@@ -1,6 +1,6 @@
-package de.mrbw.chaos.monkey.aop;
+package de.mrbwilms.spring.boot.chaos.monkey.aop;
 
-import de.mrbw.chaos.monkey.component.ChaosMonkey;
+import de.mrbwilms.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
-public class SpringRestControllerAspect {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringRestControllerAspect.class);
+public class SpringServiceAspect {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkey chaosMonkey;
 
-    public SpringRestControllerAspect(ChaosMonkey chaosMonkey) {
+    public SpringServiceAspect(ChaosMonkey chaosMonkey) {
         this.chaosMonkey = chaosMonkey;
     }
 
-    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+    @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void classAnnotatedWithControllerPointcut() {
     }
 
@@ -32,7 +32,7 @@ public class SpringRestControllerAspect {
 
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "RestController class and public method detected: " + pjp.getSignature() : null);
+        LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + pjp.getSignature() : null);
 
         chaosMonkey.callChaosMonkey();
 

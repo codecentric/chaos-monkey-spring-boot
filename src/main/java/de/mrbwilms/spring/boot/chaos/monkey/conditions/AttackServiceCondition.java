@@ -1,4 +1,4 @@
-package de.mrbw.chaos.monkey.conditions;
+package de.mrbwilms.spring.boot.chaos.monkey.conditions;
 
 
 import org.springframework.context.annotation.Condition;
@@ -13,9 +13,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class AttackServiceCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         return context.getEnvironment()
-                .getProperty("chaos.monkey.active", "false")
-                .matches("(?i:.*true*)")
-                && context.getEnvironment()
                 .getProperty("chaos.monkey.attack.services","false")
                 .matches("(?i:.*true*)");
     }

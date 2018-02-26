@@ -1,4 +1,4 @@
-package de.mrbw.chaos.monkey.demo.controller;
+package de.mrbwilms.spring.boot.chaos.monkey.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

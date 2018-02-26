@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  de.mrbw.chaos.monkey.configuration.ChaosMonkeyConfiguration
+  de.mrbwilms.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration

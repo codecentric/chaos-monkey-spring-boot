@@ -1,6 +1,6 @@
-package de.mrbw.chaos.monkey.aop;
+package de.mrbwilms.spring.boot.chaos.monkey.aop;
 
-import de.mrbw.chaos.monkey.component.ChaosMonkey;
+import de.mrbwilms.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
-public class SpringServiceAspect {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
+public class SpringControllerAspect {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringControllerAspect.class);
 
     private final ChaosMonkey chaosMonkey;
 
-    public SpringServiceAspect(ChaosMonkey chaosMonkey) {
+    public SpringControllerAspect(ChaosMonkey chaosMonkey) {
         this.chaosMonkey = chaosMonkey;
     }
 
-    @Pointcut("within(@org.springframework.stereotype.Service *)")
+    @Pointcut("within(@org.springframework.stereotype.Controller *)")
     public void classAnnotatedWithControllerPointcut() {
     }
 

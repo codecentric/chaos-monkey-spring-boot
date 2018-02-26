@@ -1,15 +1,16 @@
-package de.mrbw.chaos.monkey.configuration;
+package de.mrbwilms.spring.boot.chaos.monkey.configuration;
 
-import de.mrbw.chaos.monkey.aop.SpringControllerAspect;
-import de.mrbw.chaos.monkey.aop.SpringRestControllerAspect;
-import de.mrbw.chaos.monkey.aop.SpringServiceAspect;
-import de.mrbw.chaos.monkey.component.ChaosMonkey;
-import de.mrbw.chaos.monkey.conditions.AttackControllerCondition;
-import de.mrbw.chaos.monkey.conditions.AttackRestControllerCondition;
-import de.mrbw.chaos.monkey.conditions.AttackServiceCondition;
+import de.mrbwilms.spring.boot.chaos.monkey.aop.SpringControllerAspect;
+import de.mrbwilms.spring.boot.chaos.monkey.aop.SpringRestControllerAspect;
+import de.mrbwilms.spring.boot.chaos.monkey.aop.SpringServiceAspect;
+import de.mrbwilms.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
+import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
+import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;

@@ -7,12 +7,17 @@
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>4.3.7.RELEASE</spring.version>
-        <archaius-core.version>0.7.5</archaius-core.version>
+        <start-class>de.mrbwilms.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration</start-class>
+        <spring.version>4.3.14.RELEASE</spring.version>
+        <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
+        <spring-boot.version>1.5.9.RELEASE</spring-boot.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
     </properties>
 
-    <groupId>de.mrbw.chaos.monkey</groupId>
-    <artifactId>spring-aop-chaos-monkey</artifactId>
+    <groupId>de.mrbwilms.spring.boot.chaos.monkey</groupId>
+    <artifactId>spring-boot-chaos-monkey</artifactId>
     <version>1.2</version>
 
     <dependencies>
@@ -40,18 +45,18 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.25</version>
+            <version>${jcl-over-slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>1.5.9.RELEASE</version>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.3.13.RELEASE</version>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -63,14 +68,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
-            <version>1.5.9.RELEASE</version>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>1.5.9.RELEASE</version>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>1.5.9.RELEASE</version>
         </dependency>
 
     </dependencies>

@@ -1,4 +1,4 @@
-package de.mrbw.chaos.monkey.demo;
+package de.mrbwilms.spring.boot.chaos.monkey.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
