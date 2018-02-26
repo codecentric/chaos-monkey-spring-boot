@@ -1,7 +1,9 @@
 language: java
 sudo: false # faster builds
 
-script: "mvn cobertura:cobertura"
+script:
+  - cd spring-boot-chaos-monkey 
+  - mvn clean install
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
