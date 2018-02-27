@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey/branch/master/graph/badge.svg)](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey)
 
 <p align="center">
-![Chaos Monkey](images/sb-chaos-monkey-logo.png)
+  <img src="images/sb-chaos-monkey-logo.png">
 </p>
 
 This project provides an Spring Boot Chaos Monkey and will try to attack your running Spring Boot App.
