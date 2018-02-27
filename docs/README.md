@@ -22,7 +22,7 @@ Many questions remain unanswered....
 - What if one of our services breaks down?
 - Service Discovery works, but is our Client-Side-Load-Balancing also working?
 
-As yo can see, there are many more questions and open topics you have to deal with.
+As you can see, there are many more questions and open topics you have to deal with.
 
 That was my start to take a deep dive into Chaos Engineering and I started this little project to share my thoughts and experience.
 
