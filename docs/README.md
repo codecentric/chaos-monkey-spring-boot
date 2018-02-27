@@ -9,8 +9,13 @@
 
 This project provides an Spring Boot Chaos Monkey and will try to attack your running Spring Boot App.
 
+>Chaos Engineering is the discipline of experimenting on a distributed system
+in order to build confidence in the system’s capability
+to withstand turbulent conditions in production.
+> *principlesofchaos.org*
+
 ## What is the goal of Chaos Monkey?
-Inspired by http://principlesofchaos.org/ and by my work in distributed system, with a focus on Spring Boot, I wanted to test the resulting applications better and especially during operation.
+Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed system, with a focus on Spring Boot, I wanted to test the resulting applications better and especially during operation.
 
 > The best place on earth is...production!<br>
 > *Josh Long - Spring Developer Advocate*
