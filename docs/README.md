@@ -7,7 +7,7 @@
   <img src="images/sb-chaos-monkey-logo.png">
 </p>
 
-This project provides an Spring Boot Chaos Monkey and will try to attack your running Spring Boot App.
+This project provides a Spring Boot Chaos Monkey and will try to attack your running Spring Boot App.
 
 >Chaos Engineering is the discipline of experimenting on a distributed system
 in order to build confidence in the system’s capability
@@ -17,8 +17,8 @@ to withstand turbulent conditions in production.
 ## What is the goal of Chaos Monkey?
 Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed system, with a focus on Spring Boot, I wanted to test the resulting applications better and especially during operation.
 
-After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains...how our baby behaves in production?<br><br>
-Many questions remain unanswered....
+After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains, how our baby behaves in production?<br><br>
+Many questions remain unanswered:
 - Will our fallbacks work?
 - How does the application behave with network latency?
 - What if one of our services breaks down?
@@ -43,7 +43,7 @@ Yes of course you can start in production, but keep in mind...
 > The best place on earth is...production!<br>
 > *Josh Long*
 
-...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you...run it on production.
+...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you, run it in production.
 
 ## What does the Spring Boot Chaos Monkey do?
 Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't use your application with the profile "<b>chaos-monkey</b>", nothing will happen.
