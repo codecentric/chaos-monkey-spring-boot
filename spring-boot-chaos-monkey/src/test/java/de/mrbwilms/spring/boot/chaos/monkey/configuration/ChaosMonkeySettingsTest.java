@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -26,7 +28,6 @@ public class ChaosMonkeySettingsTest {
         validate(assaultProperties, watcherProperties);
 
 
-
     }
 
     @Test
@@ -38,6 +39,44 @@ public class ChaosMonkeySettingsTest {
 
         validate(assaultProperties, watcherProperties);
 
+
+    }
+
+    @Test
+    public void lombokDataTest() {
+
+        AssaultProperties assaultProperties = getAssaultProperties();
+        WatcherProperties watcherProperties = getWatcherProperties();
+        settings = new ChaosMonkeySettings(assaultProperties, watcherProperties);
+
+        assertThat(settings.getAssaultProperties(), notNullValue());
+        assertThat(settings.getWatcherProperties(), notNullValue());
+
+
+    }
+
+    @Test
+    public void lombokDataSetTest() {
+
+        AssaultProperties assaultProperties = getAssaultProperties();
+        WatcherProperties watcherProperties = getWatcherProperties();
+        settings = new ChaosMonkeySettings();
+        settings.setAssaultProperties(assaultProperties);
+        settings.setWatcherProperties(watcherProperties);
+
+        assertThat(settings.getAssaultProperties(), notNullValue());
+        assertThat(settings.getWatcherProperties(), notNullValue());
+
+
+    }
+
+    @Test
+    public void lombokDataNullTest() {
+
+        settings = new ChaosMonkeySettings(null, null);
+
+        assertThat(settings.getAssaultProperties(), nullValue());
+        assertThat(settings.getWatcherProperties(), nullValue());
 
 
     }
@@ -57,7 +96,7 @@ public class ChaosMonkeySettingsTest {
         assertThat(settings.getAssaultProperties().getLatencyRangeStart(), is(assaultProperties.getLatencyRangeStart()));
 
         int exceptionRandom = settings.getAssaultProperties().getExceptionRandom();
-        assertTrue("Exception random is to high!", exceptionRandom < 11 );
+        assertTrue("Exception random is to high!", exceptionRandom < 11);
 
         int troubleRandom = settings.getAssaultProperties().getTroubleRandom();
         assertTrue("Trouble random is to high!", troubleRandom < 11);
