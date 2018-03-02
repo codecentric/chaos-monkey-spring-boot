@@ -9,8 +9,7 @@ import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackRestControllerCondi
 import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +26,18 @@ import java.nio.charset.Charset;
  */
 @Configuration
 @Profile("chaos-monkey")
+@EnableConfigurationProperties({AssaultProperties.class, WatcherProperties.class})
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
+    private final WatcherProperties watcherProperties;
+    private final AssaultProperties assaultProperties;
 
-    public ChaosMonkeyConfiguration() {
+
+    public ChaosMonkeyConfiguration(WatcherProperties watcherProperties, AssaultProperties assaultProperties) {
+        this.watcherProperties = watcherProperties;
+        this.assaultProperties = assaultProperties;
+
+
         try {
             String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
             LOGGER.info(chaosLogo);
@@ -41,12 +48,22 @@ public class ChaosMonkeyConfiguration {
 
     }
 
-    @Autowired
-    private Environment env;
+    @Bean
+    public WatcherProperties watcherProperties() {
+        return new WatcherProperties();
+    }
+
+
+
+    @Bean
+    public ChaosMonkeySettings settings() {
+        return new ChaosMonkeySettings(assaultProperties, watcherProperties);
+    }
+
 
     @Bean
     public ChaosMonkey chaosMonkey() {
-        return new ChaosMonkey(env);
+        return new ChaosMonkey(assaultProperties);
     }
 
     @Bean

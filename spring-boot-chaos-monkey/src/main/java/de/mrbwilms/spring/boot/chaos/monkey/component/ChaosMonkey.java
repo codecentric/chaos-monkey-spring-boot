@@ -1,5 +1,7 @@
 package de.mrbwilms.spring.boot.chaos.monkey.component;
 
+import de.mrbwilms.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.mrbwilms.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,29 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChaosMonkey {
 
+    private final AssaultProperties assaultProperties;
     @Autowired
     private ApplicationContext context;
 
-    private Environment env;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
-    private final int level;
-    private final int timeoutRangeStart;
-    private final int timeoutRangeEnd;
-    private boolean addLatency;
-    private boolean createException;
-    private boolean killApplication;
 
-    public ChaosMonkey(Environment env) {
-        this.env = env;
-
-        addLatency = this.env.getProperty("chaos.monkey.attackmode.latency", Boolean.class, true);
-        createException = this.env.getProperty("chaos.monkey.attackmode.exception", Boolean.class, false);
-        killApplication = this.env.getProperty("chaos.monkey.attackmode.kill", Boolean.class, false);
-        level = this.env.getProperty("chaos.monkey.level", Integer.class, 5);
-        timeoutRangeStart = this.env.getProperty("chaos.monkey.timeout.range.start", Integer.class, 3000);
-        timeoutRangeEnd = this.env.getProperty("chaos.monkey.timeout.range.end", Integer.class, 10000);
+    public ChaosMonkey(AssaultProperties assaultProperties) {
+        this.assaultProperties = assaultProperties;
 
     }
 
@@ -48,20 +36,20 @@ public class ChaosMonkey {
         int troubleRand = RandomUtils.nextInt(0, 10);
         int exceptionRand = RandomUtils.nextInt(0, 10);
 
-        if (troubleRand > level) {
+        if (troubleRand > assaultProperties.getLevel()) {
 
-            if (addLatency && createException) {
+            if (assaultProperties.isLatencyActive() && assaultProperties.isExceptionsActive()) {
                 // Timeout or Exception?
                 if (exceptionRand < 7) {
                     generateLatency();
                 } else {
                     generateChaosException();
                 }
-            } else if (addLatency) {
+            } else if (assaultProperties.isLatencyActive()) {
                 generateLatency();
-            } else if (createException) {
+            } else if (assaultProperties.isExceptionsActive()) {
                 generateChaosException();
-            } else if (killApplication) {
+            } else if (assaultProperties.isKillApplicationActive()) {
                 killTheBossApp();
             }
 
@@ -94,7 +82,7 @@ public class ChaosMonkey {
      */
     private void generateLatency() {
         LOGGER.info("Chaos Monkey - timeout");
-        int timeout = RandomUtils.nextInt(timeoutRangeStart, timeoutRangeEnd);
+        int timeout = RandomUtils.nextInt(assaultProperties.getLatencyRangeStart(), assaultProperties.getLatencyRangeEnd());
 
         try {
             Thread.sleep(timeout);
