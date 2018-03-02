@@ -2,6 +2,7 @@ package de.mrbwilms.spring.boot.chaos.monkey.configuration;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -30,4 +31,12 @@ public class AssaultProperties {
 
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
+
+    public int getTroubleRandom() {
+        return RandomUtils.nextInt(0, 10);
+    }
+
+    public int getExceptionRandom() {
+        return RandomUtils.nextInt(0, 10);
+    }
 }

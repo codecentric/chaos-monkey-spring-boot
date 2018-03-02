@@ -32,8 +32,8 @@ public class ChaosMonkey {
 
     public void callChaosMonkey() {
         // Trouble?
-        int troubleRand = RandomUtils.nextInt(0, 10);
-        int exceptionRand = RandomUtils.nextInt(0, 10);
+        int troubleRand = assaultProperties.getTroubleRandom();
+        int exceptionRand = assaultProperties.getExceptionRandom();
 
         if (troubleRand > assaultProperties.getLevel()) {
 

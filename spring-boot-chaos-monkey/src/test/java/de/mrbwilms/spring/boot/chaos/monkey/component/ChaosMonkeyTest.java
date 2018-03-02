@@ -52,6 +52,7 @@ public class ChaosMonkeyTest {
     @Before
     public void setUp() throws Exception {
         given(this.assaultProperties.getLevel()).willReturn(0);
+        given(this.assaultProperties.getTroubleRandom()).willReturn(10);
         chaosMonkey = new ChaosMonkey(assaultProperties);
 
     }
