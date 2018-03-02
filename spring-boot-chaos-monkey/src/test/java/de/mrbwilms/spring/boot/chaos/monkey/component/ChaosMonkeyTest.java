@@ -95,7 +95,7 @@ public class ChaosMonkeyTest {
 
     }
 
-    @Test()
+    @Test
     public void isExceptionAssaultActive() {
 
         exception.expect(RuntimeException.class);
@@ -112,6 +112,48 @@ public class ChaosMonkeyTest {
 
         assertEquals(Level.INFO, argument.getValue().getLevel());
         assertEquals("Chaos Monkey - exception", argument.getValue().getMessage());
+
+
+    }
+
+    @Test
+    public void isExceptionAndLatencyAssaultActiveExpectExceptionLogging() {
+
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Chaos Monkey - RuntimeException");
+
+        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
+        given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
+        given(this.assaultProperties.getExceptionRandom()).willReturn(8);
+
+
+        chaosMonkey.callChaosMonkey();
+
+        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
+        verify(mockAppender,times(1)).doAppend(argument.capture());
+
+        assertEquals(Level.INFO, argument.getValue().getLevel());
+        assertEquals("Chaos Monkey - exception", argument.getValue().getMessage());
+
+
+    }
+
+    @Test
+    public void isExceptionAndLatencyAssaultActiveExpectLatencyLogging() {
+
+        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
+        given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
+        given(this.assaultProperties.getExceptionRandom()).willReturn(5); // <7
+
+        chaosMonkey.callChaosMonkey();
+
+        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
+        verify(mockAppender,times(1)).doAppend(argument.capture());
+
+        assertEquals(Level.INFO, argument.getValue().getLevel());
+        assertEquals("Chaos Monkey - timeout", argument.getValue().getMessage());
 
 
     }
