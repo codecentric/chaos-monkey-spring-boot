@@ -1,7 +1,6 @@
 package de.mrbwilms.spring.boot.chaos.monkey.component;
 
 import de.mrbwilms.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.mrbwilms.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
