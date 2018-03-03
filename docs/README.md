@@ -38,7 +38,7 @@ Check your monitoring and check if you can see the overall state of your system.
 ### Define steady states
 Define a metric to check a steady state about your service and of course your entire system. Start small with a service that is not so critical.
 ### Do not start in production
-Yes of course you can start in production, but keep in mind...
+Of course, you can start in production, but keep in mind...
 
 > The best place on earth is...production!<br>
 > *Josh Long*
