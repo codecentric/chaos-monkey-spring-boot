@@ -85,7 +85,9 @@ Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
 </dependency>
 {% endhighlight %}
 2. Start your app with profile "chaos-monkey"
+{% highlight shell %}
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
+{% endhighlight %}
 
 Spring Boot Chaos Monkey will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
 
