@@ -14,8 +14,11 @@ in order to build confidence in the system’s capability
 to withstand turbulent conditions in production.
 > *principlesofchaos.org*
 
-[Goal of Chaos Monkey](#goal)<br>
-[Social and communicative](#social)
+## Content
+- [Goal of Chaos Monkey](#goal)
+- [Social and communicative](#social)
+- [What does Spring Boot Chaos Monkey do?](#dochaos)
+- [How does it work?](#howitworks)
 
 <a name="goal"></a>
 ## What is the goal of Chaos Monkey?
@@ -49,12 +52,12 @@ Of course, you can start in production, but keep in mind...
 > *Josh Long*
 
 ...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you, run it in production.
-
+<a name="dochaos"></a>
 ## What does the Spring Boot Chaos Monkey do?
 Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't use your application with the profile "<b>chaos-monkey</b>", nothing will happen.
 
 As you can see, you don't have to change the source code!
-
+<a name="howitworks"></a>
 ### How does it work?
 If Spring Boot Chaos Monkey is on your classpath and activated with profile name "chaos-monkey", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
 
