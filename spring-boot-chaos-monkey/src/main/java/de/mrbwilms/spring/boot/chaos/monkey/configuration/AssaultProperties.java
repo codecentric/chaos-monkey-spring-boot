@@ -23,7 +23,7 @@ public class AssaultProperties {
     @Value("${latencyRangeEnd : 15000}")
     private int latencyRangeEnd;
 
-    @Value("${latencyActive : false}")
+    @Value("${latencyActive : true}")
     private boolean latencyActive;
 
     @Value("${exceptionsActive : false}")

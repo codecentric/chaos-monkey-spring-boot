@@ -14,7 +14,11 @@ in order to build confidence in the system’s capability
 to withstand turbulent conditions in production.
 > *principlesofchaos.org*
 
+[What is the goal of Chaos Monkey](#goal)
+[Be social and communicative](#social)
+
 ## What is the goal of Chaos Monkey?
+<a name="goal"></a>
 Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed system, with a focus on Spring Boot, I wanted to test the resulting applications better and especially during operation.
 
 After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains, how our baby behaves in production?<br><br>
@@ -29,6 +33,7 @@ As you can see, there are many more questions and open topics you have to deal w
 That was my start to take a deep dive into Chaos Engineering and I started this little project to share my thoughts and experience.
 
 ## Be social and communicative!
+<a name="social"></a>
 If you start to implement Chaos Engineering at your company, then you must be a very social and communicative person. Why, because you will get to know many of your colleagues personally in a very short time when your chaos experiments strike.
 
 ### Check your resilience
@@ -49,5 +54,38 @@ Of course, you can start in production, but keep in mind...
 Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't use your application with the profile "<b>chaos-monkey</b>", nothing will happen.
 
 As you can see, you don't have to change the source code!
+
+### How does it work?
+If Spring Boot Chaos Monkey is on your classpath and activated with profile name "chaos-monkey", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
+
+- @Controller
+- @RestController
+- @service
+- @Repository
+
+By configuration you define which assaults and watcher are activated, per default only the @Service watcher and the latency assault are activated.
+
+#### Example - single Spring Boot application
+Let's say you built a standalone Spring Boot application. For example, there is a service annotated with Spring @Service annotation.
+
+<p align="center">
+  <img width="50%" src="images/cases/case_single_boot_app.png">
+</p>
+Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
+
+1. Added Spring Boot Chaos Monkey to your dependencies.
+```
+<dependency>
+  <groupId>de.mrbwilms.spring.boot.chaos.monkey</groupId>
+  <artifactId>spring-boot-chaos-monkey</artifactId>
+  <version>1.2</version>
+</dependency>
+```
+2. Start your app with profile "chaos-monkey"
+java -jar your-app.jar --spring.profiles.active=chaos-monkey
+
+Spring Boot Chaos Monkey will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
+
+There are some more assaults and watcher, that can attack your app.
 
 > I´m still working on this page and the documentation!
