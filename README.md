@@ -4,7 +4,7 @@
 ### inspired by Chaos Engineering at Netflix
 
 <p align="center">
-  <img src="images/sb-chaos-monkey-logo.png">
+  <img src="docs/images/sb-chaos-monkey-logo.png">
 </p>
 
 This project provides a Spring Boot Chaos Monkey and will try to attack your running Spring Boot App.
