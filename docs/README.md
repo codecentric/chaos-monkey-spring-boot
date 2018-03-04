@@ -14,11 +14,11 @@ in order to build confidence in the system’s capability
 to withstand turbulent conditions in production.
 > *principlesofchaos.org*
 
-[What is the goal of Chaos Monkey](#goal)
-[Be social and communicative](#social)
+[Goal of Chaos Monkey](#goal)<br>
+[Social and communicative](#social)
 
-## What is the goal of Chaos Monkey?
 <a name="goal"></a>
+## What is the goal of Chaos Monkey?
 Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed system, with a focus on Spring Boot, I wanted to test the resulting applications better and especially during operation.
 
 After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains, how our baby behaves in production?<br><br>
@@ -32,8 +32,8 @@ As you can see, there are many more questions and open topics you have to deal w
 
 That was my start to take a deep dive into Chaos Engineering and I started this little project to share my thoughts and experience.
 
-## Be social and communicative!
 <a name="social"></a>
+## Be social and communicative!
 If you start to implement Chaos Engineering at your company, then you must be a very social and communicative person. Why, because you will get to know many of your colleagues personally in a very short time when your chaos experiments strike.
 
 ### Check your resilience
