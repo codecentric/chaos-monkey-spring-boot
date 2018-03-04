@@ -77,13 +77,13 @@ Let's say you built a standalone Spring Boot application. For example, there is 
 Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
 
 1. Added Spring Boot Chaos Monkey to your dependencies.
-```
+{% highlight xml %}
 <dependency>
   <groupId>de.mrbwilms.spring.boot.chaos.monkey</groupId>
   <artifactId>spring-boot-chaos-monkey</artifactId>
   <version>1.2</version>
 </dependency>
-```
+{% endhighlight %}
 2. Start your app with profile "chaos-monkey"
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 
