@@ -7,7 +7,7 @@
   <img src="images/sb-chaos-monkey-logo.png">
 </p>
 
-This project provides a Spring Boot Chaos Monkey and will try to attack your running Spring Boot App.
+This project provides a Spring Boot Chaos Monkey and will try to attack your running [Spring Boot](https://projects.spring.io/spring-boot/) App.
 
 >Chaos Engineering is the discipline of experimenting on a distributed system
 in order to build confidence in the system’s capability
@@ -19,6 +19,9 @@ to withstand turbulent conditions in production.
 - [Social and communicative](#social)
 - [What does Spring Boot Chaos Monkey do?](#dochaos)
 - [How does it work?](#howitworks)
+  - [Watcher](#watcher)
+  - [Assault](#assaults)
+  - [Properties & Configuration](#config)
 
 <a name="goal"></a>
 ## What is the goal of Chaos Monkey?
@@ -63,16 +66,20 @@ If Spring Boot Chaos Monkey is on your classpath and activated with profile name
 
 - @Controller
 - @RestController
-- @service
+- @Service
 - @Repository
 
 By configuration you define which assaults and watcher are activated, per default only the @Service watcher and the latency assault are activated.
 
+<p align="center">
+  <img width="90%" src="images/sb-chaos-monkey-architecture.png">
+</p>
+
 #### Example - single Spring Boot application
-Let's say you built a standalone Spring Boot application. For example, there is a service annotated with Spring @Service annotation.
+Let's say you built a standalone Spring Boot application. For example, there is a service annotated with Spring @Service annotation and some other components. Now we want to attack our service component.
 
 <p align="center">
-  <img width="50%" src="images/cases/case_single_boot_app.png">
+  <img width="40%" src="images/cases/case_single_boot_app.png">
 </p>
 Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
 
@@ -92,5 +99,36 @@ java -jar your-app.jar --spring.profiles.active=chaos-monkey
 Spring Boot Chaos Monkey will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
 
 There are some more assaults and watcher, that can attack your app.
+<a name="watcher"></a>
+## Watcher
+A watcher is a Spring Boot Chaos Monkey component, that will scan your app for a specific type of annotation.
+
+Following Spring annotation are supported:
+- @Controller
+- @RestController
+- @Service
+- @Repository
+
+With the help of [Spring AOP](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html), Chaos Monkey recognizes the execution of a public method and will either not execute any action or start one of its assaults. You can customize the behave by configuration.
+
+<a name="assaults"></a>
+## Assaults
+
+Following assaults are actual provided:
+- Latency Assault
+- Exception Assault
+- AppKiller Assault
+
+You can customize the behave by configuration.
+
+<a name="config"></a>
+## Properties & Configuration
+
+| Property        | Description           | Values  | Default |
+| ------------- |-------------| -----:|----:|
+| chaos.monkey.assaults.level | How many requests are to be attacked.<br> 1 each request, 5 each 5th request is attacked | 1-10 | 5
+|chaos.monkey.assaults.latencyRangeStart | Minimum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 3000
+|chaos.monkey.assaults.latencyRangeEnd | Maximum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 15000
+|chaos.monkey.assaults.latencyActive | Latency assault active| TRUE or FALSE | true
 
 > I´m still working on this page and the documentation!
