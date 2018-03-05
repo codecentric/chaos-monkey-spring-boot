@@ -72,14 +72,14 @@ If Spring Boot Chaos Monkey is on your classpath and activated with profile name
 By configuration you define which assaults and watcher are activated, per default only the @Service watcher and the latency assault are activated.
 
 <p align="center">
-  <img width="90%" src="images/sb-chaos-monkey-architecture.png">
+  <img class="imgborder s1" width="90%" src="images/sb-chaos-monkey-architecture.png">
 </p>
 
 #### Example - single Spring Boot application
 Let's say you built a standalone Spring Boot application. For example, there is a service annotated with Spring @Service annotation and some other components. Now we want to attack our service component.
 
 <p align="center">
-  <img width="40%" src="images/cases/case_single_boot_app.png">
+  <img class="imgborder s1" width="40%" src="images/cases/case_single_boot_app.png">
 </p>
 Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
 
