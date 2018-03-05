@@ -124,11 +124,18 @@ You can customize the behave by configuration.
 <a name="config"></a>
 ## Properties & Configuration
 
-| Property        | Description           | Values  | Default |
-| ------------- |-------------| -----:|----:|
+| Property        | Description                | Values  | Default |
+| ------------- |------------------| -----:|----:|
 | chaos.monkey.assaults.level | How many requests are to be attacked.<br> 1 each request, 5 each 5th request is attacked | 1-10 | 5
 |chaos.monkey.assaults.latencyRangeStart | Minimum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 3000
 |chaos.monkey.assaults.latencyRangeEnd | Maximum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 15000
-|chaos.monkey.assaults.latencyActive | Latency assault active| TRUE or FALSE | true
+|chaos.monkey.assaults.latencyActive | Latency assault active| TRUE or FALSE | TRUE
+|chaos.monkey.assaults.exceptionsActive | Exception assault active| TRUE or FALSE | FALSE
+|chaos.monkey.assaults.killApplicationActive | AppKiller assault active| TRUE or FALSE | FALSE
+chaos.monkey.watcher.controller | Controller watcher active| TRUE or FALSE | FALSE
+chaos.monkey.watcher.restController | RestController watcher active| TRUE or FALSE | FALSE
+chaos.monkey.watcher.service | Service watcher active| TRUE or FALSE | TRUE
+chaos.monkey.watcher.repository | Repository watcher active| TRUE or FALSE | FALSE
+
 
 > I´m still working on this page and the documentation!
