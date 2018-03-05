@@ -1,8 +1,8 @@
 package de.mrbwilms.spring.boot.chaos.monkey.configuration;
 
-import de.mrbwilms.spring.boot.chaos.monkey.aop.SpringControllerAspect;
-import de.mrbwilms.spring.boot.chaos.monkey.aop.SpringRestControllerAspect;
-import de.mrbwilms.spring.boot.chaos.monkey.aop.SpringServiceAspect;
+import de.mrbwilms.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
+import de.mrbwilms.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
+import de.mrbwilms.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
 import de.mrbwilms.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
 import de.mrbwilms.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;

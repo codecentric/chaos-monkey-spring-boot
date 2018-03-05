@@ -1,8 +1,7 @@
-package de.mrbwilms.spring.boot.chaos.monkey.aop;
+package de.mrbwilms.spring.boot.chaos.monkey.watcher;
 
 import de.mrbwilms.spring.boot.chaos.monkey.component.ChaosMonkey;
-import de.mrbwilms.spring.boot.chaos.monkey.demo.restcontroller.DemoRestController;
-import de.mrbwilms.spring.boot.chaos.monkey.demo.service.DemoService;
+import de.mrbwilms.spring.boot.chaos.monkey.demo.repository.DemoRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -15,21 +14,21 @@ import static org.mockito.Mockito.*;
  * @author Benjamin Wilms
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SpringRestControllerAspectTest {
+public class SpringRepositoryAspectTest {
 
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
     @Test
     public void chaosMonkeyIsCalled() {
-        DemoRestController target = new DemoRestController();
+        DemoRepository target = new DemoRepository();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock);
-        factory.addAspect(serviceAspect);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
+        factory.addAspect(repositoryAspect);
 
-        DemoRestController proxy = factory.getProxy();
-        proxy.sayHello();
+        DemoRepository proxy = factory.getProxy();
+        proxy.dummyPublicSaveMethod();
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey();
         verifyNoMoreInteractions(chaosMonkeyMock);
@@ -38,19 +37,18 @@ public class SpringRestControllerAspectTest {
 
     @Test
     public void chaosMonkeyIsNotCalled() {
-        DemoRestController target = new DemoRestController();
+        DemoRepository target = new DemoRepository();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
         SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
         factory.addAspect(controllerAspect);
         factory.addAspect(serviceAspect);
-        factory.addAspect(repositoryAspect);
+        factory.addAspect(restControllerAspect);
 
-
-        DemoRestController proxy = factory.getProxy();
-        proxy.sayHello();
+        DemoRepository proxy = factory.getProxy();
+        proxy.dummyPublicSaveMethod();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey();
         verifyNoMoreInteractions(chaosMonkeyMock);

@@ -1,8 +1,7 @@
-package de.mrbwilms.spring.boot.chaos.monkey.aop;
+package de.mrbwilms.spring.boot.chaos.monkey.watcher;
 
 import de.mrbwilms.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.mrbwilms.spring.boot.chaos.monkey.demo.controller.DemoController;
-import de.mrbwilms.spring.boot.chaos.monkey.demo.repository.DemoRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
