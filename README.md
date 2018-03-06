@@ -1,3 +1,4 @@
+[![Apache License 2](https://img.shields.io/badge/license-ASF2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Build Status](https://travis-ci.org/MrBW/spring-boot-chaos-monkey.svg?branch=master)](https://travis-ci.org/MrBW/spring-boot-chaos-monkey)
 [![codecov](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey/branch/master/graph/badge.svg)](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey)
 # Spring Boot Chaos Monkey
