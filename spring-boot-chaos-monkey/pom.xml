@@ -4,9 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-chaos-monkey</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
-
+    <description>Spring Boot Chaos Monkey</description>
+    <name>Spring Boot Chaos Monkey</name>
+    <url>https://mrbw.github.io/spring-boot-chaos-monkey</url>
     <properties>
+        <revision>1.2.0-SNAPSHOT</revision>
         <start-class>de.mrbwilms.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration</start-class>
         <spring.version>4.3.14.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
@@ -16,11 +22,28 @@
         <java.version>1.8</java.version>
         <lombok.version>1.16.20</lombok.version>
     </properties>
-
-    <groupId>de.mrbwilms.spring.boot.chaos.monkey</groupId>
-    <artifactId>spring-boot-chaos-monkey</artifactId>
-    <version>1.2</version>
-
+    <organization>
+        <name>codecentric AG</name>
+        <url>http://www.codecentric.de</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git://github.com/MrBW/spring-boot-chaos-monkey.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:MrBW/spring-boot-chaos-monkey.git</developerConnection>
+        <url>https://mrbw.github.io/spring-boot-chaos-monkey</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>Benjamin Wilms</name>
+            <email>benjamin.wilms@codecentric.de</email>
+            <organization>codecentric AG</organization>
+        </developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
