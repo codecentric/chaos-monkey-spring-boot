@@ -1,14 +1,14 @@
 [![Apache License 2](https://img.shields.io/badge/license-ASF2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Build Status](https://travis-ci.org/MrBW/spring-boot-chaos-monkey.svg?branch=master)](https://travis-ci.org/MrBW/spring-boot-chaos-monkey)
 [![codecov](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey/branch/master/graph/badge.svg)](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey)
-# Spring Boot Chaos Monkey
+# Chaos Monkey for Spring Boot
 ### inspired by Chaos Engineering at Netflix
 
 <p align="center">
   <img src="images/sb-chaos-monkey-logo.png">
 </p>
 
-This project provides a Spring Boot Chaos Monkey and will try to attack your running [Spring Boot](https://projects.spring.io/spring-boot/) App.
+This project provides a Chaos Monkey for Spring Boot and will try to attack your running [Spring Boot](https://projects.spring.io/spring-boot/) App.
 
 >Chaos Engineering is the discipline of experimenting on a distributed system
 in order to build confidence in the system’s capability
@@ -18,7 +18,7 @@ to withstand turbulent conditions in production.
 ## Content
 - [Goal of Chaos Monkey](#goal)
 - [Social and communicative](#social)
-- [What does Spring Boot Chaos Monkey do?](#dochaos)
+- [What does Chaos Monkey for Spring Boot do?](#dochaos)
 - [How does it work?](#howitworks)
   - [Watcher](#watcher)
   - [Assault](#assaults)
@@ -82,9 +82,9 @@ Let's say you built a standalone Spring Boot application. For example, there is 
 <p align="center">
   <img class="imgborder s1" width="40%" src="images/cases/case_single_boot_app.png">
 </p>
-Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
+Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
 
-1. Added Spring Boot Chaos Monkey to your dependencies.
+1. Added Chaos Monkey for Spring Boot to your dependencies.
 {% highlight xml %}
 <dependency>
   <groupId>de.mrbwilms.spring.boot.chaos.monkey</groupId>
@@ -97,12 +97,12 @@ Let´s activate Spring Boot Chaos Monkey, only 2 steps are required.
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 {% endhighlight %}
 
-Spring Boot Chaos Monkey will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
+Chaos Monkey for Spring Boot will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
 
 There are some more assaults and watcher, that can attack your app.
 <a name="watcher"></a>
 ## Watcher
-A watcher is a Spring Boot Chaos Monkey component, that will scan your app for a specific type of annotation.
+A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.
 
 Following Spring annotation are supported:
 - @Controller
