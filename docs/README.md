@@ -57,7 +57,7 @@ Of course, you can start in production, but keep in mind...
 
 ...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you, run it in production.
 <a name="dochaos"></a>
-## What does the Spring Boot Chaos Monkey do?
+## What does the Chaos Monkey for Spring Boot do?
 Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't use your application with the profile "<b>chaos-monkey</b>", nothing will happen.
 
 As you can see, you don't have to change the source code!
