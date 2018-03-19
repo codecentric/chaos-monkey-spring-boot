@@ -10,4 +10,4 @@
 
 This project provides a Chaos Monkey for Spring Boot applications and will try to attack your running Spring Boot App.
 
-All details are explained on [Chaos Monkey for Spring Boot](https://mrbw.github.io/chaos-monkey-spring-boot/)
+All details are explained on [Chaos Monkey for Spring Boot](https://codecentric.github.io/chaos-monkey-spring-boot/)
