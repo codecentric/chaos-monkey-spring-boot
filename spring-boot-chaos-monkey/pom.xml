@@ -5,15 +5,15 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.codecentric</groupId>
-    <artifactId>spring-boot-chaos-monkey</artifactId>
+    <artifactId>chaos-monkey-spring-boot</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
-    <description>Spring Boot Chaos Monkey</description>
-    <name>Spring Boot Chaos Monkey</name>
+    <description>Chaos Monkey for Spring Boot</description>
+    <name>Chaos Monkey for Spring Boot</name>
     <url>https://mrbw.github.io/spring-boot-chaos-monkey</url>
     <properties>
         <revision>1.2.0-SNAPSHOT</revision>
-        <start-class>de.mrbwilms.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration</start-class>
+        <start-class>de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration</start-class>
         <spring.version>4.3.14.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <spring-boot.version>1.5.9.RELEASE</spring-boot.version>
@@ -49,8 +49,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot.version}</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -81,7 +87,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>${spring-boot.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -110,7 +115,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
-            <version>1.5.9.RELEASE</version>
+            <version>${spring-boot.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -124,7 +130,12 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-actuator</artifactId>
+            <version>${spring-boot.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -139,6 +150,21 @@
                     </formats>
                     <check/>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
