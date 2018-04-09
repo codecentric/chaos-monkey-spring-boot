@@ -12,7 +12,7 @@
     <name>Chaos Monkey for Spring Boot</name>
     <url>https://mrbw.github.io/spring-boot-chaos-monkey</url>
     <properties>
-        <revision>1.2.0-SNAPSHOT</revision>
+        <revision>1.0.0-SNAPSHOT</revision>
         <start-class>de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration</start-class>
         <spring.version>4.3.14.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
@@ -157,6 +157,7 @@
                 <configuration>
                     <mainClass>${start-class}</mainClass>
                     <layout>ZIP</layout>
+                    <executable>true</executable>
                 </configuration>
                 <executions>
                     <execution>

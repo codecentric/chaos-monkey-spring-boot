@@ -1,33 +1,33 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyEndpoint;
-import org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.condition.ConditionalOnEnabledEndpoint;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
 
 /**
  * @author Benjamin Wilms
  */
 @Configuration
-@Profile("chaos-monkey")
-@AutoConfigureAfter(ChaosMonkeyConfiguration.class)
-@ConditionalOnBean(EndpointAutoConfiguration.class)
+@ConditionalOnClass(AbstractEndpoint.class)
+@ConditionalOnProperty(prefix = "endpoints.chaosmonkey", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class EndpointConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointConfiguration.class);
     private final ChaosMonkeySettings chaosMonkeySettings;
 
     public EndpointConfiguration(ChaosMonkeySettings chaosMonkeySettings) {
         this.chaosMonkeySettings = chaosMonkeySettings;
+        LOGGER.info("EndpointAutoConfiguration active");
     }
 
     @Bean
-    @ConditionalOnEnabledEndpoint(value = "chaosmonkey")
     public ChaosMonkeyEndpoint assaultEndpoint() {
         return new ChaosMonkeyEndpoint(chaosMonkeySettings);
     }
 }
-
