@@ -1,5 +1,5 @@
 [![Apache License 2](https://img.shields.io/badge/license-ASF2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
-[![Build Status](https://travis-ci.org/MrBW/spring-boot-chaos-monkey.svg?branch=master)](https://travis-ci.org/MrBW/spring-boot-chaos-monkey)
+[![Build Status](https://travis-ci.org/codecentric/chaos-monkey-spring-boot.svg?branch=master)](https://travis-ci.org/codecentric/chaos-monkey-spring-boot)
 [![codecov](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey/branch/master/graph/badge.svg)](https://codecov.io/gh/MrBW/spring-boot-chaos-monkey)
 # Chaos Monkey for Spring Boot
 ### inspired by Chaos Engineering at Netflix
