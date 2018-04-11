@@ -3,6 +3,11 @@
 
 @import "{{ site.theme }}";
 
+@media screen and (min-width: 64em)
+.main-content {
+   max-width: 90rem;
+}
+
 .imgborder {
    display:inline-block;
    position:relative;
