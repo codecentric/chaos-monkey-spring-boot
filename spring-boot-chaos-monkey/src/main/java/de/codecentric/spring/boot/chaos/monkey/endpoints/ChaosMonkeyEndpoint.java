@@ -1,21 +1,24 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
 /**
  * @author Benjamin Wilms
  */
-public class ChaosMonkeyEndpoint extends AbstractEndpoint<ChaosMonkeySettings> {
+@Endpoint(id = "chaosmonkey",enableByDefault = false)
+public class ChaosMonkeyEndpoint {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
     public ChaosMonkeyEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
-        super("chaosmonkey");
         this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
-    public ChaosMonkeySettings invoke() {
-        return this.chaosMonkeySettings;
+    @ReadOperation
+    public ChaosMonkeySettings chaosMonkeySettings() {
+        return chaosMonkeySettings;
     }
+
 }
