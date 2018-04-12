@@ -13,6 +13,7 @@
     <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
     <properties>
         <revision>1.0.0</revision>
+        <spring.version>5.0.5.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
