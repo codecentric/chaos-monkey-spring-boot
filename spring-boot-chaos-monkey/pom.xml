@@ -10,11 +10,9 @@
     <packaging>jar</packaging>
     <description>Chaos Monkey for Spring Boot</description>
     <name>Chaos Monkey for Spring Boot</name>
-    <url>https://mrbw.github.io/spring-boot-chaos-monkey</url>
+    <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
     <properties>
-        <revision>1.0.0-SNAPSHOT</revision>
-        <start-class>de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration</start-class>
-        <spring.version>5.0.5.RELEASE</spring.version>
+        <revision>1.0.0</revision>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,9 +31,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/MrBW/spring-boot-chaos-monkey.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:MrBW/spring-boot-chaos-monkey.git</developerConnection>
-        <url>https://mrbw.github.io/spring-boot-chaos-monkey</url>
+        <connection>scm:git:git://github.com/codecentric/chaos-monkey-spring-boot.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:codecentric/chaos-monkey-spring-boot.git</developerConnection>
+        <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
     </scm>
     <developers>
         <developer>
@@ -140,6 +138,67 @@
                     <check/>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
