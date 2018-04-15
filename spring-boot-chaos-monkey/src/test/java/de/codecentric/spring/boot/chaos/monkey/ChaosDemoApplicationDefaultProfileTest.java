@@ -35,7 +35,7 @@ public class ChaosDemoApplicationDefaultProfileTest {
     }
 
     @Test
-    public void checkEnvironment() throws Exception {
+    public void checkEnvironment() {
         assertThat(env.getProperty("chaos.monkey.attack.controller"),is("true"));
     }
 }

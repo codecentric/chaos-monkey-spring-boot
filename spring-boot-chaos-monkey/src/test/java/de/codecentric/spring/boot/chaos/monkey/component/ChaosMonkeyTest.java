@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,13 +34,15 @@ public class ChaosMonkeyTest {
     @Mock
     private Appender mockAppender;
     @Captor
-    private ArgumentCaptor captorLoggingEvent;
+    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
     @Before
     public void setup() {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
         when(mockAppender.getName()).thenReturn("MOCK");
         root.addAppender(mockAppender);
+
+        captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
 
     }
 
@@ -50,7 +53,7 @@ public class ChaosMonkeyTest {
     private AssaultProperties assaultProperties;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         given(this.assaultProperties.getLevel()).willReturn(0);
         given(this.assaultProperties.getTroubleRandom()).willReturn(10);
         chaosMonkey = new ChaosMonkey(assaultProperties);
@@ -67,13 +70,12 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
-        verify(mockAppender,times(2)).doAppend(argument.capture());
+        verify(mockAppender,times(2)).doAppend(captorLoggingEvent.capture());
 
-        assertEquals(Level.INFO, argument.getAllValues().get(0).getLevel());
-        assertEquals(Level.INFO, argument.getAllValues().get(1).getLevel());
-        assertEquals("Chaos Monkey - I am killing your Application!", argument.getAllValues().get(0).getMessage());
-        assertEquals("Chaos Monkey - Unable to kill the App, I am not the BOSS!", argument.getAllValues().get(1).getMessage());
+        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
+        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
+        assertEquals("Chaos Monkey - I am killing your Application!", captorLoggingEvent.getAllValues().get(0).getMessage());
+        assertEquals("Chaos Monkey - Unable to kill the App, I am not the BOSS!", captorLoggingEvent.getAllValues().get(1).getMessage());
 
     }
 
@@ -86,11 +88,10 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
-        verify(mockAppender,times(1)).doAppend(argument.capture());
+        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
 
-        assertEquals(Level.INFO, argument.getValue().getLevel());
-        assertEquals("Chaos Monkey - timeout", argument.getValue().getMessage());
+        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
+        assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
 
 
     }
@@ -107,11 +108,10 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
-        verify(mockAppender,times(1)).doAppend(argument.capture());
+        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
 
-        assertEquals(Level.INFO, argument.getValue().getLevel());
-        assertEquals("Chaos Monkey - exception", argument.getValue().getMessage());
+        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
+        assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
 
 
     }
@@ -130,11 +130,10 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
-        verify(mockAppender,times(1)).doAppend(argument.capture());
+        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
 
-        assertEquals(Level.INFO, argument.getValue().getLevel());
-        assertEquals("Chaos Monkey - exception", argument.getValue().getMessage());
+        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
+        assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
 
 
     }
@@ -149,11 +148,32 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        ArgumentCaptor<LoggingEvent> argument = ArgumentCaptor.forClass(LoggingEvent.class);
-        verify(mockAppender,times(1)).doAppend(argument.capture());
+        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
 
-        assertEquals(Level.INFO, argument.getValue().getLevel());
-        assertEquals("Chaos Monkey - timeout", argument.getValue().getMessage());
+        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
+        assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
+
+
+    }
+
+    @Test
+    public void givenNoAssaultsActiveExpectNoLogging() {
+        chaosMonkey.callChaosMonkey();
+
+        verify(mockAppender, never()).doAppend(captorLoggingEvent.capture());
+
+
+    }
+
+    @Test
+    public void givenAssaultLevelTooHighExpectNoLogging() {
+        given(this.assaultProperties.getLevel()).willReturn(10);
+        given(this.assaultProperties.getTroubleRandom()).willReturn(9);
+        given(this.assaultProperties.isLatencyActive()).willReturn(true);
+
+        chaosMonkey.callChaosMonkey();
+
+        verify(mockAppender, never()).doAppend(captorLoggingEvent.capture());
 
 
     }

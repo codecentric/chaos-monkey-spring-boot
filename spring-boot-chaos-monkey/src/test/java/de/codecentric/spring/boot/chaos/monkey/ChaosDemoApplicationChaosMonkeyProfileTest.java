@@ -41,7 +41,6 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Test
     public void contextLoads() {
-
         assertNotNull(chaosMonkey);
     }
 
