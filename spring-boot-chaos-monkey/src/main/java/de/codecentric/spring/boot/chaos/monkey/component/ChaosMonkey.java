@@ -31,11 +31,8 @@ public class ChaosMonkey {
 
 
     public void callChaosMonkey() {
-        // Trouble?
-        int troubleRand = assaultProperties.getTroubleRandom();
-        int exceptionRand = assaultProperties.getExceptionRandom();
-
-        if (troubleRand > assaultProperties.getLevel()) {
+        if (isTrouble()) {
+            int exceptionRand = assaultProperties.getExceptionRandom();
 
             if (assaultProperties.isLatencyActive() && assaultProperties.isExceptionsActive()) {
                 // Timeout or Exception?
@@ -53,6 +50,10 @@ public class ChaosMonkey {
             }
 
         }
+    }
+
+    private boolean isTrouble() {
+        return assaultProperties.getTroubleRandom() >= assaultProperties.getLevel();
     }
 
     private void killTheBossApp() {
