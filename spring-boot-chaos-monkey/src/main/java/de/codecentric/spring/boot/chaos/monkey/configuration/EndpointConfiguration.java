@@ -1,11 +1,12 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyEndpoint;
 
 /**
  * @author Benjamin Wilms
@@ -22,9 +23,9 @@ public class EndpointConfiguration {
         LOGGER.info("EndpointAutoConfiguration active");
     }
 
-    @ConditionalOnEnabledEndpoint
     @Bean
-    public ChaosMonkeyEndpoint assaultEndpoint() {
+    @ConditionalOnMissingBean
+    public ChaosMonkeyEndpoint chaosMonkeyEndpoint() {
         return new ChaosMonkeyEndpoint(chaosMonkeySettings);
     }
 }
