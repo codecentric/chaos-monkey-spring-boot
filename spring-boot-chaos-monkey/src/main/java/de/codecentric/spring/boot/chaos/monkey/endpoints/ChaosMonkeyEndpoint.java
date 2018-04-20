@@ -18,6 +18,7 @@ public class ChaosMonkeyEndpoint extends AbstractEndpoint<ChaosMonkeySettings> {
         this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
+    @Override
     public ChaosMonkeySettings invoke() {
         return chaosMonkeySettings;
     }
