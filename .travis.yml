@@ -2,7 +2,6 @@ language: java
 sudo: false # faster builds
 
 script:
-  - cd spring-boot-chaos-monkey
   - mvn cobertura:cobertura
 
 after_success:
