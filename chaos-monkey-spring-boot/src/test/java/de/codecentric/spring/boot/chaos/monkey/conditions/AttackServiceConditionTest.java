@@ -16,7 +16,7 @@ import static org.mockito.BDDMockito.given;
 public class AttackServiceConditionTest {
 
     private AttackServiceCondition attackServiceCondition;
-    private final String CHAOS_MONKEY_CONTROL_CONDITION = "chaos.monkey.watcher.services";
+    private final String CHAOS_MONKEY_CONTROL_CONDITION = "chaos.monkey.watcher.service";
     private final String FALSE_DEFAULT = "false";
 
     @Mock
