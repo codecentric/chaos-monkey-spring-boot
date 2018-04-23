@@ -14,3 +14,5 @@ This project provides a Chaos Monkey for Spring Boot applications and will try t
 All details are explained on [Chaos Monkey for Spring Boot](https://codecentric.github.io/chaos-monkey-spring-boot/)
 
 Depends on [Spring Boot 2.0.1](https://projects.spring.io/spring-boot/) and [Spring Framework 5.0.5](https://projects.spring.io/spring-framework/)
+
+<br><b>Decision made, we will support Spring Boot 1.5.x in the upcoming release! :-)</b>
