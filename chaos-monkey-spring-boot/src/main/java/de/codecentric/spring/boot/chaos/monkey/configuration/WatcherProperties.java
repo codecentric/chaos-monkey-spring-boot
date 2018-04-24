@@ -24,4 +24,7 @@ public class WatcherProperties {
 
     @Value("${repository:false}")
     private boolean repository;
+
+    @Value("${component:false}")
+    private boolean component;
 }

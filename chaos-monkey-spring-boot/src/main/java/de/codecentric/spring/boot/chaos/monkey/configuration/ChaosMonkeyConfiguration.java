@@ -1,9 +1,11 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
+import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
@@ -72,6 +74,12 @@ public class ChaosMonkeyConfiguration {
     @Conditional(AttackServiceCondition.class)
     public SpringServiceAspect serviceAspect() {
         return new SpringServiceAspect(chaosMonkey());
+    }
+
+    @Bean
+    @Conditional(AttackComponentCondition.class)
+    public SpringComponentAspect componentAspect() {
+        return new SpringComponentAspect(chaosMonkey());
     }
 
 

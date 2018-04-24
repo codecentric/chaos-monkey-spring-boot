@@ -138,6 +138,7 @@ chaos.monkey.watcher.controller | Controller watcher active| TRUE or FALSE | FAL
 chaos.monkey.watcher.restController | RestController watcher active| TRUE or FALSE | FALSE
 chaos.monkey.watcher.service | Service watcher active| TRUE or FALSE | TRUE
 chaos.monkey.watcher.repository | Repository watcher active| TRUE or FALSE | FALSE
+chaos.monkey.watcher.component | Component watcher active| TRUE or FALSE | FALSE
 
 
 > I´m still working on this page and the documentation!
