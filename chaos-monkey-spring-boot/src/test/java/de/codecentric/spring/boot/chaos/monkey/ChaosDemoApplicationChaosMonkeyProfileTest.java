@@ -21,8 +21,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"chaos.monkey" +
         ".watcher.controller=true","chaos.monkey.assaults.level=1","chaos.monkey.assaults.latencyRangeStart=1000", "chaos.monkey.assaults" +
-        ".killApplicationActive=true","spring.profiles" +
-        ".active=chaos-monkey"})
+        ".killApplicationActive=true","chaos.monkey.enabled=true"})
 public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Autowired
@@ -43,7 +42,6 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
     public void contextLoads() {
         assertNotNull(chaosMonkey);
     }
-
 
     @Test
     public void checkChaosSettingsObject() {

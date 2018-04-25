@@ -59,12 +59,12 @@ Of course, you can start in production, but keep in mind...
 ...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you, run it in production.
 <a name="dochaos"></a>
 ## What does the Chaos Monkey for Spring Boot do?
-Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't use your application with the profile "<b>chaos-monkey</b>", nothing will happen.
+Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't set the application property "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen.
 
 As you can see, you don't have to change the source code!
 <a name="howitworks"></a>
 ### How does it work?
-If Spring Boot Chaos Monkey is on your classpath and activated with profile name "chaos-monkey", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
+If Spring Boot Chaos Monkey is on your classpath with the property "chaos.monkey.enabled=true", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
 
 - @Controller
 - @RestController
@@ -93,9 +93,9 @@ Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
     <version>1.0.1</version>
 </dependency>
 {% endhighlight %}
-2. Start your app with profile "chaos-monkey"
+2. Start your app enabling the service using the property below:
 {% highlight shell %}
-java -jar your-app.jar --spring.profiles.active=chaos-monkey
+java -jar your-app.jar --chaos.monkey.enabled=true
 {% endhighlight %}
 
 Chaos Monkey for Spring Boot will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
@@ -128,6 +128,7 @@ You can customize the behave by configuration.
 
 | Property        | Description                | Values  | Default |
 | ------------- |------------------| -----:|----:|
+| chaos.monkey.enabled | Enable or disable the Chaos Monkey service | true-false | false
 | chaos.monkey.assaults.level | How many requests are to be attacked.<br> 1 each request, 5 each 5th request is attacked | 1-10 | 5
 |chaos.monkey.assaults.latencyRangeStart | Minimum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 3000
 |chaos.monkey.assaults.latencyRangeEnd | Maximum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 15000

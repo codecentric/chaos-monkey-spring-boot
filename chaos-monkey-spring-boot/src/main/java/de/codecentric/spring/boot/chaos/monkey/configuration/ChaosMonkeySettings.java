@@ -12,9 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class ChaosMonkeySettings {
 
+   private ChaosMonkeyProperties chaosMonkeyProperties;
    private AssaultProperties assaultProperties;
    private WatcherProperties watcherProperties;
-
-
 
 }

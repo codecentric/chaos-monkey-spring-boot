@@ -11,6 +11,7 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspec
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
@@ -23,19 +24,21 @@ import java.nio.charset.Charset;
  * @author Benjamin Wilms
  */
 @Configuration
-@Profile("chaos-monkey")
-@EnableConfigurationProperties({AssaultProperties.class, WatcherProperties.class})
+@ConditionalOnProperty(prefix = "chaos.monkey", name = "enabled", havingValue = "true", matchIfMissing = false)
+@EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
 @Import(EndpointConfiguration.class)
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
+    private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
 
 
-    public ChaosMonkeyConfiguration(WatcherProperties watcherProperties, AssaultProperties assaultProperties) {
+    public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
+                                    AssaultProperties assaultProperties) {
+        this.chaosMonkeyProperties = chaosMonkeyProperties;
         this.watcherProperties = watcherProperties;
         this.assaultProperties = assaultProperties;
-
 
         try {
             String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
@@ -44,14 +47,12 @@ public class ChaosMonkeyConfiguration {
             LOGGER.info("Chaos Monkey - ready to do evil");
         }
 
-
     }
 
     @Bean
     public ChaosMonkeySettings settings() {
-        return new ChaosMonkeySettings(assaultProperties, watcherProperties);
+        return new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
     }
-
 
     @Bean
     public ChaosMonkey chaosMonkey() {
@@ -81,6 +82,5 @@ public class ChaosMonkeyConfiguration {
     public SpringComponentAspect componentAspect() {
         return new SpringComponentAspect(chaosMonkey());
     }
-
 
 }
