@@ -128,7 +128,7 @@ You can customize the behave by configuration.
 
 | Property        | Description                | Values  | Default |
 | ------------- |------------------| -----:|----:|
-| chaos.monkey.enabled | Enable or disable the Chaos Monkey service | true-false | false
+| chaos.monkey.enabled | Enable or disable the Chaos Monkey service | TRUE or FALSE	 | FALSE
 | chaos.monkey.assaults.level | How many requests are to be attacked.<br> 1 each request, 5 each 5th request is attacked | 1-10 | 5
 |chaos.monkey.assaults.latencyRangeStart | Minimum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 3000
 |chaos.monkey.assaults.latencyRangeEnd | Maximum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 15000
