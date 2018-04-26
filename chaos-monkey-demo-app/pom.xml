@@ -5,8 +5,9 @@
 
     <parent>
         <groupId>de.codecentric</groupId>
-        <artifactId>chaos-monkey-spring-boot-parent</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <artifactId>chaos-monkey-dependencies</artifactId>
+        <version>${revision}</version>
+        <relativePath>../chaos-monkey-dependencies</relativePath>
     </parent>
 
     <artifactId>chaos-monkey-demo-app</artifactId>
