@@ -13,7 +13,14 @@
 hs_err_pid*
 .idea/
 *.iml
+*.iws
 
 *.log
 maven-archiver*
 target/
+
+#flattened POMs
+.flattened-pom.xml
+
+# gnupg keyring
+/.gnupg
