@@ -5,13 +5,13 @@ import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentConditi
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
+import de.codecentric.spring.boot.chaos.monkey.controller.ChaosMonkeyController;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
  * @author Benjamin Wilms
  */
 @Configuration
-@ConditionalOnProperty(prefix = "chaos.monkey", name = "enabled", havingValue = "true", matchIfMissing = false)
+@Profile("chaos-monkey")
 @EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
 @Import(EndpointConfiguration.class)
 public class ChaosMonkeyConfiguration {
@@ -56,7 +56,12 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkey chaosMonkey() {
-        return new ChaosMonkey(assaultProperties);
+        return new ChaosMonkey(chaosMonkeyProperties, assaultProperties);
+    }
+
+    @Bean
+    public ChaosMonkeyController controllerSettings() {
+        return new ChaosMonkeyController(settings());
     }
 
     @Bean

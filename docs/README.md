@@ -64,7 +64,7 @@ Spring Boot Chaos Monkey is a small library which you can integrate as a depende
 As you can see, you don't have to change the source code!
 <a name="howitworks"></a>
 ### How does it work?
-If Spring Boot Chaos Monkey is on your classpath with the property "chaos.monkey.enabled=true", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
+If Spring Boot Chaos Monkey is on your classpath and activated with profile name "chaos-monkey", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
 
 - @Controller
 - @RestController
@@ -95,7 +95,7 @@ Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
 {% endhighlight %}
 2. Start your app enabling the service using the property below:
 {% highlight shell %}
-java -jar your-app.jar --chaos.monkey.enabled=true
+java -jar your-app.jar --spring.profiles.active=chaos-monkey --chaos.monkey.enabled=true
 {% endhighlight %}
 
 Chaos Monkey for Spring Boot will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
@@ -128,6 +128,7 @@ You can customize the behave by configuration.
 
 | Property        | Description                | Values  | Default | Version |
 | ------------- |------------------| -----:|----:|----:|
+| chaos.monkey.enabled | Determine whether should execute or not | TRUE or FALSE | FALSE | 1.0.2
 | chaos.monkey.assaults.level | How many requests are to be attacked.<br> 1 each request, 5 each 5th request is attacked | 1-10 | 5 | 1.0.1
 |chaos.monkey.assaults.latencyRangeStart | Minimum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 3000 | 1.0.1
 |chaos.monkey.assaults.latencyRangeEnd | Maximum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 15000 | 1.0.1
