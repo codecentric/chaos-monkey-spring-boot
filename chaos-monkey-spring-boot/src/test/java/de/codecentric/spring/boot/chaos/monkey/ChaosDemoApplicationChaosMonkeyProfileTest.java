@@ -36,7 +36,7 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings.getAssaultProperties());
+        chaosMonkey = new ChaosMonkey(monkeySettings.getChaosMonkeyProperties(), monkeySettings.getAssaultProperties());
     }
 
     @Test
@@ -52,6 +52,7 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Test
     public void checkChaosSettingsValues() {
+        assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
         assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(15000));
         assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(1000));
         assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));

@@ -1,6 +1,7 @@
 package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChaosMonkey {
 
+    private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final AssaultProperties assaultProperties;
     @Autowired
     private ApplicationContext context;
@@ -24,14 +26,15 @@ public class ChaosMonkey {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
 
-    public ChaosMonkey(AssaultProperties assaultProperties) {
+    public ChaosMonkey(ChaosMonkeyProperties chaosMonkeyProperties, AssaultProperties assaultProperties) {
         this.assaultProperties = assaultProperties;
+        this.chaosMonkeyProperties = chaosMonkeyProperties;
 
     }
 
 
     public void callChaosMonkey() {
-        if (isTrouble()) {
+        if (isTrouble() && isEnabled()) {
             int exceptionRand = assaultProperties.getExceptionRandom();
 
             if (assaultProperties.isLatencyActive() && assaultProperties.isExceptionsActive()) {
@@ -54,6 +57,10 @@ public class ChaosMonkey {
 
     private boolean isTrouble() {
         return assaultProperties.getTroubleRandom() >= assaultProperties.getLevel();
+    }
+
+    private boolean isEnabled() {
+        return this.chaosMonkeyProperties.isEnabled();
     }
 
     private void killTheBossApp() {

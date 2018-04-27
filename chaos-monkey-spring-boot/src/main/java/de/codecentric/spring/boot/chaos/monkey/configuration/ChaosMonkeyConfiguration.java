@@ -5,6 +5,7 @@ import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentConditi
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
+import de.codecentric.spring.boot.chaos.monkey.controller.ChaosMonkeyController;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
@@ -24,18 +25,20 @@ import java.nio.charset.Charset;
  */
 @Configuration
 @Profile("chaos-monkey")
-@EnableConfigurationProperties({AssaultProperties.class, WatcherProperties.class})
+@EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
 @Import(EndpointConfiguration.class)
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
+    private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
 
 
-    public ChaosMonkeyConfiguration(WatcherProperties watcherProperties, AssaultProperties assaultProperties) {
+    public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
+                                    AssaultProperties assaultProperties) {
+        this.chaosMonkeyProperties = chaosMonkeyProperties;
         this.watcherProperties = watcherProperties;
         this.assaultProperties = assaultProperties;
-
 
         try {
             String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
@@ -44,18 +47,21 @@ public class ChaosMonkeyConfiguration {
             LOGGER.info("Chaos Monkey - ready to do evil");
         }
 
-
     }
 
     @Bean
     public ChaosMonkeySettings settings() {
-        return new ChaosMonkeySettings(assaultProperties, watcherProperties);
+        return new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
     }
-
 
     @Bean
     public ChaosMonkey chaosMonkey() {
-        return new ChaosMonkey(assaultProperties);
+        return new ChaosMonkey(chaosMonkeyProperties, assaultProperties);
+    }
+
+    @Bean
+    public ChaosMonkeyController controllerSettings() {
+        return new ChaosMonkeyController(settings());
     }
 
     @Bean
@@ -81,6 +87,5 @@ public class ChaosMonkeyConfiguration {
     public SpringComponentAspect componentAspect() {
         return new SpringComponentAspect(chaosMonkey());
     }
-
 
 }

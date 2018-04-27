@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
  * @author Benjamin Wilms
  */
 @Configuration
-//@ConditionalOnProperty(prefix = "endpoints.chaosmonkey", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class EndpointConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EndpointConfiguration.class);

@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,11 +53,15 @@ public class ChaosMonkeyTest {
     @Mock
     private AssaultProperties assaultProperties;
 
+    @Mock
+    private ChaosMonkeyProperties chaosMonkeyProperties;
+
     @Before
     public void setUp() {
         given(this.assaultProperties.getLevel()).willReturn(1);
         given(this.assaultProperties.getTroubleRandom()).willReturn(10);
-        chaosMonkey = new ChaosMonkey(assaultProperties);
+        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
+        chaosMonkey = new ChaosMonkey(chaosMonkeyProperties,assaultProperties);
 
     }
 
@@ -178,4 +183,14 @@ public class ChaosMonkeyTest {
 
     }
 
+    @Test
+    public void isChaosMonkeyExecutionDisabled() {
+        given(this.chaosMonkeyProperties.isEnabled()).willReturn(false);
+
+        chaosMonkey.callChaosMonkey();
+
+        verify(mockAppender, never()).doAppend(captorLoggingEvent.capture());
+
+
+    }
 }
