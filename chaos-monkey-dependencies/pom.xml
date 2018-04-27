@@ -21,7 +21,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.4</version>
+                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -44,7 +44,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -62,13 +62,13 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>2.6.0</version>
+                <version>${assertj-core.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.10.19</version>
+                <version>${mockito-all.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -79,14 +79,9 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-actuator</artifactId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring-boot.version}</version>
                 <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-actuator-autoconfigure</artifactId>
-                <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

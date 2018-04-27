@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
-public class SpringServiceAspect {
+public class SpringServiceAspect extends ChaosMonkeyBaseAspect{
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkey chaosMonkey;
@@ -30,7 +30,7 @@ public class SpringServiceAspect {
     public void allPublicMethodPointcut() {
     }
 
-    @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut()")
+    @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + pjp.getSignature() : null);
 

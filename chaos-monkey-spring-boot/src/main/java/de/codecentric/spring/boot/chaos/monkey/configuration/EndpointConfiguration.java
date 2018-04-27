@@ -1,9 +1,10 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyEndpoint;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.actuate.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,12 +19,13 @@ public class EndpointConfiguration {
 
     public EndpointConfiguration(ChaosMonkeySettings chaosMonkeySettings) {
         this.chaosMonkeySettings = chaosMonkeySettings;
-        LOGGER.info("EndpointAutoConfiguration active");
+        LOGGER.debug("EndpointAutoConfiguration active");
     }
 
-    @ConditionalOnEnabledEndpoint
+    @ConditionalOnWebApplication
+    @ConditionalOnEnabledEndpoint(value = "chaosmonkey", enabledByDefault = false)
     @Bean
-    public ChaosMonkeyEndpoint assaultEndpoint() {
-        return new ChaosMonkeyEndpoint(chaosMonkeySettings);
+    public ChaosMonkeyController assaultEndpoint() {
+        return new ChaosMonkeyController(chaosMonkeySettings);
     }
 }

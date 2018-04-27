@@ -1,6 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey;
 
-import de.codecentric.spring.boot.chaos.monkey.demo.ChaosDemoApplication;
+import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Test;
 import org.junit.runner.RunWith;

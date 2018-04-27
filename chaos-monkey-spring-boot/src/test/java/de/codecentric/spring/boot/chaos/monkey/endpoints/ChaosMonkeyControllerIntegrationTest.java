@@ -1,14 +1,14 @@
-package de.codecentric.spring.boot.chaos.monkey.controller;
+package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.demo.ChaosDemoApplication;
+import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
@@ -52,7 +52,7 @@ public class ChaosMonkeyControllerIntegrationTest {
     }
 
     private ResponseEntity<ChaosMonkeyProperties> postResponseEntity(ChaosMonkeyProperties chaosMonkeyProperties) {
-        return this.testRestTemplate.postForEntity("http://localhost:" + this.serverPort + "/chaos-monkey/configuration",
+        return this.testRestTemplate.postForEntity("http://localhost:" + this.serverPort + "/chaosmonkey/configuration",
                 chaosMonkeyProperties, ChaosMonkeyProperties.class);
     }
 }
