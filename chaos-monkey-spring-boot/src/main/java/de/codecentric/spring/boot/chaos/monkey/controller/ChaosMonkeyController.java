@@ -15,7 +15,7 @@ public class ChaosMonkeyController {
         this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
-    @PostMapping("/chaos-monkey/setting")
+    @PostMapping("/chaos-monkey/configuration")
     public void updateSettings(@RequestBody ChaosMonkeyProperties chaosMonkeyProperties) {
         this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(chaosMonkeyProperties.isEnabled());
     }

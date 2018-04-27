@@ -52,7 +52,7 @@ public class ChaosMonkeyControllerIntegrationTest {
     }
 
     private ResponseEntity<ChaosMonkeyProperties> postResponseEntity(ChaosMonkeyProperties chaosMonkeyProperties) {
-        return this.testRestTemplate.postForEntity("http://localhost:" + this.serverPort + "/chaos-monkey/setting",
+        return this.testRestTemplate.postForEntity("http://localhost:" + this.serverPort + "/chaos-monkey/configuration",
                 chaosMonkeyProperties, ChaosMonkeyProperties.class);
     }
 }
