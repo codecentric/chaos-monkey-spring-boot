@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Benjamin Wilms
@@ -19,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:application-test.properties")
 public class HelloControllerIntegrationTest {
 
     @LocalServerPort
@@ -32,10 +36,11 @@ public class HelloControllerIntegrationTest {
 
 
     @Test
-    public void expectLongRunningGetRequest() {
-        chaosMonkeySettings.getAssaultProperties().setLatencyRangeStart(1000);
-        chaosMonkeySettings.getAssaultProperties().setLatencyRangeEnd(1000);
+    public void checkHelloEndpoint() {
 
+        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + this.serverPort + "/hello", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Hello!", response.getBody());
     }
 
     private ResponseEntity<ChaosMonkeyProperties> postResponseEntity(ChaosMonkeyProperties chaosMonkeyProperties) {

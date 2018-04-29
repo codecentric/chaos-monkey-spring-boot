@@ -32,13 +32,6 @@ public class ChaosMonkeyController {
         return ResponseEntity.ok().body("Assault config has changed");
     }
 
-    @PostMapping("/configuration/watcher")
-    public ResponseEntity<String> updateWatcherProperties(@RequestBody @Validated WatcherProperties watcherProperties) {
-
-        this.chaosMonkeySettings.setWatcherProperties(watcherProperties);
-        return ResponseEntity.ok().body("Assault config has changed");
-    }
-
     @PostMapping("/enable")
     public ResponseEntity<String> enableChaosMonkey() {
         this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
@@ -70,6 +63,10 @@ public class ChaosMonkeyController {
         return this.chaosMonkeySettings.getAssaultProperties();
     }
 
+    /***
+     * Watcher can only be viewed, not changed at runtime. They are initialized at Application start.
+     * @return
+     */
     @GetMapping("/configuration/watcher")
     public WatcherProperties getWatcherSettings() {
         return this.chaosMonkeySettings.getWatcherProperties();
