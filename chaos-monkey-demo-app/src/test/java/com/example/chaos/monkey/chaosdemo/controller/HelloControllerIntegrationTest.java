@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Benjamin Wilms
@@ -32,8 +34,13 @@ public class HelloControllerIntegrationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private ChaosMonkeySettings chaosMonkeySettings;
+    private HelloController helloController;
 
+
+    @Test
+    public void contextLoads() {
+        assertThat(helloController, notNullValue());
+    }
 
     @Test
     public void checkHelloEndpoint() {

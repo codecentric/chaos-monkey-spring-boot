@@ -35,7 +35,19 @@ public class ChaosDemoApplicationDefaultProfileTest {
     }
 
     @Test
-    public void checkEnvironment() {
-        assertThat(env.getProperty("chaos.monkey.attack.controller"),is("true"));
+    public void checkEnvWatcherController() {
+        assertThat(env.getProperty("chaos.monkey.watcher.controller"),is("true"));
     }
+
+    @Test
+    public void checkEnvAssaultLatencyRangeStart() {
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"),is("100"));
+    }
+
+    @Test
+    public void checkEnvAssaultLatencyRangeEnd() {
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"),is("200"));
+    }
+
+
 }
