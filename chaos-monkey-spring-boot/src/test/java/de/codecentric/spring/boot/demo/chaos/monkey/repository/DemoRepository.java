@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.demo.repository;
+package de.codecentric.spring.boot.demo.chaos.monkey.repository;
 
 import org.springframework.stereotype.Repository;
 

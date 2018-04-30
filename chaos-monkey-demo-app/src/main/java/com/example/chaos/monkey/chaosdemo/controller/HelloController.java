@@ -1,4 +1,4 @@
-package com.example.chaos.monkey.chaosdemo;
+package com.example.chaos.monkey.chaosdemo.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

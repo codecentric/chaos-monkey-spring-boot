@@ -1,6 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey;
 
-import de.codecentric.spring.boot.chaos.monkey.demo.ChaosDemoApplication;
+import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,19 @@ public class ChaosDemoApplicationDefaultProfileTest {
     }
 
     @Test
-    public void checkEnvironment() {
-        assertThat(env.getProperty("chaos.monkey.attack.controller"),is("true"));
+    public void checkEnvWatcherController() {
+        assertThat(env.getProperty("chaos.monkey.watcher.controller"),is("true"));
     }
+
+    @Test
+    public void checkEnvAssaultLatencyRangeStart() {
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"),is("100"));
+    }
+
+    @Test
+    public void checkEnvAssaultLatencyRangeEnd() {
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"),is("200"));
+    }
+
+
 }

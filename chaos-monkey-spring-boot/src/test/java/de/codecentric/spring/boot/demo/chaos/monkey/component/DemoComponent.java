@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.demo.component;
+package de.codecentric.spring.boot.demo.chaos.monkey.component;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.demo;
+package de.codecentric.spring.boot.demo.chaos.monkey;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

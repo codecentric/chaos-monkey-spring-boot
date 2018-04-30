@@ -1,6 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
-import de.codecentric.spring.boot.chaos.monkey.demo.repository.DemoRepository;
+import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Test;
 import org.junit.runner.RunWith;

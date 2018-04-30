@@ -34,9 +34,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
+        <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
         <spring.version>5.0.5.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
-        <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
         <lombok.version>1.16.20</lombok.version>
         <!-- plugin versions-->
         <flatten-maven-plugin.version>1.0.1</flatten-maven-plugin.version>
@@ -47,6 +47,10 @@
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <junit.version>4.12</junit.version>
+        <assertj-core.version>2.6.0</assertj-core.version>
+        <mockito-all.version>1.10.19</mockito-all.version>
     </properties>
     <modules>
         <module>chaos-monkey-dependencies</module>

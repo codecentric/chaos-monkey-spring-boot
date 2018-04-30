@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.demo.service;
+package de.codecentric.spring.boot.demo.chaos.monkey.service;
 
 import org.springframework.stereotype.Service;
 

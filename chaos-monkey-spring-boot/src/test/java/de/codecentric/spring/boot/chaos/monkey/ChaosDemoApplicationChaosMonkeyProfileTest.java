@@ -1,7 +1,7 @@
 package de.codecentric.spring.boot.chaos.monkey;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.demo.ChaosDemoApplication;
+import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,8 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"chaos.monkey" +
-        ".watcher.controller=true","chaos.monkey.assaults.level=1","chaos.monkey.assaults.latencyRangeStart=1000", "chaos.monkey.assaults" +
+        ".watcher.controller=true","chaos.monkey.assaults.level=1","chaos.monkey.assaults.latencyRangeStart=10","chaos.monkey.assaults" +
+        ".latencyRangeEnd=50", "chaos.monkey.assaults" +
         ".killApplicationActive=true","spring.profiles" +
         ".active=chaos-monkey"})
 public class ChaosDemoApplicationChaosMonkeyProfileTest {
@@ -53,8 +54,8 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
     @Test
     public void checkChaosSettingsValues() {
         assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
-        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(15000));
-        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(1000));
+        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(50));
+        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(10));
         assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));
         assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(true));
         assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));

@@ -7,6 +7,9 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 /**
  * @author Benjamin Wilms
  */
@@ -16,12 +19,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AssaultProperties {
 
     @Value("${level : 5}")
+    @Min(value = 1)
+    @Max(value = 10)
     private int level;
 
     @Value("${latencyRangeStart : 3000}")
+    @Min(value = 1)
+    @Max(value = Integer.MAX_VALUE)
     private int latencyRangeStart;
 
     @Value("${latencyRangeEnd : 15000}")
+    @Min(value = 100)
+    @Max(value = Integer.MAX_VALUE)
     private int latencyRangeEnd;
 
     @Value("${latencyActive : true}")

@@ -1,8 +1,8 @@
-package de.codecentric.spring.boot.chaos.monkey.controller;
+package com.example.chaos.monkey.chaosdemo.controller;
 
+import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.demo.ChaosDemoApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,41 +14,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.BDDAssertions.then;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+/**
+ * @author Benjamin Wilms
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
-public class ChaosMonkeyControllerIntegrationTest {
+@TestPropertySource("classpath:application-test.properties")
+public class HelloControllerIntegrationTest {
 
     @LocalServerPort
     private int serverPort;
 
     @Autowired
-    private ChaosMonkeySettings chaosMonkeySettings;
-
-    @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private HelloController helloController;
+
+
     @Test
-    public void shouldDisableChaosMonkeyExecution() {
-        ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
-        chaosMonkeyProperties.setEnabled(false);
-
-        then(postResponseEntity(chaosMonkeyProperties).getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        assertEquals(false, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
+    public void contextLoads() {
+        assertThat(helloController, notNullValue());
     }
 
     @Test
-    public void shouldEnableChaosMonkeyExecution() {
-        ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
-        chaosMonkeyProperties.setEnabled(true);
+    public void checkHelloEndpoint() {
 
-        then(postResponseEntity(chaosMonkeyProperties).getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        assertEquals(true, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
+        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + this.serverPort + "/hello", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Hello!", response.getBody());
     }
 
     private ResponseEntity<ChaosMonkeyProperties> postResponseEntity(ChaosMonkeyProperties chaosMonkeyProperties) {

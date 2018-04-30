@@ -5,7 +5,7 @@ import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentConditi
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
-import de.codecentric.spring.boot.chaos.monkey.controller.ChaosMonkeyController;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyController;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
@@ -57,11 +57,6 @@ public class ChaosMonkeyConfiguration {
     @Bean
     public ChaosMonkey chaosMonkey() {
         return new ChaosMonkey(chaosMonkeyProperties, assaultProperties);
-    }
-
-    @Bean
-    public ChaosMonkeyController controllerSettings() {
-        return new ChaosMonkeyController(settings());
     }
 
     @Bean

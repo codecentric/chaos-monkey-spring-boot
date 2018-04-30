@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.demo.restcontroller;
+package de.codecentric.spring.boot.demo.chaos.monkey.restcontroller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Benjamin Wilms
  */
@@ -12,8 +14,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class ChaosMonkeySettings {
 
-   private ChaosMonkeyProperties chaosMonkeyProperties;
-   private AssaultProperties assaultProperties;
-   private WatcherProperties watcherProperties;
+    @NotNull
+    private ChaosMonkeyProperties chaosMonkeyProperties;
+    @NotNull
+    private AssaultProperties assaultProperties;
+    @NotNull
+    private WatcherProperties watcherProperties;
 
 }
