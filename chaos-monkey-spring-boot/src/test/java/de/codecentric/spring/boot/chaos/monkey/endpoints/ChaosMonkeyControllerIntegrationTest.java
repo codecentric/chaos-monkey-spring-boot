@@ -40,26 +40,16 @@ public class ChaosMonkeyControllerIntegrationTest {
     }
 
     @Test
-    public void shouldDisableChaosMonkeyExecution() {
+    public void disableChaosMonkeyExecutionNotAllowed() {
         ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
         chaosMonkeyProperties.setEnabled(false);
         chaosMonkeySettings.setChaosMonkeyProperties(chaosMonkeyProperties);
 
-        then(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode()).isEqualTo(HttpStatus.OK);
+        then(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
 
         assertEquals(false, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
     }
 
-    @Test
-    public void shouldEnableChaosMonkeyExecution() {
-        ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
-        chaosMonkeyProperties.setEnabled(true);
-        chaosMonkeySettings.setChaosMonkeyProperties(chaosMonkeyProperties);
-
-        then(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        assertEquals(true, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
-    }
 
     @Test
     public void getConfiguration() {
@@ -77,21 +67,21 @@ public class ChaosMonkeyControllerIntegrationTest {
         HttpEntity<ChaosMonkeySettings> entity = new HttpEntity<>(null, headers);
 
         ResponseEntity<String> responseEntity = postHttpEntity(entity);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, responseEntity.getStatusCode());
     }
 
     @Test
     public void postChaosMonkeySettingsValueObjectAssaultPropertiesNULL() {
         ResponseEntity<String> responseEntity = postChaosMonkeySettings(new ChaosMonkeySettings(new ChaosMonkeyProperties(), null,
                 new WatcherProperties()));
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, responseEntity.getStatusCode());
     }
 
     @Test
     public void postChaosMonkeySettingsValueObjectWatcherPropertiesNULL() {
         ResponseEntity<String> responseEntity = postChaosMonkeySettings(new ChaosMonkeySettings(new ChaosMonkeyProperties(), new AssaultProperties(),
                 null));
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, responseEntity.getStatusCode());
     }
 
     // Watcher Tests

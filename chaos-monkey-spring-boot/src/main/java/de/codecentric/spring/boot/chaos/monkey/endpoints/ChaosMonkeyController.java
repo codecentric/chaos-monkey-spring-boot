@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chaosmonkey")
-public class ChaosMonkeyController implements MvcEndpoint {
+public class ChaosMonkeyController {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
