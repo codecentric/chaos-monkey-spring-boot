@@ -10,19 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chaosmonkey")
-public class ChaosMonkeyController {
+public class ChaosMonkeyController implements MvcEndpoint {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
     public ChaosMonkeyController(ChaosMonkeySettings chaosMonkeySettings) {
         this.chaosMonkeySettings = chaosMonkeySettings;
-    }
-
-    @PostMapping("/configuration")
-    public ResponseEntity<String> updateSettings(@RequestBody @Validated ChaosMonkeySettings chaosMonkeySettings) {
-
-        this.chaosMonkeySettings = chaosMonkeySettings;
-        return ResponseEntity.ok().body("Chaos Monkey config has changed");
     }
 
     @PostMapping("/configuration/assaults")
@@ -46,8 +39,8 @@ public class ChaosMonkeyController {
 
 
     @GetMapping("/status")
-    public ResponseEntity<String>  getChaosMonkeyStatus() {
-        if(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())
+    public ResponseEntity<String> getChaosMonkeyStatus() {
+        if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())
             return ResponseEntity.status(HttpStatus.OK).body("Ready to be evil!");
         else
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
@@ -71,4 +64,6 @@ public class ChaosMonkeyController {
     public WatcherProperties getWatcherSettings() {
         return this.chaosMonkeySettings.getWatcherProperties();
     }
+
+
 }

@@ -75,12 +75,11 @@ public class ChaosMonkeyControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(settings)));
     }
 
-    // CONFIGURATION POST
+    // CONFIGURATION POST - is not allowed
     @Test
     public void chaosMonkeyPostConfiguration() throws Exception {
         this.mockMvc.perform(post(baseUrl + "/configuration").content(objectMapper.writeValueAsString(settings)).contentType(MediaType.APPLICATION_JSON)).andExpect(status()
-                .isOk())
-                .andExpect(content().string(is("Chaos Monkey config has changed")));
+                .isMethodNotAllowed());
     }
 
     @Test
