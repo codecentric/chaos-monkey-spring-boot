@@ -22,10 +22,11 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
-public class ChaosMonkeyControllerIntegrationTest {
+public class ChaosMonkeyRestEndpointIntTest {
 
     @LocalServerPort
     private int serverPort;
+
 
     @Autowired
     private ChaosMonkeySettings chaosMonkeySettings;
@@ -36,7 +37,7 @@ public class ChaosMonkeyControllerIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        baseUrl = "http://localhost:" + this.serverPort + "/chaosmonkey";
+        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
     }
 
     @Test
@@ -54,7 +55,7 @@ public class ChaosMonkeyControllerIntegrationTest {
     @Test
     public void getConfiguration() {
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult =
-                testRestTemplate.getForEntity(baseUrl + "/configuration", ChaosMonkeySettings.class);
+                testRestTemplate.getForEntity(baseUrl , ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.OK, chaosMonkeySettingsResult.getStatusCode());
         assertEquals(chaosMonkeySettings, chaosMonkeySettingsResult.getBody());
@@ -88,7 +89,7 @@ public class ChaosMonkeyControllerIntegrationTest {
     @Test
     public void getWatcherConfiguration() {
         ResponseEntity<WatcherProperties> result =
-                testRestTemplate.getForEntity(baseUrl + "/configuration/watcher", WatcherProperties.class);
+                testRestTemplate.getForEntity(baseUrl + "/watcher", WatcherProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(chaosMonkeySettings.getWatcherProperties(), result.getBody());
@@ -98,7 +99,7 @@ public class ChaosMonkeyControllerIntegrationTest {
     @Test
     public void getAssaultConfiguration() {
         ResponseEntity<AssaultProperties> result =
-                testRestTemplate.getForEntity(baseUrl + "/configuration/assaults", AssaultProperties.class);
+                testRestTemplate.getForEntity(baseUrl + "/assaults", AssaultProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(chaosMonkeySettings.getAssaultProperties(), result.getBody());
@@ -107,13 +108,13 @@ public class ChaosMonkeyControllerIntegrationTest {
 
     private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {
 
-        return this.testRestTemplate.postForEntity(baseUrl + "/configuration",
+        return this.testRestTemplate.postForEntity(baseUrl,
                 chaosMonkeySettings, String.class);
     }
 
     private ResponseEntity<String> postHttpEntity(HttpEntity value) {
 
-        return this.testRestTemplate.postForEntity(baseUrl + "/configuration",
+        return this.testRestTemplate.postForEntity(baseUrl ,
                 value, String.class);
     }
 }

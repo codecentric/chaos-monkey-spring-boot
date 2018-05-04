@@ -3,26 +3,35 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@RestController
-@RequestMapping("/chaosmonkey")
-public class ChaosMonkeyController {
+@RestControllerEndpoint(enableByDefault = false, id = "chaosmonkey")
+public class ChaosMonkeyRestEndpoint {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
-    public ChaosMonkeyController(ChaosMonkeySettings chaosMonkeySettings) {
+    public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
         this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
-    @PostMapping("/configuration/assaults")
+    @PostMapping("/assaults")
     public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultProperties assaultProperties) {
 
         this.chaosMonkeySettings.setAssaultProperties(assaultProperties);
         return ResponseEntity.ok().body("Assault config has changed");
+    }
+
+    @GetMapping("/assaults")
+    public AssaultProperties getAssaultSettings() {
+        return this.chaosMonkeySettings.getAssaultProperties();
     }
 
     @PostMapping("/enable")
@@ -37,30 +46,24 @@ public class ChaosMonkeyController {
         return ResponseEntity.ok().body("Chaos Monkey is disabled");
     }
 
+    @GetMapping
+    public ChaosMonkeySettings status() {
+        return this.chaosMonkeySettings;
+    }
 
     @GetMapping("/status")
-    public ResponseEntity<String> getChaosMonkeyStatus() {
+    public ResponseEntity<String> getStatus() {
         if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())
             return ResponseEntity.status(HttpStatus.OK).body("Ready to be evil!");
         else
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
     }
 
-    @GetMapping("/configuration")
-    public ChaosMonkeySettings getSettings() {
-        return this.chaosMonkeySettings;
-    }
-
-    @GetMapping("/configuration/assaults")
-    public AssaultProperties getAssaultSettings() {
-        return this.chaosMonkeySettings.getAssaultProperties();
-    }
-
     /***
      * Watcher can only be viewed, not changed at runtime. They are initialized at Application start.
      * @return
      */
-    @GetMapping("/configuration/watcher")
+    @GetMapping("/watcher")
     public WatcherProperties getWatcherSettings() {
         return this.chaosMonkeySettings.getWatcherProperties();
     }

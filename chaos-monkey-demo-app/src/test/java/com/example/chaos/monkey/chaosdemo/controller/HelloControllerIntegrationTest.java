@@ -2,7 +2,6 @@ package com.example.chaos.monkey.chaosdemo.controller;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +49,4 @@ public class HelloControllerIntegrationTest {
         assertEquals("Hello!", response.getBody());
     }
 
-    private ResponseEntity<ChaosMonkeyProperties> postResponseEntity(ChaosMonkeyProperties chaosMonkeyProperties) {
-        return this.testRestTemplate.postForEntity("http://localhost:" + this.serverPort + "/chaos-monkey/configuration",
-                chaosMonkeyProperties, ChaosMonkeyProperties.class);
-    }
 }

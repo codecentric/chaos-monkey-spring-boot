@@ -5,13 +5,14 @@ import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentConditi
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyController;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
@@ -26,7 +27,6 @@ import java.nio.charset.Charset;
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
-@Import(EndpointConfiguration.class)
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
@@ -83,4 +83,8 @@ public class ChaosMonkeyConfiguration {
         return new SpringComponentAspect(chaosMonkey());
     }
 
+    @Bean
+    public ChaosMonkeyRestEndpoint assaultEndpoint() {
+        return new ChaosMonkeyRestEndpoint(settings());
+    }
 }
