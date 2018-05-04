@@ -29,7 +29,7 @@ public class AssaultProperties {
     private int latencyRangeStart;
 
     @Value("${latencyRangeEnd : 15000}")
-    @Min(value = 100)
+    @Min(value = 1)
     @Max(value = Integer.MAX_VALUE)
     private int latencyRangeEnd;
 

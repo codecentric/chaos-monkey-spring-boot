@@ -22,11 +22,12 @@
     <artifactId>chaos-monkey-spring-boot-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+    <description>Chaos Monkey for Spring Boot 1.5.x</description>
     <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
 
     <properties>
         <!-- project version -->
-        <revision>1.0.2-SNAPSHOT</revision>
+        <revision>1.5.0-SNAPSHOT</revision>
         <!-- default settings -->
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -34,8 +35,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
-        <spring.version>5.0.5.RELEASE</spring.version>
+        <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
+        <spring.version>4.3.16.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <lombok.version>1.16.20</lombok.version>
         <!-- plugin versions-->
