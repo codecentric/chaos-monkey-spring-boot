@@ -23,13 +23,13 @@ public class AssaultProperties {
     @Max(value = 10)
     private int level;
 
-    @Value("${latencyRangeStart : 3000}")
+    @Value("${latencyRangeStart : 1000}")
     @Min(value = 1)
     @Max(value = Integer.MAX_VALUE)
     private int latencyRangeStart;
 
-    @Value("${latencyRangeEnd : 15000}")
-    @Min(value = 100)
+    @Value("${latencyRangeEnd : 3000}")
+    @Min(value = 1)
     @Max(value = Integer.MAX_VALUE)
     private int latencyRangeEnd;
 
