@@ -71,7 +71,7 @@ public class ChaosMonkeyRestEndpointIntTest {
     @Test
     public void getConfiguration() {
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult =
-                testRestTemplate.getForEntity(baseUrl , ChaosMonkeySettings.class);
+                testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.OK, chaosMonkeySettingsResult.getStatusCode());
         assertEquals(chaosMonkeySettings, chaosMonkeySettingsResult.getBody());
@@ -121,6 +121,105 @@ public class ChaosMonkeyRestEndpointIntTest {
         assertEquals(chaosMonkeySettings.getAssaultProperties(), result.getBody());
     }
 
+    @Test
+    public void postAssaultConfigurationGoodCase() {
+        AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLevel(10);
+        assaultProperties.setLatencyRangeEnd(100);
+        assaultProperties.setLatencyRangeStart(200);
+        assaultProperties.setLatencyActive(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Assault config has changed", result.getBody());
+    }
+
+    @Test
+    public void postAssaultConfigurationBadCaseLevelEmpty() {
+        AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLatencyRangeEnd(100);
+        assaultProperties.setLatencyRangeStart(200);
+        assaultProperties.setLatencyActive(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+    }
+
+    @Test
+    public void postAssaultConfigurationBadCaseLatencyRangeEndEmpty() {
+        AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLevel(10);
+        assaultProperties.setLatencyRangeStart(200);
+        assaultProperties.setLatencyActive(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+    }
+
+    @Test
+    public void postAssaultConfigurationBadCaseLatencyRangeStartEmpty() {
+        AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLevel(10);
+        assaultProperties.setLatencyRangeEnd(200);
+        assaultProperties.setLatencyActive(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+    }
+
+    // STATUS
+    @Test
+    public void getStatusIsEnabled() {
+        chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.getForEntity(baseUrl + "/status", String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Ready to be evil!", result.getBody());
+    }
+
+    @Test
+    public void getStatusIsDisabled() {
+        chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
+
+        ResponseEntity<String> result =
+                testRestTemplate.getForEntity(baseUrl + "/status", String.class);
+
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, result.getStatusCode());
+        assertEquals("You switched me off!", result.getBody());
+    }
+
+    // ENABLE CHAOS MONKEY
+
+    @Test
+    public void postToEnableChaosMonkey() {
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/enable", null, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Chaos Monkey is enabled", result.getBody());
+    }
+
+    // DISABLE CHAOS MONKEY
+    @Test
+    public void postToDisableChaosMonkey() {
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/disable", null, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Chaos Monkey is disabled", result.getBody());
+    }
 
     private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {
 
@@ -130,7 +229,7 @@ public class ChaosMonkeyRestEndpointIntTest {
 
     private ResponseEntity<String> postHttpEntity(HttpEntity value) {
 
-        return this.testRestTemplate.postForEntity(baseUrl ,
+        return this.testRestTemplate.postForEntity(baseUrl,
                 value, String.class);
     }
 }
