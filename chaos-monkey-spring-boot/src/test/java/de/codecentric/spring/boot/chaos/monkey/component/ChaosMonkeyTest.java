@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.codecentric.spring.boot.chaos.monkey.component;
 
 import ch.qos.logback.classic.Level;
@@ -18,10 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Benjamin Wilms
@@ -61,7 +74,7 @@ public class ChaosMonkeyTest {
         given(this.assaultProperties.getLevel()).willReturn(1);
         given(this.assaultProperties.getTroubleRandom()).willReturn(10);
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
-        chaosMonkey = new ChaosMonkey(chaosMonkeyProperties,assaultProperties);
+        chaosMonkey = new ChaosMonkey(chaosMonkeyProperties, assaultProperties);
 
     }
 
@@ -75,7 +88,7 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender,times(2)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
 
         assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
         assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
@@ -93,7 +106,7 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
 
         assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
         assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
@@ -113,7 +126,7 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
 
         assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
         assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
@@ -135,7 +148,7 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
 
         assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
         assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
@@ -153,7 +166,7 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender,times(1)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
 
         assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
         assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
