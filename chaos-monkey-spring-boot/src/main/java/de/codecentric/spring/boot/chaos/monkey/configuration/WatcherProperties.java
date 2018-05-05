@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,6 +28,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.watcher")
+@EqualsAndHashCode
 public class WatcherProperties {
 
     @Value("${controller:false}")

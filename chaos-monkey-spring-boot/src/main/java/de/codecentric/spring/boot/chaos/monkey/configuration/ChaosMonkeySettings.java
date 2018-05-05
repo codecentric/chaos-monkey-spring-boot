@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode
 public class ChaosMonkeySettings {
 
     @NotNull
