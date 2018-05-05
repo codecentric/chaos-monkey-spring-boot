@@ -16,8 +16,6 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
