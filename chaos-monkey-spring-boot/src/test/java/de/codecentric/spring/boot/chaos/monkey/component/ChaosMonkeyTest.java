@@ -21,6 +21,7 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,6 +43,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ChaosMonkeyTest {
 
+    private ChaosMonkey chaosMonkey;
+
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -50,18 +53,6 @@ public class ChaosMonkeyTest {
     @Captor
     private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
-    @Before
-    public void setup() {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        when(mockAppender.getName()).thenReturn("MOCK");
-        root.addAppender(mockAppender);
-
-        captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
-
-    }
-
-
-    private ChaosMonkey chaosMonkey;
 
     @Mock
     private AssaultProperties assaultProperties;
@@ -69,12 +60,27 @@ public class ChaosMonkeyTest {
     @Mock
     private ChaosMonkeyProperties chaosMonkeyProperties;
 
+    @Mock
+    private ChaosMonkeySettings  chaosMonkeySettings;
+
     @Before
     public void setUp() {
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+        when(mockAppender.getName()).thenReturn("MOCK");
+        root.addAppender(mockAppender);
+
+        captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
+
         given(this.assaultProperties.getLevel()).willReturn(1);
         given(this.assaultProperties.getTroubleRandom()).willReturn(10);
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
-        chaosMonkey = new ChaosMonkey(chaosMonkeyProperties, assaultProperties);
+        given(this.assaultProperties.getLevel()).willReturn(1);
+        given(this.assaultProperties.getTroubleRandom()).willReturn(5);
+        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
+        given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
+        given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);
+
+        chaosMonkey = new ChaosMonkey(chaosMonkeySettings);
 
     }
 
@@ -85,6 +91,10 @@ public class ChaosMonkeyTest {
         given(this.assaultProperties.isExceptionsActive()).willReturn(false);
         given(this.assaultProperties.isLatencyActive()).willReturn(false);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(true);
+        given(this.assaultProperties.getLevel()).willReturn(1);
+        given(this.assaultProperties.getTroubleRandom()).willReturn(5);
+        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
+
 
         chaosMonkey.callChaosMonkey();
 

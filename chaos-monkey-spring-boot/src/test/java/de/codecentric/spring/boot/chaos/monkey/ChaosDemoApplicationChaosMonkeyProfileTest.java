@@ -53,7 +53,7 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings.getChaosMonkeyProperties(), monkeySettings.getAssaultProperties());
+        chaosMonkey = new ChaosMonkey(monkeySettings);
     }
 
     @Test

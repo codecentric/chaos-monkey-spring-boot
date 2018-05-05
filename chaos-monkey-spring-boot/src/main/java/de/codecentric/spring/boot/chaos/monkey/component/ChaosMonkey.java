@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +34,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChaosMonkey {
 
-    private final ChaosMonkeyProperties chaosMonkeyProperties;
-    private final AssaultProperties assaultProperties;
+    private ChaosMonkeySettings chaosMonkeySettings;
+
     @Autowired
     private ApplicationContext context;
 
@@ -42,29 +43,27 @@ public class ChaosMonkey {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
 
-    public ChaosMonkey(ChaosMonkeyProperties chaosMonkeyProperties, AssaultProperties assaultProperties) {
-        this.assaultProperties = assaultProperties;
-        this.chaosMonkeyProperties = chaosMonkeyProperties;
-
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings) {
+        this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
 
     public void callChaosMonkey() {
         if (isTrouble() && isEnabled()) {
-            int exceptionRand = assaultProperties.getExceptionRandom();
+            int exceptionRand = chaosMonkeySettings.getAssaultProperties().getExceptionRandom();
 
-            if (assaultProperties.isLatencyActive() && assaultProperties.isExceptionsActive()) {
+            if (chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive()) {
                 // Timeout or Exception?
                 if (exceptionRand < 7) {
                     generateLatency();
                 } else {
                     generateChaosException();
                 }
-            } else if (assaultProperties.isLatencyActive()) {
+            } else if (chaosMonkeySettings.getAssaultProperties().isLatencyActive()) {
                 generateLatency();
-            } else if (assaultProperties.isExceptionsActive()) {
+            } else if (chaosMonkeySettings.getAssaultProperties().isExceptionsActive()) {
                 generateChaosException();
-            } else if (assaultProperties.isKillApplicationActive()) {
+            } else if (chaosMonkeySettings.getAssaultProperties().isKillApplicationActive()) {
                 killTheBossApp();
             }
 
@@ -72,11 +71,11 @@ public class ChaosMonkey {
     }
 
     private boolean isTrouble() {
-        return assaultProperties.getTroubleRandom() >= assaultProperties.getLevel();
+        return chaosMonkeySettings.getAssaultProperties().getTroubleRandom() >= chaosMonkeySettings.getAssaultProperties().getLevel();
     }
 
     private boolean isEnabled() {
-        return this.chaosMonkeyProperties.isEnabled();
+        return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled();
     }
 
     private void killTheBossApp() {
@@ -105,7 +104,7 @@ public class ChaosMonkey {
      */
     private void generateLatency() {
         LOGGER.info("Chaos Monkey - timeout");
-        int timeout = RandomUtils.nextInt(assaultProperties.getLatencyRangeStart(), assaultProperties.getLatencyRangeEnd());
+        int timeout = RandomUtils.nextInt(chaosMonkeySettings.getAssaultProperties().getLatencyRangeStart(), chaosMonkeySettings.getAssaultProperties().getLatencyRangeEnd());
 
         try {
             Thread.sleep(timeout);

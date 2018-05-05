@@ -74,7 +74,7 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkey chaosMonkey() {
-        return new ChaosMonkey(chaosMonkeyProperties, assaultProperties);
+        return new ChaosMonkey(settings());
     }
 
     @Bean
