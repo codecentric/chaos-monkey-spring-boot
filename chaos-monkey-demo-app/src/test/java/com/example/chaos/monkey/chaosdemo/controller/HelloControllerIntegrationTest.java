@@ -17,7 +17,6 @@
 package com.example.chaos.monkey.chaosdemo.controller;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
