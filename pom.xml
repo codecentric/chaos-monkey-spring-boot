@@ -51,11 +51,13 @@
         <junit.version>4.12</junit.version>
         <assertj-core.version>2.6.0</assertj-core.version>
         <mockito-all.version>1.10.19</mockito-all.version>
+        <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
     </properties>
     <modules>
         <module>chaos-monkey-dependencies</module>
         <module>chaos-monkey-spring-boot</module>
         <module>chaos-monkey-demo-app</module>
+        <module>chaos-monkey-docs</module>
     </modules>
     <organization>
         <name>codecentric AG</name>

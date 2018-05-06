@@ -1,0 +1,27 @@
+[[getting-started]]
+== Getting started ==
+How to activate Chaos Monkey for Spring Boot in your existing Spring Boot App?
++
+. Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
++
+[source,xml,subs="verbatim,attributes"]
+.pom.xml
+----
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>chaos-monkey-spring-boot</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+. Start your Spring Boot App
+.. Command-Line example:
+... chaos.monkey.enabled=true is optional, you can enable/disable the Chaos Monkey at runtime!
+----
+java -jar your-app.jar --spring.profiles.active=chaos-monkey --chaos.monkey.enabled=true
+----
+.. application.properties example:
+----
+spring.profiles.active=chaos-monkey
+chaos.monkey.enabled=true
+----
+
