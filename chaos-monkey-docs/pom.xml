@@ -60,6 +60,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <message>Creating Reference Guide for ${project.version}</message>
+                    <path>${project.version}</path>
+                    <merge>true</merge>
+                    <dryRun>false</dryRun>
+                    <outputDirectory>target/generated-docs</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
