@@ -55,31 +55,48 @@
                             </resources>
                             <attributes>
                                 <project-version>${project.version}</project-version>
+                                <commit-id>${git.commit.id.abbrev}</commit-id>
+                                <commit-time>${git.commit.time}</commit-time>
                             </attributes>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.12</version>
-                <configuration>
-                    <message>Creating Reference Guide for ${project.version}</message>
-                    <path>${project.version}</path>
-                    <merge>true</merge>
-                    <dryRun>false</dryRun>
-                    <outputDirectory>target/generated-docs</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>site</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.github</groupId>
+                        <artifactId>site-maven-plugin</artifactId>
+                        <version>0.12</version>
+                        <configuration>
+                            <message>Creating Reference Guide for ${project.version}</message>
+                            <path>${project.version}</path>
+                            <merge>true</merge>
+                            <dryRun>false</dryRun>
+                            <outputDirectory>target/generated-docs</outputDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>site</goal>
+                                </goals>
+                                <phase>site</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
