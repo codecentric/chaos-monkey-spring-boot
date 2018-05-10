@@ -525,7 +525,7 @@ table.CodeRay td.code>pre{padding:0}
 <span id="author" class="author">Benjamin Wilms</span><br>
 <span id="email" class="email"><a href="https://twitter.com/mrbwilms">@MrBWilms</a></span><br>
 <span id="revnumber">version 2.0.0-SNAPSHOT,</span>
-<span id="revdate">09.05.2018</span>
+<span id="revdate">10.05.2018</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -764,10 +764,22 @@ application starts.</p></td>
 </div>
 <div class="sect4">
 <h5 id="_get_chaos_monkey_status"><a class="anchor" href="#_get_chaos_monkey_status"></a><a class="link" href="#_get_chaos_monkey_status">GET Chaos Monkey Status</a></h5>
-<div id="chaosmonkeystatus" class="listingblock">
+<div id="chaosmonkeystatus" class="paragraph">
+<p>Case: Chaos Monkey is running</p>
+</div>
+<div class="listingblock">
 <div class="title">/chaosmonkey/status - Response 200 OK</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">Ready to be evil!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Case: Chaos Monkey is initilazied but inactive</p>
+</div>
+<div class="listingblock">
+<div class="title">/chaosmonkey/status - Response 503 Service Unavailable</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">You switched me off!</code></pre>
 </div>
 </div>
 </div>
@@ -1064,6 +1076,9 @@ component=false</p></td>
 </li>
 <li>
 <p>@Repository</p>
+</li>
+<li>
+<p>@Component</p>
 </li>
 </ul>
 </div>
