@@ -86,10 +86,17 @@ application starts.
 ----
 ===== GET Chaos Monkey Status
 [[chaosmonkeystatus]]
+Case: Chaos Monkey is running
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 200 OK
 ----
 Ready to be evil!
+----
+Case: Chaos Monkey is initilazied but inactive
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/status - Response 503 Service Unavailable
+----
+You switched me off!
 ----
 ===== POST Chaos Monkey enable
 [[chaosmonkeyenable]]
