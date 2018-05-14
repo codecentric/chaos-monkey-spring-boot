@@ -19,6 +19,7 @@ Get familiar with the Chaos Monkey for Spring Boot in the following video, <a hr
 alt="Chaos Monkey for Spring Boot" width="260" height="155" border="10" /></a><br>
 **Chaos Monkey for Spring Boot - new features**
 
+
 Chaos Monkey for Spring Boot 1.0.1 depends on [Spring Boot 2.0.1](https://projects.spring.io/spring-boot/) and [Spring Framework 5.0.5](https://projects.spring.io/spring-framework/)
 
 <br><b>Decision made, we will support Spring Boot 1.5.x in the upcoming release! :-)</b>
