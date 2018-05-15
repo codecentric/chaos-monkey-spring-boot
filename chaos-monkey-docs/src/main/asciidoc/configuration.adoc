@@ -1,0 +1,73 @@
+[[configuration]]
+== Configuration ==
+Chaos Monkey for Spring Boot can be customized to your planned experiment. You can decide which attacks you want to run and which parts of your application should be attacked.
+
+Except for the Watcher, you can also influence the behavior of the Chaos Monkey during runtime.
+
+=== Properties
+
+|===
+|Property |Description |Values |Default
+
+|chaos.monkey.enabled
+|Determine whether should execute or not
+|TRUE or FALSE
+|FALSE
+
+|chaos.monkey.assaults.level
+|How many requests are to be attacked.
+ 1 each request, 5 each 5th request is attacked
+|1-10
+|5
+
+|chaos.monkey.assaults.latencyRangeStart
+|Minimum latency in ms added to the request
+|Integer.MIN_VALUE, Integer.MAX_VALUE
+|3000
+
+|chaos.monkey.assaults.latencyRangeEnd
+|Maximum latency in ms added to the request
+|Integer.MIN_VALUE, Integer.MAX_VALUE
+|15000
+
+|chaos.monkey.assaults.latencyActive
+|Latency assault active
+|TRUE or FALSE
+|TRUE
+
+|chaos.monkey.assaults.exceptionsActive
+|Exception assault active
+|TRUE or FALSE
+|FALSE
+
+|chaos.monkey.assaults.killApplicationActive
+|AppKiller assault active
+|TRUE or FALSE
+|FALSE
+
+|chaos.monkey.watcher.controller
+|Controller watcher active
+|TRUE or FALSE
+|FALSE
+
+|chaos.monkey.watcher.restController
+|RestController watcher active
+|TRUE or FALSE
+|FALSE
+
+|chaos.monkey.watcher.service
+|Service watcher active
+|TRUE or FALSE
+|TRUE
+
+|chaos.monkey.watcher.repository
+|Repository watcher active
+|TRUE or FALSE
+|FALSE
+
+|chaos.monkey.watcher.component
+|Component watcher active
+|TRUE or FALSE
+|FALSE
+
+|===

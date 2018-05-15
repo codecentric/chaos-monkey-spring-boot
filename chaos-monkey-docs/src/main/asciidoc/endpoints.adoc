@@ -1,0 +1,216 @@
+[[endpoints]]
+== Spring Boot Actuator Endpoints ==
+Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP].
+
+'''
+
+=== Enable chaosmonkey endpoint
+[source,txt,subs="verbatim,attributes"]
+.application.properties:
+----
+management.endpoint.chaosmonkey.enabled=true
+management.endpoint.chaosmonkeyjmx.enabled=true
+
+# inlcude all endpoints
+management.endpoints.web.exposure.include=*
+
+# include specific endpoints
+management.endpoints.web.exposure.include=health,info,chaosmonkey
+----
+
+=== HTTP Endpoint
+
+|===
+|ID |Description |Methods
+
+|<<chaosmonkey,/chaosmonkey>>
+|Running Chaos Monkey configuration
+|GET
+
+|<<chaosmonkeystatus,/chaosmonkey/status>>
+|Is Chaos Monkey enabled or disabled?
+|GET
+
+|<<chaosmonkeyenable,/chaosmonkey/enable>>
+|Enable Chaos Monkey
+|POST
+
+|<<chaosmonkeydisable,/chaosmonkey/disable>>
+|Disable Chaos Monkey
+|POST
+
+|<<watcher,/chaosmonkey/watcher>>
+|Running Watcher configuration.
+
+NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the
+application starts.
+|GET
+
+|<<assaultsget,/chaosmonkey/assaults>>
+|Running Assaults configuration
+|GET
+
+|<<assaultspost,/chaosmonkey/assaults>>
+|Change Assaults configuration
+|POST
+|===
+
+
+==== Examples
+===== GET Chaos Monkey Configuration
+[[chaosmonkey]]
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey - Response 200 OK
+----
+{
+"chaosMonkeyProperties":{
+"enabled": true
+},
+"assaultProperties":{
+"level": 3,
+"latencyRangeStart": 1000,
+"latencyRangeEnd": 3000,
+"latencyActive": true,
+"exceptionsActive": false,
+"killApplicationActive": false,
+"restartApplicationActive": false
+},
+"watcherProperties":{
+"controller": true,
+"restController": false,
+"service": true,
+"repository": false,
+"component": false
+}
+}
+----
+===== GET Chaos Monkey Status
+[[chaosmonkeystatus]]
+Case: Chaos Monkey is running.
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/status - Response 200 OK
+----
+Ready to be evil!
+----
+Case: Chaos Monkey is activated, but will not launch any attacks.
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/status - Response 503 Service Unavailable
+----
+You switched me off!
+----
+===== POST Chaos Monkey enable
+[[chaosmonkeyenable]]
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/enable - Response 200 OK
+----
+Chaos Monkey is enabled
+----
+===== POST Chaos Monkey disable
+[[chaosmonkeydisable]]
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/disable - Response 200 OK
+----
+Chaos Monkey is disabled
+----
+===== GET Watcher
+NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the application starts.
+[[watcher]]
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/watcher - Response 200 OK
+----
+{
+"controller": true,
+"restController": false,
+"service": true,
+"repository": false,
+"component": false
+}
+----
+===== GET Assaults
+[[assaultsget]]
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Response 200 OK
+----
+{
+"level": 3,
+"latencyRangeStart": 1000,
+"latencyRangeEnd": 3000,
+"latencyActive": true,
+"exceptionsActive": false,
+"killApplicationActive": false,
+"restartApplicationActive": false
+}
+----
+===== POST Assaults
+[[assaultspost]]
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Request
+----
+{
+"level": 5,
+"latencyRangeStart": 2000,
+"latencyRangeEnd": 5000,
+"latencyActive": true,
+"exceptionsActive": true,
+"killApplicationActive": false,
+"restartApplicationActive": false
+}
+----
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Response 200 OK
+----
+Assault config has changed
+----
+
+=== JMX Endpoint
+
+Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
+
+image::jconsoleChaosMonkey.png[JMX Console]
+
+|===
+|Operation |Description |Response example
+
+|enableChaosMonkey
+|Enable Chaos Monkey
+|Chaos Monkey is enabled
+
+|disableChaosMonkey
+|Disable Chaos Monkey
+|Chaos Monkey is disabled
+
+|getAssaultProperties
+|Running Assault configuration
+|
+level=3
+latencyRangeStart=1000
+latencyRangeEnd=3000
+latencyActive=true
+exceptionsActive=false
+killApplicationActive=false
+restartApplicationActive=false
+
+|getWatcherProperties
+|Running Watcher configuration
+|controller=true
+restController=false
+service=true
+repository=false
+component=false
+
+|toggleLatencyAssault
+|Toggle Latency Assault status
+|New value (true/false)
+
+|toggleExceptionAssault
+|Toggle Exception Assault status
+|New value (true/false)
+
+|toggleKillApplicationAssault
+|Toggle KillApplication Assault status
+|New value (true/false)
+
+|isChaosMonkeyActive
+|Is Chaos Monkey active or not
+|true or false
+|===

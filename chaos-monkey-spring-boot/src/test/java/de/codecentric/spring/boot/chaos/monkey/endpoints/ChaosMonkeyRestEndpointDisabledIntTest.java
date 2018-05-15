@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.chaos.monkey.chaosdemo.controller;
+package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,40 +30,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * @author Benjamin Wilms
  */
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application-test.properties")
-public class HelloControllerIntegrationTest {
-
+@TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
+public class ChaosMonkeyRestEndpointDisabledIntTest {
     @LocalServerPort
     private int serverPort;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+    private String baseUrl;
 
-    @Autowired
-    private HelloController helloController;
-
-
-    @Test
-    public void contextLoads() {
-        assertThat(helloController, notNullValue());
+    @Before
+    public void setUp() throws Exception {
+        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
     }
 
     @Test
-    public void checkHelloEndpoint() {
+    public void getConfiguration() {
+        ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult =
+                testRestTemplate.getForEntity(baseUrl , ChaosMonkeySettings.class);
 
-        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + this.serverPort + "/hello", String.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Hello!", response.getBody());
+        assertEquals(HttpStatus.NOT_FOUND, chaosMonkeySettingsResult.getStatusCode());
     }
 
 }
