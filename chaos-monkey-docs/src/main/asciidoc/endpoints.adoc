@@ -86,13 +86,13 @@ application starts.
 ----
 ===== GET Chaos Monkey Status
 [[chaosmonkeystatus]]
-Case: Chaos Monkey is running
+Case: Chaos Monkey is running.
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 200 OK
 ----
 Ready to be evil!
 ----
-Case: Chaos Monkey is initilazied but inactive
+Case: Chaos Monkey is activated, but will not launch any attacks.
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 503 Service Unavailable
 ----
