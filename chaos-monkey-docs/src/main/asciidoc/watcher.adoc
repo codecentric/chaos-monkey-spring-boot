@@ -1,0 +1,15 @@
+[[watcher]]
+== Watcher ==
+A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.
+
+Following Spring annotation are supported:
+
+- @Controller
+- @RestController
+- @Service
+- @Repository
+- @Component
+
+With the help of https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api[Spring AOP], Chaos Monkey recognizes the
+execution of a _public_ method and will either not execute any action or start one of its assaults. You can customize the behave by
+<<configuration,configuration>>.
