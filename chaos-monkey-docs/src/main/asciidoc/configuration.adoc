@@ -12,7 +12,7 @@ Except for the Watcher, you can also influence the behavior of the Chaos Monkey 
 |chaos.monkey.enabled
 |Determine whether should execute or not
 |TRUE or FALSE
-|TRUE
+|FALSE
 
 |chaos.monkey.assaults.level
 |How many requests are to be attacked.
