@@ -24,6 +24,13 @@ to withstand turbulent conditions in production.
   - [Watcher](#watcher)
   - [Assault](#assaults)
   - [Properties & Configuration](#config)
+  
+## Introduction
+Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">availabe on YouTube</a>:
+
+<a href="https://goo.gl/r2Tmig" target="_blank"><img src="https://i.ytimg.com/vi/7sQiIR9qCdA/maxresdefault.jpg" 
+alt="Chaos Monkey for Spring Boot" width="260" height="155" border="10" /></a><br>
+**Chaos Monkey for Spring Boot - new features**
 
 <a name="goal"></a>
 ## What is the goal of Chaos Monkey?
