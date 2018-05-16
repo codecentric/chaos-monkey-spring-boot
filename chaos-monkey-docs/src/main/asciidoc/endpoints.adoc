@@ -1,6 +1,6 @@
 [[endpoints]]
 == Spring Boot Actuator Endpoints ==
-Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP].
+Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[HTTP].
 
 '''
 
@@ -13,6 +13,8 @@ endpoints.chaosmonkey.enabled=true
 ----
 
 === HTTP Endpoint
+
+NOTE: The Chaos Monkey endpoint is based on standard Spring Boot Actuator configuration.
 
 |===
 |ID |Description |Methods
@@ -155,56 +157,3 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 ----
 - NO CONTENT -
 ----
-
-=== JMX Endpoint
-
-Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
-
-image::jconsoleChaosMonkey.png[JMX Console]
-
-|===
-|Operation |Description |Response example
-
-|enableChaosMonkey
-|Enable Chaos Monkey
-|Chaos Monkey is enabled
-
-|disableChaosMonkey
-|Disable Chaos Monkey
-|Chaos Monkey is disabled
-
-|getAssaultProperties
-|Running Assault configuration
-|
-level=3
-latencyRangeStart=1000
-latencyRangeEnd=3000
-latencyActive=true
-exceptionsActive=false
-killApplicationActive=false
-restartApplicationActive=false
-
-|getWatcherProperties
-|Running Watcher configuration
-|controller=true
-restController=false
-service=true
-repository=false
-component=false
-
-|toggleLatencyAssault
-|Toggle Latency Assault status
-|New value (true/false)
-
-|toggleExceptionAssault
-|Toggle Exception Assault status
-|New value (true/false)
-
-|toggleKillApplicationAssault
-|Toggle KillApplication Assault status
-|New value (true/false)
-
-|isChaosMonkeyActive
-|Is Chaos Monkey active or not
-|true or false
-|===

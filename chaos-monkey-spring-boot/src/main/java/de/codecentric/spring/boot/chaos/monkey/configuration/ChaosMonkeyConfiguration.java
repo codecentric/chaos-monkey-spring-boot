@@ -109,5 +109,4 @@ public class ChaosMonkeyConfiguration {
     public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint() {
         return new ChaosMonkeyRestEndpoint(settings());
     }
-
 }

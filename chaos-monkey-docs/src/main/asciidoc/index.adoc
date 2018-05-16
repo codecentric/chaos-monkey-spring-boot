@@ -33,6 +33,7 @@ That was my start to take a deep dive into Chaos Engineering and I started this 
 A detailed explanation of when and why you should use the Chaos Monkey for Spring Boot https://codecentric.github.io/chaos-monkey-spring-boot/[can be found here].
 
 include::getting-started.adoc[]
+include::endpoints.adoc[]
 include::configuration.adoc[]
 include::watcher.adoc[]
 include::assaults.adoc[]
