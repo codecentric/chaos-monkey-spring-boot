@@ -117,6 +117,7 @@ Following Spring annotation are supported:
 - @RestController
 - @Service
 - @Repository
+- @Component
 
 With the help of [Spring AOP](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html), Chaos Monkey recognizes the execution of a public method and will either not execute any action or start one of its assaults. You can customize the behave by configuration.
 
@@ -128,24 +129,16 @@ Following assaults are actual provided:
 - Exception Assault
 - AppKiller Assault
 
-You can customize the behave by configuration.
+You can customize the behave by configuration, please take a look at the documentation.
 
 <a name="config"></a>
-## Properties & Configuration
+## Support for Spring Boot 1.5.x and 2.0.1
+Which version should I use?
+- If you are running  <b>Spring Boot 1.5.x,</b> use the Chaos Monkey forSpring Boot  <b>1.5.x</b>. 
+- If you are already using Spring Boot 2.0.x, please use the 
+Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 
-| Property        | Description                | Values  | Default | Version |
-| ------------- |------------------| -----:|----:|----:|
-| chaos.monkey.enabled | Determine whether should execute or not | TRUE or FALSE | FALSE | 1.0.2
-| chaos.monkey.assaults.level | How many requests are to be attacked.<br> 1 each request, 5 each 5th request is attacked | 1-10 | 5 | 1.0.1
-|chaos.monkey.assaults.latencyRangeStart | Minimum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 3000 | 1.0.1
-|chaos.monkey.assaults.latencyRangeEnd | Maximum latency in ms added to the request| Integer.MIN_VALUE, Integer.MAX_VALUE  | 15000 | 1.0.1
-|chaos.monkey.assaults.latencyActive | Latency assault active| TRUE or FALSE | TRUE | 1.0.1
-|chaos.monkey.assaults.exceptionsActive | Exception assault active| TRUE or FALSE | FALSE | 1.0.1
-|chaos.monkey.assaults.killApplicationActive | AppKiller assault active| TRUE or FALSE | FALSE | 1.0.1
-chaos.monkey.watcher.controller | Controller watcher active| TRUE or FALSE | FALSE | 1.0.1
-chaos.monkey.watcher.restController | RestController watcher active| TRUE or FALSE | FALSE | 1.0.1
-chaos.monkey.watcher.service | Service watcher active| TRUE or FALSE | TRUE | 1.0.1
-chaos.monkey.watcher.repository | Repository watcher active| TRUE or FALSE | FALSE | 1.0.1
-chaos.monkey.watcher.component | Component watcher active| TRUE or FALSE | FALSE | tbd
+## Release Notes
 
-> I´m still working on this page and the documentation!
+
+
