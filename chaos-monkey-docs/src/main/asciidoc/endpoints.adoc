@@ -8,14 +8,8 @@ Chaos Monkey for Spring Boot offers you some build in endpoints exposed via http
 [source,txt,subs="verbatim,attributes"]
 .application.properties:
 ----
-management.endpoint.chaosmonkey.enabled=true
-management.endpoint.chaosmonkeyjmx.enabled=true
+endpoints.chaosmonkey.enabled=true
 
-# inlcude all endpoints
-management.endpoints.web.exposure.include=*
-
-# include specific endpoints
-management.endpoints.web.exposure.include=health,info,chaosmonkey
 ----
 
 === HTTP Endpoint
@@ -90,27 +84,27 @@ Case: Chaos Monkey is running.
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 200 OK
 ----
-Ready to be evil!
+- NO CONTENT -
 ----
 Case: Chaos Monkey is activated, but will not launch any attacks.
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 503 Service Unavailable
 ----
-You switched me off!
+- NO CONTENT -
 ----
 ===== POST Chaos Monkey enable
 [[chaosmonkeyenable]]
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/enable - Response 200 OK
 ----
-Chaos Monkey is enabled
+- NO CONTENT -
 ----
 ===== POST Chaos Monkey disable
 [[chaosmonkeydisable]]
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/disable - Response 200 OK
 ----
-Chaos Monkey is disabled
+- NO CONTENT -
 ----
 ===== GET Watcher
 NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the application starts.
@@ -159,7 +153,7 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/assaults - Response 200 OK
 ----
-Assault config has changed
+- NO CONTENT -
 ----
 
 === JMX Endpoint

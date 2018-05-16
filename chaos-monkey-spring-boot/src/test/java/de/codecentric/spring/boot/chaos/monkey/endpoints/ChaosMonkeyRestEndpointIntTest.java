@@ -53,7 +53,7 @@ public class ChaosMonkeyRestEndpointIntTest {
 
     @Before
     public void setUp() throws Exception {
-        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+        baseUrl = "http://localhost:" + this.serverPort + "/chaosmonkey";
     }
 
     @Test
@@ -133,7 +133,6 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals("Assault config has changed", result.getBody());
     }
 
     @Test
@@ -184,7 +183,6 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.getForEntity(baseUrl + "/status", String.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals("Ready to be evil!", result.getBody());
     }
 
     @Test
@@ -195,7 +193,6 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.getForEntity(baseUrl + "/status", String.class);
 
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, result.getStatusCode());
-        assertEquals("You switched me off!", result.getBody());
     }
 
     // ENABLE CHAOS MONKEY
@@ -207,7 +204,6 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.postForEntity(baseUrl + "/enable", null, String.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals("Chaos Monkey is enabled", result.getBody());
     }
 
     // DISABLE CHAOS MONKEY
@@ -218,7 +214,6 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.postForEntity(baseUrl + "/disable", null, String.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals("Chaos Monkey is disabled", result.getBody());
     }
 
     private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {

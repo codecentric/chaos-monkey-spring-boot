@@ -48,7 +48,7 @@ public class ChaosMonkeyRestEndpointDisabledIntTest {
 
     @Before
     public void setUp() throws Exception {
-        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+        baseUrl = "http://localhost:" + this.serverPort + "/chaosmonkey";
     }
 
     @Test
