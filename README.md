@@ -23,7 +23,8 @@ to withstand turbulent conditions in production.
 - [How does it work?](#howitworks)
   - [Watcher](#watcher)
   - [Assault](#assaults)
-  - [Properties & Configuration](#config)
+- [Support for Spring Boot](#support)
+- [Documentation](#docs)
   
 ## Introduction
 Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">availabe on YouTube</a>:
@@ -131,14 +132,22 @@ Following assaults are actual provided:
 
 You can customize the behave by configuration, please take a look at the documentation.
 
-<a name="config"></a>
+<a name="support"></a>
 ## Support for Spring Boot 1.5.x and 2.0.1
-Which version should I use?
+
+In the versions of Chaos Monkey for Spring Boot I will follow the versions of Spring Boot. The first two numbers of the Chaos Monkey release show you which is the right one for your Spring Boot version.
 - If you are running  <b>Spring Boot 1.5.x,</b> use the Chaos Monkey forSpring Boot  <b>1.5.x</b>. 
-- If you are already using Spring Boot 2.0.x, please use the 
+- If you are already using <b>Spring Boot 2.0.x</b>, please use the 
 Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 
-## Release Notes
+<a name="docs"></a>
+## Documentation
+A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
+### Chaos Monkey for Spring Boot 1.5.x
+- [Version 1.5.0](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0)
+### Spring Boot for Spring Boot 2.0.x
+- [Version 2.0.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
+
 
 
 
