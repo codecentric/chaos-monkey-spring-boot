@@ -94,6 +94,7 @@ As you can see, you don't have to change the source code!
 Since version 1.5.0 and 2.0.0 the Chaos Monkey for Spring Boot can be configured at runtime via a Spring Boot Actuator Endpoint.
 
 > Take a look at the current [snapshots](#snapshots) and [documentation](#releases).
+
 <a name="howitworks"></a>
 ### How does it work?
 If Spring Boot Chaos Monkey is on your classpath and activated with profile name "chaos-monkey", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
