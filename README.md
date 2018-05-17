@@ -25,6 +25,8 @@ to withstand turbulent conditions in production.
   - [Assault](#assaults)
 - [Support for Spring Boot](#support)
 - [Documentation](#docs)
+- [Releases](#releases)
+- [Snapshots](#snapshots)
   
 ## Introduction
 Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">availabe on YouTube</a>:
@@ -78,6 +80,7 @@ If Spring Boot Chaos Monkey is on your classpath and activated with profile name
 - @RestController
 - @Service
 - @Repository
+- @Component
 
 By configuration you define which assaults and watcher are activated, per default only the @Service watcher and the latency assault are activated.
 
@@ -144,9 +147,28 @@ Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 ## Documentation
 A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
 ### Chaos Monkey for Spring Boot 1.5.x
-- [Version 1.5.0](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0)
+- [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0-SNAPSHOT)
 ### Spring Boot for Spring Boot 2.0.x
-- [Version 2.0.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
+- [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0-SNAPSHOT)
+
+## Releases
+- Version 1.0.1 (Spring Boot 2.0.1)
+
+## Snapshots
+You can access snapshot builds from the sonatype snapshot repository by adding the following to your `repositories`:
+```xml
+<repository>
+	<id>sonatype-nexus-snapshots</id>
+	<name>Sonatype Nexus Snapshots</name>
+	<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	<snapshots>
+		<enabled>true</enabled>
+	</snapshots>
+	<releases>
+		<enabled>false</enabled>
+	</releases>
+</repository>
+```
 
 
 
