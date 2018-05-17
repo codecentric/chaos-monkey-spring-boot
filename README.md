@@ -32,12 +32,13 @@ to withstand turbulent conditions in production.
 Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">availabe on YouTube</a>:
 
 <a href="https://goo.gl/r2Tmig" target="_blank"><img src="https://i.ytimg.com/vi/7sQiIR9qCdA/maxresdefault.jpg" 
-alt="Chaos Monkey for Spring Boot" width="260" height="155" border="10" /></a><br>
+alt="Chaos Monkey for Spring Boot" width="50%" border="10" /></a><br>
 **Chaos Monkey for Spring Boot - new features**
 
 <a name="goal"></a>
 ## What is the goal of Chaos Monkey?
-Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed system, with a focus on Spring Boot, I wanted to test the resulting applications better and especially during operation.
+Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed systems, with a focus on Spring Boot, I 
+wanted to test the resulting applications in more detail and especially during operation.
 
 After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains, how our baby behaves in production?<br><br>
 Many questions remain unanswered:
@@ -69,9 +70,30 @@ Of course, you can start in production, but keep in mind...
 ...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you, run it in production.
 <a name="dochaos"></a>
 ## What does the Chaos Monkey for Spring Boot do?
-Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application. As long as you don't set the application property "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen.
+Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application.
+```xml
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>chaos-monkey-spring-boot</artifactId>
+    <version>X.X.X</version>
+</dependency>
+```
+
+Start your application with the Spring Profile **chaos-monkey** to initialize the Chaos Monkey. Since version 1.5.0 and 2.0.0 it will **not** start 
+attacks on your application yet,
+ you can activate this dynamically at runtime.
+ 
+```
+java -jar your-app.jar --spring.profiles.active=chaos-monkey
+``` 
+ 
+As long as you don't set the property "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen.
 
 As you can see, you don't have to change the source code!
+### Dynamic Configuration at runtime
+Since version 1.5.0 and 2.0.0 the Chaos Monkey for Spring Boot can be configured at runtime via a Spring Boot Actuator Endpoint.
+
+> Take a look at the current [snapshots](#snapshots) and [documentation](#releases).
 <a name="howitworks"></a>
 ### How does it work?
 If Spring Boot Chaos Monkey is on your classpath and activated with profile name "chaos-monkey", it will automatically scan your application for all classes annotated with any of the following Spring annotations:
@@ -89,6 +111,8 @@ By configuration you define which assaults and watcher are activated, per defaul
 </p>
 
 #### Example - single Spring Boot application
+> Following example is based on Chaos Monkey for Spring Boot 1.0.1
+
 Let's say you built a standalone Spring Boot application. For example, there is a service annotated with Spring @Service annotation and some other components. Now we want to attack our service component.
 
 <p align="center">
@@ -106,7 +130,7 @@ Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
 {% endhighlight %}
 2. Start your app enabling the service using the property below:
 {% highlight shell %}
-java -jar your-app.jar --spring.profiles.active=chaos-monkey --chaos.monkey.enabled=true
+java -jar your-app.jar --spring.profiles.active=chaos-monkey
 {% endhighlight %}
 
 Chaos Monkey for Spring Boot will attack your @Service classes and will randomly add some latency to all <b>public</b> methods.
@@ -138,8 +162,10 @@ You can customize the behave by configuration, please take a look at the documen
 <a name="support"></a>
 ## Support for Spring Boot 1.5.x and 2.0.1
 
-In the versions of Chaos Monkey for Spring Boot I will follow the versions of Spring Boot. The first two numbers of the Chaos Monkey release show you which is the right one for your Spring Boot version.
-- If you are running  <b>Spring Boot 1.5.x,</b> use the Chaos Monkey forSpring Boot  <b>1.5.x</b>. 
+Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. The first two numbers of the Chaos Monkey release will show you which
+ is 
+the right one for your Spring Boot version.
+- If you are running  <b>Spring Boot 1.5.x,</b> use the Chaos Monkey for Spring Boot  <b>1.5.x</b>. 
 - If you are already using <b>Spring Boot 2.0.x</b>, please use the 
 Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 
@@ -147,12 +173,17 @@ Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 ## Documentation
 A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
 ### Chaos Monkey for Spring Boot 1.5.x
-- [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0-SNAPSHOT)
-### Spring Boot for Spring Boot 2.0.x
-- [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0-SNAPSHOT)
+- SNAPSHOTS
+  - [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0-SNAPSHOT)
+- RELEASES
+
+### Chaos Monkey for Spring Boot 2.0.x
+- SNAPSHOTS
+  - [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0-SNAPSHOT)
+- RELEASES
 
 ## Releases
-- Version 1.0.1 (Spring Boot 2.0.1)
+- Version 1.0.1 (depends on Spring Boot 2.0.1)
 
 ## Snapshots
 You can access snapshot builds from the sonatype snapshot repository by adding the following to your `repositories`:
