@@ -23,7 +23,7 @@ to withstand turbulent conditions in production.
 - [How does it work?](#howitworks)
   - [Watcher](#watcher)
   - [Assault](#assaults)
-- [Support for Spring Boot](#support)
+- [Supported Spring Boot versions](#support)
 - [Documentation](#docs)
 - [Releases](#releases)
 - [Snapshots](#snapshots)
@@ -160,7 +160,7 @@ Following assaults are actual provided:
 You can customize the behave by configuration, please take a look at the documentation.
 
 <a name="support"></a>
-## Support for Spring Boot 1.5.x and 2.0.1
+## Support for Spring Boot 1.5.x and 2.0.x
 
 Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. The first two numbers of the Chaos Monkey release will show you which
  is 
@@ -173,18 +173,15 @@ Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 ## Documentation
 A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
 ### Chaos Monkey for Spring Boot 1.5.x
-- SNAPSHOTS
-  - [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0-SNAPSHOT)
-- RELEASES
+- [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0-SNAPSHOT)
 
 ### Chaos Monkey for Spring Boot 2.0.x
-- SNAPSHOTS
-  - [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0-SNAPSHOT)
-- RELEASES
+- [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0-SNAPSHOT)
 
 ## Releases
 - Version 1.0.1 (depends on Spring Boot 2.0.1)
 
+<a name="snapshots"></a>
 ## Snapshots
 You can access snapshot builds from the sonatype snapshot repository by adding the following to your `repositories`:
 ```xml
@@ -200,7 +197,21 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
 	</releases>
 </repository>
 ```
-
-
-
+### Latest snapshots
+#### Chaos Monkey for Spring Boot 1.5.x
+```xml
+<dependency>
+  <groupId>de.codecentric</groupId>
+  <artifactId>chaos-monkey-spring-boot</artifactId>
+  <version>1.5.0-SNAPSHOT</version>
+</dependency>
+```
+#### Chaos Monkey for Spring Boot 2.0.x
+```xml
+<dependency>
+  <groupId>de.codecentric</groupId>
+  <artifactId>chaos-monkey-spring-boot</artifactId>
+  <version>2.0.0-SNAPSHOT</version>
+</dependency>
+```
 
