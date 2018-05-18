@@ -29,7 +29,7 @@ to withstand turbulent conditions in production.
 - [Snapshots](#snapshots)
   
 ## Introduction
-Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">availabe on YouTube</a>:
+Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">available on YouTube</a>:
 
 <a href="https://goo.gl/r2Tmig" target="_blank"><img src="https://i.ytimg.com/vi/7sQiIR9qCdA/maxresdefault.jpg" 
 alt="Chaos Monkey for Spring Boot" width="50%" border="10" /></a><br>
