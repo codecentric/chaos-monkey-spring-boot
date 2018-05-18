@@ -14,7 +14,7 @@ This project provides a Chaos Monkey for Spring Boot applications and will try t
 >All details are explained on [Chaos Monkey for Spring Boot](https://codecentric.github.io/chaos-monkey-spring-boot/)
 
 ## Introduction
-Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">availabe on YouTube</a>:
+Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">available on YouTube</a>:
 
 <a href="https://goo.gl/r2Tmig" target="_blank"><img src="https://i.ytimg.com/vi/7sQiIR9qCdA/maxresdefault.jpg" 
 alt="Chaos Monkey for Spring Boot" width="260" height="155" border="10" /></a><br>
