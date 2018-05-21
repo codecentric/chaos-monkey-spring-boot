@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -34,6 +35,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @EqualsAndHashCode
+@Validated
 public class AssaultProperties {
 
     @Value("${level : 5}")
