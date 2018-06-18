@@ -65,7 +65,7 @@ public class ChaosMonkey {
                 }
             } else if (isLatencyAndExceptionActive()) {
                 exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                        switch (exceptionRand) {
+                switch (exceptionRand) {
                     case 1:
                         generateLatency();
                         break;
@@ -169,6 +169,4 @@ public class ChaosMonkey {
             // do nothing
         }
     }
-
-
 }
