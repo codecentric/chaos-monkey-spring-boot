@@ -45,18 +45,57 @@ public class ChaosMonkey {
         this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
-
     public void callChaosMonkey() {
         if (isTrouble() && isEnabled()) {
-            int exceptionRand = chaosMonkeySettings.getAssaultProperties().getExceptionRandom();
+            // TODO: Refactoring to Assault Management!
+            int exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(3);
 
-            if (chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive()) {
-                // Timeout or Exception?
-                if (exceptionRand < 7) {
-                    generateLatency();
-                } else {
-                    generateChaosException();
+            if (allAssaultsActive()) {
+
+                switch (exceptionRand) {
+                    case 1:
+                        generateLatency();
+                        break;
+                    case 2:
+                        generateChaosException();
+                        break;
+                    case 3:
+                        killTheBossApp();
+                        break;
                 }
+            } else if (isLatencyAndExceptionActive()) {
+                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
+                switch (exceptionRand) {
+                    case 1:
+                        generateLatency();
+                        break;
+                    case 2:
+                        generateChaosException();
+                        break;
+                }
+
+            } else if (isLatencyAndKillAppActive()) {
+                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
+                switch (exceptionRand) {
+                    case 1:
+                        generateLatency();
+                        break;
+                    case 2:
+                        killTheBossApp();
+                        break;
+                }
+
+            } else if (isExceptionAndKillAppActive()) {
+                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
+                switch (exceptionRand) {
+                    case 1:
+                        generateChaosException();
+                        break;
+                    case 2:
+                        killTheBossApp();
+                        break;
+                }
+
             } else if (chaosMonkeySettings.getAssaultProperties().isLatencyActive()) {
                 generateLatency();
             } else if (chaosMonkeySettings.getAssaultProperties().isExceptionsActive()) {
@@ -64,8 +103,28 @@ public class ChaosMonkey {
             } else if (chaosMonkeySettings.getAssaultProperties().isKillApplicationActive()) {
                 killTheBossApp();
             }
-
         }
+
+    }
+
+    private boolean isLatencyAndKillAppActive() {
+        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && !chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+                chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+    }
+
+    private boolean isExceptionAndKillAppActive() {
+        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && !chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+                chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+    }
+
+    private boolean isLatencyAndExceptionActive() {
+        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+                !chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+    }
+
+
+    private boolean allAssaultsActive() {
+        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() && chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     }
 
     private boolean isTrouble() {
@@ -110,6 +169,4 @@ public class ChaosMonkey {
             // do nothing
         }
     }
-
-
 }

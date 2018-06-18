@@ -108,7 +108,7 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.getForEntity(baseUrl + "/watcher", WatcherProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(chaosMonkeySettings.getWatcherProperties(), result.getBody());
+        assertEquals(chaosMonkeySettings.getWatcherProperties().toString(), result.getBody().toString());
     }
 
     // Assault Tests
@@ -118,7 +118,7 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.getForEntity(baseUrl + "/assaults", AssaultProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(chaosMonkeySettings.getAssaultProperties(), result.getBody());
+        assertEquals(chaosMonkeySettings.getAssaultProperties().toString(), result.getBody().toString());
     }
 
     @Test

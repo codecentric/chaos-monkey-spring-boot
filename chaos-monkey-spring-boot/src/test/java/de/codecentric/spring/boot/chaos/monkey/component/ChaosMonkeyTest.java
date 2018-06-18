@@ -153,7 +153,7 @@ public class ChaosMonkeyTest {
         given(this.assaultProperties.isExceptionsActive()).willReturn(true);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
-        given(this.assaultProperties.getExceptionRandom()).willReturn(8);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(2);
 
 
         chaosMonkey.callChaosMonkey();
@@ -172,7 +172,7 @@ public class ChaosMonkeyTest {
         given(this.assaultProperties.isExceptionsActive()).willReturn(true);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
-        given(this.assaultProperties.getExceptionRandom()).willReturn(5); // <7
+        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
