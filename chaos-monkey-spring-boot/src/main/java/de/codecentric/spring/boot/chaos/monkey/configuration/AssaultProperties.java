@@ -35,7 +35,6 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @EqualsAndHashCode
-@Validated
 public class AssaultProperties {
 
     @Value("${level : 5}")
@@ -62,17 +61,14 @@ public class AssaultProperties {
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
 
-    @Value("${restartApplicationActive : false}")
-    private boolean restartApplicationActive;
-
     @JsonIgnore
     public int getTroubleRandom() {
         return RandomUtils.nextInt(1, 11);
     }
 
     @JsonIgnore
-    public int getExceptionRandom() {
-        return RandomUtils.nextInt(0, 10);
+    public int chooseAssault(int amount) {
+        return RandomUtils.nextInt(1, amount + 1);
     }
 
 
