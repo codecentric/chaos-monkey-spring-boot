@@ -27,17 +27,17 @@ to withstand turbulent conditions in production.
 - [Documentation](#docs)
 - [Releases](#releases)
 - [Snapshots](#snapshots)
-  
+
 ## Introduction
 Get familiar with the Chaos Monkey for Spring Boot in the following video, <a href="https://goo.gl/r2Tmig" target="_blank">available on YouTube</a>:
 
-<a href="https://goo.gl/r2Tmig" target="_blank"><img src="https://i.ytimg.com/vi/7sQiIR9qCdA/maxresdefault.jpg" 
+<a href="https://goo.gl/r2Tmig" target="_blank"><img src="https://i.ytimg.com/vi/7sQiIR9qCdA/maxresdefault.jpg"
 alt="Chaos Monkey for Spring Boot" width="50%" border="10" /></a><br>
 **Chaos Monkey for Spring Boot - new features**
 
 <a name="goal"></a>
 ## What is the goal of Chaos Monkey?
-Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed systems, with a focus on Spring Boot, I 
+Inspired by [PRINCIPLES OF CHAOS ENGINEERING](http://principlesofchaos.org/) and by my work in distributed systems, with a focus on Spring Boot, I
 wanted to test the resulting applications in more detail and especially during operation.
 
 After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains, how our baby behaves in production?<br><br>
@@ -79,14 +79,14 @@ Spring Boot Chaos Monkey is a small library which you can integrate as a depende
 </dependency>
 ```
 
-Start your application with the Spring Profile **chaos-monkey** to initialize the Chaos Monkey. Since version 1.5.0 and 2.0.0 it will **not** start 
+Start your application with the Spring Profile **chaos-monkey** to initialize the Chaos Monkey. Since version 1.5.0 and 2.0.0 it will **not** start
 attacks on your application yet,
  you can activate this dynamically at runtime.
- 
+
 ```
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
-``` 
- 
+```
+
 As long as you don't set the property "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen.
 
 As you can see, you don't have to change the source code!
@@ -126,7 +126,7 @@ Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>chaos-monkey-spring-boot</artifactId>
-    <version>1.0.1</version>
+    <version>2.0.0</version>
 </dependency>
 {% endhighlight %}
 2. Start your app enabling the service using the property below:
@@ -164,24 +164,26 @@ You can customize the behave by configuration, please take a look at the documen
 ## Support for Spring Boot 1.5.x and 2.0.x
 
 Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. The first two numbers of the Chaos Monkey release will show you which
- is 
+ is
 the right one for your Spring Boot version.
-- If you are running  <b>Spring Boot 1.5.x,</b> use the Chaos Monkey for Spring Boot  <b>1.5.x</b>. 
-- If you are already using <b>Spring Boot 2.0.x</b>, please use the 
+- If you are running  <b>Spring Boot 1.5.x,</b> use the Chaos Monkey for Spring Boot  <b>1.5.x</b>.
+- If you are already using <b>Spring Boot 2.0.x</b>, please use the
 Chaos Monkey for Spring Boot  <b>2.0.x</b>.
 
 <a name="docs"></a>
 ## Documentation
 A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
 ### Chaos Monkey for Spring Boot 1.5.x
-- [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0-SNAPSHOT)
+- [Version 1.5.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0)
 
 ### Chaos Monkey for Spring Boot 2.0.x
 - [Version 1.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/1.0.1/)
-- [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0-SNAPSHOT)
+- [Version 2.0.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
 
 ## Releases
 - Version 1.0.1 (depends on Spring Boot 2.0.1)
+- Version 1.5.0 (supports on Spring Boot 1.5.x)
+- Version 2.0.0 (supports on Spring Boot 2.0.x)
 
 <a name="snapshots"></a>
 ## Snapshots
@@ -216,4 +218,3 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
   <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
-
