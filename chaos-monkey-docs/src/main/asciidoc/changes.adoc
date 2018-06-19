@@ -11,6 +11,7 @@
 === Bugs fixed
 - Service Watcher config bug
 - Documentation
+- [Issue 23 - If all Assaults are active, only Latency & Exception are fired](https://github.com/codecentric/chaos-monkey-spring-boot/issues/23)
 
 === Contributors
 Thank you for your support!
