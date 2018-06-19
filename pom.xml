@@ -27,7 +27,7 @@
 
     <properties>
         <!-- project version -->
-        <revision>1.5.0-SNAPSHOT</revision>
+        <revision>1.5.1-SNAPSHOT</revision>
 
         <!-- default settings -->
         <java.version>1.8</java.version>
