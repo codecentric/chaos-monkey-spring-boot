@@ -182,8 +182,8 @@ A detailed documentation about the configuration of the Chaos Monkey for Spring 
 
 ## Releases
 - Version 1.0.1 (depends on Spring Boot 2.0.1)
-- Version 1.5.0 (supports on Spring Boot 1.5.x)
-- Version 2.0.0 (supports on Spring Boot 2.0.x)
+- Version 1.5.0 (supports Spring Boot 1.5.x)
+- Version 2.0.0 (supports Spring Boot 2.0.x)
 
 <a name="snapshots"></a>
 ## Snapshots
