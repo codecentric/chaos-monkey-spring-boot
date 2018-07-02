@@ -42,10 +42,6 @@ public class SpringRestControllerAspect extends ChaosMonkeyBaseAspect {
     public void classAnnotatedWithControllerPointcut() {
     }
 
-    @Pointcut("execution(* *.*(..))")
-    public void allPublicMethodPointcut() {
-    }
-
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "RestController class and public method detected: " + pjp.getSignature() : null);
