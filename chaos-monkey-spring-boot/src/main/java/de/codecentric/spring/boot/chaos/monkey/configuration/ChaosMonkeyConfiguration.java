@@ -19,16 +19,10 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
-import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentCondition;
-import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
-import de.codecentric.spring.boot.chaos.monkey.conditions.AttackRestControllerCondition;
-import de.codecentric.spring.boot.chaos.monkey.conditions.AttackServiceCondition;
+import de.codecentric.spring.boot.chaos.monkey.conditions.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
@@ -107,6 +101,12 @@ public class ChaosMonkeyConfiguration {
     @Conditional(AttackComponentCondition.class)
     public SpringComponentAspect componentAspect(ChaosMonkey chaosMonkey) {
         return new SpringComponentAspect(chaosMonkey);
+    }
+
+    @Bean
+    @Conditional(AttackRepositoryCondition.class)
+    public SpringRepositoryAspect repositoryAspect() {
+        return new SpringRepositoryAspect(chaosMonkey());
     }
 
     @Bean
