@@ -24,12 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Benjamin Wilms
  */
-@Component
 public class ChaosMonkey {
 
     private ChaosMonkeySettings chaosMonkeySettings;
@@ -115,7 +113,7 @@ public class ChaosMonkey {
     }
 
     private boolean isExceptionAndKillAppActive() {
-        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && !chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+        return !chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
                 chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     }
 

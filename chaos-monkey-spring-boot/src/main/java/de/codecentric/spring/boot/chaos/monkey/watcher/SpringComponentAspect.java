@@ -42,10 +42,6 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
     public void classAnnotatedWithComponentPointcut() {
     }
 
-    @Pointcut("execution(* *.*(..))")
-    public void allPublicMethodPointcut() {
-    }
-
     @Around("classAnnotatedWithComponentPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Component class and public method detected: " + pjp.getSignature() : null);
