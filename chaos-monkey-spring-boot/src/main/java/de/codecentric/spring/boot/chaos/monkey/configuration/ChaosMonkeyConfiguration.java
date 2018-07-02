@@ -16,6 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackComponentCondition;
 import de.codecentric.spring.boot.chaos.monkey.conditions.AttackControllerCondition;
@@ -38,6 +40,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * @author Benjamin Wilms
@@ -73,32 +76,37 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkey chaosMonkey() {
-        return new ChaosMonkey(settings());
+    public LatencyAssault latencyAssault() {
+        return new LatencyAssault(assaultProperties.getLatencyRangeStart(), assaultProperties.getLatencyRangeEnd(), assaultProperties.isLatencyActive());
+    }
+
+    @Bean
+    public ChaosMonkey chaosMonkey(LatencyAssault latencyAssault) {
+        return new ChaosMonkey(settings(), latencyAssault);
     }
 
     @Bean
     @Conditional(AttackControllerCondition.class)
-    public SpringControllerAspect controllerAspect() {
-        return new SpringControllerAspect(chaosMonkey());
+    public SpringControllerAspect controllerAspect(ChaosMonkey chaosMonkey) {
+        return new SpringControllerAspect(chaosMonkey);
     }
 
     @Bean
     @Conditional(AttackRestControllerCondition.class)
-    public SpringRestControllerAspect restControllerAspect() {
-        return new SpringRestControllerAspect(chaosMonkey());
+    public SpringRestControllerAspect restControllerAspect(ChaosMonkey chaosMonkey) {
+        return new SpringRestControllerAspect(chaosMonkey);
     }
 
     @Bean
     @Conditional(AttackServiceCondition.class)
-    public SpringServiceAspect serviceAspect() {
-        return new SpringServiceAspect(chaosMonkey());
+    public SpringServiceAspect serviceAspect(ChaosMonkey chaosMonkey) {
+        return new SpringServiceAspect(chaosMonkey);
     }
 
     @Bean
     @Conditional(AttackComponentCondition.class)
-    public SpringComponentAspect componentAspect() {
-        return new SpringComponentAspect(chaosMonkey());
+    public SpringComponentAspect componentAspect(ChaosMonkey chaosMonkey) {
+        return new SpringComponentAspect(chaosMonkey);
     }
 
     @Bean

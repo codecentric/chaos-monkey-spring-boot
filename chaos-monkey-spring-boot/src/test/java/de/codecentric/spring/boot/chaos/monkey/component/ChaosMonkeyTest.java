@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -63,6 +64,9 @@ public class ChaosMonkeyTest {
     @Mock
     private ChaosMonkeySettings  chaosMonkeySettings;
 
+    @Mock
+    private LatencyAssault latencyAssault;
+
     @Before
     public void setUp() {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
@@ -80,7 +84,7 @@ public class ChaosMonkeyTest {
         given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
         given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);
 
-        chaosMonkey = new ChaosMonkey(chaosMonkeySettings);
+        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, latencyAssault);
 
     }
 
@@ -90,6 +94,7 @@ public class ChaosMonkeyTest {
 
         given(this.assaultProperties.isExceptionsActive()).willReturn(false);
         given(this.assaultProperties.isLatencyActive()).willReturn(false);
+        given(this.latencyAssault.isActive()).willReturn(false);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(true);
         given(this.assaultProperties.getLevel()).willReturn(1);
         given(this.assaultProperties.getTroubleRandom()).willReturn(5);
@@ -112,16 +117,12 @@ public class ChaosMonkeyTest {
 
         given(this.assaultProperties.isExceptionsActive()).willReturn(false);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
-
-
+        verify(latencyAssault, times(1)).attack();
     }
 
     @Test
@@ -132,6 +133,7 @@ public class ChaosMonkeyTest {
 
         given(this.assaultProperties.isExceptionsActive()).willReturn(true);
         given(this.assaultProperties.isLatencyActive()).willReturn(false);
+        given(this.latencyAssault.isActive()).willReturn(false);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
 
         chaosMonkey.callChaosMonkey();
@@ -152,6 +154,7 @@ public class ChaosMonkeyTest {
 
         given(this.assaultProperties.isExceptionsActive()).willReturn(true);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
         given(this.assaultProperties.chooseAssault(2)).willReturn(2);
 
@@ -171,17 +174,13 @@ public class ChaosMonkeyTest {
 
         given(this.assaultProperties.isExceptionsActive()).willReturn(true);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
         given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
         given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
-
-
+        verify(latencyAssault, times(1)).attack();
     }
 
     @Test
@@ -198,6 +197,7 @@ public class ChaosMonkeyTest {
         given(this.assaultProperties.getLevel()).willReturn(10);
         given(this.assaultProperties.getTroubleRandom()).willReturn(9);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
 
         chaosMonkey.callChaosMonkey();
 
