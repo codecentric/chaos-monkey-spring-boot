@@ -105,8 +105,8 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     @Conditional(AttackRepositoryCondition.class)
-    public SpringRepositoryAspect repositoryAspect() {
-        return new SpringRepositoryAspect(chaosMonkey());
+    public SpringRepositoryAspect repositoryAspect(ChaosMonkey chaosMonkey) {
+        return new SpringRepositoryAspect(chaosMonkey);
     }
 
     @Bean
