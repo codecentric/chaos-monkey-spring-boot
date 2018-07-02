@@ -111,7 +111,7 @@ public class ChaosMonkey {
     }
 
     private boolean isExceptionAndKillAppActive() {
-        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && !chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+        return !chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
                 chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     }
 
