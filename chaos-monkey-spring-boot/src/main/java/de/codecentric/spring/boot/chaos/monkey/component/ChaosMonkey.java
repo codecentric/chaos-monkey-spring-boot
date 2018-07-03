@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class ChaosMonkey {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, LatencyAssault assault) {
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, LatencyAssault assault, ExceptionAssault exceptionAssault) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.latencyAssault = assault;
     }

@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -53,11 +54,14 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
     private LatencyAssault latencyAssault;
 
     @Autowired
+    private ExceptionAssault exceptionAssault;
+
+    @Autowired
     private Environment env;
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings, latencyAssault);
+        chaosMonkey = new ChaosMonkey(monkeySettings, latencyAssault, exceptionAssault);
     }
 
     @Test

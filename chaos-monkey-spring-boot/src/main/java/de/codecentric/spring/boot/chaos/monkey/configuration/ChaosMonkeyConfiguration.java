@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.conditions.*;
@@ -75,8 +76,13 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkey chaosMonkey(LatencyAssault latencyAssault) {
-        return new ChaosMonkey(settings(), latencyAssault);
+    public ExceptionAssault exceptionAssault() {
+        return new ExceptionAssault(assaultProperties.isExceptionsActive());
+    }
+
+    @Bean
+    public ChaosMonkey chaosMonkey(LatencyAssault latencyAssault, ExceptionAssault exceptionAssault) {
+        return new ChaosMonkey(settings(), latencyAssault, exceptionAssault);
     }
 
     @Bean
