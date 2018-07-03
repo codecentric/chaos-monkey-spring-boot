@@ -37,6 +37,7 @@ public class ChaosMonkey {
     private ApplicationContext context;
 
     private LatencyAssault latencyAssault;
+    private ExceptionAssault exceptionAssault;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
@@ -44,6 +45,7 @@ public class ChaosMonkey {
     public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, LatencyAssault assault, ExceptionAssault exceptionAssault) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.latencyAssault = assault;
+        this.exceptionAssault = exceptionAssault;
     }
 
     public void callChaosMonkey() {
@@ -58,7 +60,7 @@ public class ChaosMonkey {
                         latencyAssault.attack();
                         break;
                     case 2:
-                        generateChaosException();
+                        exceptionAssault.attack();
                         break;
                     case 3:
                         killTheBossApp();
@@ -71,7 +73,7 @@ public class ChaosMonkey {
                         latencyAssault.attack();
                         break;
                     case 2:
-                        generateChaosException();
+                        exceptionAssault.attack();
                         break;
                 }
 
@@ -90,7 +92,7 @@ public class ChaosMonkey {
                 exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
                 switch (exceptionRand) {
                     case 1:
-                        generateChaosException();
+                        exceptionAssault.attack();
                         break;
                     case 2:
                         killTheBossApp();
@@ -99,8 +101,8 @@ public class ChaosMonkey {
 
             } else if (latencyAssault.isActive()) {
                 latencyAssault.attack();
-            } else if (chaosMonkeySettings.getAssaultProperties().isExceptionsActive()) {
-                generateChaosException();
+            } else if (exceptionAssault.isActive()) {
+                exceptionAssault.attack();
             } else if (chaosMonkeySettings.getAssaultProperties().isKillApplicationActive()) {
                 killTheBossApp();
             }
@@ -114,18 +116,18 @@ public class ChaosMonkey {
     }
 
     private boolean isExceptionAndKillAppActive() {
-        return !chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+        return !latencyAssault.isActive() && exceptionAssault.isActive() &&
                 chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     }
 
     private boolean isLatencyAndExceptionActive() {
-        return latencyAssault.isActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
+        return latencyAssault.isActive() && exceptionAssault.isActive() &&
                 !chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     }
 
 
     private boolean allAssaultsActive() {
-        return latencyAssault.isActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() && chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+        return latencyAssault.isActive() && exceptionAssault.isActive() && chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     }
 
     private boolean isTrouble() {
@@ -150,11 +152,6 @@ public class ChaosMonkey {
         } catch (Exception e) {
             LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
         }
-    }
-
-    private void generateChaosException() {
-        LOGGER.info("Chaos Monkey - exception");
-        throw new RuntimeException("Chaos Monkey - RuntimeException");
     }
 
 }
