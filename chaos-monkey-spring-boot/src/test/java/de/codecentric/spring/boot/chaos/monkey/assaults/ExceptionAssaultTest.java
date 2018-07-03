@@ -33,7 +33,7 @@ public class ExceptionAssaultTest {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Chaos Monkey - RuntimeException");
 
-        ExceptionAssault exceptionAssault = new ExceptionAssault(true);
+        ExceptionAssault exceptionAssault = new ExceptionAssault(null);
         exceptionAssault.attack();
     }
 }

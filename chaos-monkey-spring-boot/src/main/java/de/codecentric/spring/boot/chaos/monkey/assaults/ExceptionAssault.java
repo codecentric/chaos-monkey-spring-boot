@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +26,15 @@ import org.slf4j.LoggerFactory;
 public class ExceptionAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAssault.class);
+    private ChaosMonkeySettings settings;
 
-    private boolean active;
-
-    public ExceptionAssault(boolean active) {
-        this.active = active;
+    public ExceptionAssault(ChaosMonkeySettings settings) {
+        this.settings = settings;
     }
 
     @Override
     public boolean isActive() {
-        return active;
+        return settings.getAssaultProperties().isExceptionsActive();
     }
 
     @Override

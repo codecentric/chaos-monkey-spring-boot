@@ -73,17 +73,17 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public LatencyAssault latencyAssault() {
-        return new LatencyAssault(assaultProperties.getLatencyRangeStart(), assaultProperties.getLatencyRangeEnd(), assaultProperties.isLatencyActive());
+        return new LatencyAssault(settings());
     }
 
     @Bean
     public ExceptionAssault exceptionAssault() {
-        return new ExceptionAssault(assaultProperties.isExceptionsActive());
+        return new ExceptionAssault(settings());
     }
 
     @Bean
     public KillAppAssault killAppAssault() {
-        return new KillAppAssault(assaultProperties.isKillApplicationActive());
+        return new KillAppAssault(settings());
     }
 
     @Bean

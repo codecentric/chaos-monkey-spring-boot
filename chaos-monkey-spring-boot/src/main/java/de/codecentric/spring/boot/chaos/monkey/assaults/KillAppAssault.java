@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,18 @@ import org.springframework.context.ApplicationContext;
 public class KillAppAssault implements ChaosMonkeyAssault{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
-    private boolean active;
-
     @Autowired
     private ApplicationContext context;
 
-    public KillAppAssault(boolean active) {
-        this.active = active;
+    private ChaosMonkeySettings settings;
+
+    public KillAppAssault(ChaosMonkeySettings settings) {
+        this.settings = settings;
     }
 
     @Override
     public boolean isActive() {
-        return active;
+        return settings.getAssaultProperties().isKillApplicationActive();
     }
 
     @Override

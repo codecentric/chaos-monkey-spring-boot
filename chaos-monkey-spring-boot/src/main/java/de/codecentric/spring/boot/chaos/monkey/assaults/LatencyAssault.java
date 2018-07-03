@@ -16,12 +16,10 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 /**
  * @author Thorsten Deelmann
@@ -30,27 +28,21 @@ public class LatencyAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
 
-    private int latencyRangeStart;
-    private int latencyRangeEnd;
-    private boolean active;
+    private ChaosMonkeySettings settings;
 
-    public LatencyAssault(@Min(value = 1) @Max(value = Integer.MAX_VALUE) int latencyRangeStart,
-                          @Min(value = 1) @Max(value = Integer.MAX_VALUE) int latencyRangeEnd,
-                          boolean latencyActive) {
-        this.latencyRangeStart = latencyRangeStart;
-        this.latencyRangeEnd = latencyRangeEnd;
-        active = latencyActive;
+    public LatencyAssault(ChaosMonkeySettings settings) {
+        this.settings = settings;
     }
 
     @Override
     public boolean isActive() {
-        return active;
+        return settings.getAssaultProperties().isLatencyActive();
     }
 
     @Override
     public void attack() {
         LOGGER.info("Chaos Monkey - timeout");
-        int timeout = RandomUtils.nextInt(latencyRangeStart, latencyRangeEnd);
+        int timeout = RandomUtils.nextInt(settings.getAssaultProperties().getLatencyRangeStart(), settings.getAssaultProperties().getLatencyRangeEnd());
 
         try {
             Thread.sleep(timeout);
