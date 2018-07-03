@@ -170,7 +170,7 @@ public class ChaosMonkeyTest {
     }
 
     @Test
-    public void isExceptionAndLatencyAssaultActiveExpectLatencyLogging() {
+    public void isExceptionAndLatencyAssaultActiveExpectLatencyAttack() {
 
         given(this.assaultProperties.isExceptionsActive()).willReturn(true);
         given(this.assaultProperties.isLatencyActive()).willReturn(true);
