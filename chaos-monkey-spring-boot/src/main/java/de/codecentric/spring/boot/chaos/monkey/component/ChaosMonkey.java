@@ -22,10 +22,6 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ExitCodeGenerator;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author Benjamin Wilms
@@ -34,11 +30,9 @@ public class ChaosMonkey {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
-    @Autowired
-    private ApplicationContext context;
-
     private LatencyAssault latencyAssault;
     private ExceptionAssault exceptionAssault;
+    private KillAppAssault killAppAssault;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
@@ -47,6 +41,7 @@ public class ChaosMonkey {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.latencyAssault = assault;
         this.exceptionAssault = exceptionAssault;
+        this.killAppAssault = killAppAssault;
     }
 
     public void callChaosMonkey() {
@@ -64,7 +59,7 @@ public class ChaosMonkey {
                         exceptionAssault.attack();
                         break;
                     case 3:
-                        killTheBossApp();
+                        killAppAssault.attack();
                         break;
                 }
             } else if (isLatencyAndExceptionActive()) {
@@ -85,7 +80,7 @@ public class ChaosMonkey {
                         latencyAssault.attack();
                         break;
                     case 2:
-                        killTheBossApp();
+                        killAppAssault.attack();
                         break;
                 }
 
@@ -96,7 +91,7 @@ public class ChaosMonkey {
                         exceptionAssault.attack();
                         break;
                     case 2:
-                        killTheBossApp();
+                        killAppAssault.attack();
                         break;
                 }
 
@@ -104,31 +99,31 @@ public class ChaosMonkey {
                 latencyAssault.attack();
             } else if (exceptionAssault.isActive()) {
                 exceptionAssault.attack();
-            } else if (chaosMonkeySettings.getAssaultProperties().isKillApplicationActive()) {
-                killTheBossApp();
+            } else if (killAppAssault.isActive()) {
+                killAppAssault.attack();
             }
         }
 
     }
 
     private boolean isLatencyAndKillAppActive() {
-        return latencyAssault.isActive() && !chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
-                chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+        return latencyAssault.isActive() && !exceptionAssault.isActive() &&
+                killAppAssault.isActive();
     }
 
     private boolean isExceptionAndKillAppActive() {
         return !latencyAssault.isActive() && exceptionAssault.isActive() &&
-                chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+                killAppAssault.isActive();
     }
 
     private boolean isLatencyAndExceptionActive() {
         return latencyAssault.isActive() && exceptionAssault.isActive() &&
-                !chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+                !killAppAssault.isActive();
     }
 
 
     private boolean allAssaultsActive() {
-        return latencyAssault.isActive() && exceptionAssault.isActive() && chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+        return latencyAssault.isActive() && exceptionAssault.isActive() && killAppAssault.isActive();
     }
 
     private boolean isTrouble() {
@@ -138,21 +133,4 @@ public class ChaosMonkey {
     private boolean isEnabled() {
         return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled();
     }
-
-    private void killTheBossApp() {
-
-        try {
-            LOGGER.info("Chaos Monkey - I am killing your Application!");
-
-            int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
-                public int getExitCode() {
-                    return 0;
-                }
-            });
-            System.exit(exit);
-        } catch (Exception e) {
-            LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
-        }
-    }
-
 }
