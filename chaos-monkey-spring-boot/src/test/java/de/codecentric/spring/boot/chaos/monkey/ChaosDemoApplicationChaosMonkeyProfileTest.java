@@ -30,6 +30,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -65,7 +67,7 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings, latencyAssault, exceptionAssault, killAppAssault);
+        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault));
     }
 
     @Test

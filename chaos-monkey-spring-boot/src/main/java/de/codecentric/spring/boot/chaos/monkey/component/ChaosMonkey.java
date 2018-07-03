@@ -16,12 +16,15 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author Benjamin Wilms
@@ -30,100 +33,32 @@ public class ChaosMonkey {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
-    private LatencyAssault latencyAssault;
-    private ExceptionAssault exceptionAssault;
-    private KillAppAssault killAppAssault;
+    private List<ChaosMonkeyAssault> assaults;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, LatencyAssault assault, ExceptionAssault exceptionAssault, KillAppAssault killAppAssault) {
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults) {
         this.chaosMonkeySettings = chaosMonkeySettings;
-        this.latencyAssault = assault;
-        this.exceptionAssault = exceptionAssault;
-        this.killAppAssault = killAppAssault;
+        this.assaults = assaults;
     }
 
     public void callChaosMonkey() {
         if (isTrouble() && isEnabled()) {
-            // TODO: Refactoring to Assault Management!
-            int exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(3);
-
-            if (allAssaultsActive()) {
-
-                switch (exceptionRand) {
-                    case 1:
-                        latencyAssault.attack();
-                        break;
-                    case 2:
-                        exceptionAssault.attack();
-                        break;
-                    case 3:
-                        killAppAssault.attack();
-                        break;
-                }
-            } else if (isLatencyAndExceptionActive()) {
-                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                switch (exceptionRand) {
-                    case 1:
-                        latencyAssault.attack();
-                        break;
-                    case 2:
-                        exceptionAssault.attack();
-                        break;
-                }
-
-            } else if (isLatencyAndKillAppActive()) {
-                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                switch (exceptionRand) {
-                    case 1:
-                        latencyAssault.attack();
-                        break;
-                    case 2:
-                        killAppAssault.attack();
-                        break;
-                }
-
-            } else if (isExceptionAndKillAppActive()) {
-                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                switch (exceptionRand) {
-                    case 1:
-                        exceptionAssault.attack();
-                        break;
-                    case 2:
-                        killAppAssault.attack();
-                        break;
-                }
-
-            } else if (latencyAssault.isActive()) {
-                latencyAssault.attack();
-            } else if (exceptionAssault.isActive()) {
-                exceptionAssault.attack();
-            } else if (killAppAssault.isActive()) {
-                killAppAssault.attack();
+            List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
+                    .filter(ChaosMonkeyAssault::isActive)
+                    .collect(Collectors.toList());
+            if (isEmpty(activeAssaults)){
+                return;
             }
+            getRandomFrom(activeAssaults).attack();
         }
 
     }
 
-    private boolean isLatencyAndKillAppActive() {
-        return latencyAssault.isActive() && !exceptionAssault.isActive() &&
-                killAppAssault.isActive();
-    }
-
-    private boolean isExceptionAndKillAppActive() {
-        return !latencyAssault.isActive() && exceptionAssault.isActive() &&
-                killAppAssault.isActive();
-    }
-
-    private boolean isLatencyAndExceptionActive() {
-        return latencyAssault.isActive() && exceptionAssault.isActive() &&
-                !killAppAssault.isActive();
-    }
-
-
-    private boolean allAssaultsActive() {
-        return latencyAssault.isActive() && exceptionAssault.isActive() && killAppAssault.isActive();
+    private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {
+        int exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(activeAssaults.size());
+        return activeAssaults.get(exceptionRand);
     }
 
     private boolean isTrouble() {

@@ -28,6 +28,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -60,15 +62,12 @@ public class ChaosMonkeyTest {
     @Before
     public void setUp() {
         given(this.assaultProperties.getLevel()).willReturn(1);
-        given(this.assaultProperties.getTroubleRandom()).willReturn(10);
-        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
-        given(this.assaultProperties.getLevel()).willReturn(1);
         given(this.assaultProperties.getTroubleRandom()).willReturn(5);
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
         given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
         given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);
 
-        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, latencyAssault, exceptionAssault, killAppAssault);
+        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault));
     }
 
     @Test
@@ -76,7 +75,7 @@ public class ChaosMonkeyTest {
         given(this.exceptionAssault.isActive()).willReturn(true);
         given(this.latencyAssault.isActive()).willReturn(true);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(3)).willReturn(1);
+        given(this.assaultProperties.chooseAssault(3)).willReturn(0);
 
         chaosMonkey.callChaosMonkey();
 
@@ -88,7 +87,7 @@ public class ChaosMonkeyTest {
         given(this.exceptionAssault.isActive()).willReturn(true);
         given(this.latencyAssault.isActive()).willReturn(true);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(3)).willReturn(2);
+        given(this.assaultProperties.chooseAssault(3)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
@@ -100,7 +99,7 @@ public class ChaosMonkeyTest {
         given(this.exceptionAssault.isActive()).willReturn(true);
         given(this.latencyAssault.isActive()).willReturn(true);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(3)).willReturn(3);
+        given(this.assaultProperties.chooseAssault(3)).willReturn(2);
 
         chaosMonkey.callChaosMonkey();
 
@@ -112,10 +111,7 @@ public class ChaosMonkeyTest {
         given(this.exceptionAssault.isActive()).willReturn(false);
         given(this.latencyAssault.isActive()).willReturn(false);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.getLevel()).willReturn(1);
-        given(this.assaultProperties.getTroubleRandom()).willReturn(5);
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
-
 
         chaosMonkey.callChaosMonkey();
 
@@ -124,7 +120,6 @@ public class ChaosMonkeyTest {
 
     @Test
     public void isLatencyAssaultActive() {
-
         given(this.latencyAssault.isActive()).willReturn(true);
         given(this.exceptionAssault.isActive()).willReturn(false);
         given(this.killAppAssault.isActive()).willReturn(false);
@@ -150,7 +145,7 @@ public class ChaosMonkeyTest {
         given(this.exceptionAssault.isActive()).willReturn(true);
         given(this.latencyAssault.isActive()).willReturn(true);
         given(this.killAppAssault.isActive()).willReturn(false);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(2);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
@@ -163,7 +158,7 @@ public class ChaosMonkeyTest {
         given(this.exceptionAssault.isActive()).willReturn(true);
         given(this.latencyAssault.isActive()).willReturn(true);
         given(this.killAppAssault.isActive()).willReturn(false);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
 
         chaosMonkey.callChaosMonkey();
 
@@ -175,7 +170,7 @@ public class ChaosMonkeyTest {
         given(exceptionAssault.isActive()).willReturn(true);
         given(latencyAssault.isActive()).willReturn(false);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
 
         chaosMonkey.callChaosMonkey();
 
@@ -187,7 +182,7 @@ public class ChaosMonkeyTest {
         given(exceptionAssault.isActive()).willReturn(true);
         given(latencyAssault.isActive()).willReturn(false);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(2);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
@@ -199,7 +194,7 @@ public class ChaosMonkeyTest {
         given(exceptionAssault.isActive()).willReturn(false);
         given(latencyAssault.isActive()).willReturn(true);
         given(this.killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
 
         chaosMonkey.callChaosMonkey();
 
@@ -211,7 +206,7 @@ public class ChaosMonkeyTest {
         given(exceptionAssault.isActive()).willReturn(false);
         given(latencyAssault.isActive()).willReturn(true);
         given(killAppAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(2);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
@@ -219,7 +214,11 @@ public class ChaosMonkeyTest {
     }
 
     @Test
-    public void givenNoAssaultsActiveExpectNoLogging() {
+    public void givenNoAssaultsActiveExpectNoAttack() {
+        given(exceptionAssault.isActive()).willReturn(false);
+        given(latencyAssault.isActive()).willReturn(false);
+        given(killAppAssault.isActive()).willReturn(false);
+
         chaosMonkey.callChaosMonkey();
 
         verify(latencyAssault, never()).attack();

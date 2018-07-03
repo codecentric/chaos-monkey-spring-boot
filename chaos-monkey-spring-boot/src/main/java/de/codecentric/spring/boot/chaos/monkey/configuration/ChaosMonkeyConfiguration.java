@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
@@ -35,6 +36,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * @author Benjamin Wilms
@@ -85,8 +87,8 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkey chaosMonkey(LatencyAssault latencyAssault, ExceptionAssault exceptionAssault, KillAppAssault killAppAssault) {
-        return new ChaosMonkey(settings(), latencyAssault, exceptionAssault, killAppAssault);
+    public ChaosMonkey chaosMonkey(List<ChaosMonkeyAssault> chaosMonkeyAssaults) {
+        return new ChaosMonkey(settings(), chaosMonkeyAssaults);
     }
 
     @Bean
