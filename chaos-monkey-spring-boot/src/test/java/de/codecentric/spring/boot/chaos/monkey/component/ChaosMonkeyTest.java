@@ -16,24 +16,20 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.Appender;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Arrays;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -45,15 +41,6 @@ public class ChaosMonkeyTest {
 
     private ChaosMonkey chaosMonkey;
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
-    @Mock
-    private Appender mockAppender;
-    @Captor
-    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
-
-
     @Mock
     private AssaultProperties assaultProperties;
 
@@ -63,182 +50,193 @@ public class ChaosMonkeyTest {
     @Mock
     private ChaosMonkeySettings  chaosMonkeySettings;
 
+    @Mock
+    private LatencyAssault latencyAssault;
+
+    @Mock
+    private ExceptionAssault exceptionAssault;
+
+    @Mock
+    private KillAppAssault killAppAssault;
+
     @Before
     public void setUp() {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        when(mockAppender.getName()).thenReturn("MOCK");
-        root.addAppender(mockAppender);
-
-        captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
-
-        given(this.assaultProperties.getLevel()).willReturn(1);
-        given(this.assaultProperties.getTroubleRandom()).willReturn(10);
-        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
         given(this.assaultProperties.getLevel()).willReturn(1);
         given(this.assaultProperties.getTroubleRandom()).willReturn(5);
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
         given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
         given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);
 
-        chaosMonkey = new ChaosMonkey(chaosMonkeySettings);
-
+        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault));
     }
 
-
     @Test
-    public void isKillAppAssaultActive() {
-
-        given(this.assaultProperties.isExceptionsActive()).willReturn(false);
-        given(this.assaultProperties.isLatencyActive()).willReturn(false);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(true);
-        given(this.assaultProperties.getLevel()).willReturn(1);
-        given(this.assaultProperties.getTroubleRandom()).willReturn(5);
-        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
-
+    public void allAssaultsActiveExpectLatencyAttack() {
+        given(this.exceptionAssault.isActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
+        given(this.killAppAssault.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(3)).willReturn(0);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+        verify(latencyAssault, times(1)).attack();
+    }
 
-        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
-        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
-        assertEquals("Chaos Monkey - I am killing your Application!", captorLoggingEvent.getAllValues().get(0).getMessage());
-        assertEquals("Chaos Monkey - Unable to kill the App, I am not the BOSS!", captorLoggingEvent.getAllValues().get(1).getMessage());
+    @Test
+    public void allAssaultsActiveExpectExceptionAttack() {
+        given(this.exceptionAssault.isActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
+        given(this.killAppAssault.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(3)).willReturn(1);
 
+        chaosMonkey.callChaosMonkey();
+
+        verify(exceptionAssault, times(1)).attack();
+    }
+
+    @Test
+    public void allAssaultsActiveExpectKillAttack() {
+        given(this.exceptionAssault.isActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
+        given(this.killAppAssault.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(3)).willReturn(2);
+
+        chaosMonkey.callChaosMonkey();
+
+        verify(killAppAssault, times(1)).attack();
+    }
+
+    @Test
+    public void isKillAppAssaultActive() {
+        given(this.exceptionAssault.isActive()).willReturn(false);
+        given(this.latencyAssault.isActive()).willReturn(false);
+        given(this.killAppAssault.isActive()).willReturn(true);
+        given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
+
+        chaosMonkey.callChaosMonkey();
+
+        verify(killAppAssault, times(1)).attack();
     }
 
     @Test
     public void isLatencyAssaultActive() {
-
-        given(this.assaultProperties.isExceptionsActive()).willReturn(false);
-        given(this.assaultProperties.isLatencyActive()).willReturn(true);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
+        given(this.latencyAssault.isActive()).willReturn(true);
+        given(this.exceptionAssault.isActive()).willReturn(false);
+        given(this.killAppAssault.isActive()).willReturn(false);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
-
-
+        verify(latencyAssault, times(1)).attack();
     }
 
     @Test
     public void isExceptionAssaultActive() {
-
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Chaos Monkey - RuntimeException");
-
-        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
-        given(this.assaultProperties.isLatencyActive()).willReturn(false);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
+        given(this.exceptionAssault.isActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(false);
+        given(this.killAppAssault.isActive()).willReturn(false);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
-
-
+        verify(exceptionAssault, times(1)).attack();
     }
 
     @Test
-    public void isExceptionAndLatencyAssaultActiveExpectExceptionLogging() {
-
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Chaos Monkey - RuntimeException");
-
-        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
-        given(this.assaultProperties.isLatencyActive()).willReturn(true);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(2);
-
-
-        chaosMonkey.callChaosMonkey();
-
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
-
-
-    }
-
-    @Test
-    public void isExceptionAndLatencyAssaultActiveExpectLatencyLogging() {
-
-        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
-        given(this.assaultProperties.isLatencyActive()).willReturn(true);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(false);
+    public void isExceptionAndLatencyAssaultActiveExpectExceptionAttack() {
+        given(this.exceptionAssault.isActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
+        given(this.killAppAssault.isActive()).willReturn(false);
         given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - timeout", captorLoggingEvent.getValue().getMessage());
-
-
+        verify(exceptionAssault, times(1)).attack();
     }
 
     @Test
-    public void isExceptionAndKillAssaultActiveExpectExceptionLogging() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Chaos Monkey - RuntimeException");
+    public void isExceptionAndLatencyAssaultActiveExpectLatencyAttack() {
 
-        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
-        given(this.assaultProperties.isLatencyActive()).willReturn(false);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(true);
+        given(this.exceptionAssault.isActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
+        given(this.killAppAssault.isActive()).willReturn(false);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
+
+        chaosMonkey.callChaosMonkey();
+
+        verify(latencyAssault, times(1)).attack();
+    }
+
+    @Test
+    public void isExceptionAndKillAssaultActiveExpectExceptionAttack() {
+        given(exceptionAssault.isActive()).willReturn(true);
+        given(latencyAssault.isActive()).willReturn(false);
+        given(this.killAppAssault.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
+
+        chaosMonkey.callChaosMonkey();
+
+        verify(exceptionAssault, times(1)).attack();
+    }
+
+    @Test
+    public void isExceptionAndKillAssaultActiveExpectKillAttack() {
+        given(exceptionAssault.isActive()).willReturn(true);
+        given(latencyAssault.isActive()).willReturn(false);
+        given(this.killAppAssault.isActive()).willReturn(true);
         given(this.assaultProperties.chooseAssault(2)).willReturn(1);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getValue().getLevel());
-        assertEquals("Chaos Monkey - exception", captorLoggingEvent.getValue().getMessage());
+        verify(killAppAssault, times(1)).attack();
     }
 
     @Test
-    public void isExceptionAndKillAssaultActiveExpectKillLogging() {
-        given(this.assaultProperties.isExceptionsActive()).willReturn(true);
-        given(this.assaultProperties.isLatencyActive()).willReturn(false);
-        given(this.assaultProperties.isKillApplicationActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(2);
+    public void isLatencyAndKillAssaultActiveExpectLatencyAttack() {
+        given(exceptionAssault.isActive()).willReturn(false);
+        given(latencyAssault.isActive()).willReturn(true);
+        given(this.killAppAssault.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
-
-        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
-        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
-        assertEquals("Chaos Monkey - I am killing your Application!", captorLoggingEvent.getAllValues().get(0).getMessage());
-        assertEquals("Chaos Monkey - Unable to kill the App, I am not the BOSS!", captorLoggingEvent.getAllValues().get(1).getMessage());
+        verify(latencyAssault, times(1)).attack();
     }
 
     @Test
-    public void givenNoAssaultsActiveExpectNoLogging() {
+    public void isLatencyAndKillAssaultActiveExpectKillAttack() {
+        given(exceptionAssault.isActive()).willReturn(false);
+        given(latencyAssault.isActive()).willReturn(true);
+        given(killAppAssault.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
+
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, never()).doAppend(captorLoggingEvent.capture());
+        verify(killAppAssault, times(1)).attack();
+    }
 
+    @Test
+    public void givenNoAssaultsActiveExpectNoAttack() {
+        given(exceptionAssault.isActive()).willReturn(false);
+        given(latencyAssault.isActive()).willReturn(false);
+        given(killAppAssault.isActive()).willReturn(false);
 
+        chaosMonkey.callChaosMonkey();
+
+        verify(latencyAssault, never()).attack();
+        verify(exceptionAssault, never()).attack();
+        verify(killAppAssault, never()).attack();
     }
 
     @Test
     public void givenAssaultLevelTooHighExpectNoLogging() {
         given(this.assaultProperties.getLevel()).willReturn(10);
         given(this.assaultProperties.getTroubleRandom()).willReturn(9);
-        given(this.assaultProperties.isLatencyActive()).willReturn(true);
+        given(this.latencyAssault.isActive()).willReturn(true);
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, never()).doAppend(captorLoggingEvent.capture());
-
-
+        verify(latencyAssault, never()).attack();
+        verify(exceptionAssault, never()).attack();
+        verify(killAppAssault, never()).attack();
     }
 
     @Test
@@ -247,8 +245,8 @@ public class ChaosMonkeyTest {
 
         chaosMonkey.callChaosMonkey();
 
-        verify(mockAppender, never()).doAppend(captorLoggingEvent.capture());
-
-
+        verify(latencyAssault, never()).attack();
+        verify(exceptionAssault, never()).attack();
+        verify(killAppAssault, never()).attack();
     }
 }

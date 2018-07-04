@@ -16,14 +16,15 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ExitCodeGenerator;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author Benjamin Wilms
@@ -32,97 +33,32 @@ public class ChaosMonkey {
 
     private ChaosMonkeySettings chaosMonkeySettings;
 
-    @Autowired
-    private ApplicationContext context;
-
+    private List<ChaosMonkeyAssault> assaults;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings) {
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults) {
         this.chaosMonkeySettings = chaosMonkeySettings;
+        this.assaults = assaults;
     }
 
     public void callChaosMonkey() {
         if (isTrouble() && isEnabled()) {
-            // TODO: Refactoring to Assault Management!
-            int exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(3);
-
-            if (allAssaultsActive()) {
-
-                switch (exceptionRand) {
-                    case 1:
-                        generateLatency();
-                        break;
-                    case 2:
-                        generateChaosException();
-                        break;
-                    case 3:
-                        killTheBossApp();
-                        break;
-                }
-            } else if (isLatencyAndExceptionActive()) {
-                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                switch (exceptionRand) {
-                    case 1:
-                        generateLatency();
-                        break;
-                    case 2:
-                        generateChaosException();
-                        break;
-                }
-
-            } else if (isLatencyAndKillAppActive()) {
-                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                switch (exceptionRand) {
-                    case 1:
-                        generateLatency();
-                        break;
-                    case 2:
-                        killTheBossApp();
-                        break;
-                }
-
-            } else if (isExceptionAndKillAppActive()) {
-                exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(2);
-                switch (exceptionRand) {
-                    case 1:
-                        generateChaosException();
-                        break;
-                    case 2:
-                        killTheBossApp();
-                        break;
-                }
-
-            } else if (chaosMonkeySettings.getAssaultProperties().isLatencyActive()) {
-                generateLatency();
-            } else if (chaosMonkeySettings.getAssaultProperties().isExceptionsActive()) {
-                generateChaosException();
-            } else if (chaosMonkeySettings.getAssaultProperties().isKillApplicationActive()) {
-                killTheBossApp();
+            List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
+                    .filter(ChaosMonkeyAssault::isActive)
+                    .collect(Collectors.toList());
+            if (isEmpty(activeAssaults)){
+                return;
             }
+            getRandomFrom(activeAssaults).attack();
         }
 
     }
 
-    private boolean isLatencyAndKillAppActive() {
-        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && !chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
-                chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
-    }
-
-    private boolean isExceptionAndKillAppActive() {
-        return !chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
-                chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
-    }
-
-    private boolean isLatencyAndExceptionActive() {
-        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() &&
-                !chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
-    }
-
-
-    private boolean allAssaultsActive() {
-        return chaosMonkeySettings.getAssaultProperties().isLatencyActive() && chaosMonkeySettings.getAssaultProperties().isExceptionsActive() && chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+    private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {
+        int exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(activeAssaults.size());
+        return activeAssaults.get(exceptionRand);
     }
 
     private boolean isTrouble() {
@@ -131,40 +67,5 @@ public class ChaosMonkey {
 
     private boolean isEnabled() {
         return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled();
-    }
-
-    private void killTheBossApp() {
-
-        try {
-            LOGGER.info("Chaos Monkey - I am killing your Application!");
-
-            int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
-                public int getExitCode() {
-                    return 0;
-                }
-            });
-            System.exit(exit);
-        } catch (Exception e) {
-            LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
-        }
-    }
-
-    private void generateChaosException() {
-        LOGGER.info("Chaos Monkey - exception");
-        throw new RuntimeException("Chaos Monkey - RuntimeException");
-    }
-
-    /***
-     * Generates a timeout exception
-     */
-    private void generateLatency() {
-        LOGGER.info("Chaos Monkey - timeout");
-        int timeout = RandomUtils.nextInt(chaosMonkeySettings.getAssaultProperties().getLatencyRangeStart(), chaosMonkeySettings.getAssaultProperties().getLatencyRangeEnd());
-
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException e) {
-            // do nothing
-        }
     }
 }
