@@ -228,7 +228,7 @@ public class ChaosMonkeyTest {
 
     @Test
     public void givenAssaultLevelTooHighExpectNoLogging() {
-        given(this.assaultProperties.getLevel()).willReturn(10);
+        given(this.assaultProperties.getLevel()).willReturn(100);
         given(this.assaultProperties.getTroubleRandom()).willReturn(9);
         given(this.latencyAssault.isActive()).willReturn(true);
 
