@@ -22,15 +22,17 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.conditions.*;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.watcher.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
@@ -43,7 +45,7 @@ import java.util.List;
  */
 @Configuration
 @Profile("chaos-monkey")
-@EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
+@EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
@@ -121,17 +123,10 @@ public class ChaosMonkeyConfiguration {
         return new SpringRepositoryAspect(chaosMonkey);
     }
 
-    @Bean
+        @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
+    @ConditionalOnProperty(prefix = "endpoints.chaosmonkey", name = "enabled", matchIfMissing = false)
     public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint() {
         return new ChaosMonkeyRestEndpoint(settings());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
-    public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
-        return new ChaosMonkeyJmxEndpoint(settings());
     }
 }

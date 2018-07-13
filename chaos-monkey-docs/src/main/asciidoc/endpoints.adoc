@@ -1,6 +1,6 @@
 [[endpoints]]
 == Spring Boot Actuator Endpoints ==
-Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP].
+Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[HTTP].
 
 '''
 
@@ -8,17 +8,13 @@ Chaos Monkey for Spring Boot offers you some build in endpoints exposed via http
 [source,txt,subs="verbatim,attributes"]
 .application.properties:
 ----
-management.endpoint.chaosmonkey.enabled=true
-management.endpoint.chaosmonkeyjmx.enabled=true
+endpoints.chaosmonkey.enabled=true
 
-# inlcude all endpoints
-management.endpoints.web.exposure.include=*
-
-# include specific endpoints
-management.endpoints.web.exposure.include=health,info,chaosmonkey
 ----
 
 === HTTP Endpoint
+
+NOTE: The Chaos Monkey endpoint is based on standard Spring Boot Actuator configuration.
 
 |===
 |ID |Description |Methods
@@ -90,27 +86,27 @@ Case: Chaos Monkey is running.
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 200 OK
 ----
-Ready to be evil!
+- NO CONTENT -
 ----
 Case: Chaos Monkey is activated, but will not launch any attacks.
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 503 Service Unavailable
 ----
-You switched me off!
+- NO CONTENT -
 ----
 ===== POST Chaos Monkey enable
 [[chaosmonkeyenable]]
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/enable - Response 200 OK
 ----
-Chaos Monkey is enabled
+- NO CONTENT -
 ----
 ===== POST Chaos Monkey disable
 [[chaosmonkeydisable]]
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/disable - Response 200 OK
 ----
-Chaos Monkey is disabled
+- NO CONTENT -
 ----
 ===== GET Watcher
 NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the application starts.
@@ -159,58 +155,5 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/assaults - Response 200 OK
 ----
-Assault config has changed
+- NO CONTENT -
 ----
-
-=== JMX Endpoint
-
-Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
-
-image::jconsoleChaosMonkey.png[JMX Console]
-
-|===
-|Operation |Description |Response example
-
-|enableChaosMonkey
-|Enable Chaos Monkey
-|Chaos Monkey is enabled
-
-|disableChaosMonkey
-|Disable Chaos Monkey
-|Chaos Monkey is disabled
-
-|getAssaultProperties
-|Running Assault configuration
-|
-level=3
-latencyRangeStart=1000
-latencyRangeEnd=3000
-latencyActive=true
-exceptionsActive=false
-killApplicationActive=false
-restartApplicationActive=false
-
-|getWatcherProperties
-|Running Watcher configuration
-|controller=true
-restController=false
-service=true
-repository=false
-component=false
-
-|toggleLatencyAssault
-|Toggle Latency Assault status
-|New value (true/false)
-
-|toggleExceptionAssault
-|Toggle Exception Assault status
-|New value (true/false)
-
-|toggleKillApplicationAssault
-|Toggle KillApplication Assault status
-|New value (true/false)
-
-|isChaosMonkeyActive
-|Is Chaos Monkey active or not
-|true or false
-|===

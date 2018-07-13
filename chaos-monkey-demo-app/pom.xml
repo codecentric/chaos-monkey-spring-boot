@@ -55,9 +55,7 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

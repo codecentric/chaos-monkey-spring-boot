@@ -6,7 +6,6 @@
 
 === Endpoints
 - Spring Boot Actuator Endpoint /chaosmonkey/*
-- JMX Endpoint
 
 === Bugs fixed
 - Service Watcher config bug

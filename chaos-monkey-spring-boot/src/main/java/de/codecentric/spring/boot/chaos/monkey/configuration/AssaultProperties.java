@@ -69,6 +69,4 @@ public class AssaultProperties {
     public int chooseAssault(int amount) {
         return RandomUtils.nextInt(0, amount);
     }
-
-
 }
