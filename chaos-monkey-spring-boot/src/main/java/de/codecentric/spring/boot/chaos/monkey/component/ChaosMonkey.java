@@ -18,8 +18,6 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,9 +33,6 @@ public class ChaosMonkey {
 
     private List<ChaosMonkeyAssault> assaults;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
-
-
     public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.assaults = assaults;
@@ -48,7 +43,7 @@ public class ChaosMonkey {
             List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
                     .filter(ChaosMonkeyAssault::isActive)
                     .collect(Collectors.toList());
-            if (isEmpty(activeAssaults)){
+            if (isEmpty(activeAssaults)) {
                 return;
             }
             getRandomFrom(activeAssaults).attack();
