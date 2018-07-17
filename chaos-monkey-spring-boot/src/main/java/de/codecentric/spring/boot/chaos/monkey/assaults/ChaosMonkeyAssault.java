@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
-
-import org.aspectj.lang.annotation.Pointcut;
+package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 /**
- * @author Benjamin Wilms
+ * @author Thorsten Deelmann
  */
-abstract class ChaosMonkeyBaseAspect {
-    @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
-    public void classInChaosMonkeyPackage() { }
+public interface ChaosMonkeyAssault {
 
-    @Pointcut("execution(* *.*(..))")
-    public void allPublicMethodPointcut() {
-    }
+    boolean isActive();
+
+    void attack();
+
 }

@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import org.aspectj.lang.annotation.Pointcut;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
- * @author Benjamin Wilms
+ * @author Thorsten Deelmann
  */
-abstract class ChaosMonkeyBaseAspect {
-    @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
-    public void classInChaosMonkeyPackage() { }
+public class ExceptionAssaultTest {
 
-    @Pointcut("execution(* *.*(..))")
-    public void allPublicMethodPointcut() {
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    @Test
+    public void throwsRuntimeException() {
+        exception.expect(RuntimeException.class);
+        exception.expectMessage("Chaos Monkey - RuntimeException");
+
+        ExceptionAssault exceptionAssault = new ExceptionAssault(null);
+        exceptionAssault.attack();
     }
 }

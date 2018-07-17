@@ -16,6 +16,9 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
@@ -26,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
@@ -49,11 +54,20 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
     private ChaosMonkeySettings monkeySettings;
 
     @Autowired
+    private LatencyAssault latencyAssault;
+
+    @Autowired
+    private ExceptionAssault exceptionAssault;
+
+    @Autowired
+    private KillAppAssault killAppAssault;
+
+    @Autowired
     private Environment env;
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings);
+        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault));
     }
 
     @Test
