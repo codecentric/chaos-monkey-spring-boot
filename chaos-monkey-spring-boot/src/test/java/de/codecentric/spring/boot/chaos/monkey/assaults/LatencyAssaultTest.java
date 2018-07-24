@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
@@ -41,6 +42,9 @@ public class LatencyAssaultTest {
     @Mock
     private AssaultProperties assaultProperties;
 
+    @Mock
+    private Metrics metricsMock;
+
     @Test
     public void threadSleepHasBeenCalled() throws Exception {
         mockStatic(Thread.class);
@@ -54,7 +58,7 @@ public class LatencyAssaultTest {
         when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
         when(RandomUtils.nextInt(latencyRangeStart, latencyRangeEnd)).thenReturn(sleepTimeMillis);
 
-        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings);
+        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricsMock);
         latencyAssault.attack();
 
         verifyStatic(Thread.class, times(1));

@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +28,18 @@ import org.springframework.context.ApplicationContext;
 /**
  * @author Thorsten Deelmann
  */
-public class KillAppAssault implements ChaosMonkeyAssault{
+public class KillAppAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
     @Autowired
     private ApplicationContext context;
 
     private ChaosMonkeySettings settings;
+    private final Metrics metrics;
 
-    public KillAppAssault(ChaosMonkeySettings settings) {
+    public KillAppAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;
+        this.metrics = metrics;
     }
 
     @Override
@@ -48,6 +51,10 @@ public class KillAppAssault implements ChaosMonkeyAssault{
     public void attack() {
         try {
             LOGGER.info("Chaos Monkey - I am killing your Application!");
+
+            if (metrics != null)
+                // metrics, makes not really sense
+                metrics.counter("appkill.counter").increment();
 
             int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
                 public int getExitCode() {

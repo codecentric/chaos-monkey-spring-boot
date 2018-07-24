@@ -21,16 +21,21 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.conditions.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.watcher.*;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
@@ -43,19 +48,21 @@ import java.util.List;
  */
 @Configuration
 @Profile("chaos-monkey")
-@EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
+@EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
+    private final MeterRegistry meterRegistry;
 
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
-                                    AssaultProperties assaultProperties) {
+                                    AssaultProperties assaultProperties, MeterRegistry meterRegistry) {
         this.chaosMonkeyProperties = chaosMonkeyProperties;
         this.watcherProperties = watcherProperties;
         this.assaultProperties = assaultProperties;
+        this.meterRegistry = meterRegistry;
 
         try {
             String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
@@ -73,34 +80,34 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public LatencyAssault latencyAssault() {
-        return new LatencyAssault(settings());
+        return new LatencyAssault(settings(), metrics(meterRegistry));
     }
 
     @Bean
     public ExceptionAssault exceptionAssault() {
-        return new ExceptionAssault(settings());
+        return new ExceptionAssault(settings(), metrics(meterRegistry));
     }
 
     @Bean
     public KillAppAssault killAppAssault() {
-        return new KillAppAssault(settings());
+        return new KillAppAssault(settings(), metrics(meterRegistry));
     }
 
     @Bean
     public ChaosMonkey chaosMonkey(List<ChaosMonkeyAssault> chaosMonkeyAssaults) {
-        return new ChaosMonkey(settings(), chaosMonkeyAssaults);
+        return new ChaosMonkey(settings(), chaosMonkeyAssaults, metrics(meterRegistry));
     }
 
     @Bean
     @Conditional(AttackControllerCondition.class)
     public SpringControllerAspect controllerAspect(ChaosMonkey chaosMonkey) {
-        return new SpringControllerAspect(chaosMonkey);
+        return new SpringControllerAspect(chaosMonkey, metrics(meterRegistry));
     }
 
     @Bean
     @Conditional(AttackRestControllerCondition.class)
     public SpringRestControllerAspect restControllerAspect(ChaosMonkey chaosMonkey) {
-        return new SpringRestControllerAspect(chaosMonkey);
+        return new SpringRestControllerAspect(chaosMonkey, metrics(meterRegistry));
     }
 
     @Bean
@@ -134,4 +141,10 @@ public class ChaosMonkeyConfiguration {
     public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
         return new ChaosMonkeyJmxEndpoint(settings());
     }
+
+    @Bean
+    public Metrics metrics(MeterRegistry meterRegistry) {
+        return new Metrics(meterRegistry);
+    }
+
 }

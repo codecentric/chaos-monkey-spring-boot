@@ -31,6 +31,12 @@ public class HelloController {
         return ResponseEntity.ok(sayHelloPlease());
     }
 
+
+    @GetMapping("/greet")
+    public ResponseEntity<String> greet() {
+        return ResponseEntity.ok("Greetings from the server side!");
+    }
+
     private String sayHelloPlease() {
         return "Hello!";
     }

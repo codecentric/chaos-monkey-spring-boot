@@ -16,7 +16,10 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +32,11 @@ public class LatencyAssault implements ChaosMonkeyAssault {
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
 
     private ChaosMonkeySettings settings;
+    private final Metrics metrics;
 
-    public LatencyAssault(ChaosMonkeySettings settings) {
+    public LatencyAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;
+        this.metrics = metrics;
     }
 
     @Override
@@ -41,8 +46,14 @@ public class LatencyAssault implements ChaosMonkeyAssault {
 
     @Override
     public void attack() {
-        LOGGER.info("Chaos Monkey - timeout");
+        LOGGER.debug("Chaos Monkey - timeout");
         int timeout = RandomUtils.nextInt(settings.getAssaultProperties().getLatencyRangeStart(), settings.getAssaultProperties().getLatencyRangeEnd());
+
+        if(metrics != null) {
+            // metrics
+            metrics.counter("chaos.monkey.assault.latency.counter").increment();
+            metrics.gauge(MetricType.LATENCY_ASSAULT, timeout);
+        }
 
         try {
             Thread.sleep(timeout);

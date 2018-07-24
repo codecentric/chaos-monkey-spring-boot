@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.demo.chaos.monkey.restcontroller.DemoRestController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,12 +36,15 @@ public class SpringRestControllerAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    @Mock
+    private Metrics metricsMock;
+
     @Test
     public void chaosMonkeyIsCalled() {
         DemoRestController target = new DemoRestController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock);
+        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(serviceAspect);
 
         DemoRestController proxy = factory.getProxy();
@@ -56,7 +60,7 @@ public class SpringRestControllerAspectTest {
         DemoRestController target = new DemoRestController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
         SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
         factory.addAspect(controllerAspect);
