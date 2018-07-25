@@ -32,8 +32,7 @@ alt="Chaos Monkey for Spring Boot" width="260" height="155" border="10" /></a><b
 ## Releases
 [Releases](https://codecentric.github.io/chaos-monkey-spring-boot/#releases)
 
->Chaos Monkey for Spring Boot 1.0.1 depends on [Spring Boot 2.0.x](https://projects.spring.io/spring-boot/) and [Spring Framework 5.0.x]
-(https://projects.spring.io/spring-framework/)
+>Chaos Monkey for Spring Boot 1.0.1 depends on [Spring Boot 2.0.x](https://projects.spring.io/spring-boot/) and [Spring Framework 5.0.x](https://projects.spring.io/spring-framework/)
 
 
 ## Latest Snapshots
