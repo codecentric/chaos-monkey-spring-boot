@@ -29,9 +29,7 @@ public class Metrics {
     }
 
     public Counter counterWatcher(MetricType type, String name) {
-        String component = name.substring(name.indexOf("."), name.indexOf(".", name.indexOf(".")));
-
-        return meterRegistry.counter(type.getMetricName() + "watcher." + component, "component", name);
+        return meterRegistry.counter(type.getMetricName() + ".watcher." + extractComponent(name), "component", name);
     }
 
     public Timer timer(MetricType type) {
@@ -41,6 +39,10 @@ public class Metrics {
 
     public <T extends Number> T gauge(MetricType type, T number) {
 
-        return meterRegistry.gauge(type.getMetricName() + "gauge", number);
+        return meterRegistry.gauge(type.getMetricName() + ".gauge.", number);
+    }
+
+    private String extractComponent(String name) {
+        return name.substring(name.indexOf("."), name.indexOf(".", name.indexOf(".")));
     }
 }

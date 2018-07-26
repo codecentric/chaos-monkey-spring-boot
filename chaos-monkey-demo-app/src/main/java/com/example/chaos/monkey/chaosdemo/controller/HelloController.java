@@ -16,6 +16,7 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import com.example.chaos.monkey.chaosdemo.service.GreetingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HelloController {
 
+    private final GreetingService greetingService;
+
+    public HelloController(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok(sayHelloPlease());
@@ -34,7 +41,7 @@ public class HelloController {
 
     @GetMapping("/greet")
     public ResponseEntity<String> greet() {
-        return ResponseEntity.ok("Greetings from the server side!");
+        return ResponseEntity.ok(greetingService.greet());
     }
 
     private String sayHelloPlease() {

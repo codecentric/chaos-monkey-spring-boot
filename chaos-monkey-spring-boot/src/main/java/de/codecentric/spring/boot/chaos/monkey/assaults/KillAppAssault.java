@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
@@ -54,7 +55,7 @@ public class KillAppAssault implements ChaosMonkeyAssault {
 
             if (metrics != null)
                 // metrics, makes not really sense
-                metrics.counter("appkill.counter").increment();
+                metrics.counter(MetricType.KILLAPP_ASSAULT).increment();
 
             int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
                 public int getExitCode() {

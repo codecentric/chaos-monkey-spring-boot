@@ -42,7 +42,7 @@ public class ChaosMonkey {
 
     public void callChaosMonkey() {
         if (isEnabled() && metrics != null)
-            metrics.counter(MetricType.APPLICATION_REQ_COUNT,"count","total").increment();
+            metrics.counter(MetricType.APPLICATION_REQ_COUNT,"type","total").increment();
 
         if (isTrouble() && isEnabled()) {
 
@@ -55,7 +55,7 @@ public class ChaosMonkey {
             getRandomFrom(activeAssaults).attack();
             // attacked requests
             if (metrics != null) {
-                metrics.counter(MetricType.APPLICATION_REQ_COUNT, "count", "assaulted").increment();
+                metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted").increment();
             }
         }
 
