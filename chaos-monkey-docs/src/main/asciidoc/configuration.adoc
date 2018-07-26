@@ -17,7 +17,7 @@ Except for the Watcher, you can also influence the behavior of the Chaos Monkey 
 |chaos.monkey.assaults.level
 |How many requests are to be attacked.
  1 each request, 5 each 5th request is attacked
-|1-100
+|1-1000
 |5
 
 |chaos.monkey.assaults.latencyRangeStart
