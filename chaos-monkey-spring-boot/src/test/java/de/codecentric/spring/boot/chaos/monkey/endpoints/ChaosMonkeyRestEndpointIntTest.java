@@ -124,7 +124,7 @@ public class ChaosMonkeyRestEndpointIntTest {
     @Test
     public void postAssaultConfigurationGoodCase() {
         AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setLevel(100);
+        assaultProperties.setLevel(1000);
         assaultProperties.setLatencyRangeEnd(100);
         assaultProperties.setLatencyRangeStart(200);
         assaultProperties.setLatencyActive(true);
@@ -152,7 +152,7 @@ public class ChaosMonkeyRestEndpointIntTest {
     @Test
     public void postAssaultConfigurationBadCaseLatencyRangeEndEmpty() {
         AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setLevel(100);
+        assaultProperties.setLevel(1000);
         assaultProperties.setLatencyRangeStart(200);
         assaultProperties.setLatencyActive(true);
 
@@ -165,7 +165,7 @@ public class ChaosMonkeyRestEndpointIntTest {
     @Test
     public void postAssaultConfigurationBadCaseLatencyRangeStartEmpty() {
         AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setLevel(100);
+        assaultProperties.setLevel(1000);
         assaultProperties.setLatencyRangeEnd(200);
         assaultProperties.setLatencyActive(true);
 
