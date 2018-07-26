@@ -62,7 +62,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public int getTroubleRandom() {
-        return RandomUtils.nextInt(1, 101);
+        return RandomUtils.nextInt(1, 1001);
     }
 
     @JsonIgnore
