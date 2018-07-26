@@ -116,7 +116,7 @@ public class ChaosMonkeySettingsTest {
         assertThat(settings.getAssaultProperties().getLatencyRangeStart(), is(assaultProperties.getLatencyRangeStart()));
 
         int troubleRandom = settings.getAssaultProperties().getTroubleRandom();
-        assertTrue("Trouble random is to high!", troubleRandom < 11);
+        assertTrue("Trouble random is to high!", troubleRandom < 1001);
 
         assertThat(settings.getAssaultProperties().getLevel(), is(assaultProperties.getLevel()));
     }
