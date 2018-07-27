@@ -42,8 +42,7 @@ public class LatencyAssaultTest {
     @Mock
     private AssaultProperties assaultProperties;
 
-    @Mock
-    private Metrics metricsMock;
+
 
     @Test
     public void threadSleepHasBeenCalled() throws Exception {
@@ -58,7 +57,7 @@ public class LatencyAssaultTest {
         when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
         when(RandomUtils.nextInt(latencyRangeStart, latencyRangeEnd)).thenReturn(sleepTimeMillis);
 
-        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricsMock);
+        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, null);
         latencyAssault.attack();
 
         verifyStatic(Thread.class, times(1));

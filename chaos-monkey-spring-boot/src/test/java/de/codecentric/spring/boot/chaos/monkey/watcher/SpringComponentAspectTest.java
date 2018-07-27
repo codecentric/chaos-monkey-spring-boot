@@ -37,15 +37,13 @@ public class SpringComponentAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
-    @Mock
-    private Metrics metricsMock;
 
     @Test
     public void chaosMonkeyIsCalled() {
         DemoComponent target = new DemoComponent();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyMock);
+        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyMock, null);
         factory.addAspect(componentAspect);
 
         DemoComponent proxy = factory.getProxy();
@@ -61,10 +59,10 @@ public class SpringComponentAspectTest {
         DemoComponent target = new DemoComponent();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
-        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, null);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, null);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, null);
         factory.addAspect(controllerAspect);
         factory.addAspect(repositoryAspect);
         factory.addAspect(serviceAspect);

@@ -113,19 +113,19 @@ public class ChaosMonkeyConfiguration {
     @Bean
     @Conditional(AttackServiceCondition.class)
     public SpringServiceAspect serviceAspect(ChaosMonkey chaosMonkey) {
-        return new SpringServiceAspect(chaosMonkey);
+        return new SpringServiceAspect(chaosMonkey, metrics(meterRegistry));
     }
 
     @Bean
     @Conditional(AttackComponentCondition.class)
     public SpringComponentAspect componentAspect(ChaosMonkey chaosMonkey) {
-        return new SpringComponentAspect(chaosMonkey);
+        return new SpringComponentAspect(chaosMonkey, metrics(meterRegistry));
     }
 
     @Bean
     @Conditional(AttackRepositoryCondition.class)
     public SpringRepositoryAspect repositoryAspect(ChaosMonkey chaosMonkey) {
-        return new SpringRepositoryAspect(chaosMonkey);
+        return new SpringRepositoryAspect(chaosMonkey, metrics(meterRegistry));
     }
 
     @Bean

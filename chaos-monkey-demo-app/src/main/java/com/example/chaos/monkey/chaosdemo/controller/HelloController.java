@@ -44,6 +44,11 @@ public class HelloController {
         return ResponseEntity.ok(greetingService.greet());
     }
 
+    @GetMapping("/dbgreet")
+    public ResponseEntity<String> greetFromDb() {
+        return ResponseEntity.ok(greetingService.greetFromRepo());
+    }
+
     private String sayHelloPlease() {
         return "Hello!";
     }

@@ -34,8 +34,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
-        <spring.version>5.0.6.RELEASE</spring.version>
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <spring.version>5.0.7.RELEASE</spring.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <lombok.version>1.16.20</lombok.version>
         <!-- plugin versions-->
@@ -56,6 +56,8 @@
         <mockito-all.version>1.10.19</mockito-all.version>
         <powermock.version>1.7.4</powermock.version>
         <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
+
+
     </properties>
     <modules>
         <module>chaos-monkey-dependencies</module>

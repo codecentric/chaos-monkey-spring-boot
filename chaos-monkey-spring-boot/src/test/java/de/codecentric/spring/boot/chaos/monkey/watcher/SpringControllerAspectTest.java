@@ -16,18 +16,15 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
-import de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Benjamin Wilms
@@ -38,15 +35,13 @@ public class SpringControllerAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
-    @Mock
-    private Metrics metricsMock;
 
     @Test
     public void chaosMonkeyIsCalled() {
         DemoController target = new DemoController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, null);
         factory.addAspect(controllerAspect);
 
         DemoController proxy = factory.getProxy();
@@ -62,9 +57,9 @@ public class SpringControllerAspectTest {
         DemoController target = new DemoController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
-        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, null);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, null);
         factory.addAspect(repositoryAspect);
         factory.addAspect(serviceAspect);
         factory.addAspect(restControllerAspect);

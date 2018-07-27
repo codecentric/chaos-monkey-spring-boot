@@ -36,15 +36,12 @@ public class SpringRestControllerAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
-    @Mock
-    private Metrics metricsMock;
-
     @Test
     public void chaosMonkeyIsCalled() {
         DemoRestController target = new DemoRestController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock, null);
         factory.addAspect(serviceAspect);
 
         DemoRestController proxy = factory.getProxy();
@@ -60,9 +57,9 @@ public class SpringRestControllerAspectTest {
         DemoRestController target = new DemoRestController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, null);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, null);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
         factory.addAspect(controllerAspect);
         factory.addAspect(serviceAspect);
         factory.addAspect(repositoryAspect);

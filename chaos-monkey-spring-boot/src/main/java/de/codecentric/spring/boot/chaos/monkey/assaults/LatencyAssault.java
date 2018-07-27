@@ -51,7 +51,7 @@ public class LatencyAssault implements ChaosMonkeyAssault {
 
         if(metrics != null) {
             // metrics
-            metrics.counter("chaos.monkey.assault.latency.counter").increment();
+            metrics.counter(MetricType.LATENCY_ASSAULT).increment();
             metrics.gauge(MetricType.LATENCY_ASSAULT, timeout);
         }
 

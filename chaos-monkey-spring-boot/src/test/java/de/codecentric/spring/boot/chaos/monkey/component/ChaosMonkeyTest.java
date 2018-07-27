@@ -59,8 +59,6 @@ public class ChaosMonkeyTest {
     @Mock
     private KillAppAssault killAppAssault;
 
-    @Mock
-    private Metrics metricsMock;
 
     @Before
     public void setUp() {
@@ -70,7 +68,7 @@ public class ChaosMonkeyTest {
         given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
         given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);
 
-        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), metricsMock);
+        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), null);
     }
 
     @Test

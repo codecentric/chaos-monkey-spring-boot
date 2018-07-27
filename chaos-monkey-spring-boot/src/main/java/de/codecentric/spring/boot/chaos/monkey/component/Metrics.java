@@ -29,7 +29,7 @@ public class Metrics {
     }
 
     public Counter counterWatcher(MetricType type, String name) {
-        return meterRegistry.counter(type.getMetricName() + ".watcher." + extractComponent(name), "component", name);
+        return meterRegistry.counter(type.getMetricName() + ".watcher", "component", extractComponent(name));
     }
 
     public Timer timer(MetricType type) {
@@ -43,6 +43,6 @@ public class Metrics {
     }
 
     private String extractComponent(String name) {
-        return name.substring(name.indexOf("."), name.indexOf(".", name.indexOf(".")));
+        return name.replaceAll("execution.","");
     }
 }
