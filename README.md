@@ -70,7 +70,9 @@ Of course, you can start in production, but keep in mind...
 ...so let's keep production as the best place on earth and look for our first experiences on another stage. If all goes well and your company is further on to you, run it in production.
 <a name="dochaos"></a>
 ## What does the Chaos Monkey for Spring Boot do?
-Spring Boot Chaos Monkey is a small library which you can integrate as a dependency into your existing application.
+Spring Boot Chaos Monkey is a small library (30kb) and you have the following options to integrate the Chaos Monkey into your Spring Boot App.
+### Dependency in your POM
+
 ```xml
 <dependency>
     <groupId>de.codecentric</groupId>
@@ -86,11 +88,38 @@ attacks on your application yet,
 ```
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 ```
+### Star via injected external JAR file and Spring Boot PropertiesLauncher
+```
+java -cp your-app.jar
+  -Dloader.path=chaos-monkey-spring-boot-X.X.X.jar
+    org.springframework.boot.loader.PropertiesLauncher
+    --spring.profiles.active=chaos-monkey
+```
+### Start via loader.path system property and Spring Boot PropertiesLauncher
+Thanks to [Thomas Darimont](https://gist.github.com/thomasdarimont) !!!
+```
+java \
+  -Xbootclasspath/a:aspectjrt-1.9.1.jar \
+  -cp your-app.jar \
+  -Dloader.path=chaos-monkey-spring-boot-X.X.X.jar \
+  -Dspring.profiles.active=chaos-monkey \
+  org.springframework.boot.loader.PropertiesLauncher
+```
+### Start via LOADER_PATH env variable and Spring Boot PropertiesLauncher
+Thanks to [Thomas Darimont](https://gist.github.com/thomasdarimont) !!!
+```
+LOADER_PATH=chaos-monkey-spring-boot-X.X.X.jar \
+java \
+  -Xbootclasspath/a:aspectjrt-1.9.1.jar \
+  -Dspring.profiles.active=chaos-monkey \
+  -cp your-app.jar \
+  org.springframework.boot.loader.PropertiesLauncher
+```
 
-As long as you don't set the property "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen.
+>No matter how you embed Chaos Monkey, as long as you don't set the property  "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen!
 
 As you can see, you don't have to change the source code!
-### Dynamic Configuration at runtime
+## Dynamic Configuration at runtime
 Since version 1.5.0 and 2.0.0 the Chaos Monkey for Spring Boot can be configured at runtime via a Spring Boot Actuator Endpoint.
 
 > Take a look at the current [snapshots](#snapshots) and [documentation](#releases).
