@@ -116,6 +116,8 @@ java \
   org.springframework.boot.loader.PropertiesLauncher
 ```
 
+In all cases:
+
 >No matter how you embed Chaos Monkey, as long as you don't set the property  "<b>chaos.monkey.enabled</b>" to "<b>true</b>", nothing will happen!
 
 As you can see, you don't have to change the source code!
