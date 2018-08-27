@@ -49,6 +49,7 @@ public class ChaosMonkeyConfiguration {
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
+    private ChaosMonkeySettings chaosMonkeySettings;
 
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
@@ -68,7 +69,8 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkeySettings settings() {
-        return new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
+        chaosMonkeySettings = new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
+        return chaosMonkeySettings;
     }
 
     @Bean
@@ -106,7 +108,7 @@ public class ChaosMonkeyConfiguration {
     @Bean
     @Conditional(AttackServiceCondition.class)
     public SpringServiceAspect serviceAspect(ChaosMonkey chaosMonkey) {
-        return new SpringServiceAspect(chaosMonkey);
+        return new SpringServiceAspect(chaosMonkey, chaosMonkeySettings);
     }
 
     @Bean
