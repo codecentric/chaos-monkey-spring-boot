@@ -43,7 +43,7 @@ import java.util.List;
  */
 @Configuration
 @Profile("chaos-monkey")
-@EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
+@EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
@@ -108,7 +108,7 @@ public class ChaosMonkeyConfiguration {
     @Bean
     @Conditional(AttackServiceCondition.class)
     public SpringServiceAspect serviceAspect(ChaosMonkey chaosMonkey) {
-        return new SpringServiceAspect(chaosMonkey, chaosMonkeySettings);
+        return new SpringServiceAspect(chaosMonkey);
     }
 
     @Bean

@@ -61,7 +61,7 @@ public class AssaultProperties {
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
 
-    private List<String> watchedServices;
+    private List<String> watchedCustomServices;
 
     @JsonIgnore
     public int getTroubleRandom() {
@@ -71,6 +71,13 @@ public class AssaultProperties {
     @JsonIgnore
     public int chooseAssault(int amount) {
         return RandomUtils.nextInt(0, amount);
+    }
+
+    @JsonIgnore
+    public boolean isWatchedCustomServicesActive() {
+        if(watchedCustomServices == null || watchedCustomServices.isEmpty())
+            return false;
+        return true;
     }
 
 

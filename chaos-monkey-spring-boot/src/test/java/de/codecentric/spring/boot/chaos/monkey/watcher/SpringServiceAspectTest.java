@@ -25,8 +25,10 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -42,21 +44,20 @@ public class SpringServiceAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
-    @Mock
-    private ChaosMonkeySettings chaosMonkeySettings;
+    private String testSignature = "com.test.Class.method";
 
     @Test
     public void chaosMonkeyIsCalled() {
         DemoService serviceTarget = new DemoService();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(serviceTarget);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, chaosMonkeySettings);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
         factory.addAspect(serviceAspect);
 
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(DemoService.class.getCanonicalName());
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -76,36 +77,9 @@ public class SpringServiceAspectTest {
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey(DemoService.class.getCanonicalName());
         verifyNoMoreInteractions(chaosMonkeyMock);
 
-    }
-
-    @Test
-    public void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
-        DemoService target = new DemoService();
-
-        AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
-        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, chaosMonkeySettings);
-        factory.addAspect(controllerAspect);
-        factory.addAspect(restControllerAspect);
-        factory.addAspect(repositoryAspect);
-        factory.addAspect(serviceAspect);
-
-        final List<String> watchedServices = new ArrayList<>();
-        watchedServices.add("TestService");
-
-        when(chaosMonkeySettings.getAssaultProperties())
-            .thenReturn(assaultPropertyWithWatchedServices(watchedServices));
-
-        DemoService proxy = factory.getProxy();
-        proxy.sayHelloService();
-
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
-        verifyNoMoreInteractions(chaosMonkeyMock);
     }
 
     @Test
@@ -116,28 +90,18 @@ public class SpringServiceAspectTest {
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, chaosMonkeySettings);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
         factory.addAspect(controllerAspect);
         factory.addAspect(restControllerAspect);
         factory.addAspect(repositoryAspect);
         factory.addAspect(serviceAspect);
 
-        final List<String> watchedServices = new ArrayList<>();
-        watchedServices.add("DemoService");
-
-        when(chaosMonkeySettings.getAssaultProperties())
-            .thenReturn(assaultPropertyWithWatchedServices(watchedServices));
-
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(DemoService.class.getCanonicalName());
         verifyNoMoreInteractions(chaosMonkeyMock);
     }
 
-    private AssaultProperties assaultPropertyWithWatchedServices(List<String> watchedServices) {
-        AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setWatchedServices(watchedServices);
-        return assaultProperties;
-    }
+
 }

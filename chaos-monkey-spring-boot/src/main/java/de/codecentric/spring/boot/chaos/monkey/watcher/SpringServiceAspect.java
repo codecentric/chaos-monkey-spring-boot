@@ -19,8 +19,10 @@ package de.codecentric.spring.boot.chaos.monkey.watcher;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+
 import java.util.Collections;
 import java.util.List;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -39,11 +41,9 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkey chaosMonkey;
-    private final ChaosMonkeySettings chaosMonkeySettings;
 
-    public SpringServiceAspect(ChaosMonkey chaosMonkey, ChaosMonkeySettings chaosMonkeySettings) {
+    public SpringServiceAspect(ChaosMonkey chaosMonkey) {
         this.chaosMonkey = chaosMonkey;
-        this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
     @Pointcut("within(@org.springframework.stereotype.Service *)")
@@ -55,19 +55,7 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
         final Signature signature = pjp.getSignature();
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + signature : null);
 
-        final AssaultProperties assaultProperties = chaosMonkeySettings.getAssaultProperties();
-
-        if (assaultProperties != null) {
-            final List<String> watchedServices = assaultProperties.getWatchedServices() != null
-                ? assaultProperties.getWatchedServices()
-                : Collections.emptyList();
-
-            if (watchedServices.isEmpty() || watchedServices.contains(signature.getDeclaringType().getSimpleName())) {
-                chaosMonkey.callChaosMonkey();
-            }
-        } else {
-            chaosMonkey.callChaosMonkey();
-        }
+        chaosMonkey.callChaosMonkey(signature.getDeclaringType().getCanonicalName());
 
         return pjp.proceed();
     }

@@ -52,7 +52,7 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -63,7 +63,7 @@ public class SpringControllerAspectTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, chaosMonkeySettings);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
         factory.addAspect(repositoryAspect);
         factory.addAspect(serviceAspect);
@@ -72,7 +72,7 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
