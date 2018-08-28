@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,9 @@ public class SpringComponentAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    @Mock
+    private ChaosMonkeySettings chaosMonkeySettings;
+
     @Test
     public void chaosMonkeyIsCalled() {
         DemoComponent target = new DemoComponent();
@@ -47,7 +51,7 @@ public class SpringComponentAspectTest {
         DemoComponent proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -69,7 +73,7 @@ public class SpringComponentAspectTest {
         DemoComponent proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }

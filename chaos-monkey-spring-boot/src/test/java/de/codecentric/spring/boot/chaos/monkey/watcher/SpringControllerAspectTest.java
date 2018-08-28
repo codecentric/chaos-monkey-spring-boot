@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Test;
@@ -37,6 +38,9 @@ public class SpringControllerAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    @Mock
+    private ChaosMonkeySettings chaosMonkeySettings;
+
     @Test
     public void chaosMonkeyIsCalled() {
         DemoController target = new DemoController();
@@ -48,7 +52,7 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -68,7 +72,7 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }

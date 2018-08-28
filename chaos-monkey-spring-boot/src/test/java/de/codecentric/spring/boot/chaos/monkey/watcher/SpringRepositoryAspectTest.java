@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Test;
@@ -35,6 +36,9 @@ public class SpringRepositoryAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    @Mock
+    private ChaosMonkeySettings chaosMonkeySettings;
+
     @Test
     public void chaosMonkeyIsCalled() {
         DemoRepository target = new DemoRepository();
@@ -46,7 +50,7 @@ public class SpringRepositoryAspectTest {
         DemoRepository proxy = factory.getProxy();
         proxy.dummyPublicSaveMethod();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -66,7 +70,7 @@ public class SpringRepositoryAspectTest {
         DemoRepository proxy = factory.getProxy();
         proxy.dummyPublicSaveMethod();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }

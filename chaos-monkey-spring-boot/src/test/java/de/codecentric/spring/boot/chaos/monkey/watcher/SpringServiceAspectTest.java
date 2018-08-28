@@ -16,15 +16,24 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
-import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
-
-import static org.mockito.Mockito.*;
 
 /**
  * @author Benjamin Wilms
@@ -34,6 +43,8 @@ public class SpringServiceAspectTest {
 
     @Mock
     private ChaosMonkey chaosMonkeyMock;
+
+    private String testSignature = "com.test.Class.method";
 
     @Test
     public void chaosMonkeyIsCalled() {
@@ -46,7 +57,7 @@ public class SpringServiceAspectTest {
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(DemoService.class.getCanonicalName());
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -57,18 +68,40 @@ public class SpringServiceAspectTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
         factory.addAspect(controllerAspect);
-        factory.addAspect(serviceAspect);
+        factory.addAspect(restControllerAspect);
         factory.addAspect(repositoryAspect);
-
 
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey(DemoService.class.getCanonicalName());
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
+
+    @Test
+    public void chaosMonkeyIsCalledWhenServiceWatched() {
+        DemoService target = new DemoService();
+
+        AspectJProxyFactory factory = new AspectJProxyFactory(target);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
+        factory.addAspect(controllerAspect);
+        factory.addAspect(restControllerAspect);
+        factory.addAspect(repositoryAspect);
+        factory.addAspect(serviceAspect);
+
+        DemoService proxy = factory.getProxy();
+        proxy.sayHelloService();
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(DemoService.class.getCanonicalName());
+        verifyNoMoreInteractions(chaosMonkeyMock);
+    }
+
+
 }

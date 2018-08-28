@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -60,6 +61,8 @@ public class AssaultProperties {
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
 
+    private List<String> watchedCustomServices;
+
     @JsonIgnore
     public int getTroubleRandom() {
         return RandomUtils.nextInt(1, 1001);
@@ -68,6 +71,13 @@ public class AssaultProperties {
     @JsonIgnore
     public int chooseAssault(int amount) {
         return RandomUtils.nextInt(0, amount);
+    }
+
+    @JsonIgnore
+    public boolean isWatchedCustomServicesActive() {
+        if(watchedCustomServices == null || watchedCustomServices.isEmpty())
+            return false;
+        return true;
     }
 
 

@@ -21,6 +21,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,17 +44,31 @@ public class ChaosMonkey {
         this.assaults = assaults;
     }
 
-    public void callChaosMonkey() {
+    public void callChaosMonkey(String simpleName) {
         if (isTrouble() && isEnabled()) {
-            List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
-                    .filter(ChaosMonkeyAssault::isActive)
-                    .collect(Collectors.toList());
-            if (isEmpty(activeAssaults)){
-                return;
+            // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
+            if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
+                if (chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
+                    // only all listed custom methods will be attacked
+                    LOGGER.debug(LOGGER.isDebugEnabled() ? "Custom watched services found, run attack on:" + simpleName : null);
+                    chooseAndRunAttack();
+                }
+            } else {
+                // default attack if no custom watched service is defined
+                chooseAndRunAttack();
             }
-            getRandomFrom(activeAssaults).attack();
         }
 
+    }
+
+    private void chooseAndRunAttack() {
+        List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
+                .filter(ChaosMonkeyAssault::isActive)
+                .collect(Collectors.toList());
+        if (isEmpty(activeAssaults)) {
+            return;
+        }
+        getRandomFrom(activeAssaults).attack();
     }
 
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {

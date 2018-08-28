@@ -16,16 +16,24 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 
 /**
  * @author Benjamin Wilms
  */
 abstract class ChaosMonkeyBaseAspect {
     @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
-    public void classInChaosMonkeyPackage() { }
+    public void classInChaosMonkeyPackage() {
+    }
 
     @Pointcut("execution(* *.*(..))")
     public void allPublicMethodPointcut() {
+    }
+
+    protected String createSignature(MethodSignature signature) {
+        return signature.getDeclaringTypeName() + "." + signature.getMethod().getName();
     }
 }

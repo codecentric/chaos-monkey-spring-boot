@@ -124,7 +124,7 @@ public class ChaosMonkeyRestEndpointIntTest {
     @Test
     public void postAssaultConfigurationGoodCase() {
         AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setLevel(1000);
+        assaultProperties.setLevel(10);
         assaultProperties.setLatencyRangeEnd(100);
         assaultProperties.setLatencyRangeStart(200);
         assaultProperties.setLatencyActive(true);

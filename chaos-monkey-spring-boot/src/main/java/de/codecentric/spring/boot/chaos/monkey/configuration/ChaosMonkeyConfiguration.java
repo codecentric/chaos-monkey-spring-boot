@@ -43,12 +43,13 @@ import java.util.List;
  */
 @Configuration
 @Profile("chaos-monkey")
-@EnableConfigurationProperties({ChaosMonkeyProperties.class,AssaultProperties.class, WatcherProperties.class})
+@EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 public class ChaosMonkeyConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
+    private ChaosMonkeySettings chaosMonkeySettings;
 
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
@@ -68,7 +69,8 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkeySettings settings() {
-        return new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
+        chaosMonkeySettings = new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
+        return chaosMonkeySettings;
     }
 
     @Bean
