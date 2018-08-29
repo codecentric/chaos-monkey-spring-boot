@@ -26,6 +26,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -52,17 +55,26 @@ public class ChaosDemoApplicationDefaultProfileTest {
 
     @Test
     public void checkEnvWatcherController() {
-        assertThat(env.getProperty("chaos.monkey.watcher.controller"),is("true"));
+        assertThat(env.getProperty("chaos.monkey.watcher.controller"), is("true"));
     }
 
     @Test
     public void checkEnvAssaultLatencyRangeStart() {
-        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"),is("100"));
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"), is("100"));
     }
 
     @Test
     public void checkEnvAssaultLatencyRangeEnd() {
-        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"),is("200"));
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"), is("200"));
+    }
+
+    @Test
+    public void checkEnvCustomServiceWatcherList() {
+
+        List<String> stringList = env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
+        assertThat(stringList, hasSize(2));
+        assertThat(stringList.get(0), is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello"));
+        assertThat(stringList.get(1), is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"));
     }
 
 

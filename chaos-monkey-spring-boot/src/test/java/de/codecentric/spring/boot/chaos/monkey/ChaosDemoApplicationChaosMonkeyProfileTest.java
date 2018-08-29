@@ -32,6 +32,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -90,9 +91,11 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
         assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(true));
         assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));
         assertThat(monkeySettings.getAssaultProperties().isKillApplicationActive(), is(true));
+        assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices(), is(nullValue()));
         assertThat(monkeySettings.getWatcherProperties().isController(), is(true));
         assertThat(monkeySettings.getWatcherProperties().isRepository(), is(false));
         assertThat(monkeySettings.getWatcherProperties().isRestController(), is(false));
         assertThat(monkeySettings.getWatcherProperties().isService(), is(true));
+
     }
 }

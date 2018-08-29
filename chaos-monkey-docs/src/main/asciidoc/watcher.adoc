@@ -13,3 +13,37 @@ Following Spring annotation are supported:
 With the help of https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api[Spring AOP], Chaos Monkey recognizes the
 execution of a _public_ method and will either not execute any action or start one of its assaults. You can customize the behave by
 <<configuration,configuration>>.
+
+=== Customize Watcher
+You can customize the behavior of all watchers using the property *watchedCustomServices* and decide which classes and public methods
+should be attacked. If no signatures are stored, all classes and public methods recognized by the watchers are attacked.
+
+You can either maintain the list in your application properties or adjust it at runtime using the Spring Boot Actuator Endpoint.
+[source,json,subs="verbatim,attributes"]
+.Example Chaos Monkey Spring Boot Actuator Endpoint
+----
+{
+"level": 3,
+"latencyRangeStart": 1000,
+"latencyRangeEnd": 3000,
+"latencyActive": true,
+"exceptionsActive": false,
+"killApplicationActive": false,
+ "watchedCustomServices": [ "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello","com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"]
+}
+----
+
+
+
+[source,txt,subs="verbatim,attributes"]
+.Example application.properties:
+----
+...
+chaos.monkey.watcher.controller=true
+chaos.monkey.assaults.level=1
+
+chaos.monkey.assaults.watchedCustomServices=com.example.chaosdemo.HelloController.sayHello,com.example.chaosdemo.HelloController.sayGoodbye
+
+...
+----
+NOTE: The listed classes and their methods must have been found by one of the watchers. Only the behaviour of the watchers that are activated can be influenced.

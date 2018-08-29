@@ -73,7 +73,7 @@ application starts.
 "latencyActive": true,
 "exceptionsActive": false,
 "killApplicationActive": false,
-"restartApplicationActive": false
+"watchedCustomServices": []
 },
 "watcherProperties":{
 "controller": true,
@@ -138,7 +138,7 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 "latencyActive": true,
 "exceptionsActive": false,
 "killApplicationActive": false,
-"restartApplicationActive": false
+"watchedCustomServices": []
 }
 ----
 ===== POST Assaults
@@ -153,7 +153,7 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 "latencyActive": true,
 "exceptionsActive": true,
 "killApplicationActive": false,
-"restartApplicationActive": false
+"watchedCustomServices": [ "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello","com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"]
 }
 ----
 [source,txt,subs="verbatim,attributes"]

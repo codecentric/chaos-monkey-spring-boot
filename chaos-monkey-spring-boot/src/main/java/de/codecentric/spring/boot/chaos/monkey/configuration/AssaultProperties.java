@@ -61,6 +61,7 @@ public class AssaultProperties {
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
 
+    @Value("${watchedCustomServices:#{null}}")
     private List<String> watchedCustomServices;
 
     @JsonIgnore
