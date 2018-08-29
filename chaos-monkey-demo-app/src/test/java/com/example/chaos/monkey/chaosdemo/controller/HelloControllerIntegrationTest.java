@@ -64,4 +64,12 @@ public class HelloControllerIntegrationTest {
         assertEquals("Hello!", response.getBody());
     }
 
+    @Test
+    public void checkGoodbyeEndpoint() {
+
+        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + this.serverPort + "/goodbye", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Goodbye!", response.getBody());
+    }
+
 }

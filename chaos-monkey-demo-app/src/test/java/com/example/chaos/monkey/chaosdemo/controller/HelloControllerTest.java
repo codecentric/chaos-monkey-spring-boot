@@ -45,4 +45,10 @@ public class HelloControllerTest {
                 .andExpect(content().string(is("Hello!")));
     }
 
+    @Test
+    public void shouldReturnGoodbye() throws Exception {
+        this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk())
+                .andExpect(content().string(is("Goodbye!")));
+    }
+
 }
