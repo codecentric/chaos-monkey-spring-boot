@@ -20,18 +20,21 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * @author Benjamin Wilms
  */
 
 @Aspect
-public class SpringServiceAspect extends ChaosMonkeyBaseAspect{
+public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkey chaosMonkey;
@@ -49,12 +52,14 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect{
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + pjp.getSignature() : null);
-// metrics
+    // metrics
         if (metrics != null) {
             metrics.counterWatcher(MetricType.SERVICE, calculatePointcut(pjp.toShortString())).increment();
         }
+        final Signature signature = pjp.getSignature();
+        LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + signature : null);
 
-        chaosMonkey.callChaosMonkey();
+        chaosMonkey.callChaosMonkey(signature.getDeclaringType().getCanonicalName());
 
         return pjp.proceed();
     }

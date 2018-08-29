@@ -85,5 +85,9 @@ public class HelloControllerTest {
         this.mockMvc.perform(get("/dbgreet")).andExpect(status().isOk())
                 .andExpect(content().string(is(responseRepo)));
     }
+    public void shouldReturnGoodbye() throws Exception {
+        this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk())
+                .andExpect(content().string(is("Goodbye!")));
+    }
 
 }

@@ -26,6 +26,7 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
 import static org.mockito.Mockito.*;
 
+
 /**
  * @author Benjamin Wilms
  */
@@ -47,7 +48,7 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -67,7 +68,7 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey();
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }

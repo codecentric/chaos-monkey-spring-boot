@@ -20,9 +20,11 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +55,9 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
         // metrics
         if (metrics != null)
             metrics.counter(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-        chaosMonkey.callChaosMonkey();
+        chaosMonkey.callChaosMonkey(createSignature(signature));
 
         return pjp.proceed();
     }

@@ -20,9 +20,11 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +50,13 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
 
     @Around("classAnnotatedWithComponentPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "Component class and public method detected: " + pjp.getSignature() : null);
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
 
         // metrics
         if (metrics != null)
             metrics.counter(MetricType.COMPONENT, calculatePointcut(pjp.toShortString())).increment();
 
-        chaosMonkey.callChaosMonkey();
+        chaosMonkey.callChaosMonkey(createSignature(signature));
 
         return pjp.proceed();
     }

@@ -2,22 +2,15 @@
 == Changes in {project-version} ==
 
 === Watcher
-- new Watcher for @Component
-
-=== Endpoints
-- Spring Boot Actuator Endpoint /chaosmonkey/*
-- JMX Endpoint
+- customize the Watcher to define specific classes and there public methods that will be attacked
 
 === Bugs fixed
-- Service Watcher config bug
-- Documentation
-- [Issue 23 - If all Assaults are active, only Latency & Exception are fired](https://github.com/codecentric/chaos-monkey-spring-boot/issues/23)
+
 
 === Contributors
 Thank you for your support!
 
--  https://github.com/wonwoo[wonwoo]
--  https://github.com/tiarebalbi[tiarebalbi]
+-  https://github.com/snieking[snieking]
 
 
 

@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,25 +41,38 @@ public class ChaosMonkey {
         this.metrics = metrics;
     }
 
-    public void callChaosMonkey() {
-        if (isEnabled() && metrics != null)
-            metrics.counter(MetricType.APPLICATION_REQ_COUNT,"type","total").increment();
 
+    public void callChaosMonkey(String simpleName) {
         if (isTrouble() && isEnabled()) {
+            if (metrics != null)
+                metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "total").increment();
 
-            List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
-                    .filter(ChaosMonkeyAssault::isActive)
-                    .collect(Collectors.toList());
-            if (isEmpty(activeAssaults)) {
-                return;
-            }
-            getRandomFrom(activeAssaults).attack();
-            // attacked requests
-            if (metrics != null) {
-                metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted").increment();
+            // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
+            if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
+                if (chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
+                    // only all listed custom methods will be attacked
+                    chooseAndRunAttack();
+                }
+            } else {
+                // default attack if no custom watched service is defined
+                chooseAndRunAttack();
             }
         }
 
+    }
+
+    private void chooseAndRunAttack() {
+        List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
+                .filter(ChaosMonkeyAssault::isActive)
+                .collect(Collectors.toList());
+        if (isEmpty(activeAssaults)) {
+            return;
+        }
+        getRandomFrom(activeAssaults).attack();
+        // attacked requests
+        if (metrics != null) {
+            metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted").increment();
+        }
     }
 
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {
