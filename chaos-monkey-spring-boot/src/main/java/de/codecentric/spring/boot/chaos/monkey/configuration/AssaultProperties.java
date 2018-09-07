@@ -39,7 +39,7 @@ public class AssaultProperties {
 
     @Value("${level : 5}")
     @Min(value = 1)
-    @Max(value = 100)
+    @Max(value = 10000)
     private int level;
 
     @Value("${latencyRangeStart : 1000}")
@@ -66,7 +66,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public int getTroubleRandom() {
-        return RandomUtils.nextInt(1, 1001);
+        return RandomUtils.nextInt(1, getLevel()+1);
     }
 
     @JsonIgnore

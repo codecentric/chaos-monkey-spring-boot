@@ -45,7 +45,7 @@ public class ChaosMonkey {
     }
 
     public void callChaosMonkey(String simpleName) {
-        if (isTrouble() && isEnabled()) {
+        if (isEnabled() && isTrouble()) {
             // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
             if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
                 if (chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
