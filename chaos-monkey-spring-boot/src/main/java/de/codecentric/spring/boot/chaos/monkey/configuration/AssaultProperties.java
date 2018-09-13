@@ -27,6 +27,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Benjamin Wilms
@@ -35,6 +36,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @EqualsAndHashCode
+@Validated
 public class AssaultProperties {
 
     @Value("${level : 5}")
