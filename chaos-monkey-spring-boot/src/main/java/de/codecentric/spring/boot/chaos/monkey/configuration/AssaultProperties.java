@@ -17,16 +17,17 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 /**
  * @author Benjamin Wilms
@@ -35,11 +36,12 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @EqualsAndHashCode
+@Validated
 public class AssaultProperties {
 
     @Value("${level : 5}")
     @Min(value = 1)
-    @Max(value = 100)
+    @Max(value = 10000)
     private int level;
 
     @Value("${latencyRangeStart : 1000}")
@@ -66,7 +68,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public int getTroubleRandom() {
-        return RandomUtils.nextInt(1, 1001);
+        return RandomUtils.nextInt(1, getLevel()+1);
     }
 
     @JsonIgnore

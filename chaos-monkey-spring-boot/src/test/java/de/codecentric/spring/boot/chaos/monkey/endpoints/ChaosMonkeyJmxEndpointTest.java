@@ -22,7 +22,6 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;

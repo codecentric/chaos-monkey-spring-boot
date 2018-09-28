@@ -63,7 +63,7 @@ public class ChaosMonkeyTest {
     @Before
     public void setUp() {
         given(this.assaultProperties.getLevel()).willReturn(1);
-        given(this.assaultProperties.getTroubleRandom()).willReturn(5);
+        given(this.assaultProperties.getTroubleRandom()).willReturn(1);
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(true);
         given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
         given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);

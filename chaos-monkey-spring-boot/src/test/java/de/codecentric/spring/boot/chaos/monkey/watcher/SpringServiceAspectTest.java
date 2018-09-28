@@ -26,7 +26,6 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
 import static org.mockito.Mockito.*;
 
-
 /**
  * @author Benjamin Wilms
  */

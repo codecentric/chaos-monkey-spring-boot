@@ -19,7 +19,6 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +42,7 @@ public class ChaosMonkey {
 
 
     public void callChaosMonkey(String simpleName) {
-        if (isTrouble() && isEnabled()) {
+        if (isEnabled() && isTrouble()) {
             if (metrics != null)
                 metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "total").increment();
 

@@ -52,7 +52,7 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + pjp.getSignature() : null);
-    // metrics
+        // metrics
         if (metrics != null) {
             metrics.counterWatcher(MetricType.SERVICE, calculatePointcut(pjp.toShortString())).increment();
         }
