@@ -21,7 +21,6 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
