@@ -49,8 +49,6 @@ public class ChaosMonkeyConfiguration {
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
-    private ChaosMonkeySettings chaosMonkeySettings;
-
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
                                     AssaultProperties assaultProperties) {
@@ -69,8 +67,7 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkeySettings settings() {
-        chaosMonkeySettings = new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
-        return chaosMonkeySettings;
+        return new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
     }
 
     @Bean

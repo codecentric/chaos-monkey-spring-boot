@@ -32,9 +32,9 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  */
 public class ChaosMonkey {
 
-    private ChaosMonkeySettings chaosMonkeySettings;
+    private final ChaosMonkeySettings chaosMonkeySettings;
 
-    private List<ChaosMonkeyAssault> assaults;
+    private final List<ChaosMonkeyAssault> assaults;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
 

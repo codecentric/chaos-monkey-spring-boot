@@ -28,7 +28,7 @@ public class LatencyAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
 
-    private ChaosMonkeySettings settings;
+    private final ChaosMonkeySettings settings;
 
     public LatencyAssault(ChaosMonkeySettings settings) {
         this.settings = settings;

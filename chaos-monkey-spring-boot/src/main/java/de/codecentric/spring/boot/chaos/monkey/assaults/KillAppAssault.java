@@ -19,21 +19,21 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author Thorsten Deelmann
  */
-public class KillAppAssault implements ChaosMonkeyAssault{
+public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
-    @Autowired
+
     private ApplicationContext context;
 
-    private ChaosMonkeySettings settings;
+    private final ChaosMonkeySettings settings;
 
     public KillAppAssault(ChaosMonkeySettings settings) {
         this.settings = settings;
@@ -58,5 +58,10 @@ public class KillAppAssault implements ChaosMonkeyAssault{
         } catch (Exception e) {
             LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
         }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.context = applicationContext;
     }
 }

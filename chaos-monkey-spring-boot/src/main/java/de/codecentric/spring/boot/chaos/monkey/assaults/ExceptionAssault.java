@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class ExceptionAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAssault.class);
-    private ChaosMonkeySettings settings;
+    private final ChaosMonkeySettings settings;
 
     public ExceptionAssault(ChaosMonkeySettings settings) {
         this.settings = settings;
