@@ -22,8 +22,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Benjamin Wilms
@@ -31,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 @Aspect
 public class SpringControllerAspect extends ChaosMonkeyBaseAspect{
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringControllerAspect.class);
 
     private final ChaosMonkey chaosMonkey;
 
