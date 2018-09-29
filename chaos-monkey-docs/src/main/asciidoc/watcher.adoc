@@ -16,7 +16,7 @@ execution of a _public_ method and will either not execute any action or start o
 
 === Customize Watcher
 You can customize the behavior of all watchers using the property *watchedCustomServices* and decide which classes and public methods
-should be attacked. If no signatures are stored, all classes and public methods recognized by the watchers are attacked.
+should be attacked. If no signatures are stored, all classes and public methods, recognized by the watchers are attacked by default.
 
 You can either maintain the list in your application properties or adjust it at runtime using the Spring Boot Actuator Endpoint.
 [source,json,subs="verbatim,attributes"]

@@ -35,6 +35,8 @@ public class SpringServiceAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    private final String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService.sayHelloService";
+
 
     @Test
     public void chaosMonkeyIsCalled() {
@@ -47,7 +49,7 @@ public class SpringServiceAspectTest {
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey(DemoService.class.getCanonicalName());
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -68,7 +70,7 @@ public class SpringServiceAspectTest {
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey(DemoService.class.getCanonicalName());
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
         verifyNoMoreInteractions(chaosMonkeyMock);
 
     }
@@ -90,7 +92,8 @@ public class SpringServiceAspectTest {
         DemoService proxy = factory.getProxy();
         proxy.sayHelloService();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey(DemoService.class.getCanonicalName());
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
         verifyNoMoreInteractions(chaosMonkeyMock);
     }
 

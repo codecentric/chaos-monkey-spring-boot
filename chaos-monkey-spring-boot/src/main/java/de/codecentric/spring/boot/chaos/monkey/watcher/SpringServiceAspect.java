@@ -24,6 +24,7 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,15 +52,14 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + pjp.getSignature() : null);
+        LOGGER.debug(LOGGER.isDebugEnabled() ? "Service class and public method detected: " + pjp.getSignature() : null);
         // metrics
-        if (metrics != null) {
+        if (metrics != null)
             metrics.counterWatcher(MetricType.SERVICE, calculatePointcut(pjp.toShortString())).increment();
-        }
-        final Signature signature = pjp.getSignature();
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + signature : null);
 
-        chaosMonkey.callChaosMonkey(signature.getDeclaringType().getCanonicalName());
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+        chaosMonkey.callChaosMonkey(createSignature(signature));
 
         return pjp.proceed();
     }

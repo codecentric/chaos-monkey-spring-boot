@@ -53,7 +53,7 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
 
         // metrics
         if (metrics != null)
-            metrics.counter(MetricType.COMPONENT, calculatePointcut(pjp.toShortString())).increment();
+            metrics.counterWatcher(MetricType.COMPONENT, calculatePointcut(pjp.toShortString())).increment();
 
         chaosMonkey.callChaosMonkey(createSignature(signature));
 

@@ -52,7 +52,7 @@ public class SpringRestControllerAspect extends ChaosMonkeyBaseAspect {
 
         // metrics
         if (metrics != null)
-            metrics.counter(MetricType.RESTCONTROLLER, calculatePointcut(pjp.toShortString())).increment();
+            metrics.counterWatcher(MetricType.RESTCONTROLLER, calculatePointcut(pjp.toShortString())).increment();
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 

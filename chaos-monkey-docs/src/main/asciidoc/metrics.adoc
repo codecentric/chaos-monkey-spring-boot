@@ -1,0 +1,63 @@
+[[metrics]]
+== Metrics ==
+Since version 2.0.1 of Chaos Monkey for Spring Boot, there are some metrics available. Thanks to http://micrometer.io[micrometer], we are now able to
+deliver
+some insights about all calls and attacks recognized by the CM4SB.
+
+=== CM4SB Metrics
+If you have micrometer.io enabled in your attacked Spring Boot App, you are able to view and export these kind of insights.
+Take a look at https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics[Spring Docs] to see how it works and
+what you have do.
+
+Metrics are available via Spring Boot Actuator endpoint, if you are exposing them in simple mode.
+
+[source,txt,subs="verbatim,attributes"]
+.endpoint example:
+----
+/actuator/metrics
+----
+Beside all other metrics, deliverd by default, you will find some CM4SB metrics. They will always start with "chaos.monkey.*".
+[source,txt,subs="verbatim,attributes"]
+.chaos monkey metric example:
+----
+{
+    "names": [
+        ...
+        "chaos.monkey.controller.watcher",
+        "chaos.monkey.assault.latency",
+        "chaos.monkey.application.request.count",
+        "chaos.monkey.assault.latency.gauge.",
+        ...
+    ]
+}
+----
+=== Watcher Metrics
+For all types of CM4SB Watchers, you will find a metric.
+
+In the following example two @Controller annotated classes are available in the Spring Boot application and have been recognized by the CM4SB.
+[source,txt,subs="verbatim,attributes"]
+./actuator/metrics/chaos.monkey.controller.watcher:
+----
+{
+    "name": "chaos.monkey.controller.watcher",
+    "description": null,
+    "baseUnit": null,
+    "measurements": [
+        {
+            "statistic": "COUNT",
+            "value": 5
+        }
+    ],
+    "availableTags": [
+        {
+            "tag": "component",
+            "values": [
+                "GreetingController.sayHello",
+                "HelloController.sayHello"
+            ]
+        }
+    ]
+}
+
+----
+

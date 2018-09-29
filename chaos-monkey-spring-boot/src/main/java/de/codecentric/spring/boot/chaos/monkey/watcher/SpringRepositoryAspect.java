@@ -53,7 +53,8 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
 
         // metrics
         if (metrics != null)
-            metrics.counter(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();
+            metrics.counterWatcher(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();
+
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 
         chaosMonkey.callChaosMonkey(createSignature(signature));
