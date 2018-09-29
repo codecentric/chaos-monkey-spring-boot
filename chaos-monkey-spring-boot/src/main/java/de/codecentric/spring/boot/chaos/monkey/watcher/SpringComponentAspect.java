@@ -49,11 +49,12 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
 
     @Around("classAnnotatedWithComponentPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-
         // metrics
-        if (metrics != null)
+        if (metrics != null) {
             metrics.counterWatcher(MetricType.COMPONENT, calculatePointcut(pjp.toShortString())).increment();
+        }
+
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
 
         chaosMonkey.callChaosMonkey(createSignature(signature));
 

@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 @Aspect
 public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringControllerAspect.class);
 
     private final ChaosMonkey chaosMonkey;
     private final Metrics metrics;
@@ -50,12 +49,12 @@ public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
         // metrics
         if (metrics != null) {
             metrics.counterWatcher(MetricType.CONTROLLER, calculatePointcut(pjp.toShortString())).increment();
         }
 
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
 
         chaosMonkey.callChaosMonkey(createSignature(signature));
 

@@ -17,8 +17,11 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
-
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController;
+import io.micrometer.core.instrument.Counter;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -37,20 +40,35 @@ public class SpringControllerAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    @Mock
+    private Metrics metricsMock;
+    @Mock
+    private Counter counterMock;
+
+    private String pointcutName = "execution.DemoController.sayHello";
+    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello";
+
+    @Before
+    public void before() {
+        when(metricsMock.counterWatcher(MetricType.CONTROLLER, pointcutName)).thenReturn(counterMock);
+    }
 
     @Test
     public void chaosMonkeyIsCalled() {
         DemoController target = new DemoController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, null);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(controllerAspect);
 
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
-        verifyNoMoreInteractions(chaosMonkeyMock);
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(1)).counterWatcher(MetricType.CONTROLLER, pointcutName);
+        verify(counterMock, times(1)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
 
     }
 
@@ -69,8 +87,10 @@ public class SpringControllerAspectTest {
         DemoController proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.controller.DemoController.sayHello");
-        verifyNoMoreInteractions(chaosMonkeyMock);
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.CONTROLLER, pointcutName);
+        verify(counterMock, times(0)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
 
     }
 }
