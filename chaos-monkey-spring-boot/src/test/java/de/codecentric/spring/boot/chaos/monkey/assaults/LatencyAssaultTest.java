@@ -42,7 +42,6 @@ public class LatencyAssaultTest {
     private AssaultProperties assaultProperties;
 
 
-
     @Test
     public void threadSleepHasBeenCalled() throws Exception {
         mockStatic(Thread.class);

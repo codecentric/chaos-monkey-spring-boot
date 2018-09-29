@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
-public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
+public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringRepositoryAspect.class);
 
     private final ChaosMonkey chaosMonkey;

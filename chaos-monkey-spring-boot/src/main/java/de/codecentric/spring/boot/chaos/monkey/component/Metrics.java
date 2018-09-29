@@ -17,7 +17,6 @@ public class Metrics {
     }
 
 
-
     public Counter counter(MetricType type, String... tags) {
 
         return meterRegistry.counter(type.getMetricName(), tags);
@@ -43,6 +42,6 @@ public class Metrics {
     }
 
     private String extractComponent(String name) {
-        return name.replaceAll("execution.","");
+        return name.replaceAll("execution.", "");
     }
 }

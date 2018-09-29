@@ -29,9 +29,8 @@ import org.slf4j.LoggerFactory;
 public class LatencyAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
-
-    private ChaosMonkeySettings settings;
     private final Metrics metrics;
+    private ChaosMonkeySettings settings;
 
     public LatencyAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;
@@ -48,7 +47,7 @@ public class LatencyAssault implements ChaosMonkeyAssault {
         LOGGER.debug("Chaos Monkey - timeout");
         int timeout = RandomUtils.nextInt(settings.getAssaultProperties().getLatencyRangeStart(), settings.getAssaultProperties().getLatencyRangeEnd());
 
-        if(metrics != null) {
+        if (metrics != null) {
             // metrics
             metrics.counter(MetricType.LATENCY_ASSAULT).increment();
             metrics.gauge(MetricType.LATENCY_ASSAULT, timeout);

@@ -66,8 +66,8 @@ public class SpringRepositoryAspectTest {
         proxy.dummyPublicSaveMethod();
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock,times(1)).counterWatcher(MetricType.REPOSITORY, pointcutName);
-        verify(counterMock,times(1)).increment();
+        verify(metricsMock, times(1)).counterWatcher(MetricType.REPOSITORY, pointcutName);
+        verify(counterMock, times(1)).increment();
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
     }
 
@@ -77,7 +77,7 @@ public class SpringRepositoryAspectTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock,metricsMock);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, metricsMock);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(controllerAspect);
         factory.addAspect(serviceAspect);
@@ -87,8 +87,8 @@ public class SpringRepositoryAspectTest {
         proxy.dummyPublicSaveMethod();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock,times(0)).counterWatcher(MetricType.REPOSITORY, pointcutName);
-        verify(counterMock,times(0)).increment();
+        verify(metricsMock, times(0)).counterWatcher(MetricType.REPOSITORY, pointcutName);
+        verify(counterMock, times(0)).increment();
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
 
     }

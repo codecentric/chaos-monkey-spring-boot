@@ -30,7 +30,7 @@ public class AttackControllerCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         return
                 context.getEnvironment()
-                .getProperty("chaos.monkey.watcher.controller","false")
-                .matches("(?i:.*true*)");
+                        .getProperty("chaos.monkey.watcher.controller", "false")
+                        .matches("(?i:.*true*)");
     }
 }

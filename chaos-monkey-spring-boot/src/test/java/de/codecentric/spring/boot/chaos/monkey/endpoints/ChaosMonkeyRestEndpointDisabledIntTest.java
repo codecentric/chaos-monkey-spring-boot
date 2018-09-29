@@ -54,7 +54,7 @@ public class ChaosMonkeyRestEndpointDisabledIntTest {
     @Test
     public void getConfiguration() {
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult =
-                testRestTemplate.getForEntity(baseUrl , ChaosMonkeySettings.class);
+                testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.NOT_FOUND, chaosMonkeySettingsResult.getStatusCode());
     }

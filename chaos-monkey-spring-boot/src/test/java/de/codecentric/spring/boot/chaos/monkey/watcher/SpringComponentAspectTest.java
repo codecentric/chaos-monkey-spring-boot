@@ -66,10 +66,9 @@ public class SpringComponentAspectTest {
         proxy.sayHello();
 
 
-
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock,times(1)).counterWatcher(MetricType.COMPONENT, pointcutName);
-        verify(counterMock,times(1)).increment();
+        verify(metricsMock, times(1)).counterWatcher(MetricType.COMPONENT, pointcutName);
+        verify(counterMock, times(1)).increment();
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
 
     }
@@ -92,7 +91,7 @@ public class SpringComponentAspectTest {
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock,times(0)).counterWatcher(MetricType.COMPONENT, pointcutName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.COMPONENT, pointcutName);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
 
     }

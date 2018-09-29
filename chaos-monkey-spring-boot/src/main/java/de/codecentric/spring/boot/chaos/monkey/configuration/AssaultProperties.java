@@ -68,7 +68,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public int getTroubleRandom() {
-        return RandomUtils.nextInt(1, getLevel()+1);
+        return RandomUtils.nextInt(1, getLevel() + 1);
     }
 
     @JsonIgnore
@@ -78,7 +78,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public boolean isWatchedCustomServicesActive() {
-        if(watchedCustomServices == null || watchedCustomServices.isEmpty())
+        if (watchedCustomServices == null || watchedCustomServices.isEmpty())
             return false;
         return true;
     }

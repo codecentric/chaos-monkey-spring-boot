@@ -1,6 +1,8 @@
 language: java
 sudo: false # faster builds
 
+bundler_args: --retry 5
+
 script:
 - mvn cobertura:cobertura
 

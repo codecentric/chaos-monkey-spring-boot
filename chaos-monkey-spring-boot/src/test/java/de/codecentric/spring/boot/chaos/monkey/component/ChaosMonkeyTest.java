@@ -48,7 +48,7 @@ public class ChaosMonkeyTest {
     private ChaosMonkeyProperties chaosMonkeyProperties;
 
     @Mock
-    private ChaosMonkeySettings  chaosMonkeySettings;
+    private ChaosMonkeySettings chaosMonkeySettings;
 
     @Mock
     private LatencyAssault latencyAssault;

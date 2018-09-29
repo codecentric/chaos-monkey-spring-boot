@@ -32,11 +32,10 @@ import org.springframework.context.ApplicationContext;
 public class KillAppAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
+    private final Metrics metrics;
     @Autowired
     private ApplicationContext context;
-
     private ChaosMonkeySettings settings;
-    private final Metrics metrics;
 
     public KillAppAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;

@@ -31,10 +31,9 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class AttackRestControllerConditionTest {
 
-    private AttackRestControllerCondition attackRestControllerCondition;
     private final String CHAOS_MONKEY_CONTROL_CONDITION = "chaos.monkey.watcher.restController";
     private final String FALSE_DEFAULT = "false";
-
+    private AttackRestControllerCondition attackRestControllerCondition;
     @Mock
     private ConditionContext conditionContext;
     @Mock
