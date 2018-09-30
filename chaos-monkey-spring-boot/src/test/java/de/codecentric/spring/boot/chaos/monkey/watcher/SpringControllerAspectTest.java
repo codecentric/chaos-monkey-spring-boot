@@ -73,6 +73,25 @@ public class SpringControllerAspectTest {
     }
 
     @Test
+    public void chaosMonkeyIsCalled_Metrics_NULL() {
+        DemoController target = new DemoController();
+
+        AspectJProxyFactory factory = new AspectJProxyFactory(target);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, null);
+        factory.addAspect(controllerAspect);
+
+        DemoController proxy = factory.getProxy();
+        proxy.sayHello();
+
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.CONTROLLER, pointcutName);
+        verify(counterMock, times(0)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+
+    }
+
+    @Test
     public void chaosMonkeyIsNotCalled() {
         DemoController target = new DemoController();
 

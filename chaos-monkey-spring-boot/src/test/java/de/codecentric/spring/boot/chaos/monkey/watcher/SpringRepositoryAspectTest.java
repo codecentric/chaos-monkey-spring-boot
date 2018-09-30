@@ -72,6 +72,23 @@ public class SpringRepositoryAspectTest {
     }
 
     @Test
+    public void chaosMonkeyIsCalled_Metrics_NULL() {
+        DemoRepository target = new DemoRepository();
+
+        AspectJProxyFactory factory = new AspectJProxyFactory(target);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
+        factory.addAspect(repositoryAspect);
+
+        DemoRepository proxy = factory.getProxy();
+        proxy.dummyPublicSaveMethod();
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.REPOSITORY, pointcutName);
+        verify(counterMock, times(0)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+    }
+
+    @Test
     public void chaosMonkeyIsNotCalled() {
         DemoRepository target = new DemoRepository();
 

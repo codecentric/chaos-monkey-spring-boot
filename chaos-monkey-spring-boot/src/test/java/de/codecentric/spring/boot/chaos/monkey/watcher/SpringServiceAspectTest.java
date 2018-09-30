@@ -73,6 +73,24 @@ public class SpringServiceAspectTest {
     }
 
     @Test
+    public void chaosMonkeyIsCalled_Metrics_NULL() {
+        DemoService serviceTarget = new DemoService();
+
+        AspectJProxyFactory factory = new AspectJProxyFactory(serviceTarget);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, null);
+        factory.addAspect(serviceAspect);
+
+        DemoService proxy = factory.getProxy();
+        proxy.sayHelloService();
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.SERVICE, pointcutName);
+        verify(counterMock, times(0)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+
+    }
+
+    @Test
     public void chaosMonkeyIsNotCalled() {
         DemoService target = new DemoService();
 
