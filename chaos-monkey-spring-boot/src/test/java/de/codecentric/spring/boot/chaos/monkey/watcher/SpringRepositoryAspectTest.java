@@ -20,6 +20,7 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository;
+import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryImpl;
 import io.micrometer.core.instrument.Counter;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class SpringRepositoryAspectTest {
 
     @Test
     public void chaosMonkeyIsCalled() {
-        DemoRepository target = new DemoRepository();
+        DemoRepository target = new DemoRepositoryImpl();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, metricsMock);
@@ -73,7 +74,7 @@ public class SpringRepositoryAspectTest {
 
     @Test
     public void chaosMonkeyIsCalled_Metrics_NULL() {
-        DemoRepository target = new DemoRepository();
+        DemoRepository target =  new DemoRepositoryImpl();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
@@ -90,7 +91,7 @@ public class SpringRepositoryAspectTest {
 
     @Test
     public void chaosMonkeyIsNotCalled() {
-        DemoRepository target = new DemoRepository();
+        DemoRepository target =  new DemoRepositoryImpl();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);

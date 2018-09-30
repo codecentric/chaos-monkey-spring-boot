@@ -49,6 +49,15 @@ public class HelloController {
         return ResponseEntity.ok(greetingService.greetFromRepo());
     }
 
+    @GetMapping("/findbyid")
+    public ResponseEntity<String> greetFromDbById() {
+        return ResponseEntity.ok(greetingService.greetFromRepoPagingSorting());
+    }
+    @GetMapping("/jpa/findbyid")
+    public ResponseEntity<String> greetFromDbByIdJpa() {
+        return ResponseEntity.ok(greetingService.greetFromRepoJpa());
+    }
+
     @GetMapping("/goodbye")
     public ResponseEntity<String> sayGoodbye() {
         return ResponseEntity.ok("Goodbye!");
@@ -57,4 +66,6 @@ public class HelloController {
     private String sayHelloPlease() {
         return "Hello!";
     }
+
+
 }

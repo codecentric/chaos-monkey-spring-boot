@@ -43,11 +43,12 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect {
         this.metrics = metrics;
     }
 
-    @Pointcut("within(@org.springframework.stereotype.Repository *)")
-    public void classAnnotatedWithRepositoryPointcut() {
+    @Pointcut("this(org.springframework.data.repository.CrudRepository)")
+    public void implementsCrudRepository(){
+
     }
 
-    @Around("classAnnotatedWithRepositoryPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Repository class and public method detected: " + pjp.getSignature() : null);
 
