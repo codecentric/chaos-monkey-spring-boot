@@ -49,7 +49,7 @@
 
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
-        <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+        <cobertura-maven-plugin.version>2.6</cobertura-maven-plugin.version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <junit.version>4.12</junit.version>
         <assertj-core.version>2.6.0</assertj-core.version>
