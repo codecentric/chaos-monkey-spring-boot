@@ -17,8 +17,11 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository;
+import io.micrometer.core.instrument.Counter;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -37,22 +40,52 @@ public class SpringRepositoryAspectTest {
     private ChaosMonkey chaosMonkeyMock;
 
     @Mock
-    private ChaosMonkeySettings chaosMonkeySettings;
+    private Metrics metricsMock;
+
+    @Mock
+    private Counter counterMock;
+
+    private String pointcutName = "execution.DemoRepository.dummyPublicSaveMethod";
+    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod";
+
+    @Before
+    public void before() {
+        when(metricsMock.counterWatcher(MetricType.REPOSITORY, pointcutName)).thenReturn(counterMock);
+    }
+
 
     @Test
     public void chaosMonkeyIsCalled() {
         DemoRepository target = new DemoRepository();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(repositoryAspect);
 
         DemoRepository proxy = factory.getProxy();
         proxy.dummyPublicSaveMethod();
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod");
-        verifyNoMoreInteractions(chaosMonkeyMock);
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(1)).counterWatcher(MetricType.REPOSITORY, pointcutName);
+        verify(counterMock, times(1)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+    }
 
+    @Test
+    public void chaosMonkeyIsCalled_Metrics_NULL() {
+        DemoRepository target = new DemoRepository();
+
+        AspectJProxyFactory factory = new AspectJProxyFactory(target);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
+        factory.addAspect(repositoryAspect);
+
+        DemoRepository proxy = factory.getProxy();
+        proxy.dummyPublicSaveMethod();
+
+        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.REPOSITORY, pointcutName);
+        verify(counterMock, times(0)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
     }
 
     @Test
@@ -60,9 +93,9 @@ public class SpringRepositoryAspectTest {
         DemoRepository target = new DemoRepository();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
-        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, metricsMock);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(controllerAspect);
         factory.addAspect(serviceAspect);
         factory.addAspect(restControllerAspect);
@@ -70,8 +103,10 @@ public class SpringRepositoryAspectTest {
         DemoRepository proxy = factory.getProxy();
         proxy.dummyPublicSaveMethod();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey("de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod");
-        verifyNoMoreInteractions(chaosMonkeyMock);
+        verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(0)).counterWatcher(MetricType.REPOSITORY, pointcutName);
+        verify(counterMock, times(0)).increment();
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
 
     }
 }

@@ -16,14 +16,18 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import com.example.chaos.monkey.chaosdemo.service.GreetingService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,19 +37,51 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@WebMvcTest(HelloController.class)
 public class HelloControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private GreetingService greetingServiceMock;
+    private String responseService;
+    private String responseRepo;
+
+    @Before
+    public void setup() {
+        responseService = "Hello from service!";
+        when(greetingServiceMock.greet()).thenReturn(responseService);
+        responseRepo = "Hello from repo!";
+        when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
+    }
+
+
     @Test
     public void shouldReturnHello() throws Exception {
+
+
         this.mockMvc.perform(get("/hello")).andExpect(status().isOk())
                 .andExpect(content().string(is("Hello!")));
     }
 
     @Test
+    public void callMockServiceGreet() throws Exception {
+
+
+        this.mockMvc.perform(get("/greet")).andExpect(status().isOk())
+                .andExpect(content().string(is(responseService)));
+    }
+
+
+    @Test
+    public void callMockServiceDbGreet() throws Exception {
+
+
+        this.mockMvc.perform(get("/dbgreet")).andExpect(status().isOk())
+                .andExpect(content().string(is(responseRepo)));
+    }
+
     public void shouldReturnGoodbye() throws Exception {
         this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk())
                 .andExpect(content().string(is("Goodbye!")));

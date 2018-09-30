@@ -31,7 +31,14 @@ abstract class ChaosMonkeyBaseAspect {
     public void allPublicMethodPointcut() {
     }
 
-    protected String createSignature(MethodSignature signature) {
+    String calculatePointcut(String target) {
+        return target
+                .replaceAll("\\(\\)", "")
+                .replaceAll("\\)", "")
+                .replaceAll("\\(", ".");
+    }
+
+    String createSignature(MethodSignature signature) {
         return signature.getDeclaringTypeName() + "." + signature.getMethod().getName();
     }
 }

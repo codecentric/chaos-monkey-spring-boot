@@ -16,9 +16,11 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
 
 /**
  * @author Thorsten Deelmann
@@ -28,12 +30,15 @@ public class ExceptionAssaultTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    @Mock
+    private Metrics metricsMock;
+
     @Test
     public void throwsRuntimeException() {
         exception.expect(RuntimeException.class);
         exception.expectMessage("Chaos Monkey - RuntimeException");
 
-        ExceptionAssault exceptionAssault = new ExceptionAssault(null);
+        ExceptionAssault exceptionAssault = new ExceptionAssault(null, metricsMock);
         exceptionAssault.attack();
     }
 }

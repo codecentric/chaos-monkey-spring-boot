@@ -17,6 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,13 +32,15 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
-public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
+public class SpringComponentAspect extends ChaosMonkeyBaseAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringComponentAspect.class);
 
     private final ChaosMonkey chaosMonkey;
+    private final Metrics metrics;
 
-    public SpringComponentAspect(ChaosMonkey chaosMonkey) {
+    public SpringComponentAspect(ChaosMonkey chaosMonkey, Metrics metrics) {
         this.chaosMonkey = chaosMonkey;
+        this.metrics = metrics;
     }
 
     @Pointcut("within(@org.springframework.stereotype.Component *)")
@@ -45,6 +49,11 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
 
     @Around("classAnnotatedWithComponentPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+        // metrics
+        if (metrics != null) {
+            metrics.counterWatcher(MetricType.COMPONENT, calculatePointcut(pjp.toShortString())).increment();
+        }
+
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 
         chaosMonkey.callChaosMonkey(createSignature(signature));

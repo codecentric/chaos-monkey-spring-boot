@@ -56,6 +56,8 @@
         <mockito-all.version>1.10.19</mockito-all.version>
         <powermock.version>1.7.4</powermock.version>
         <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
+
+
     </properties>
     <modules>
         <module>chaos-monkey-dependencies</module>

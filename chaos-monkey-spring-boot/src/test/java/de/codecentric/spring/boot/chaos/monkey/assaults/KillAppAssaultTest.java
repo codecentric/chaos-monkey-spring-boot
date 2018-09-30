@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +43,9 @@ public class KillAppAssaultTest {
     @Captor
     private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
+    @Mock
+    private Metrics metricsMock;
+
     @Before
     public void setUp() throws Exception {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
@@ -53,7 +57,7 @@ public class KillAppAssaultTest {
 
     @Test
     public void killsSpringBootApplication() {
-        KillAppAssault killAppAssault = new KillAppAssault(null);
+        KillAppAssault killAppAssault = new KillAppAssault(null, metricsMock);
         killAppAssault.attack();
 
         verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
