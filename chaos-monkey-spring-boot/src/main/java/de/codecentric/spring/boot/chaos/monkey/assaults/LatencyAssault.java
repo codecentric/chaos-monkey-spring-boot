@@ -23,6 +23,8 @@ import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author Thorsten Deelmann
  */
@@ -31,10 +33,12 @@ public class LatencyAssault implements ChaosMonkeyAssault {
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
     private final Metrics metrics;
     private ChaosMonkeySettings settings;
+    private AtomicInteger atomicTimeoutGauge;
 
     public LatencyAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;
         this.metrics = metrics;
+        this.atomicTimeoutGauge = new AtomicInteger(0);
     }
 
     @Override
@@ -46,11 +50,11 @@ public class LatencyAssault implements ChaosMonkeyAssault {
     public void attack() {
         LOGGER.debug("Chaos Monkey - timeout");
         int timeout = RandomUtils.nextInt(settings.getAssaultProperties().getLatencyRangeStart(), settings.getAssaultProperties().getLatencyRangeEnd());
-
+        atomicTimeoutGauge.set(timeout);
         if (metrics != null) {
             // metrics
             metrics.counter(MetricType.LATENCY_ASSAULT).increment();
-            metrics.gauge(MetricType.LATENCY_ASSAULT, timeout);
+            metrics.gauge(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
         }
 
         try {

@@ -6,7 +6,8 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 public enum MetricType {
 
     CONTROLLER("controller"), RESTCONTROLLER("restController"), REPOSITORY("repository"), COMPONENT("component"), SERVICE("service"),
-    LATENCY_ASSAULT("assault.latency"), EXCEPTION_ASSAULT("assault.exception"), KILLAPP_ASSAULT("assault.killapp"), APPLICATION_REQ_COUNT
+    LATENCY_ASSAULT("assault.latency.count"), EXCEPTION_ASSAULT("assault.exception.count"), KILLAPP_ASSAULT("assault.killapp.count"),
+    APPLICATION_REQ_COUNT
             ("application.request.count");
 
     private String metricName;

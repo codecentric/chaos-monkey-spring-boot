@@ -26,6 +26,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 
 /**
  * @author Benjamin Wilms
@@ -52,6 +53,7 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect {
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Repository class and public method detected: " + pjp.getSignature() : null);
 
+        MethodInvocationProceedingJoinPoint mjp = (MethodInvocationProceedingJoinPoint)pjp;
         // metrics
         if (metrics != null)
             metrics.counterWatcher(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();
