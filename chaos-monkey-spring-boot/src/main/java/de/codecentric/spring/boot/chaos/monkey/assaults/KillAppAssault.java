@@ -16,6 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +32,13 @@ import org.springframework.context.ApplicationContextAware;
 public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
-
     private ApplicationContext context;
-
     private final ChaosMonkeySettings settings;
+    private final Metrics metrics;
 
-    public KillAppAssault(ChaosMonkeySettings settings) {
+    public KillAppAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;
+        this.metrics = metrics;
     }
 
     @Override
@@ -50,6 +52,15 @@ public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAwa
             LOGGER.info("Chaos Monkey - I am killing your Application!");
 
             int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
+            if (metrics != null)
+                // metrics, makes not really sense
+                metrics.counter(MetricType.KILLAPP_ASSAULT).increment();
+
+            int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
+                public int getExitCode() {
+                    return 0;
+                }
+            });
             System.exit(exit);
         } catch (Exception e) {
             LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");

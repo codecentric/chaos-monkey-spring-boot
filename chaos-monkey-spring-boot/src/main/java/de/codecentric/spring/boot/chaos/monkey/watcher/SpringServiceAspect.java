@@ -17,13 +17,16 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * @author Benjamin Wilms
@@ -35,9 +38,11 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkey chaosMonkey;
+    private final Metrics metrics;
 
-    public SpringServiceAspect(ChaosMonkey chaosMonkey) {
+    public SpringServiceAspect(ChaosMonkey chaosMonkey, Metrics metrics) {
         this.chaosMonkey = chaosMonkey;
+        this.metrics = metrics;
     }
 
     @Pointcut("within(@org.springframework.stereotype.Service *)")
@@ -46,10 +51,14 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        final Signature signature = pjp.getSignature();
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + signature : null);
+        LOGGER.debug(LOGGER.isDebugEnabled() ? "Service class and public method detected: " + pjp.getSignature() : null);
+        // metrics
+        if (metrics != null)
+            metrics.counterWatcher(MetricType.SERVICE, calculatePointcut(pjp.toShortString())).increment();
 
-        chaosMonkey.callChaosMonkey(signature.getDeclaringType().getCanonicalName());
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+        chaosMonkey.callChaosMonkey(createSignature(signature));
 
         return pjp.proceed();
     }

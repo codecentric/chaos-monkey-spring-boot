@@ -17,6 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -31,17 +33,27 @@ import org.aspectj.lang.reflect.MethodSignature;
 public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
 
     private final ChaosMonkey chaosMonkey;
+    private final Metrics metrics;
 
-    public SpringRepositoryAspect(ChaosMonkey chaosMonkey) {
+    public SpringRepositoryAspect(ChaosMonkey chaosMonkey, Metrics metrics) {
         this.chaosMonkey = chaosMonkey;
+        this.metrics = metrics;
     }
 
-    @Pointcut("within(@org.springframework.stereotype.Repository *)")
-    public void classAnnotatedWithControllerPointcut() {
+    @Pointcut("this(org.springframework.data.repository.CrudRepository)")
+    public void implementsCrudRepository(){
+
     }
 
-    @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+        LOGGER.debug(LOGGER.isDebugEnabled() ? "Repository class and public method detected: " + pjp.getSignature() : null);
+
+        MethodInvocationProceedingJoinPoint mjp = (MethodInvocationProceedingJoinPoint)pjp;
+        // metrics
+        if (metrics != null)
+            metrics.counterWatcher(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();
+
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 
         chaosMonkey.callChaosMonkey(createSignature(signature));

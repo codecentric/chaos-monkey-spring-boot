@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DemoRestController {
 
     @GetMapping("/rest/hello")
-    public ResponseEntity<String> sayHello()
-    {
+    public ResponseEntity<String> sayHello() {
         return new ResponseEntity<String>("Hello", HttpStatus.OK);
     }
 }

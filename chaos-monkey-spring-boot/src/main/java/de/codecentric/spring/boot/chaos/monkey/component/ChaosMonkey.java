@@ -18,8 +18,6 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,24 +30,25 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class ChaosMonkey {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
-
     private final List<ChaosMonkeyAssault> assaults;
+    private final Metrics metrics;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
-
-
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults) {
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, Metrics metrics) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.assaults = assaults;
+        this.metrics = metrics;
     }
+
 
     public void callChaosMonkey(String simpleName) {
         if (isEnabled() && isTrouble()) {
+            if (metrics != null)
+                metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "total").increment();
+
             // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
             if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
                 if (chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
                     // only all listed custom methods will be attacked
-                    LOGGER.debug(LOGGER.isDebugEnabled() ? "Custom watched services found, run attack on:" + simpleName : null);
                     chooseAndRunAttack();
                 }
             } else {
@@ -68,6 +67,10 @@ public class ChaosMonkey {
             return;
         }
         getRandomFrom(activeAssaults).attack();
+        // attacked requests
+        if (metrics != null) {
+            metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted").increment();
+        }
     }
 
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {

@@ -30,7 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Benjamin Wilms
@@ -54,7 +54,7 @@ public class ChaosMonkeyRestEndpointDisabledIntTest {
     @Test
     public void getConfiguration() {
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult =
-                testRestTemplate.getForEntity(baseUrl , ChaosMonkeySettings.class);
+                testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.NOT_FOUND, chaosMonkeySettingsResult.getStatusCode());
     }

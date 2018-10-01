@@ -33,10 +33,9 @@ import static org.mockito.BDDMockito.given;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AttackComponentConditionTest {
-    private AttackComponentCondition attackComponentCondition;
     private final String CHAOS_MONKEY_COMPONENT_CONDITION = "chaos.monkey.watcher.component";
     private final String FALSE_DEFAULT = "false";
-
+    private AttackComponentCondition attackComponentCondition;
     @Mock
     private ConditionContext conditionContext;
     @Mock

@@ -31,10 +31,9 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class AttackServiceConditionTest {
 
-    private AttackServiceCondition attackServiceCondition;
     private final String CHAOS_MONKEY_CONTROL_CONDITION = "chaos.monkey.watcher.service";
     private final String FALSE_DEFAULT = "false";
-
+    private AttackServiceCondition attackServiceCondition;
     @Mock
     private ConditionContext conditionContext;
     @Mock

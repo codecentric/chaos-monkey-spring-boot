@@ -17,17 +17,17 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import org.springframework.validation.annotation.Validated;
+import java.util.List;
 
 /**
  * @author Benjamin Wilms
@@ -68,7 +68,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public int getTroubleRandom() {
-        return RandomUtils.nextInt(1, getLevel()+1);
+        return RandomUtils.nextInt(1, getLevel() + 1);
     }
 
     @JsonIgnore
@@ -78,7 +78,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public boolean isWatchedCustomServicesActive() {
-        if(watchedCustomServices == null || watchedCustomServices.isEmpty())
+        if (watchedCustomServices == null || watchedCustomServices.isEmpty())
             return false;
         return true;
     }

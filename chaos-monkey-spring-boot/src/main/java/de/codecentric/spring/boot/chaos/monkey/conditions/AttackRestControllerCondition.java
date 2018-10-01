@@ -29,7 +29,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class AttackRestControllerCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         return context.getEnvironment()
-                .getProperty("chaos.monkey.watcher.restController","false")
+                .getProperty("chaos.monkey.watcher.restController", "false")
                 .matches("(?i:.*true*)");
     }
 }

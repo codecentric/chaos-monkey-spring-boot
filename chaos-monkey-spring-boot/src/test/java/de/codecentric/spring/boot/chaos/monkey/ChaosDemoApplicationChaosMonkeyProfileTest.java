@@ -19,15 +19,16 @@ package de.codecentric.spring.boot.chaos.monkey;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -42,9 +43,9 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"chaos.monkey" +
-        ".watcher.controller=true","chaos.monkey.assaults.level=1","chaos.monkey.assaults.latencyRangeStart=10","chaos.monkey.assaults" +
+        ".watcher.controller=true", "chaos.monkey.assaults.level=1", "chaos.monkey.assaults.latencyRangeStart=10", "chaos.monkey.assaults" +
         ".latencyRangeEnd=50", "chaos.monkey.assaults" +
-        ".killApplicationActive=true","spring.profiles" +
+        ".killApplicationActive=true", "spring.profiles" +
         ".active=chaos-monkey"})
 public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
@@ -63,12 +64,13 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
     @Autowired
     private KillAppAssault killAppAssault;
 
-    @Autowired
-    private Environment env;
+
+    @Mock
+    private Metrics metricsMock;
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault));
+        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), metricsMock);
     }
 
     @Test

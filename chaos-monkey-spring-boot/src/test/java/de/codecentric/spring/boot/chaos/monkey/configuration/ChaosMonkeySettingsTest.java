@@ -91,7 +91,7 @@ public class ChaosMonkeySettingsTest {
     @Test
     public void lombokDataNullTest() {
 
-        settings = new ChaosMonkeySettings(null,null, null);
+        settings = new ChaosMonkeySettings(null, null, null);
 
         assertThat(settings.getChaosMonkeyProperties(), nullValue());
         assertThat(settings.getAssaultProperties(), nullValue());

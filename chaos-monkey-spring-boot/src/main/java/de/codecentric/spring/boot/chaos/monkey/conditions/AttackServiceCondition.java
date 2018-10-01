@@ -29,7 +29,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class AttackServiceCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         return context.getEnvironment()
-                .getProperty("chaos.monkey.watcher.service","false")
+                .getProperty("chaos.monkey.watcher.service", "false")
                 .matches("(?i:.*true*)");
     }
 }

@@ -29,7 +29,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class AttackComponentCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         return context.getEnvironment()
-                .getProperty("chaos.monkey.watcher.component","false")
-                .matches("(?i:.*true*)");
+                        .getProperty("chaos.monkey.watcher.component", "false")
+                        .matches("(?i:.*true*)");
     }
 }
