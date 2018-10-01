@@ -29,9 +29,9 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  */
 public class ChaosMonkey {
 
+    private final ChaosMonkeySettings chaosMonkeySettings;
+    private final List<ChaosMonkeyAssault> assaults;
     private final Metrics metrics;
-    private ChaosMonkeySettings chaosMonkeySettings;
-    private List<ChaosMonkeyAssault> assaults;
 
     public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, Metrics metrics) {
         this.chaosMonkeySettings = chaosMonkeySettings;

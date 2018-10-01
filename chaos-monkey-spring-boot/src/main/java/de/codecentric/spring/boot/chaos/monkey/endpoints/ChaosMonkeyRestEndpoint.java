@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestControllerEndpoint(enableByDefault = false, id = "chaosmonkey")
 public class ChaosMonkeyRestEndpoint {
 
-    private ChaosMonkeySettings chaosMonkeySettings;
+    private final ChaosMonkeySettings chaosMonkeySettings;
 
     public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
         this.chaosMonkeySettings = chaosMonkeySettings;

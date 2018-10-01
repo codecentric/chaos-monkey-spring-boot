@@ -31,8 +31,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class LatencyAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
+    private final ChaosMonkeySettings settings;
     private final Metrics metrics;
-    private ChaosMonkeySettings settings;
     private AtomicInteger atomicTimeoutGauge;
 
     public LatencyAssault(ChaosMonkeySettings settings, Metrics metrics) {

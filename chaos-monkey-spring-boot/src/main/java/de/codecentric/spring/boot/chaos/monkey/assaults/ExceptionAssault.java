@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 public class ExceptionAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAssault.class);
+    private final ChaosMonkeySettings settings;
     private final Metrics metrics;
-    private ChaosMonkeySettings settings;
 
     public ExceptionAssault(ChaosMonkeySettings settings, Metrics metrics) {
         this.settings = settings;

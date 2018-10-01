@@ -29,7 +29,7 @@ import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
 @JmxEndpoint(enableByDefault = false, id = "chaosmonkeyjmx")
 public class ChaosMonkeyJmxEndpoint {
 
-    private ChaosMonkeySettings chaosMonkeySettings;
+    private final ChaosMonkeySettings chaosMonkeySettings;
 
     public ChaosMonkeyJmxEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
         this.chaosMonkeySettings = chaosMonkeySettings;
