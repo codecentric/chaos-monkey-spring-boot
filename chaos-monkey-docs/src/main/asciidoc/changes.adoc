@@ -2,15 +2,20 @@
 == Changes in {project-version} ==
 
 === Watcher
-- customize the Watcher to define specific classes and there public methods that will be attacked
+- Filtering to classes and method names. By default all public methods of a monitored class are attacked by the Chaos Monkey, now single classes and methods can be defined and changed at runtime.
 
+=== Metrics
+- CM4SB 
 === Bugs fixed
-
+- Repository Watcher was not initilized
+- Repository Watcher was not triggered by calling default Spring Data methods
+-
 
 === Contributors
 Thank you for your support!
 
 -  https://github.com/snieking[snieking]
+- https://github.com/wonwoo[wonwoo]
 
 
 
