@@ -47,9 +47,7 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
 
     @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "Repository class and public method detected: " + pjp.getSignature() : null);
 
-        MethodInvocationProceedingJoinPoint mjp = (MethodInvocationProceedingJoinPoint)pjp;
         // metrics
         if (metrics != null)
             metrics.counterWatcher(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();

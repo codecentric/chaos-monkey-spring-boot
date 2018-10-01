@@ -5,7 +5,8 @@
 - Filtering to classes and method names. By default all public methods of a monitored class are attacked by the Chaos Monkey, now single classes and methods can be defined and changed at runtime.
 
 === Metrics
-- CM4SB 
+- CM4SB now provides metrics about all recognized classes and methods. In addition, it provides metrics for all assaults and their use.
+
 === Bugs fixed
 - Repository Watcher was not initilized
 - Repository Watcher was not triggered by calling default Spring Data methods
