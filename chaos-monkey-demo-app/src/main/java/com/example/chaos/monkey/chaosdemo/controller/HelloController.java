@@ -53,9 +53,15 @@ public class HelloController {
     public ResponseEntity<String> greetFromDbById() {
         return ResponseEntity.ok(greetingService.greetFromRepoPagingSorting());
     }
+
     @GetMapping("/jpa/findbyid")
     public ResponseEntity<String> greetFromDbByIdJpa() {
         return ResponseEntity.ok(greetingService.greetFromRepoJpa());
+    }
+
+    @GetMapping("/common/findbyid")
+    public ResponseEntity<String> greetFromDbByIdAnnotation() {
+        return ResponseEntity.ok(greetingService.greetFromRepoAnnotation());
     }
 
     @GetMapping("/goodbye")
