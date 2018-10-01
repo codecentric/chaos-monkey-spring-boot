@@ -2,11 +2,11 @@ package com.example.chaos.monkey.chaosdemo.service;
 
 import com.example.chaos.monkey.chaosdemo.repo.Hello;
 import com.example.chaos.monkey.chaosdemo.repo.HelloRepo;
+import com.example.chaos.monkey.chaosdemo.repo.HelloRepoAnnotation;
 import com.example.chaos.monkey.chaosdemo.repo.HelloRepoJpa;
 import com.example.chaos.monkey.chaosdemo.repo.HelloRepoSearchAndSorting;
-import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Benjamin Wilms
@@ -15,14 +15,17 @@ import java.util.Optional;
 public class GreetingService {
 
     private final HelloRepo helloRepo;
-    private HelloRepoSearchAndSorting repoSearchAndSorting;
-    private HelloRepoJpa helloRepoJpa;
+    private final HelloRepoSearchAndSorting repoSearchAndSorting;
+    private final HelloRepoJpa helloRepoJpa;
+    private final HelloRepoAnnotation helloRepoAnnotation;
 
 
-    public GreetingService(HelloRepo helloRepo, HelloRepoSearchAndSorting repoSearchAndSorting, HelloRepoJpa helloRepoJpa) {
+    public GreetingService(HelloRepo helloRepo, HelloRepoSearchAndSorting repoSearchAndSorting, HelloRepoJpa helloRepoJpa,
+        HelloRepoAnnotation helloRepoAnnotation) {
         this.helloRepo = helloRepo;
         this.repoSearchAndSorting = repoSearchAndSorting;
         this.helloRepoJpa = helloRepoJpa;
+        this.helloRepoAnnotation = helloRepoAnnotation;
     }
 
     public String greet() {
@@ -37,14 +40,18 @@ public class GreetingService {
     public String greetFromRepoPagingSorting() {
         Hello databaseSide = repoSearchAndSorting.save(new Hello(0, "Greetings from the paging and sorting database side"));
         Optional<Hello> byId = repoSearchAndSorting.findById(databaseSide.getId());
-        return byId.orElse(new Hello(-99,"not found")).getMessage();
+        return byId.orElse(new Hello(-99, "not found")).getMessage();
     }
 
     public String greetFromRepoJpa() {
         Hello databaseSide = helloRepoJpa.save(new Hello(0, "Greetings from the paging and sorting database side"));
         Optional<Hello> byId = helloRepoJpa.findById(databaseSide.getId());
-        return byId.orElse(new Hello(-99,"not found")).getMessage();
+        return byId.orElse(new Hello(-99, "not found")).getMessage();
     }
 
-
+    public String greetFromRepoAnnotation() {
+        Hello databaseSide = helloRepoAnnotation.save(new Hello(0, "Greetings from the paging and sorting database side"));
+        Optional<Hello> byId = helloRepoAnnotation.findById(databaseSide.getId());
+        return byId.orElse(new Hello(-99, "not found")).getMessage();
+    }
 }
