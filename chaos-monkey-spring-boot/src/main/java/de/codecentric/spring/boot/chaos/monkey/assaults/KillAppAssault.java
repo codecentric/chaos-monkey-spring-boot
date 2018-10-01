@@ -51,16 +51,13 @@ public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAwa
         try {
             LOGGER.info("Chaos Monkey - I am killing your Application!");
 
-            int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
             if (metrics != null)
-                // metrics, makes not really sense
+            {
                 metrics.counter(MetricType.KILLAPP_ASSAULT).increment();
+            }
+            int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
+            Thread.sleep(5000); // wait befor kill to deliver some metrics
 
-            int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
-                public int getExitCode() {
-                    return 0;
-                }
-            });
             System.exit(exit);
         } catch (Exception e) {
             LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
