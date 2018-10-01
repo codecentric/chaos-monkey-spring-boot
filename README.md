@@ -238,7 +238,7 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
 <dependency>
   <groupId>de.codecentric</groupId>
   <artifactId>chaos-monkey-spring-boot</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
+  <version>1.5.1-SNAPSHOT</version>
 </dependency>
 ```
 #### Chaos Monkey for Spring Boot 2.0.x
@@ -246,6 +246,6 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
 <dependency>
   <groupId>de.codecentric</groupId>
   <artifactId>chaos-monkey-spring-boot</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ```
