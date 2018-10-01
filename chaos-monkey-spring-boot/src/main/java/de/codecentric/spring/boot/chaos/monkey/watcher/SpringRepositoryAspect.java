@@ -40,7 +40,7 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
         this.metrics = metrics;
     }
 
-    @Pointcut("this(org.springframework.data.repository.CrudRepository)")
+    @Pointcut("this(org.springframework.data.repository.CrudRepository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
     public void implementsCrudRepository(){
 
     }
