@@ -4,10 +4,25 @@ Since version 2.0.1 of Chaos Monkey for Spring Boot, there are some metrics avai
 deliver
 some insights about all calls and attacks recognized by the CM4SB.
 
+https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics[Spring Boot's application metrics] facade supports
+numerous monitoring systems, including:
+
+- Atlas
+- Datadog
+- Ganglia
+- Graphite
+- Influx
+- JMX
+- New Relic
+- Prometheus
+- SignalFx
+- Simple (in-memory)
+- StatsD
+- Wavefront
+
 === CM4SB Metrics
 If you have micrometer.io enabled in your attacked Spring Boot App, you are able to view and export these kind of insights.
-Take a look at https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics[Spring Docs] to see how it works and
-what you have do.
+Take a look at https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics[Spring Docs] to see how it works.
 
 Metrics are available via Spring Boot Actuator endpoint, if you are exposing them in simple mode.
 
@@ -17,47 +32,63 @@ Metrics are available via Spring Boot Actuator endpoint, if you are exposing the
 /actuator/metrics
 ----
 Beside all other metrics, deliverd by default, you will find some CM4SB metrics. They will always start with "chaos.monkey.*".
+
+==== Chaos Monkey Application Metrics
+===== Request count
+- total = all requests recognized
+- assaulted = all attacked requests
+
 [source,txt,subs="verbatim,attributes"]
-.chaos monkey metric example:
+.chaos monkey metric request count:
 ----
-{
-    "names": [
-        ...
-        "chaos.monkey.controller.watcher",
-        "chaos.monkey.assault.latency",
-        "chaos.monkey.application.request.count",
-        "chaos.monkey.assault.latency.gauge.",
-        ...
-    ]
-}
+chaos_monkey_application_request_count_total
+chaos_monkey_application_request_count_assaulted
 ----
-=== Watcher Metrics
+
+
+==== Watcher Metrics
 For all types of CM4SB Watchers, you will find a metric.
 
-In the following example two @Controller annotated classes are available in the Spring Boot application and have been recognized by the CM4SB.
 [source,txt,subs="verbatim,attributes"]
-./actuator/metrics/chaos.monkey.controller.watcher:
+.chaos monkey metric request count:
 ----
-{
-    "name": "chaos.monkey.controller.watcher",
-    "description": null,
-    "baseUnit": null,
-    "measurements": [
-        {
-            "statistic": "COUNT",
-            "value": 5
-        }
-    ],
-    "availableTags": [
-        {
-            "tag": "component",
-            "values": [
-                "GreetingController.sayHello",
-                "HelloController.sayHello"
-            ]
-        }
-    ]
-}
+chaos_monkey_assault_component_watcher_total
+chaos_monkey_assault_controller_watcher_total
+chaos_monkey_assault_repository_watcher_total
+chaos_monkey_assault_restController_watcher_total
+chaos_monkey_assault_service_watcher_total
+----
 
+===== Assault Latency
+
+*_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
+*_latency_count_total = number of latency attacks
+
+[source,txt,subs="verbatim,attributes"]
+.chaos monkey metric latency count in ms:
+----
+chaos_monkey_assault_latency_count_gauge
+chaos_monkey_assault_latency_count_total
+----
+===== Assault Exception
+
+Number of thrown exception attacks
+
+[source,txt,subs="verbatim,attributes"]
+.chaos monkey metric exception:
+----
+chaos_monkey_assault_exception_count
+----
+===== Assault KillApp
+
+Number of Application kills, there is a delay before the app is killed (5s) and the produce of this metric. So, be sure this metric is collected by
+ your favorite system.
+Otherwise it is
+lost.
+
+[source,txt,subs="verbatim,attributes"]
+.chaos monkey metric:
+----
+chaos_monkey_assault_exception_count
 ----
 
