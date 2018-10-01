@@ -56,7 +56,6 @@ public class ChaosMonkeyConfiguration {
     private final AssaultProperties assaultProperties;
     private final MeterRegistry meterRegistry;
 
-
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
                                     AssaultProperties assaultProperties, MeterRegistry meterRegistry) {
         this.chaosMonkeyProperties = chaosMonkeyProperties;
