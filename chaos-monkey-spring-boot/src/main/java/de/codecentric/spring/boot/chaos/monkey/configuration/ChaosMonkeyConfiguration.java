@@ -27,9 +27,11 @@ import de.codecentric.spring.boot.chaos.monkey.conditions.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.watcher.*;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
@@ -56,7 +58,6 @@ public class ChaosMonkeyConfiguration {
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
     private ApplicationEventPublisher applicationEventPublisher;
-    private Metrics metrics;
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
                                     AssaultProperties assaultProperties, ApplicationEventPublisher applicationEventPublisher) {
@@ -73,7 +74,11 @@ public class ChaosMonkeyConfiguration {
         }
 
     }
-
+    @Bean
+    @ConditionalOnClass(name = "io.micrometer.core.instrument.MeterRegistry")
+    public Metrics metrics() {
+        return new Metrics();
+    }
     @Bean
     public MetricEventPublisher publisher() {
         return new MetricEventPublisher(applicationEventPublisher);
