@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -29,11 +30,11 @@ public class ExceptionAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAssault.class);
     private final ChaosMonkeySettings settings;
-    private final Metrics metrics;
+    private MetricEventPublisher metricEventPublisher;
 
-    public ExceptionAssault(ChaosMonkeySettings settings, Metrics metrics) {
+    public ExceptionAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.settings = settings;
-        this.metrics = metrics;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     @Override
@@ -46,8 +47,7 @@ public class ExceptionAssault implements ChaosMonkeyAssault {
         LOGGER.info("Chaos Monkey - exception");
 
         // metrics
-        if (metrics != null)
-            metrics.counter(MetricType.EXCEPTION_ASSAULT).increment();
+        metricEventPublisher.publishMetricEvent(MetricType.EXCEPTION_ASSAULT);
 
         throw new RuntimeException("Chaos Monkey - RuntimeException");
     }

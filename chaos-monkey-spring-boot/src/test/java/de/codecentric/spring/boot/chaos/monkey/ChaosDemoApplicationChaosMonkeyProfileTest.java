@@ -20,6 +20,7 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -66,7 +67,7 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
 
     @Mock
-    private Metrics metricsMock;
+    private MetricEventPublisher metricsMock;
 
     @Before
     public void setUp() {

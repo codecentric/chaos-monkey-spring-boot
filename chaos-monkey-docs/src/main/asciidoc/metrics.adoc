@@ -61,8 +61,8 @@ chaos_monkey_assault_service_watcher_total
 
 ===== Assault Latency
 
-*_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
-*_latency_count_total = number of latency attacks
+- *_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
+- *_latency_count_total = number of latency attacks
 
 [source,txt,subs="verbatim,attributes"]
 .chaos monkey metric latency count in ms:

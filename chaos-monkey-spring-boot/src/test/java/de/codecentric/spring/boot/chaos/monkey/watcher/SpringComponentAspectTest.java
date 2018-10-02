@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
@@ -41,17 +42,11 @@ public class SpringComponentAspectTest {
     private ChaosMonkey chaosMonkeyMock;
 
     @Mock
-    private Metrics metricsMock;
-    @Mock
-    private Counter counterMock;
-
+    private MetricEventPublisher metricsMock;
     private String pointcutName = "execution.DemoComponent.sayHello";
     private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello";
 
-    @Before
-    public void before() {
-        when(metricsMock.counterWatcher(MetricType.COMPONENT, pointcutName)).thenReturn(counterMock);
-    }
+
 
 
     @Test
@@ -67,9 +62,8 @@ public class SpringComponentAspectTest {
 
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(1)).counterWatcher(MetricType.COMPONENT, pointcutName);
-        verify(counterMock, times(1)).increment();
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+        verify(metricsMock, times(1)).publishMetricEvent(MetricType.COMPONENT, pointcutName);
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
 
@@ -86,9 +80,8 @@ public class SpringComponentAspectTest {
 
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).counterWatcher(MetricType.COMPONENT, pointcutName);
-        verify(counterMock, times(0)).increment();
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+        verify(metricsMock, times(0)).publishMetricEvent(MetricType.COMPONENT, pointcutName);
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
 
@@ -110,8 +103,8 @@ public class SpringComponentAspectTest {
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).counterWatcher(MetricType.COMPONENT, pointcutName);
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock, counterMock);
+        verify(metricsMock, times(0)).publishMetricEvent(MetricType.COMPONENT, pointcutName);
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
 
