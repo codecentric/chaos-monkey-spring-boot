@@ -59,24 +59,7 @@ public class SpringRestControllerAspectTest {
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(1)).publishMetricEvent(MetricType.RESTCONTROLLER, pointcutName);
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
-
-    }
-
-    @Test
-    public void chaosMonkeyIsCalled_Metrics_NULL() {
-        DemoRestController target = new DemoRestController();
-
-        AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock, null);
-        factory.addAspect(serviceAspect);
-
-        DemoRestController proxy = factory.getProxy();
-        proxy.sayHello();
-
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(MetricType.RESTCONTROLLER, pointcutName);
+        verify(metricsMock, times(1)).publishMetricEvent(pointcutName, MetricType.RESTCONTROLLER);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
@@ -98,7 +81,7 @@ public class SpringRestControllerAspectTest {
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(MetricType.RESTCONTROLLER, pointcutName);
+        verify(metricsMock, times(0)).publishMetricEvent(pointcutName,MetricType.RESTCONTROLLER);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }

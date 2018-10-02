@@ -60,25 +60,10 @@ public class SpringRepositoryAspectTest {
         proxy.dummyPublicSaveMethod();
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(1)).publishMetricEvent(MetricType.REPOSITORY, pointcutName);
+        verify(metricsMock, times(1)).publishMetricEvent(pointcutName,MetricType.REPOSITORY);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
     }
 
-    @Test
-    public void chaosMonkeyIsCalled_Metrics_NULL() {
-        DemoRepository target =  new DemoRepositoryImpl();
-
-        AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, null);
-        factory.addAspect(repositoryAspect);
-
-        DemoRepository proxy = factory.getProxy();
-        proxy.dummyPublicSaveMethod();
-
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(MetricType.REPOSITORY, pointcutName);
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
-    }
 
     @Test
     public void chaosMonkeyIsNotCalled() {
@@ -96,7 +81,7 @@ public class SpringRepositoryAspectTest {
         proxy.dummyPublicSaveMethod();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(MetricType.REPOSITORY, pointcutName);
+        verify(metricsMock, times(0)).publishMetricEvent(pointcutName,MetricType.REPOSITORY);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }

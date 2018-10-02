@@ -47,7 +47,7 @@ public class ChaosMonkey {
 
             // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
             if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
-                if (chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
+                if (!chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().isEmpty() && chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
                     // only all listed custom methods will be attacked
                     chooseAndRunAttack();
                 }

@@ -62,28 +62,11 @@ public class SpringComponentAspectTest {
 
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(1)).publishMetricEvent(MetricType.COMPONENT, pointcutName);
+        verify(metricsMock, times(1)).publishMetricEvent(pointcutName,MetricType.COMPONENT);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
 
-    @Test
-    public void chaosMonkeyIsCalled_Metrics_NULL() {
-        DemoComponent target = new DemoComponent();
-
-        AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyMock, null);
-        factory.addAspect(componentAspect);
-
-        DemoComponent proxy = factory.getProxy();
-        proxy.sayHello();
-
-
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(MetricType.COMPONENT, pointcutName);
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
-
-    }
 
     @Test
     public void chaosMonkeyIsNotCalled() {
@@ -103,7 +86,7 @@ public class SpringComponentAspectTest {
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(MetricType.COMPONENT, pointcutName);
+        verify(metricsMock, times(0)).publishMetricEvent(pointcutName,MetricType.COMPONENT);
         verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
