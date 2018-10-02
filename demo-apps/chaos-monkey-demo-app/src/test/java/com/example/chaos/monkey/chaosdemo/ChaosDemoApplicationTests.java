@@ -18,15 +18,30 @@ package com.example.chaos.monkey.chaosdemo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ChaosDemoApplicationTests {
 
+    @Autowired
+    private ApplicationContext ctx;
+
     @Test
     public void contextLoads() {
+    }
+
+    @Test
+    public void checkMetricsBean() {
+        assertThat(ctx.getBean("metrics"), is(notNullValue()));
+
     }
 
 }
