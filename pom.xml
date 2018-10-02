@@ -62,7 +62,8 @@
     <modules>
         <module>chaos-monkey-dependencies</module>
         <module>chaos-monkey-spring-boot</module>
-        <module>chaos-monkey-demo-app</module>
+        <module>demo-apps/chaos-monkey-demo-app</module>
+        <module>demo-apps/chaos-monkey-demo-app-naked</module>
         <module>chaos-monkey-docs</module>
     </modules>
     <organization>

@@ -31,23 +31,24 @@ public class ChaosMonkey {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
     private final List<ChaosMonkeyAssault> assaults;
-    private final Metrics metrics;
+    private MetricEventPublisher metricEventPublisher;
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, Metrics metrics) {
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.assaults = assaults;
-        this.metrics = metrics;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
 
     public void callChaosMonkey(String simpleName) {
         if (isEnabled() && isTrouble()) {
-            if (metrics != null)
-                metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "total").increment();
+
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
 
             // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
             if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
-                if (chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
+                if (!chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().isEmpty() && chaosMonkeySettings.getAssaultProperties().getWatchedCustomServices().contains(simpleName)) {
                     // only all listed custom methods will be attacked
                     chooseAndRunAttack();
                 }
@@ -67,10 +68,9 @@ public class ChaosMonkey {
             return;
         }
         getRandomFrom(activeAssaults).attack();
-        // attacked requests
-        if (metrics != null) {
-            metrics.counter(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted").increment();
-        }
+
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
     }
 
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {

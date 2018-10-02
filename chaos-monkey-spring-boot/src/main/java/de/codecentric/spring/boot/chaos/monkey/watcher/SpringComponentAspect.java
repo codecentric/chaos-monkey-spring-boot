@@ -17,8 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,14 +30,14 @@ import org.aspectj.lang.reflect.MethodSignature;
  */
 
 @Aspect
-public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
+public class SpringComponentAspect extends ChaosMonkeyBaseAspect {
 
     private final ChaosMonkey chaosMonkey;
-    private final Metrics metrics;
+    private MetricEventPublisher metricEventPublisher;
 
-    public SpringComponentAspect(ChaosMonkey chaosMonkey, Metrics metrics) {
+    public SpringComponentAspect(ChaosMonkey chaosMonkey, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkey = chaosMonkey;
-        this.metrics = metrics;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     @Pointcut("within(@org.springframework.stereotype.Component *)")
@@ -47,9 +47,8 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect{
     @Around("classAnnotatedWithComponentPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         // metrics
-        if (metrics != null) {
-            metrics.counterWatcher(MetricType.COMPONENT, calculatePointcut(pjp.toShortString())).increment();
-        }
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.COMPONENT);
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 

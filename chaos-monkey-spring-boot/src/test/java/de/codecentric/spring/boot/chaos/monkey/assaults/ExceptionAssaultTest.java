@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class ExceptionAssaultTest {
     public final ExpectedException exception = ExpectedException.none();
 
     @Mock
-    private Metrics metricsMock;
+    private MetricEventPublisher metricsMock;
 
     @Test
     public void throwsRuntimeException() {

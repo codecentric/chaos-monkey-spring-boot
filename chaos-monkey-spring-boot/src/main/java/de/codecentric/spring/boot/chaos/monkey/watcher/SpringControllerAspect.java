@@ -17,8 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,11 +33,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
 
     private final ChaosMonkey chaosMonkey;
-    private final Metrics metrics;
+    private MetricEventPublisher metricEventPublisher;
 
-    public SpringControllerAspect(ChaosMonkey chaosMonkey, Metrics metrics) {
+    public SpringControllerAspect(ChaosMonkey chaosMonkey, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkey = chaosMonkey;
-        this.metrics = metrics;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     @Pointcut("within(@org.springframework.stereotype.Controller *)")
@@ -49,10 +49,8 @@ public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         // metrics
-        if (metrics != null) {
-            metrics.counterWatcher(MetricType.CONTROLLER, calculatePointcut(pjp.toShortString())).increment();
-        }
-
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.CONTROLLER);
 
         chaosMonkey.callChaosMonkey(createSignature(signature));
 

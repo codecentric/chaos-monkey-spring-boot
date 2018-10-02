@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class KillAppAssaultTest {
     private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
     @Mock
-    private Metrics metricsMock;
+    private MetricEventPublisher metricsMock;
 
     @Before
     public void setUp() throws Exception {

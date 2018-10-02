@@ -17,8 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,18 +30,18 @@ import org.aspectj.lang.reflect.MethodSignature;
  */
 
 @Aspect
-public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
+public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect {
 
     private final ChaosMonkey chaosMonkey;
-    private final Metrics metrics;
+    private MetricEventPublisher metricEventPublisher;
 
-    public SpringRepositoryAspect(ChaosMonkey chaosMonkey, Metrics metrics) {
+    public SpringRepositoryAspect(ChaosMonkey chaosMonkey, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkey = chaosMonkey;
-        this.metrics = metrics;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     @Pointcut("this(org.springframework.data.repository.CrudRepository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
-    public void implementsCrudRepository(){
+    public void implementsCrudRepository() {
 
     }
 
@@ -49,8 +49,8 @@ public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect{
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
         // metrics
-        if (metrics != null)
-            metrics.counterWatcher(MetricType.REPOSITORY, calculatePointcut(pjp.toShortString())).increment();
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 

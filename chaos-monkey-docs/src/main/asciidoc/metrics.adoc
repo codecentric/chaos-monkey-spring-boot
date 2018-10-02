@@ -21,7 +21,7 @@ numerous monitoring systems, including:
 - Wavefront
 
 === CM4SB Metrics
-If you have micrometer.io enabled in your attacked Spring Boot App, you are able to view and export these kind of insights.
+If you have micrometer.io on your classpath and enabled, you are able to view and export these kind of insights.
 Take a look at https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics[Spring Docs] to see how it works.
 
 Metrics are available via Spring Boot Actuator endpoint, if you are exposing them in simple mode.
@@ -61,8 +61,8 @@ chaos_monkey_assault_service_watcher_total
 
 ===== Assault Latency
 
-*_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
-*_latency_count_total = number of latency attacks
+- *_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
+- *_latency_count_total = number of latency attacks
 
 [source,txt,subs="verbatim,attributes"]
 .chaos monkey metric latency count in ms:

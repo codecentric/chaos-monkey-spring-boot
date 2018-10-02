@@ -16,8 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -32,12 +32,12 @@ public class LatencyAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
     private final ChaosMonkeySettings settings;
-    private final Metrics metrics;
+    private MetricEventPublisher metricEventPublisher;
     private AtomicInteger atomicTimeoutGauge;
 
-    public LatencyAssault(ChaosMonkeySettings settings, Metrics metrics) {
+    public LatencyAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.settings = settings;
-        this.metrics = metrics;
+        this.metricEventPublisher = metricEventPublisher;
         this.atomicTimeoutGauge = new AtomicInteger(0);
     }
 
@@ -51,10 +51,11 @@ public class LatencyAssault implements ChaosMonkeyAssault {
         LOGGER.debug("Chaos Monkey - timeout");
         int timeout = RandomUtils.nextInt(settings.getAssaultProperties().getLatencyRangeStart(), settings.getAssaultProperties().getLatencyRangeEnd());
         atomicTimeoutGauge.set(timeout);
-        if (metrics != null) {
-            // metrics
-            metrics.counter(MetricType.LATENCY_ASSAULT).increment();
-            metrics.gauge(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
+
+        // metrics
+        if (metricEventPublisher != null) {
+            metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT);
+            metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
         }
 
         try {

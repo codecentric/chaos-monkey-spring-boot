@@ -21,6 +21,7 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.conditions.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
@@ -30,8 +31,10 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -54,14 +57,14 @@ public class ChaosMonkeyConfiguration {
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
-    private final MeterRegistry meterRegistry;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
-                                    AssaultProperties assaultProperties, MeterRegistry meterRegistry) {
+                                    AssaultProperties assaultProperties, ApplicationEventPublisher applicationEventPublisher) {
         this.chaosMonkeyProperties = chaosMonkeyProperties;
         this.watcherProperties = watcherProperties;
         this.assaultProperties = assaultProperties;
-        this.meterRegistry = meterRegistry;
+        this.applicationEventPublisher = applicationEventPublisher;
 
         try {
             String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
@@ -71,6 +74,15 @@ public class ChaosMonkeyConfiguration {
         }
 
     }
+    @Bean
+    @ConditionalOnClass(name = "io.micrometer.core.instrument.MeterRegistry")
+    public Metrics metrics() {
+        return new Metrics();
+    }
+    @Bean
+    public MetricEventPublisher publisher() {
+        return new MetricEventPublisher(applicationEventPublisher);
+    }
 
     @Bean
     public ChaosMonkeySettings settings() {
@@ -79,52 +91,52 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public LatencyAssault latencyAssault() {
-        return new LatencyAssault(settings(), metrics(meterRegistry));
+        return new LatencyAssault(settings(), publisher());
     }
 
     @Bean
     public ExceptionAssault exceptionAssault() {
-        return new ExceptionAssault(settings(), metrics(meterRegistry));
+        return new ExceptionAssault(settings(), publisher());
     }
 
     @Bean
     public KillAppAssault killAppAssault() {
-        return new KillAppAssault(settings(), metrics(meterRegistry));
+        return new KillAppAssault(settings(), publisher());
     }
 
     @Bean
     public ChaosMonkey chaosMonkey(List<ChaosMonkeyAssault> chaosMonkeyAssaults) {
-        return new ChaosMonkey(settings(), chaosMonkeyAssaults, metrics(meterRegistry));
+        return new ChaosMonkey(settings(), chaosMonkeyAssaults, publisher());
     }
 
     @Bean
     @Conditional(AttackControllerCondition.class)
     public SpringControllerAspect controllerAspect(ChaosMonkey chaosMonkey) {
-        return new SpringControllerAspect(chaosMonkey, metrics(meterRegistry));
+        return new SpringControllerAspect(chaosMonkey, publisher());
     }
 
     @Bean
     @Conditional(AttackRestControllerCondition.class)
     public SpringRestControllerAspect restControllerAspect(ChaosMonkey chaosMonkey) {
-        return new SpringRestControllerAspect(chaosMonkey, metrics(meterRegistry));
+        return new SpringRestControllerAspect(chaosMonkey, publisher());
     }
 
     @Bean
     @Conditional(AttackServiceCondition.class)
     public SpringServiceAspect serviceAspect(ChaosMonkey chaosMonkey) {
-        return new SpringServiceAspect(chaosMonkey, metrics(meterRegistry));
+        return new SpringServiceAspect(chaosMonkey, publisher());
     }
 
     @Bean
     @Conditional(AttackComponentCondition.class)
     public SpringComponentAspect componentAspect(ChaosMonkey chaosMonkey) {
-        return new SpringComponentAspect(chaosMonkey, metrics(meterRegistry));
+        return new SpringComponentAspect(chaosMonkey, publisher());
     }
 
     @Bean
     @Conditional(AttackRepositoryCondition.class)
     public SpringRepositoryAspect repositoryAspect(ChaosMonkey chaosMonkey) {
-        return new SpringRepositoryAspect(chaosMonkey, metrics(meterRegistry));
+        return new SpringRepositoryAspect(chaosMonkey, publisher());
     }
 
     @Bean
@@ -139,11 +151,6 @@ public class ChaosMonkeyConfiguration {
     @ConditionalOnEnabledEndpoint
     public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
         return new ChaosMonkeyJmxEndpoint(settings());
-    }
-
-    @Bean
-    public Metrics metrics(MeterRegistry meterRegistry) {
-        return new Metrics(meterRegistry);
     }
 
 }
