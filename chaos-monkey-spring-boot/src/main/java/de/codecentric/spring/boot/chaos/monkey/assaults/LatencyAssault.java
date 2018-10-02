@@ -51,9 +51,12 @@ public class LatencyAssault implements ChaosMonkeyAssault {
         LOGGER.debug("Chaos Monkey - timeout");
         int timeout = RandomUtils.nextInt(settings.getAssaultProperties().getLatencyRangeStart(), settings.getAssaultProperties().getLatencyRangeEnd());
         atomicTimeoutGauge.set(timeout);
+
         // metrics
-        metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT);
-        metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
+        if (metricEventPublisher != null) {
+            metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT);
+            metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
+        }
 
         try {
             Thread.sleep(timeout);

@@ -18,7 +18,6 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,8 @@ public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAwa
         try {
             LOGGER.info("Chaos Monkey - I am killing your Application!");
 
-            metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
 
             int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
             Thread.sleep(5000); // wait befor kill to deliver some metrics

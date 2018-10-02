@@ -43,7 +43,8 @@ public class ChaosMonkey {
     public void callChaosMonkey(String simpleName) {
         if (isEnabled() && isTrouble()) {
 
-            metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
 
             // Custom watched services can be defined at runtime, if there are any, only these will be attacked!
             if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
@@ -68,7 +69,8 @@ public class ChaosMonkey {
         }
         getRandomFrom(activeAssaults).attack();
 
-        metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
     }
 
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {

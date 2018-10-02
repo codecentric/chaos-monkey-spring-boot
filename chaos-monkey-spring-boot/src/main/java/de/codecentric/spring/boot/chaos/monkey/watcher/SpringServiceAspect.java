@@ -53,7 +53,8 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Service class and public method detected: " + pjp.getSignature() : null);
 
-        metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 

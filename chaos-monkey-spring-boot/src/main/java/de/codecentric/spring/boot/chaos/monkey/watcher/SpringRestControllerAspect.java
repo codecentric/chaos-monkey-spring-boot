@@ -48,7 +48,8 @@ public class SpringRestControllerAspect extends ChaosMonkeyBaseAspect {
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
         // metrics
-        metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.RESTCONTROLLER);
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.RESTCONTROLLER);
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 
