@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Benjamin Wilms
@@ -68,12 +68,12 @@ public class AssaultProperties {
 
     @JsonIgnore
     public int getTroubleRandom() {
-        return RandomUtils.nextInt(1, getLevel() + 1);
+        return ThreadLocalRandom.current().nextInt(1, getLevel() + 1);
     }
 
     @JsonIgnore
     public int chooseAssault(int amount) {
-        return RandomUtils.nextInt(0, amount);
+        return ThreadLocalRandom.current().nextInt(0, amount);
     }
 
     @JsonIgnore

@@ -18,12 +18,13 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -32,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
  * @author Thorsten Deelmann
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({LatencyAssault.class, RandomUtils.class})
+@PrepareForTest({LatencyAssault.class, ThreadLocalRandom.class})
 public class LatencyAssaultTest {
 
     @Mock
@@ -45,7 +46,7 @@ public class LatencyAssaultTest {
     @Test
     public void threadSleepHasBeenCalled() throws Exception {
         mockStatic(Thread.class);
-        mockStatic(RandomUtils.class);
+        mockStatic(ThreadLocalRandom.class);
         int sleepTimeMillis = 150;
         int latencyRangeStart = 100;
         int latencyRangeEnd = 200;
@@ -53,7 +54,7 @@ public class LatencyAssaultTest {
         when(assaultProperties.getLatencyRangeStart()).thenReturn(latencyRangeStart);
         when(assaultProperties.getLatencyRangeEnd()).thenReturn(latencyRangeEnd);
         when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
-        when(RandomUtils.nextInt(latencyRangeStart, latencyRangeEnd)).thenReturn(sleepTimeMillis);
+        when(ThreadLocalRandom.current().nextInt(latencyRangeStart, latencyRangeEnd)).thenReturn(sleepTimeMillis);
 
         LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, null);
         latencyAssault.attack();
