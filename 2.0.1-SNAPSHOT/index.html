@@ -525,7 +525,7 @@ table.CodeRay td.code>pre{padding:0}
 <span id="author" class="author">Benjamin Wilms</span><br>
 <span id="email" class="email"><a href="https://twitter.com/mrbwilms">@MrBWilms</a></span><br>
 <span id="revnumber">version 2.0.1-SNAPSHOT,</span>
-<span id="revdate">01.10.2018</span>
+<span id="revdate">10.10.2018</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -566,10 +566,12 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#changes">8. Changes in 2.0.1-SNAPSHOT</a>
 <ul class="sectlevel2">
-<li><a href="#_watcher">8.1. Watcher</a></li>
-<li><a href="#_metrics">8.2. Metrics</a></li>
-<li><a href="#_bugs_fixed">8.3. Bugs fixed</a></li>
-<li><a href="#_contributors">8.4. Contributors</a></li>
+<li><a href="#_spring_boot_version">8.1. Spring Boot Version</a></li>
+<li><a href="#_watcher">8.2. Watcher</a></li>
+<li><a href="#_metrics">8.3. Metrics</a></li>
+<li><a href="#_aop">8.4. AOP</a></li>
+<li><a href="#_bugs_fixed">8.5. Bugs fixed</a></li>
+<li><a href="#_contributors">8.6. Contributors</a></li>
 </ul>
 </li>
 </ul>
@@ -1260,7 +1262,7 @@ numerous monitoring systems, including:</p>
 <div class="sect2">
 <h3 id="_cm4sb_metrics"><a class="anchor" href="#_cm4sb_metrics"></a><a class="link" href="#_cm4sb_metrics">7.1. CM4SB Metrics</a></h3>
 <div class="paragraph">
-<p>If you have micrometer.io enabled in your attacked Spring Boot App, you are able to view and export these kind of insights.
+<p>If you have micrometer.io on your classpath and enabled, you are able to view and export these kind of insights.
 Take a look at <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring Docs</a> to see how it works.</p>
 </div>
 <div class="paragraph">
@@ -1315,9 +1317,15 @@ chaos_monkey_assault_service_watcher_total</code></pre>
 </div>
 <div class="sect4">
 <h5 id="_assault_latency"><a class="anchor" href="#_assault_latency"></a><a class="link" href="#_assault_latency">Assault Latency</a></h5>
-<div class="paragraph">
-<p>*_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
-*_latency_count_total = number of latency attacks</p>
+<div class="ulist">
+<ul>
+<li>
+<p>*_latency_count_gauge = indicates the current average (gauge) level of all latency attacks</p>
+</li>
+<li>
+<p>*_latency_count_total = number of latency attacks</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="title">chaos monkey metric latency count in ms:</div>
@@ -1362,7 +1370,17 @@ lost.</p>
 <h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.0.1-SNAPSHOT</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_watcher"><a class="anchor" href="#_watcher"></a><a class="link" href="#_watcher">8.1. Watcher</a></h3>
+<h3 id="_spring_boot_version"><a class="anchor" href="#_spring_boot_version"></a><a class="link" href="#_spring_boot_version">8.1. Spring Boot Version</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>supported and tested Spring Boot versions, up to 2.0.5</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_watcher"><a class="anchor" href="#_watcher"></a><a class="link" href="#_watcher">8.2. Watcher</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1372,7 +1390,7 @@ lost.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_metrics"><a class="anchor" href="#_metrics"></a><a class="link" href="#_metrics">8.2. Metrics</a></h3>
+<h3 id="_metrics"><a class="anchor" href="#_metrics"></a><a class="link" href="#_metrics">8.3. Metrics</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1382,7 +1400,30 @@ lost.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bugs_fixed"><a class="anchor" href="#_bugs_fixed"></a><a class="link" href="#_bugs_fixed">8.3. Bugs fixed</a></h3>
+<h3 id="_aop"><a class="anchor" href="#_aop"></a><a class="link" href="#_aop">8.4. AOP</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Switch from compile-time weaving to load-time weaving to bring up the possibility to run the CM4SB as external loaded JAR.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">.application.properties:</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>java -cp ./target/demo.jar
+    -Dloader.path=chaos-monkey-spring-boot-2.0.1.jar
+        org.springframework.boot.loader.PropertiesLauncher
+    --spring.profiles.active=chaos-monkey</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bugs_fixed"><a class="anchor" href="#_bugs_fixed"></a><a class="link" href="#_bugs_fixed">8.5. Bugs fixed</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1396,7 +1437,7 @@ lost.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">8.4. Contributors</a></h3>
+<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">8.6. Contributors</a></h3>
 <div class="paragraph">
 <p>Thank you for your support!</p>
 </div>
@@ -1407,6 +1448,9 @@ lost.</p>
 </li>
 <li>
 <p><a href="https://github.com/wonwoo">wonwoo</a></p>
+</li>
+<li>
+<p><a href="https://github.com/deelthor">deelthor</a></p>
 </li>
 </ul>
 </div>
