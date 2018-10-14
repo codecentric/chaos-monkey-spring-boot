@@ -28,8 +28,9 @@ java -cp ./target/demo.jar
 === Contributors
 Thank you for your support!
 
--  https://github.com/snieking[snieking]
+- https://github.com/snieking[snieking]
 - https://github.com/wonwoo[wonwoo]
+- https://github.com/deelthor[deelthor]
 
 
 
