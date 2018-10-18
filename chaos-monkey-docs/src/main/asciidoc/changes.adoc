@@ -1,7 +1,8 @@
 [[changes]]
 == Changes in {project-version} ==
 === Spring Boot Version
-- supported and tested Spring Boot versions, up to 2.0.5
+- supported and tested Spring Boot versions, up to 2.0.6
+- supported and tested Spring Framework versions, up to 5.0.10
 
 === Watcher
 - Filtering to classes and method names. By default all public methods of a monitored class are attacked by the Chaos Monkey, now single classes and methods can be defined and changed at runtime.

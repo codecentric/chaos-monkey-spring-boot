@@ -34,8 +34,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.0.5.RELEASE</spring-boot.version>
-        <spring.version>5.0.9.RELEASE</spring.version>
+        <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
+        <spring.version>5.0.10.RELEASE</spring.version>
+        <aspectj-weaver.version>1.8.13</aspectj-weaver.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <lombok.version>1.16.20</lombok.version>
         <!-- plugin versions-->

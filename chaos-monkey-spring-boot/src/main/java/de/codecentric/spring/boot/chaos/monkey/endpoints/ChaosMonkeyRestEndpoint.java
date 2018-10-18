@@ -36,6 +36,7 @@ public class ChaosMonkeyRestEndpoint {
         this.chaosMonkeySettings = chaosMonkeySettings;
     }
 
+
     @PostMapping("/assaults")
     public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultProperties assaultProperties) {
 

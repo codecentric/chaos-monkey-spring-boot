@@ -40,7 +40,7 @@
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
-                <version>1.8.13</version>
+                <version>${aspectj-weaver.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

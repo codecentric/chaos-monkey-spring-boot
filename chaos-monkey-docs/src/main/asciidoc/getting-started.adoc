@@ -2,6 +2,10 @@
 == Getting started ==
 How to activate Chaos Monkey for Spring Boot in your existing Spring Boot App?
 
+There are two ways to integrate the Chaos Monkey for Spring Boot into your existing Spring Boot app. Either it is an integral part of your project and is listed in the POM or you can include it as an external dependency when starting your Spring Boot App.
+
+=== Dependency in your POM file ===
+
 1.) Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required
 
 [source,xml,subs="verbatim,attributes"]
@@ -21,12 +25,39 @@ How to activate Chaos Monkey for Spring Boot in your existing Spring Boot App?
 ----
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 ----
+=== External dependency JAR file
+You can extend your existing application with the CM4SB and add it as an external dependency at startup. For this it is necessary to use the PropertiesLauncher of Spring Boot.
+
+You can specify the necessary properties to activate the CM4SB as an external property file using the parameter *--spring.config.location*.
+
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files[Spring Boot external config documentation]
+
+[source,txt,subs="verbatim,attributes"]
+.command-line
+----
+java -cp your-app.jar
+    -Dloader.path=chaos-monkey-spring-boot-{project-version}-external.jar
+        org.springframework.boot.loader.PropertiesLauncher
+    --spring.profiles.active=chaos-monkey
+    --spring.config.location=file:./chaos-monkey.properties
+----
+
+It is your decision how you want to integrate and use the CM4SB. There is no difference between the two possibilities.
+
+=== Minimal property file to run CM4SB
+Activate the watcher you need for your experiments. In this example we want to make attacks on our *@Service* and *@RestController* annotated classes.
+
 NOTE: *chaos.monkey.enabled=true* is optional, you can enable/disable the Chaos Monkey at runtime! (default=false)
 [source,txt,subs="verbatim,attributes"]
 .application.properties:
 ----
 spring.profiles.active=chaos-monkey
 chaos.monkey.enabled=true
+
+chaos.monkey.watcher.controller=false
+chaos.monkey.watcher.restController=true
+chaos.monkey.watcher.service=true
+chaos.monkey.watcher.repository=false
 ----
 [source,yml,subs="verbatim,attributes"]
 .application.yml:
@@ -37,4 +68,10 @@ spring:
 chaos:
   monkey:
     enabled: true
+    watcher:
+      component: false
+      controller: false
+      repository: false
+      rest-controller: true
+      service: true
 ----
