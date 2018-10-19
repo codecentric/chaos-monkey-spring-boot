@@ -27,7 +27,8 @@
     </parent>
 
     <artifactId>chaos-monkey-demo-app-ext-jar</artifactId>
-    <description>Chaos Monkey for Spring Boot demo app with ext jar</description>
+    <description>Chaos Monkey for Spring Boot demo app with external jar of CM4SB</description>
+    <name>chaos-monkey-demo-app-ext-jar</name>
 
     <dependencies>
         <dependency>

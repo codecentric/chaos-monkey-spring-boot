@@ -28,6 +28,7 @@
 
     <artifactId>chaos-monkey-demo-app-naked</artifactId>
     <description>Chaos Monkey for Spring Boot demo app, without metrics and actuator endpoint</description>
+    <name>chaos-monkey-demo-app-naked</name>
 
     <dependencies>
         <dependency>

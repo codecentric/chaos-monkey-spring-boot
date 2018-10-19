@@ -32,11 +32,23 @@ You can specify the necessary properties to activate the CM4SB as an external pr
 
 https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files[Spring Boot external config documentation]
 
+This special JAR file is also available via Maven:
+[source,xml,subs="verbatim,attributes"]
+.pom.xml
+----
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>chaos-monkey-spring-boot</artifactId>
+    <classifier>jar-with-dependencies</classifier>
+    <version>{project-version}</version>
+</dependency>
+----
+Start your Spring Boot application, add Chaos Monkey for Spring Boot JAR and properties.
 [source,txt,subs="verbatim,attributes"]
 .command-line
 ----
 java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-{project-version}-external.jar
+    -Dloader.path=chaos-monkey-spring-boot-{project-version}-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties

@@ -11,6 +11,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>chaos-monkey-docs</artifactId>
+    <name>chaos-monkey-docs</name>
+    <description>Documentation of Chaos Monkey for Spring Boot</description>
 
     <build>
         <plugins>

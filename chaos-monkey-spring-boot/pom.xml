@@ -136,11 +136,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>${artifactId}-${version}-external</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
         </plugins>

@@ -27,7 +27,8 @@
     </parent>
 
     <artifactId>chaos-monkey-demo-app</artifactId>
-    <description>Chaos Monkey for Spring Boot demo app</description>
+    <description>Chaos Monkey for Spring Boot simple demo app</description>
+    <name>chaos-monkey-demo-app</name>
 
     <dependencies>
         <dependency>

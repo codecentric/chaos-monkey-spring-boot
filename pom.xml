@@ -23,10 +23,13 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
     <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
+    <name>chaos-monkey-spring-boot-parent</name>
+    <description>Chaos Monkey for Spring Boot parent project</description>
+
 
     <properties>
         <!-- project version -->
-        <revision>2.0.1-SNAPSHOT</revision>
+        <revision>2.0.1</revision>
         <!-- default settings -->
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
