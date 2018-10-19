@@ -524,8 +524,8 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Benjamin Wilms</span><br>
 <span id="email" class="email"><a href="https://twitter.com/mrbwilms">@MrBWilms</a></span><br>
-<span id="revnumber">version 2.0.1-SNAPSHOT,</span>
-<span id="revdate">18.10.2018</span>
+<span id="revnumber">version 2.0.1,</span>
+<span id="revdate">19.10.2018</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -570,7 +570,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 </ul>
 </li>
-<li><a href="#changes">8. Changes in 2.0.1-SNAPSHOT</a>
+<li><a href="#changes">8. Changes in 2.0.1</a>
 <ul class="sectlevel2">
 <li><a href="#_spring_boot_version">8.1. Spring Boot Version</a></li>
 <li><a href="#_watcher">8.2. Watcher</a></li>
@@ -643,7 +643,7 @@ table.CodeRay td.code>pre{padding:0}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.0.1-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -668,11 +668,28 @@ table.CodeRay td.code>pre{padding:0}
 <div class="paragraph">
 <p><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files">Spring Boot external config documentation</a></p>
 </div>
+<div class="paragraph">
+<p>This special JAR file is also available via Maven:</p>
+</div>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Start your Spring Boot application, add Chaos Monkey for Spring Boot JAR and properties.</p>
+</div>
 <div class="listingblock">
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.0.1-SNAPSHOT-external.jar
+    -Dloader.path=chaos-monkey-spring-boot-2.0.1-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -1421,7 +1438,7 @@ lost.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.0.1-SNAPSHOT</a></h2>
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.0.1</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_spring_boot_version"><a class="anchor" href="#_spring_boot_version"></a><a class="link" href="#_spring_boot_version">8.1. Spring Boot Version</a></h3>
@@ -1509,6 +1526,12 @@ lost.</p>
 <li>
 <p><a href="https://github.com/deelthor">deelthor</a></p>
 </li>
+<li>
+<p><a href="https://github.com/ottlinger">ottlinger</a></p>
+</li>
+<li>
+<p><a href="https://github.com/mattk-pio">mattk-pio</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1517,7 +1540,7 @@ lost.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.0.1-SNAPSHOT<br>
+Version 2.0.1<br>
 </div>
 </div>
 </body>
