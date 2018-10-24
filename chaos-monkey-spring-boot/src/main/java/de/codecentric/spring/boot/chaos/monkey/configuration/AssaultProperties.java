@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
@@ -62,6 +64,29 @@ public class AssaultProperties {
 
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
+
+    @Value("${memoryActive : false}")
+    private boolean memoryActive;
+
+    @Value("${memoryKeepFilledLevel : 90000}")
+    @Min(value = 15000)
+    @Max(value = Integer.MAX_VALUE)
+    private int memoryKeepFilledLevel;
+
+    @Value("${memoryIncreaseLevel : 1000}")
+    @Min(value = 100)
+    @Max(value = 30000)
+    private int memoryIncreaseLevel;
+
+    @Value("${memoryMinFreePercentage : 0.15}")
+    @DecimalMax("1.0")
+    @DecimalMin("0.0")
+    private double memoryMinFreePercentage;
+
+    @Value("${memoryFillPercentage : 0.25}")
+    @DecimalMax("0.3")
+    @DecimalMin("0.05")
+    private double memoryFillPercentage;
 
     @Value("${watchedCustomServices:#{null}}")
     private List<String> watchedCustomServices;

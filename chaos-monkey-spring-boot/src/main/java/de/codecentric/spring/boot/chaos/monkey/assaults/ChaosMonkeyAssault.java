@@ -25,4 +25,9 @@ public interface ChaosMonkeyAssault {
 
     void attack();
 
+    default AssaultType getAssaultType() {
+        return AssaultType.REQUEST;
+    }
+
+
 }

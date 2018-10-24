@@ -16,9 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.*;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -58,6 +56,9 @@ public class ChaosMonkeyTest {
 
     @Mock
     private KillAppAssault killAppAssault;
+
+    @Mock
+    private MemoryAssault memoryAssaultMock;
 
     @Mock
     private MetricEventPublisher metricEventPublisherMock;
@@ -285,6 +286,23 @@ public class ChaosMonkeyTest {
         verify(latencyAssault, never()).attack();
         verify(exceptionAssault, never()).attack();
         verify(killAppAssault, times(1)).attack();
+
+    }
+
+    @Test
+    public void only_assaults_from_type_REQUEST_should_called() {
+        String customService = "CustomService";
+
+        when(memoryAssaultMock.getAssaultType()).thenReturn(AssaultType.RUNTIME);
+        given(memoryAssaultMock.isActive()).willReturn(true);
+        given(this.assaultProperties.chooseAssault(2)).willReturn(1);
+
+        chaosMonkey = new ChaosMonkey(chaosMonkeySettings, Arrays.asList(memoryAssaultMock),
+                metricEventPublisherMock);
+
+        chaosMonkey.callChaosMonkey(customService);
+
+        verify(latencyAssault, never()).attack();
 
     }
 }

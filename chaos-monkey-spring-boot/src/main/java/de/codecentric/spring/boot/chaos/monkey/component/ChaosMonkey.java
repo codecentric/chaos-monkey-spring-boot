@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.AssaultType;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 
@@ -62,6 +63,7 @@ public class ChaosMonkey {
 
     private void chooseAndRunAttack() {
         List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
+                .filter(chaosMonkeyAssault -> chaosMonkeyAssault.getAssaultType() == AssaultType.REQUEST)
                 .filter(ChaosMonkeyAssault::isActive)
                 .collect(Collectors.toList());
         if (isEmpty(activeAssaults)) {
