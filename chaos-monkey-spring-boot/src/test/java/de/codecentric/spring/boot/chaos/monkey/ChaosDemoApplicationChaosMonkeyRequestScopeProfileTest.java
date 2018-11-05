@@ -19,9 +19,8 @@ package de.codecentric.spring.boot.chaos.monkey;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import org.junit.Before;
@@ -48,10 +47,10 @@ import static org.junit.Assert.assertThat;
         ".latencyRangeEnd=50", "chaos.monkey.assaults" +
         ".killApplicationActive=true", "spring.profiles" +
         ".active=chaos-monkey"})
-public class ChaosDemoApplicationChaosMonkeyProfileTest {
+public class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
     @Autowired
-    private ChaosMonkey chaosMonkey;
+    private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
     @Autowired
     private ChaosMonkeySettings monkeySettings;
@@ -71,12 +70,12 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
 
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), metricsMock);
+        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), metricsMock);
     }
 
     @Test
     public void contextLoads() {
-        assertNotNull(chaosMonkey);
+        assertNotNull(chaosMonkeyRequestScope);
     }
 
 

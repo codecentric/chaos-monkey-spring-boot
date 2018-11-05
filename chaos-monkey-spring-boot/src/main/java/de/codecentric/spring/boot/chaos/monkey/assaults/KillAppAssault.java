@@ -47,6 +47,11 @@ public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAwa
     }
 
     @Override
+    public AssaultType getAssaultType() {
+        return AssaultType.RUNTIME;
+    }
+
+    @Override
     public void attack() {
         try {
             LOGGER.info("Chaos Monkey - I am killing your Application!");

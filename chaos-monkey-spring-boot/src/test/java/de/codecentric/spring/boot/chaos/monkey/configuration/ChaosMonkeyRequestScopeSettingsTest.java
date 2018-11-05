@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Benjamin Wilms
  */
-public class ChaosMonkeySettingsTest {
+public class ChaosMonkeyRequestScopeSettingsTest {
 
     private ChaosMonkeySettings settings;
 

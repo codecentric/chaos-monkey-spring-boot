@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,6 +36,7 @@ public class MemoryAssault implements ChaosMonkeyAssault {
     private Runtime runtime;
     private final ChaosMonkeySettings settings;
     private MetricEventPublisher metricEventPublisher;
+    private AtomicReference<Vector<byte[]>> memoryVector;
 
     public MemoryAssault(Runtime runtime, ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.runtime = runtime;
@@ -68,32 +70,43 @@ public class MemoryAssault implements ChaosMonkeyAssault {
 
     private void eatFreeMemory() {
 
-        long maxAvailableMemory = runtime.freeMemory();
         int minimumFreeMemoryPercentage = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryMinFreePercentage());
 
-        AtomicReference<Vector<byte[]>> memoryVector = new AtomicReference<>(new Vector<>());
-        int percentIncreaseValue  = calculatePercentIncreaseValue(calculatePercentageRandom());
+        memoryVector = new AtomicReference<>(new Vector<>());
+        int percentIncreaseValue = calculatePercentIncreaseValue(calculatePercentageRandom());
 
         while (runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
 
-            // increase memory random percent steps
-            byte b[] = new byte[percentIncreaseValue];
-            memoryVector.get().add(b);
+            // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
+            if (settings.getChaosMonkeyProperties().isEnabled()) {
+                // increase memory random percent steps
+                byte b[] = new byte[percentIncreaseValue];
+                memoryVector.get().add(b);
 
-            LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " +runtime.freeMemory());
+                LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
 
-            waitUntil(settings.getAssaultProperties().getMemoryIncreaseLevel());
-            percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillPercentage());
+                waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
+                percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillPercentage());
+            }
         }
 
-        waitUntil(settings.getAssaultProperties().getMemoryKeepFilledLevel());
+        // Hold memory level and cleanUp after, only if experiment is running
+        if (settings.getChaosMonkeyProperties().isEnabled()) {
+            waitUntil(settings.getAssaultProperties().getMemoryMillisecondsHoldFilledMemory());
+        }
 
+        // CleanUp Vector and call GC
+        cleanUp();
+
+
+    }
+
+    private void cleanUp() {
         // clean Vector
         memoryVector.get().clear();
 
         // quickly run gc for reuse
         Runtime.getRuntime().gc();
-
     }
 
     private int calculatePercentIncreaseValue(double percentage) {

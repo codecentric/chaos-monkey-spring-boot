@@ -17,6 +17,9 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.codecentric.spring.boot.chaos.monkey.assaults.AssaultType;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,6 +33,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author Benjamin Wilms
@@ -68,15 +74,15 @@ public class AssaultProperties {
     @Value("${memoryActive : false}")
     private boolean memoryActive;
 
-    @Value("${memoryKeepFilledLevel : 90000}")
+    @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
     @Min(value = 15000)
     @Max(value = Integer.MAX_VALUE)
-    private int memoryKeepFilledLevel;
+    private int memoryMillisecondsHoldFilledMemory;
 
-    @Value("${memoryIncreaseLevel : 1000}")
+    @Value("${memoryMillisecondsWaitNextIncrease : 1000}")
     @Min(value = 100)
     @Max(value = 30000)
-    private int memoryIncreaseLevel;
+    private int memoryMillisecondsWaitNextIncrease;
 
     @Value("${memoryMinFreePercentage : 0.15}")
     @DecimalMax("1.0")
@@ -87,6 +93,9 @@ public class AssaultProperties {
     @DecimalMax("0.3")
     @DecimalMin("0.05")
     private double memoryFillPercentage;
+
+    @Value("${runtime.scope.assault.cron.expression : */5 * * * *}")
+    private String runtimeAssaultCronExpression;
 
     @Value("${watchedCustomServices:#{null}}")
     private List<String> watchedCustomServices;
@@ -103,10 +112,10 @@ public class AssaultProperties {
 
     @JsonIgnore
     public boolean isWatchedCustomServicesActive() {
-        if (watchedCustomServices == null || watchedCustomServices.isEmpty())
-            return false;
-        return true;
+        return watchedCustomServices != null && !watchedCustomServices.isEmpty();
     }
+
+
 
 
 }

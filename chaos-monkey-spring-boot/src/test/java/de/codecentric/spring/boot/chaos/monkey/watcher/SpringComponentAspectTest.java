@@ -16,13 +16,10 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
-import io.micrometer.core.instrument.Counter;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -39,7 +36,7 @@ import static org.mockito.Mockito.*;
 public class SpringComponentAspectTest {
 
     @Mock
-    private ChaosMonkey chaosMonkeyMock;
+    private ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock;
 
     @Mock
     private MetricEventPublisher metricsMock;
@@ -54,16 +51,16 @@ public class SpringComponentAspectTest {
         DemoComponent target = new DemoComponent();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyMock, metricsMock);
+        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock);
         factory.addAspect(componentAspect);
 
         DemoComponent proxy = factory.getProxy();
         proxy.sayHello();
 
 
-        verify(chaosMonkeyMock, times(1)).callChaosMonkey(simpleName);
+        verify(chaosMonkeyRequestScopeMock, times(1)).callChaosMonkey(simpleName);
         verify(metricsMock, times(1)).publishMetricEvent(pointcutName,MetricType.COMPONENT);
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
+        verifyNoMoreInteractions(chaosMonkeyRequestScopeMock, metricsMock);
 
     }
 
@@ -73,10 +70,10 @@ public class SpringComponentAspectTest {
         DemoComponent target = new DemoComponent();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, metricsMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, metricsMock);
-        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock);
         factory.addAspect(controllerAspect);
         factory.addAspect(repositoryAspect);
         factory.addAspect(serviceAspect);
@@ -85,9 +82,9 @@ public class SpringComponentAspectTest {
         DemoComponent proxy = factory.getProxy();
         proxy.sayHello();
 
-        verify(chaosMonkeyMock, times(0)).callChaosMonkey(simpleName);
+        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(simpleName);
         verify(metricsMock, times(0)).publishMetricEvent(pointcutName,MetricType.COMPONENT);
-        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
+        verifyNoMoreInteractions(chaosMonkeyRequestScopeMock, metricsMock);
 
     }
 

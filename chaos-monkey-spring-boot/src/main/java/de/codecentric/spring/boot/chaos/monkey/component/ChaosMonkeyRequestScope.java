@@ -28,13 +28,13 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 /**
  * @author Benjamin Wilms
  */
-public class ChaosMonkey {
+public class ChaosMonkeyRequestScope {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
     private final List<ChaosMonkeyAssault> assaults;
     private MetricEventPublisher metricEventPublisher;
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, MetricEventPublisher metricEventPublisher) {
+    public ChaosMonkeyRequestScope(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.assaults = assaults;
         this.metricEventPublisher = metricEventPublisher;
