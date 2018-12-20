@@ -16,10 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.*;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import org.junit.Before;
 import org.junit.Test;
@@ -128,6 +125,8 @@ public class ChaosMonkeyRestEndpointIntTest {
         assaultProperties.setLatencyRangeEnd(100);
         assaultProperties.setLatencyRangeStart(200);
         assaultProperties.setLatencyActive(true);
+        assaultProperties.setExceptionsActive(false);
+        assaultProperties.setException(new AssaultException());
 
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
@@ -168,6 +167,25 @@ public class ChaosMonkeyRestEndpointIntTest {
         assaultProperties.setLevel(1000);
         assaultProperties.setLatencyRangeEnd(200);
         assaultProperties.setLatencyActive(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+    }
+
+    @Test
+    public void postAssaultConfigurationBadCaseInvalidExceptionType() {
+        AssaultException exception = new AssaultException();
+        exception.setType("SomeInvalidException");
+
+        AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLevel(10);
+        assaultProperties.setLatencyRangeEnd(100);
+        assaultProperties.setLatencyRangeStart(200);
+        assaultProperties.setLatencyActive(true);
+        assaultProperties.setExceptionsActive(false);
+        assaultProperties.setException(exception);
 
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
