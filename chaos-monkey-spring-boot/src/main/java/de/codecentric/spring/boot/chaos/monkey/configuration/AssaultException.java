@@ -39,6 +39,7 @@ public class AssaultException {
         @NotNull
         private String value;
 
+        @JsonIgnore
         public Class<?> getClassType() {
             try {
                 return Class.forName(className);
