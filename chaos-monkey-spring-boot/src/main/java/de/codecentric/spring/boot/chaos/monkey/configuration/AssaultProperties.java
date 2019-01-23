@@ -18,7 +18,6 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -35,10 +34,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
-@EqualsAndHashCode
 @Validated
 public class AssaultProperties {
-
     @Value("${level : 5}")
     @Min(value = 1)
     @Max(value = 10000)
@@ -60,11 +57,22 @@ public class AssaultProperties {
     @Value("${exceptionsActive : false}")
     private boolean exceptionsActive;
 
+    @AssaultExceptionConstraint
+    private AssaultException exception;
+
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
 
     @Value("${watchedCustomServices:#{null}}")
     private List<String> watchedCustomServices;
+
+    public AssaultException getException() {
+        return exception;
+    }
+
+    public void setException(AssaultException exception) {
+        this.exception = exception;
+    }
 
     @JsonIgnore
     public int getTroubleRandom() {
@@ -78,10 +86,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public boolean isWatchedCustomServicesActive() {
-        if (watchedCustomServices == null || watchedCustomServices.isEmpty())
-            return false;
-        return true;
+        return watchedCustomServices != null && !watchedCustomServices.isEmpty();
     }
-
 
 }

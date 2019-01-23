@@ -39,7 +39,6 @@ public class ChaosMonkeyRestEndpoint {
 
     @PostMapping("/assaults")
     public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultProperties assaultProperties) {
-
         this.chaosMonkeySettings.setAssaultProperties(assaultProperties);
         return ResponseEntity.ok().body("Assault config has changed");
     }
@@ -76,7 +75,7 @@ public class ChaosMonkeyRestEndpoint {
 
     /***
      * Watcher can only be viewed, not changed at runtime. They are initialized at Application start.
-     * @return
+     * @return watch settings
      */
     @GetMapping("/watcher")
     public WatcherProperties getWatcherSettings() {
