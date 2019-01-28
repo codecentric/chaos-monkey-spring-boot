@@ -11,3 +11,10 @@ Following assaults are actual provided:
 .. Yeah, what can I say? It destroys the entire application!
 
 You can customize the behave of each Assault by configuration.
+
+=== Latency Assault ===
+If Latency Assault is enabled, latency is added to a request. You control the number of requests where this should occur via the level.
+
+=== Exception Assault ===
+
+=== AppKiller Assault ===

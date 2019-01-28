@@ -20,7 +20,7 @@ public class Metrics implements ApplicationListener<MetricEvent> {
     }
 
     private void counter(MetricType type, String... tags) {
-        if (meterRegistry != null)
+        if (meterRegistry != null && tags != null)
             meterRegistry.counter(type.getMetricName(), tags).increment();
     }
 
