@@ -183,6 +183,9 @@ A detailed documentation about the configuration of the Chaos Monkey for Spring 
 - [Version 2.0.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
 - [Version 2.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.1)
 
+### Chaos Monkey for Spring Boot SNAPSHOT
+- [Version 2.0.2-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2-SNAPSHOT)
+
 ## Releases
 - Version 1.0.1 (depends on Spring Boot 2.0.1)
 - Version 1.5.0 (supports Spring Boot 1.5.x)
@@ -219,6 +222,6 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
 <dependency>
   <groupId>de.codecentric</groupId>
   <artifactId>chaos-monkey-spring-boot</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.0.2-SNAPSHOT</version>
 </dependency>
 ```
