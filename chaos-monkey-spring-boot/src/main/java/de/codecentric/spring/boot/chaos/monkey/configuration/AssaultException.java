@@ -9,6 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +71,12 @@ public class AssaultException {
     @JsonIgnore
     public Class<? extends RuntimeException> getExceptionClass() throws ClassNotFoundException {
         if (type == null) {
+            // use Chaos Monkey default Runtime Exception
             type = "java.lang.RuntimeException";
+            ExceptionArgument exceptionArgument = new ExceptionArgument();
+            exceptionArgument.setClassName("java.lang.String");
+            exceptionArgument.setValue("Chaos Monkey - RuntimeException");
+            arguments = Collections.singletonList(exceptionArgument);
         }
         return (Class<? extends RuntimeException>) Class.forName(type);
     }

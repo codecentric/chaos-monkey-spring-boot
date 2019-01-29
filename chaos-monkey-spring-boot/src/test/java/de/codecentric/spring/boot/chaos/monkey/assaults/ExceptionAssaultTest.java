@@ -60,9 +60,9 @@ public class ExceptionAssaultTest {
     }
 
     @Test
-    public void throwsRuntimeExceptionWithNullTypeAndNonNullArgument() {
+    public void throwsDefaultRuntimeExceptionWithNullTypeAndNonNullArgument() {
         String exceptionArgumentClassName = "java.lang.String";
-        String exceptionArgumentValue = "Exception message";
+        String exceptionArgumentValue = "Chaos Monkey - RuntimeException";
         exception.expect(RuntimeException.class);
         exception.expectMessage(exceptionArgumentValue);
 

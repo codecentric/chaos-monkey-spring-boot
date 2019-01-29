@@ -47,8 +47,7 @@ public class ExceptionAssault implements ChaosMonkeyAssault {
     public void attack() {
         LOGGER.info("Chaos Monkey - exception");
 
-        AssaultProperties assaultProperties = this.settings.getAssaultProperties();
-        AssaultException assaultException = assaultProperties.getException();
+        AssaultException assaultException = this.settings.getAssaultProperties().getException();
 
         // metrics
         if (metricEventPublisher != null)

@@ -67,7 +67,7 @@ public class AssaultProperties {
     private List<String> watchedCustomServices;
 
     public AssaultException getException() {
-        return exception;
+        return exception == null ? new AssaultException() : exception;
     }
 
     public void setException(AssaultException exception) {
