@@ -143,6 +143,25 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 ----
 ===== POST Assaults
 [[assaultspost]]
+====== Request to enable Latency & Exception Assault
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Request
+----
+{
+"level": 5,
+"latencyRangeStart": 2000,
+"latencyRangeEnd": 5000,
+"latencyActive": true,
+"exceptionsActive": true,
+"killApplicationActive": false
+}
+----
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Response 200 OK
+----
+Assault config has changed
+----
+====== Define specific method attacks
 [source,json,subs="verbatim,attributes"]
 ./chaosmonkey/assaults - Request
 ----
@@ -154,6 +173,29 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 "exceptionsActive": true,
 "killApplicationActive": false,
 "watchedCustomServices": [ "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello","com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"]
+}
+----
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Response 200 OK
+----
+Assault config has changed
+----
+====== Define custom Exceptions
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/assaults - Request
+----
+{
+"level": 5,
+"latencyRangeStart": 2000,
+"latencyRangeEnd": 5000,
+"latencyActive": true,
+"exceptionsActive": true,
+"killApplicationActive": false,
+"exception": {
+    "type": "java.lang.IllegalArgumentException",
+    "arguments": [{
+      "className": "java.lang.String",
+      "value": "custom illegal argument exception"}] },
 }
 ----
 [source,txt,subs="verbatim,attributes"]

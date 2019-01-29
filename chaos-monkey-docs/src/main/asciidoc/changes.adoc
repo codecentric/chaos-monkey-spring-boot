@@ -1,39 +1,19 @@
 [[changes]]
 == Changes in {project-version} ==
 === Spring Boot Version
-- supported and tested Spring Boot versions, up to 2.0.6
-- supported and tested Spring Framework versions, up to 5.0.10
+- supported and tested Spring Boot versions, up to 2.1.2.RELEASE
+- supported and tested Spring Framework versions, up to 5.1.4.RELEASE
 
-=== Watcher
-- Filtering to classes and method names. By default all public methods of a monitored class are attacked by the Chaos Monkey, now single classes and methods can be defined and changed at runtime.
-
-=== Metrics
-- CM4SB now provides metrics about all recognized classes and methods. In addition, it provides metrics for all assaults and their use.
-
-=== AOP
-- Switch from compile-time weaving to load-time weaving to bring up the possibility to run the CM4SB as external loaded JAR.
-[source,txt,subs="verbatim,attributes"]
-.application.properties:
-----
-java -cp ./target/demo.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.0.1.jar
-        org.springframework.boot.loader.PropertiesLauncher
-    --spring.profiles.active=chaos-monkey
-----
+=== Assaults
+- Define any kind of Runtime Expection during your Chaos Experiments
 
 === Bugs fixed
-- Repository Watcher was not initilized
-- Repository Watcher was not triggered by calling default Spring Data methods
--
+- fixed a bug where during startup a NPE was thrown in the init metric process
 
 === Contributors
 Thank you for your support!
 
-- https://github.com/snieking[snieking]
-- https://github.com/wonwoo[wonwoo]
-- https://github.com/deelthor[deelthor]
-- https://github.com/ottlinger[ottlinger]
-- https://github.com/mattk-pio[mattk-pio]
+- https://github.com/singhgarima[singhgarima]
 
 
 
