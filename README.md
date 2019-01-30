@@ -184,6 +184,7 @@ A detailed documentation about the configuration of the Chaos Monkey for Spring 
 - [Version 1.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/1.0.1/)
 - [Version 2.0.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
 - [Version 2.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.1)
+- [Version 2.0.2](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2)
 
 ### Chaos Monkey for Spring Boot SNAPSHOT
 - [Version 2.0.2-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2-SNAPSHOT)
@@ -193,6 +194,7 @@ A detailed documentation about the configuration of the Chaos Monkey for Spring 
 - Version 1.5.0 (supports Spring Boot 1.5.x)
 - Version 2.0.0 (supports Spring Boot 2.0.x)
 - Version 2.0.1 (supports Spring Boot 2.0.x)
+- Version 2.0.2 (supports Spring Boot 2.0.x & 2.1.x)
 
 <a name="snapshots"></a>
 ## Snapshots
