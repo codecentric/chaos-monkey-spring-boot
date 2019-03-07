@@ -89,6 +89,6 @@ lost.
 [source,txt,subs="verbatim,attributes"]
 .chaos monkey metric:
 ----
-chaos_monkey_assault_exception_count
+chaos_monkey_assault_killapp_count
 ----
 
