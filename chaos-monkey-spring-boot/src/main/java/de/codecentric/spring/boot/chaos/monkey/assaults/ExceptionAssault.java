@@ -19,7 +19,6 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +52,6 @@ public class ExceptionAssault implements ChaosMonkeyAssault {
         if (metricEventPublisher != null)
             metricEventPublisher.publishMetricEvent(MetricType.EXCEPTION_ASSAULT);
 
-        throw assaultException.getExceptionInstance();
+        assaultException.throwExceptionInstance();
     }
 }

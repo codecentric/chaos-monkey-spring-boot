@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import static org.hamcrest.core.Is.isA;
@@ -95,6 +96,17 @@ public class ExceptionAssaultTest {
         ChaosMonkeySettings settings = getChaosMonkeySettings();
         settings.getAssaultProperties().setException(
                 getAssaultException("java.lang.ArithmeticException", exceptionArgumentClassName, exceptionArgumentValue));
+
+        ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
+        exceptionAssault.attack();
+    }
+
+    @Test
+    public void throwsGeneralException() {
+        exception.expect(isA(IOException.class));
+
+        ChaosMonkeySettings settings = getChaosMonkeySettings();
+        settings.getAssaultProperties().setException(getAssaultException("java.io.IOException", null, null));
 
         ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
         exceptionAssault.attack();
