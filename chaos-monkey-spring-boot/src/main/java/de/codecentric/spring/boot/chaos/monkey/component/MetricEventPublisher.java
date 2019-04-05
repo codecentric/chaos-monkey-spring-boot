@@ -31,4 +31,8 @@ public class MetricEventPublisher {
         MetricEvent metricEvent = new MetricEvent(this, metricType, atomicTimeoutGauge);
         publisher.publishEvent(metricEvent);
     }
+
+    public void publishMetricEvent(MetricType type, long metricValue) {
+        publisher.publishEvent(new MetricEvent(this, type, metricValue, null));
+    }
 }

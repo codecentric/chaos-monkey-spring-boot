@@ -5,15 +5,26 @@ package de.codecentric.spring.boot.chaos.monkey.component;
  */
 public enum MetricType {
 
-    CONTROLLER("controller"), RESTCONTROLLER("restController"), REPOSITORY("repository"), COMPONENT("component"), SERVICE("service"),
-    LATENCY_ASSAULT("assault.latency.count"), EXCEPTION_ASSAULT("assault.exception.count"), KILLAPP_ASSAULT("assault.killapp.count"),
-    APPLICATION_REQ_COUNT
-            ("application.request.count"), MEMORY_ASSAULT("assault.memory.count");
+    CONTROLLER("controller", true, false),
+    RESTCONTROLLER("restController", true, false),
+    REPOSITORY("repository", true, false),
+    COMPONENT("component", true, false),
+    SERVICE("service", true, false),
+    LATENCY_ASSAULT("assault.latency.count", false, false),
+    EXCEPTION_ASSAULT("assault.exception.count", false, false),
+    KILLAPP_ASSAULT("assault.killapp.count", false, true),
+    APPLICATION_REQ_COUNT("application.request.count", false, true),
+    MEMORY_ASSAULT("assault.memory.count", true, false),
+    MEMORY_ASSAULT_MEMORY_STOLEN("assault.memory.bytes_stolen", false, false);
 
-    private String metricName;
+    private final String metricName;
+    private final boolean signatureEvent;
+    private final boolean tagEvent;
 
-    MetricType(String metricName) {
+    MetricType(String metricName, boolean signatureEvent, boolean tagEvent) {
         this.metricName = metricName;
+        this.signatureEvent = signatureEvent;
+        this.tagEvent = tagEvent;
     }
 
     public String getMetricName() {
@@ -22,4 +33,11 @@ public enum MetricType {
     }
 
 
+    public boolean isSignatureOnlyEvent() {
+        return signatureEvent;
+    }
+
+    public boolean isTagEvent() {
+        return tagEvent;
+    }
 }

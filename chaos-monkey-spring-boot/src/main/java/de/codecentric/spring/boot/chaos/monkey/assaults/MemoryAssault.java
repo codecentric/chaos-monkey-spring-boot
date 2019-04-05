@@ -23,9 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Benjamin Wilms
@@ -36,7 +38,7 @@ public class MemoryAssault implements ChaosMonkeyAssault {
     private Runtime runtime;
     private final ChaosMonkeySettings settings;
     private MetricEventPublisher metricEventPublisher;
-    private AtomicReference<Vector<byte[]>> memoryVector;
+    private AtomicLong stolenMemory = new AtomicLong(0);
 
     public MemoryAssault(Runtime runtime, ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.runtime = runtime;
@@ -69,10 +71,11 @@ public class MemoryAssault implements ChaosMonkeyAssault {
     }
 
     private void eatFreeMemory() {
-
         int minimumFreeMemoryPercentage = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryMinFreePercentage());
 
-        memoryVector = new AtomicReference<>(new Vector<>());
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+        Vector<byte[]> memoryVector = new Vector<>();
+        long stolenHere = 0L;
         int percentIncreaseValue = calculatePercentIncreaseValue(calculatePercentageRandom());
 
         while (runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
@@ -80,8 +83,15 @@ public class MemoryAssault implements ChaosMonkeyAssault {
             // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
             if (settings.getChaosMonkeyProperties().isEnabled()) {
                 // increase memory random percent steps
-                byte b[] = new byte[percentIncreaseValue];
-                memoryVector.get().add(b);
+                byte[] b = new byte[percentIncreaseValue];
+                // touch the memory to actually make the OS commit it
+                ThreadLocalRandom.current().nextBytes(b);
+
+                stolenHere += percentIncreaseValue;
+                long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
+
+                metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
+                memoryVector.add(b);
 
                 LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
 
@@ -95,22 +105,18 @@ public class MemoryAssault implements ChaosMonkeyAssault {
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsHoldFilledMemory());
         }
 
-        // CleanUp Vector and call GC
-        cleanUp();
-
-
-    }
-
-    private void cleanUp() {
         // clean Vector
-        memoryVector.get().clear();
-
+        memoryVector.clear();
         // quickly run gc for reuse
         Runtime.getRuntime().gc();
+        stolenMemory.set(0);
+
+        long stolenAfterComplete = stolenMemory.addAndGet(-stolenHere);
+        metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);
     }
 
     private int calculatePercentIncreaseValue(double percentage) {
-        return (int) (runtime.freeMemory() * percentage);
+        return (int) Math.max(1, runtime.freeMemory() * percentage);
     }
 
     private double calculatePercentageRandom() {
