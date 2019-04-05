@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,25 +50,46 @@ public class AssaultException {
         }
     }
 
-    @JsonIgnore
-    public RuntimeException getExceptionInstance() {
-        try {
-            Class<? extends RuntimeException> exceptionClass = getExceptionClass();
-            if (arguments == null) {
-                Constructor<?> constructor = exceptionClass.getConstructor();
-                return (RuntimeException) constructor.newInstance();
-            } else {
-                Constructor<?> constructor = exceptionClass.getConstructor(this.getExceptionArgumentTypes().toArray(new Class[0]));
-                return (RuntimeException) constructor.newInstance(this.getExceptionArgumentValues().toArray(new Object[0]));
-            }
-        } catch (ReflectiveOperationException e) {
-            LOGGER.warn("Cannot instantiate the class for provided type: {}. Fallback: Throw RuntimeException", type);
-            return new RuntimeException("Chaos Monkey - RuntimeException");
+    private static class TypeLoophole<E extends Throwable> {
+        private final E payload;
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        static void throwException(Throwable e) {
+            TypeLoophole<RuntimeException> instance = new TypeLoophole(e);
+            instance.throwIt();
+        }
+
+        TypeLoophole(E exception) {
+            payload = exception;
+        }
+
+        void throwIt() throws E {
+            throw payload;
         }
     }
 
     @JsonIgnore
-    public Class<? extends RuntimeException> getExceptionClass() throws ClassNotFoundException {
+    public void throwExceptionInstance() {
+        Exception instance;
+        try {
+            Class<? extends Exception> exceptionClass = getExceptionClass();
+            if (arguments == null) {
+                Constructor<? extends Exception> constructor = exceptionClass.getConstructor();
+                instance = constructor.newInstance();
+            } else {
+                Constructor<? extends Exception> constructor = exceptionClass.getConstructor(this.getExceptionArgumentTypes().toArray(new Class[0]));
+                instance = constructor.newInstance(this.getExceptionArgumentValues().toArray(new Object[0]));
+            }
+        } catch (ReflectiveOperationException e) {
+            LOGGER.warn("Cannot instantiate the class for provided type: {}. Fallback: Throw RuntimeException", type);
+            instance = new RuntimeException("Chaos Monkey - RuntimeException");
+        }
+
+        TypeLoophole.throwException(instance);
+    }
+
+    @JsonIgnore
+    public Class<? extends Exception> getExceptionClass() throws ClassNotFoundException {
         if (type == null) {
             // use Chaos Monkey default Runtime Exception
             type = "java.lang.RuntimeException";
@@ -78,7 +98,7 @@ public class AssaultException {
             exceptionArgument.setValue("Chaos Monkey - RuntimeException");
             arguments = Collections.singletonList(exceptionArgument);
         }
-        return (Class<? extends RuntimeException>) Class.forName(type);
+        return Class.forName(type).asSubclass(Exception.class);
     }
 
     @JsonIgnore

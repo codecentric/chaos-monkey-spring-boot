@@ -16,7 +16,7 @@ public class AssaultExceptionValidator implements ConstraintValidator<AssaultExc
         }
 
         try {
-            Class<? extends RuntimeException> exceptionClass = exception.getExceptionClass();
+            Class<? extends Exception> exceptionClass = exception.getExceptionClass();
             if (exception.getArguments() == null) {
                 exceptionClass.getConstructor();
             } else {
