@@ -246,6 +246,7 @@ public class ChaosMonkeyRequestScopeTest {
 
     @Test
     public void shouldMakeUncategorizedCustomAssaultsRequestScopeByDefault() {
+        // create an assault that is neither runtime nor request
         ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
         given(customAssault.isActive()).willReturn(true);
         ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(), Collections.singletonList(customAssault), metricEventPublisherMock);
