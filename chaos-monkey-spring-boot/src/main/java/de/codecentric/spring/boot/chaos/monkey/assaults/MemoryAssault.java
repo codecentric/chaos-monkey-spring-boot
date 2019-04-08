@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * @author Benjamin Wilms
  */
-public class MemoryAssault implements ChaosMonkeyAssault {
+public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemoryAssault.class);
     private static AtomicLong stolenMemory = new AtomicLong(0);

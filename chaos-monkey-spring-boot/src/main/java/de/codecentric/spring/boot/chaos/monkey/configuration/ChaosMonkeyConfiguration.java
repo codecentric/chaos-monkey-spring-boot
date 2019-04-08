@@ -152,8 +152,8 @@ public class ChaosMonkeyConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnEnabledEndpoint
-    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint() {
-        return new ChaosMonkeyRestEndpoint(settings());
+    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(ChaosMonkeyRuntimeScope runtimeScope) {
+        return new ChaosMonkeyRestEndpoint(settings(), runtimeScope);
     }
 
     @Bean

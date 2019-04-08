@@ -43,8 +43,13 @@ public class ChaosMonkeyRestEndpoint {
     @PostMapping("/assaults")
     public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultProperties assaultProperties) {
         this.chaosMonkeySettings.setAssaultProperties(assaultProperties);
-        this.runtimeScope.callChaosMonkey();
         return ResponseEntity.ok().body("Assault config has changed");
+    }
+
+    @PostMapping("/assaults/runtime/attack")
+    public ResponseEntity<String> attack() {
+        runtimeScope.callChaosMonkey();
+        return ResponseEntity.ok("Started runtime assaults");
     }
 
     @GetMapping("/assaults")
