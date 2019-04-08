@@ -90,9 +90,10 @@ public class AssaultProperties {
     @DecimalMin("0.05")
     private double memoryFillTargetFraction;
 
+    /* Not yet implemented: Runtime assaults on a schedule.
     @Value("${runtime.scope.assault.cron.expression : 59 59 23 31 12 ? 2099}")
     private String runtimeAssaultCronExpression;
-
+    */
     @Value("${watchedCustomServices:#{null}}")
     private List<String> watchedCustomServices;
 
