@@ -21,6 +21,7 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
@@ -52,7 +53,7 @@ public class MemoryAssault implements ChaosMonkeyAssault {
         return settings.getAssaultProperties().isMemoryActive();
     }
 
-    @Override
+    @Override @Async
     public void attack() {
         LOGGER.info("Chaos Monkey - memory assault");
 
@@ -63,7 +64,6 @@ public class MemoryAssault implements ChaosMonkeyAssault {
         eatFreeMemory();
 
         LOGGER.info("Chaos Monkey - memory assault cleaned up");
-
     }
 
     private void eatFreeMemory() {
