@@ -1,13 +1,15 @@
 [[assaults]]
 == Assaults ==
 Assaults are the heart of Monkey's Chaos and he makes use of them based on your configuration.
-Following assaults are actual provided:
+Following assaults are actual provided.
 
-. Latency Assault
-.. adds random latency to the request
-. Exception Assault
-.. throws Chaos Monkey Runtime Exception, if he wants to (random)
-. AppKiller Assault
-.. Yeah, what can I say? It destroys the entire application!
+=== Latency Assault ===
+If Latency Assault is enabled, latency is added to a request. You control the number of requests where this should occur via the level.
 
-You can customize the behave of each Assault by configuration.
+=== Exception Assault ===
+You can determine at runtime whether an exception should occur when the method is used.
+
+Thanks to the great community, the Chaos Monkey for Spring Boot can throw any kind of RuntimeException. You can configure the required exception at runtime via the Actuator Endpoint.
+
+=== AppKiller Assault ===
+When the configured methods are called in the application, the Chaos Monkey will shut down the application.

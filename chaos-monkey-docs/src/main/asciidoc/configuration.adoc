@@ -40,6 +40,11 @@ Except for the Watcher, you can also influence the behavior of the Chaos Monkey 
 |TRUE or FALSE
 |FALSE
 
+|chaos.monkey.assaults.exception
+|Custom RuntimeException or default RuntimeException
+|de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException
+|java.lang.RuntimeException("Chaos Monkey - RuntimeException"")
+
 |chaos.monkey.assaults.killApplicationActive
 |AppKiller assault active
 |TRUE or FALSE

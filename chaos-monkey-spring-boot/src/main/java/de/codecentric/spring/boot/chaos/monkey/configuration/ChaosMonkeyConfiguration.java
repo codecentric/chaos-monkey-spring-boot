@@ -56,14 +56,12 @@ public class ChaosMonkeyConfiguration {
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public ChaosMonkeyConfiguration(ChaosMonkeyProperties chaosMonkeyProperties, WatcherProperties watcherProperties,
-                                    AssaultProperties assaultProperties, ApplicationEventPublisher applicationEventPublisher) {
+                                    AssaultProperties assaultProperties) {
         this.chaosMonkeyProperties = chaosMonkeyProperties;
         this.watcherProperties = watcherProperties;
         this.assaultProperties = assaultProperties;
-        this.applicationEventPublisher = applicationEventPublisher;
 
         try {
             String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
@@ -80,9 +78,10 @@ public class ChaosMonkeyConfiguration {
         return new Metrics();
     }
 
+
     @Bean
     public MetricEventPublisher publisher() {
-        return new MetricEventPublisher(applicationEventPublisher);
+        return new MetricEventPublisher();
     }
 
     @Bean
