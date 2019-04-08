@@ -16,8 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.component;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.AssaultType;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 
 import java.util.List;
@@ -31,10 +31,10 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class ChaosMonkeyRequestScope {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
-    private final List<ChaosMonkeyAssault> assaults;
+    private final List<ChaosMonkeyRequestAssault> assaults;
     private MetricEventPublisher metricEventPublisher;
 
-    public ChaosMonkeyRequestScope(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, MetricEventPublisher metricEventPublisher) {
+    public ChaosMonkeyRequestScope(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyRequestAssault> assaults, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.assaults = assaults;
         this.metricEventPublisher = metricEventPublisher;
@@ -63,7 +63,6 @@ public class ChaosMonkeyRequestScope {
 
     private void chooseAndRunAttack() {
         List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
-                .filter(chaosMonkeyAssault -> chaosMonkeyAssault.getAssaultType() == AssaultType.REQUEST)
                 .filter(ChaosMonkeyAssault::isActive)
                 .collect(Collectors.toList());
         if (isEmpty(activeAssaults)) {

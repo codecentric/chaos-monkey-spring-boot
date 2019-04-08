@@ -17,9 +17,6 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.codecentric.spring.boot.chaos.monkey.assaults.AssaultType;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -33,7 +30,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 

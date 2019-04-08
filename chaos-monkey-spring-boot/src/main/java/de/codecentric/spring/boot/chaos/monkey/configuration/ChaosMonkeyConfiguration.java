@@ -111,12 +111,12 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyAssault> chaosMonkeyAssaults) {
+    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults) {
         return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, publisher());
     }
 
     @Bean
-    public ChaosMonkeyRuntimeScope chaosMonkeyRuntimeScope(List<ChaosMonkeyAssault> chaosMonkeyAssaults) {
+    public ChaosMonkeyRuntimeScope chaosMonkeyRuntimeScope(List<ChaosMonkeyRuntimeAssault> chaosMonkeyAssaults) {
         return new ChaosMonkeyRuntimeScope(settings(), chaosMonkeyAssaults);
     }
 

@@ -35,10 +35,11 @@ import java.util.stream.Collectors;
 public class MemoryAssault implements ChaosMonkeyAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemoryAssault.class);
+    private static AtomicLong stolenMemory = new AtomicLong(0);
+
     private Runtime runtime;
     private final ChaosMonkeySettings settings;
     private MetricEventPublisher metricEventPublisher;
-    private AtomicLong stolenMemory = new AtomicLong(0);
 
     public MemoryAssault(Runtime runtime, ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.runtime = runtime;
@@ -48,12 +49,7 @@ public class MemoryAssault implements ChaosMonkeyAssault {
 
     @Override
     public boolean isActive() {
-        return settings.getAssaultProperties().isExceptionsActive();
-    }
-
-    @Override
-    public AssaultType getAssaultType() {
-        return AssaultType.RUNTIME;
+        return settings.getAssaultProperties().isMemoryActive();
     }
 
     @Override
@@ -78,10 +74,9 @@ public class MemoryAssault implements ChaosMonkeyAssault {
         long stolenHere = 0L;
         int percentIncreaseValue = calculatePercentIncreaseValue(calculatePercentageRandom());
 
-        while (runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
+        while (isActive() && runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
 
             // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
-            if (settings.getChaosMonkeyProperties().isEnabled()) {
                 // increase memory random percent steps
                 byte[] b = new byte[percentIncreaseValue];
                 // touch the memory to actually make the OS commit it
@@ -97,11 +92,10 @@ public class MemoryAssault implements ChaosMonkeyAssault {
 
                 waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
                 percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillPercentage());
-            }
         }
 
         // Hold memory level and cleanUp after, only if experiment is running
-        if (settings.getChaosMonkeyProperties().isEnabled()) {
+        if (isActive()) {
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsHoldFilledMemory());
         }
 
@@ -109,7 +103,6 @@ public class MemoryAssault implements ChaosMonkeyAssault {
         memoryVector.clear();
         // quickly run gc for reuse
         Runtime.getRuntime().gc();
-        stolenMemory.set(0);
 
         long stolenAfterComplete = stolenMemory.addAndGet(-stolenHere);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);

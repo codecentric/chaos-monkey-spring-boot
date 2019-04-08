@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Thorsten Deelmann
  */
-public class LatencyAssault implements ChaosMonkeyAssault {
+public class LatencyAssault implements ChaosMonkeyRequestAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
     private final ChaosMonkeySettings settings;

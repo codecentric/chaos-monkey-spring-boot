@@ -70,7 +70,7 @@ public class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
     @Before
     public void setUp() {
-        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), metricsMock);
+        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault), metricsMock);
     }
 
     @Test

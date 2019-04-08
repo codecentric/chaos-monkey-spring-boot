@@ -129,6 +129,13 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
         assaultProperties.setLatencyRangeStart(200);
         assaultProperties.setLatencyActive(true);
 
+        // TODO: Make these fields optional, adding required fields to a REST api is bad form
+        assaultProperties.setMemoryActive(false);
+        assaultProperties.setMemoryFillPercentage(.25);
+        assaultProperties.setMemoryMillisecondsHoldFilledMemory(15000);
+        assaultProperties.setMemoryMillisecondsWaitNextIncrease(1000);
+        assaultProperties.setMemoryMinFreePercentage(0.15);
+
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
 
