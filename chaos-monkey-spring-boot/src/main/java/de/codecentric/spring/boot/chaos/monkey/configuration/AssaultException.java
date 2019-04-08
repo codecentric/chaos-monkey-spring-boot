@@ -2,6 +2,7 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,25 +51,7 @@ public class AssaultException {
         }
     }
 
-    private static class TypeLoophole<E extends Throwable> {
-        private final E payload;
-
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        static void throwException(Throwable e) {
-            TypeLoophole<RuntimeException> instance = new TypeLoophole(e);
-            instance.throwIt();
-        }
-
-        TypeLoophole(E exception) {
-            payload = exception;
-        }
-
-        void throwIt() throws E {
-            throw payload;
-        }
-    }
-
-    @JsonIgnore
+    @JsonIgnore @SneakyThrows
     public void throwExceptionInstance() {
         Exception instance;
         try {
@@ -85,7 +68,7 @@ public class AssaultException {
             instance = new RuntimeException("Chaos Monkey - RuntimeException");
         }
 
-        TypeLoophole.throwException(instance);
+        throw instance;
     }
 
     @JsonIgnore
