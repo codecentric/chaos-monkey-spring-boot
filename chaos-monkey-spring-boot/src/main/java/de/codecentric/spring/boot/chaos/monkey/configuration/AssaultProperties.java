@@ -71,7 +71,7 @@ public class AssaultProperties {
     private volatile boolean memoryActive;
 
     @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
-    @Min(value = 15000)
+    @Min(value = 1500)
     @Max(value = Integer.MAX_VALUE)
     private int memoryMillisecondsHoldFilledMemory;
 
@@ -90,7 +90,7 @@ public class AssaultProperties {
     @DecimalMin("0.05")
     private double memoryFillTargetFraction;
 
-    @Value("${runtime.scope.assault.cron.expression : */5 * * * *}")
+    @Value("${runtime.scope.assault.cron.expression : 59 59 23 31 12 ? 2099}")
     private String runtimeAssaultCronExpression;
 
     @Value("${watchedCustomServices:#{null}}")
