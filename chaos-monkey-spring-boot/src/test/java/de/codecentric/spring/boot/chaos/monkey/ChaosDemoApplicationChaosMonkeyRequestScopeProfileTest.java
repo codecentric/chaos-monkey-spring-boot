@@ -32,6 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -70,7 +71,7 @@ public class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
     @Before
     public void setUp() {
-        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault), metricsMock);
+        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricsMock);
     }
 
     @Test

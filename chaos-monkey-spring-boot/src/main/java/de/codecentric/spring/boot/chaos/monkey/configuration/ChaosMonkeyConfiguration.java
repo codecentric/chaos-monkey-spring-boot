@@ -111,8 +111,8 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults) {
-        return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, publisher());
+    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults) {
+        return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher());
     }
 
     @Bean

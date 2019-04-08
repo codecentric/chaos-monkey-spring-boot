@@ -27,6 +27,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -72,7 +74,7 @@ public class ChaosMonkeyRequestScopeTest {
         given(this.chaosMonkeySettings.getAssaultProperties()).willReturn(this.assaultProperties);
         given(this.chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(this.chaosMonkeyProperties);
 
-        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault), metricEventPublisherMock);
+        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricEventPublisherMock);
     }
 
     @Test
@@ -240,6 +242,15 @@ public class ChaosMonkeyRequestScopeTest {
         verify(latencyAssault, times(1)).attack();
         verify(exceptionAssault, never()).attack();
         verify(killAppAssault, never()).attack();
+    }
 
+    @Test
+    public void shouldMakeUncategorizedCustomAssaultsRequestScopeByDefault() {
+        ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
+        given(customAssault.isActive()).willReturn(true);
+        ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(), Collections.singletonList(customAssault), metricEventPublisherMock);
+
+        customScope.callChaosMonkey("foo");
+        verify(customAssault).attack();
     }
 }
