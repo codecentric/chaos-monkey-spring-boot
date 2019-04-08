@@ -68,7 +68,7 @@ public class AssaultProperties {
     private boolean killApplicationActive;
 
     @Value("${memoryActive : false}")
-    private boolean memoryActive;
+    private volatile boolean memoryActive;
 
     @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
     @Min(value = 15000)
@@ -80,15 +80,15 @@ public class AssaultProperties {
     @Max(value = 30000)
     private int memoryMillisecondsWaitNextIncrease;
 
-    @Value("${memoryMinFreePercentage : 0.15}")
+    @Value("${memoryFillIncrementFraction : 0.15}")
     @DecimalMax("1.0")
     @DecimalMin("0.0")
-    private double memoryMinFreePercentage;
+    private double memoryFillIncrementFraction;
 
-    @Value("${memoryFillPercentage : 0.25}")
-    @DecimalMax("0.3")
+    @Value("${memoryFillTargetFraction : 0.25}")
+    @DecimalMax("0.95")
     @DecimalMin("0.05")
-    private double memoryFillPercentage;
+    private double memoryFillTargetFraction;
 
     @Value("${runtime.scope.assault.cron.expression : */5 * * * *}")
     private String runtimeAssaultCronExpression;

@@ -14,7 +14,7 @@ public enum MetricType {
     EXCEPTION_ASSAULT("assault.exception.count", false, false),
     KILLAPP_ASSAULT("assault.killapp.count", false, true),
     APPLICATION_REQ_COUNT("application.request.count", false, true),
-    MEMORY_ASSAULT("assault.memory.count", true, false),
+    MEMORY_ASSAULT("assault.memory.count", false, false),
     MEMORY_ASSAULT_MEMORY_STOLEN("assault.memory.bytes_stolen", false, false);
 
     private final String metricName;

@@ -16,7 +16,6 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -26,10 +25,9 @@ import org.springframework.scheduling.annotation.Async;
 
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Benjamin Wilms
@@ -37,11 +35,12 @@ import java.util.stream.Collectors;
 public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemoryAssault.class);
-    private static AtomicLong stolenMemory = new AtomicLong(0);
+    private static final AtomicLong stolenMemory = new AtomicLong(0);
 
-    private Runtime runtime;
+    private final Runtime runtime;
+    private final AtomicBoolean inAttack = new AtomicBoolean(false);
     private final ChaosMonkeySettings settings;
-    private MetricEventPublisher metricEventPublisher;
+    private final MetricEventPublisher metricEventPublisher;
 
     public MemoryAssault(Runtime runtime, ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.runtime = runtime;
@@ -54,7 +53,8 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         return settings.getAssaultProperties().isMemoryActive();
     }
 
-    @Override @Async
+    @Override
+    @Async
     public void attack() {
         LOGGER.info("Chaos Monkey - memory assault");
 
@@ -62,13 +62,19 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         if (metricEventPublisher != null)
             metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT);
 
-        eatFreeMemory();
+        if (inAttack.compareAndSet(false, true)) {
+            try {
+                eatFreeMemory();
+            } finally {
+                inAttack.set(false);
+            }
+        }
 
         LOGGER.info("Chaos Monkey - memory assault cleaned up");
     }
 
     private void eatFreeMemory() {
-        int minimumFreeMemoryPercentage = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryMinFreePercentage());
+        int minimumFreeMemoryPercentage = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillIncrementFraction());
 
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         Vector<byte[]> memoryVector = new Vector<>();
@@ -78,21 +84,21 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         while (isActive() && runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
 
             // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
-                // increase memory random percent steps
-                byte[] b = new byte[percentIncreaseValue];
-                // touch the memory to actually make the OS commit it
-                ThreadLocalRandom.current().nextBytes(b);
+            // increase memory random percent steps
+            byte[] b = new byte[percentIncreaseValue];
+            // touch the memory to actually make the OS commit it
+            ThreadLocalRandom.current().nextBytes(b);
 
-                stolenHere += percentIncreaseValue;
-                long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
+            stolenHere += percentIncreaseValue;
+            long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
 
-                metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
-                memoryVector.add(b);
+            metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
+            memoryVector.add(b);
 
-                LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
+            LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
 
-                waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
-                percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillPercentage());
+            waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
+            percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillTargetFraction());
         }
 
         // Hold memory level and cleanUp after, only if experiment is running
@@ -114,14 +120,20 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     }
 
     private double calculatePercentageRandom() {
-        return ThreadLocalRandom.current().nextDouble(0.05, settings.getAssaultProperties().getMemoryFillPercentage());
+        return ThreadLocalRandom.current().nextDouble(0.05, settings.getAssaultProperties().getMemoryFillTargetFraction());
     }
 
     private void waitUntil(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            // do nothing
+        final long startNano = System.nanoTime();
+        long now = startNano;
+        while (startNano + TimeUnit.MILLISECONDS.toNanos(ms) > now && isActive()) {
+            try {
+                long elapsed = TimeUnit.NANOSECONDS.toMillis(startNano - now);
+                Thread.sleep(Math.min(100, ms - elapsed));
+                now = System.nanoTime();
+            } catch (InterruptedException e) {
+                break;
+            }
         }
     }
 }

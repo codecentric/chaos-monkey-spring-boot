@@ -130,10 +130,10 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
 
         // TODO: Make these fields optional, adding required fields to a REST api is bad form
         assaultProperties.setMemoryActive(false);
-        assaultProperties.setMemoryFillPercentage(.25);
+        assaultProperties.setMemoryFillTargetFraction(.25);
         assaultProperties.setMemoryMillisecondsHoldFilledMemory(15000);
         assaultProperties.setMemoryMillisecondsWaitNextIncrease(1000);
-        assaultProperties.setMemoryMinFreePercentage(0.15);
+        assaultProperties.setMemoryFillIncrementFraction(0.15);
 
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
