@@ -52,7 +52,7 @@ import java.util.List;
 @EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyRequestScope.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
