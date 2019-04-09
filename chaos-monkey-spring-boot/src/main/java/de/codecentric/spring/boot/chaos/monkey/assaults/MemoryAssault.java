@@ -83,17 +83,13 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         int percentIncreaseValue = calculatePercentIncreaseValue(calculatePercentageRandom());
 
         while (isActive() && runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
-
             // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
+
             // increase memory random percent steps
-            byte[] b = new byte[percentIncreaseValue];
-            // touch the memory to actually make the OS commit it. 4096 is still a common page size
-            makeMemoryDirty(percentIncreaseValue, b);
+            memoryVector.add(createDirtyMemorySlice(percentIncreaseValue));
             stolenHere += percentIncreaseValue;
             long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
-
             metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
-            memoryVector.add(b);
 
             LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
 
@@ -116,10 +112,13 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);
     }
 
-    private void makeMemoryDirty(int percentIncreaseValue, byte[] b) {
-        for (int idx = 0; idx < percentIncreaseValue; idx += 4096) {
+    private byte[] createDirtyMemorySlice(int size) {
+        byte[] b = new byte[size];
+        for (int idx = 0; idx < size; idx += 4096) { // 4096 is commonly the size of a mwmory page, forcing a commit
             b[idx] = 19;
         }
+
+        return b;
     }
 
     private int calculatePercentIncreaseValue(double percentage) {
