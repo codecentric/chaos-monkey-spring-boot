@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.*;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import lombok.Data;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -131,6 +132,19 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
         // Do not set memory properties - optional :)
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Assault config has changed", result.getBody());
+    }
+
+
+    @Test
+    public void postMinimalUpdate() {
+        @Data class MinimalSubmission {
+            private int level = 10;
+        }
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", new MinimalSubmission(), String.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals("Assault config has changed", result.getBody());

@@ -1,5 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultExceptionConstraint;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
@@ -15,7 +16,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Data @NoArgsConstructor @Validated
+@Data @NoArgsConstructor @Validated @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AssaultPropertiesUpdate {
     @Nullable
     @Min(value = 1)
