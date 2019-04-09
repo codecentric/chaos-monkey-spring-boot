@@ -122,7 +122,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     }
 
     private int calculatePercentIncreaseValue(double percentage) {
-        return (int) Math.max(1, runtime.freeMemory() * percentage);
+        return (int) Math.min(Integer.MAX_VALUE / 4, runtime.freeMemory() * percentage);
     }
 
     private double calculatePercentageRandom() {
