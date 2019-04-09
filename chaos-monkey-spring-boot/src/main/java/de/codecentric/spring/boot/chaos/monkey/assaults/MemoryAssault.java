@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -86,9 +87,8 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
             // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
             // increase memory random percent steps
             byte[] b = new byte[percentIncreaseValue];
-            // touch the memory to actually make the OS commit it
-            ThreadLocalRandom.current().nextBytes(b);
-
+            // touch the memory to actually make the OS commit it. 4096 is still a common page size
+            makeMemoryDirty(percentIncreaseValue, b);
             stolenHere += percentIncreaseValue;
             long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
 
@@ -103,6 +103,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         // Hold memory level and cleanUp after, only if experiment is running
         if (isActive()) {
+            LOGGER.info("Memory fill reached, now sleeping and holding memory");
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsHoldFilledMemory());
         }
 
@@ -113,6 +114,12 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         long stolenAfterComplete = stolenMemory.addAndGet(-stolenHere);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);
+    }
+
+    private void makeMemoryDirty(int percentIncreaseValue, byte[] b) {
+        for (int idx = 0; idx < percentIncreaseValue; idx += 4096) {
+            b[idx] = 19;
+        }
     }
 
     private int calculatePercentIncreaseValue(double percentage) {

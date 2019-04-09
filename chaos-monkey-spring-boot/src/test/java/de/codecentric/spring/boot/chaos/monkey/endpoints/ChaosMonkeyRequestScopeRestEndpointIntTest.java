@@ -71,7 +71,7 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
                 testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.OK, chaosMonkeySettingsResult.getStatusCode());
-        assertEquals(chaosMonkeySettings, chaosMonkeySettingsResult.getBody());
+        assertEquals(chaosMonkeySettings.toString(), chaosMonkeySettingsResult.getBody().toString());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
 
     @Test
     public void postAssaultConfigurationGoodCase() {
-        AssaultProperties assaultProperties = new AssaultProperties();
+        AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
         assaultProperties.setLevel(10);
         assaultProperties.setLatencyRangeEnd(100);
         assaultProperties.setLatencyRangeStart(200);
@@ -128,13 +128,7 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
         assaultProperties.setExceptionsActive(false);
         assaultProperties.setException(new AssaultException());
 
-        // TODO: Make these fields optional, adding required fields to a REST api is bad form
-        assaultProperties.setMemoryActive(false);
-        assaultProperties.setMemoryFillTargetFraction(.25);
-        assaultProperties.setMemoryMillisecondsHoldFilledMemory(15000);
-        assaultProperties.setMemoryMillisecondsWaitNextIncrease(1000);
-        assaultProperties.setMemoryFillIncrementFraction(0.15);
-
+        // Do not set memory properties - optional :)
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
 

@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -39,6 +40,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @Validated
+@EqualsAndHashCode
 public class AssaultProperties {
     @Value("${level : 5}")
     @Min(value = 1)

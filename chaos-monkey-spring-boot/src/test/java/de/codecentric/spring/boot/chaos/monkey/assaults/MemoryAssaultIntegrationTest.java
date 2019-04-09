@@ -125,7 +125,7 @@ public class MemoryAssaultIntegrationTest {
 
             stillActive.set(false);
 
-            backgroundThread.join(5000);
+            backgroundThread.join(7500);
             assertFalse(backgroundThread.isAlive());
         } finally {
             settings.setAssaultProperties(originalAssaultProperties);

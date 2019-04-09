@@ -41,8 +41,8 @@ public class ChaosMonkeyRestEndpoint {
 
 
     @PostMapping("/assaults")
-    public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultProperties assaultProperties) {
-        this.chaosMonkeySettings.setAssaultProperties(assaultProperties);
+    public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
+        assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
         return ResponseEntity.ok().body("Assault config has changed");
     }
 
