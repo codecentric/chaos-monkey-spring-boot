@@ -104,7 +104,7 @@ public class MemoryAssaultIntegrationTest {
         AtomicBoolean stillActive = new AtomicBoolean(true);
         AssaultProperties originalAssaultProperties = settings.getAssaultProperties();
         AssaultProperties mockAssaultConfig = mock(AssaultProperties.class);
-        when(mockAssaultConfig.getMemoryFillTargetFraction()).thenReturn(0.5);
+        when(mockAssaultConfig.getMemoryFillTargetFraction()).thenReturn(0.25);
         when(mockAssaultConfig.getMemoryMillisecondsHoldFilledMemory()).thenReturn(10000);
         when(mockAssaultConfig.getMemoryMillisecondsWaitNextIncrease()).thenReturn(100);
         when(mockAssaultConfig.isMemoryActive()).thenAnswer(iom -> stillActive.get());
@@ -117,7 +117,7 @@ public class MemoryAssaultIntegrationTest {
             outer: {
                 while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
                     long remaining = rt.freeMemory();
-                    if (remaining <= initialMemory / 2) break outer;
+                    if (remaining * 4.0 / 3.0 <= initialMemory) break outer;
                 }
 
                 fail("Memory did not reach half exhaustion before timeout");
