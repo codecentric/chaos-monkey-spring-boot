@@ -4,8 +4,6 @@ import de.codecentric.spring.boot.chaos.monkey.events.MetricEvent;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.ApplicationListener;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * @author Benjamin Wilms
  */
@@ -30,7 +28,7 @@ public class Metrics implements ApplicationListener<MetricEvent> {
     }
 
 
-    private void gauge(MetricType type, AtomicInteger number) {
+    private void gauge(MetricType type, double number) {
         if (meterRegistry != null)
             meterRegistry.gauge(type.getMetricName() + ".gauge.", number);
     }
@@ -41,39 +39,13 @@ public class Metrics implements ApplicationListener<MetricEvent> {
 
     @Override
     public void onApplicationEvent(MetricEvent event) {
-        switch (event.getMetricType()) {
-            case SERVICE:
-                counterWatcher(event.getMetricType(), event.getMethodSignature());
-                break;
-            case COMPONENT:
-                counterWatcher(event.getMetricType(), event.getMethodSignature());
-                break;
-            case REPOSITORY:
-                counterWatcher(event.getMetricType(), event.getMethodSignature());
-                break;
-            case RESTCONTROLLER:
-                counterWatcher(event.getMetricType(), event.getMethodSignature());
-                break;
-            case CONTROLLER:
-                counterWatcher(event.getMetricType(), event.getMethodSignature());
-                break;
-            case LATENCY_ASSAULT:
-                if (event.getGaugeValue() != null)
-                    gauge(event.getMetricType(), event.getGaugeValue());
-
-                counter(event.getMetricType(), event.getTags());
-                break;
-            case APPLICATION_REQ_COUNT:
-                counter(event.getMetricType(), event.getTags());
-                break;
-            case KILLAPP_ASSAULT:
-                counter(event.getMetricType(), event.getTags());
-                break;
-            case EXCEPTION_ASSAULT:
-                counter(event.getMetricType(), event.getTags());
-                break;
-            default:
-
+        if (event.getMetricType().isSignatureOnlyEvent()) {
+            counterWatcher(event.getMetricType(), event.getMethodSignature());
+        } else if (event.getMetricType().isTagEvent()) {
+            counter(event.getMetricType(), event.getTags());
+        } else { // untagged and without method signature -> metric value is the interesting part
+            gauge(event.getMetricType(), event.getMetricValue());
+            counter(event.getMetricType(), event.getTags());
         }
     }
 }

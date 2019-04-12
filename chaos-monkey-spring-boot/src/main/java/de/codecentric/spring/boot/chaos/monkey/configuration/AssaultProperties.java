@@ -18,15 +18,20 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author Benjamin Wilms
@@ -35,6 +40,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @Validated
+@EqualsAndHashCode
 public class AssaultProperties {
     @Value("${level : 5}")
     @Min(value = 1)
@@ -63,6 +69,33 @@ public class AssaultProperties {
     @Value("${killApplicationActive : false}")
     private boolean killApplicationActive;
 
+    @Value("${memoryActive : false}")
+    private volatile boolean memoryActive;
+
+    @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
+    @Min(value = 1500)
+    @Max(value = Integer.MAX_VALUE)
+    private int memoryMillisecondsHoldFilledMemory;
+
+    @Value("${memoryMillisecondsWaitNextIncrease : 1000}")
+    @Min(value = 100)
+    @Max(value = 30000)
+    private int memoryMillisecondsWaitNextIncrease;
+
+    @Value("${memoryFillIncrementFraction : 0.15}")
+    @DecimalMax("1.0")
+    @DecimalMin("0.0")
+    private double memoryFillIncrementFraction;
+
+    @Value("${memoryFillTargetFraction : 0.25}")
+    @DecimalMax("0.95")
+    @DecimalMin("0.05")
+    private double memoryFillTargetFraction;
+
+    /* Not yet implemented: Runtime assaults on a schedule.
+    @Value("${runtime.scope.assault.cron.expression : 59 59 23 31 12 ? 2099}")
+    private String runtimeAssaultCronExpression;
+    */
     @Value("${watchedCustomServices:#{null}}")
     private List<String> watchedCustomServices;
 
@@ -88,5 +121,6 @@ public class AssaultProperties {
     public boolean isWatchedCustomServicesActive() {
         return watchedCustomServices != null && !watchedCustomServices.isEmpty();
     }
+
 
 }

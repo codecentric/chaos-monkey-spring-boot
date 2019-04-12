@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
@@ -31,16 +32,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ChaosMonkeyRestEndpoint {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
+    private final ChaosMonkeyRuntimeScope runtimeScope;
 
-    public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
+    public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings, ChaosMonkeyRuntimeScope runtimeScope) {
         this.chaosMonkeySettings = chaosMonkeySettings;
+        this.runtimeScope = runtimeScope;
     }
 
 
     @PostMapping("/assaults")
-    public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultProperties assaultProperties) {
-        this.chaosMonkeySettings.setAssaultProperties(assaultProperties);
+    public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
+        assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
         return ResponseEntity.ok().body("Assault config has changed");
+    }
+
+    @PostMapping("/assaults/runtime/attack")
+    public ResponseEntity<String> attack() {
+        runtimeScope.callChaosMonkey();
+        return ResponseEntity.ok("Started runtime assaults");
     }
 
     @GetMapping("/assaults")

@@ -16,11 +16,9 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.assaults.*;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.conditions.*;
@@ -33,9 +31,12 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -48,8 +49,9 @@ import java.util.List;
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
+@EnableScheduling
 public class ChaosMonkeyConfiguration {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkey.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
     private final ChaosMonkeyProperties chaosMonkeyProperties;
     private final WatcherProperties watcherProperties;
     private final AssaultProperties assaultProperties;
@@ -102,45 +104,55 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkey chaosMonkey(List<ChaosMonkeyAssault> chaosMonkeyAssaults) {
-        return new ChaosMonkey(settings(), chaosMonkeyAssaults, publisher());
+    public MemoryAssault memoryAssault() {
+        return new MemoryAssault(Runtime.getRuntime(), settings(), publisher());
+    }
+
+    @Bean
+    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults) {
+        return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher());
+    }
+
+    @Bean
+    public ChaosMonkeyRuntimeScope chaosMonkeyRuntimeScope(List<ChaosMonkeyRuntimeAssault> chaosMonkeyAssaults) {
+        return new ChaosMonkeyRuntimeScope(settings(), chaosMonkeyAssaults);
     }
 
     @Bean
     @Conditional(AttackControllerCondition.class)
-    public SpringControllerAspect controllerAspect(ChaosMonkey chaosMonkey) {
-        return new SpringControllerAspect(chaosMonkey, publisher());
+    public SpringControllerAspect controllerAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringControllerAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
     @Conditional(AttackRestControllerCondition.class)
-    public SpringRestControllerAspect restControllerAspect(ChaosMonkey chaosMonkey) {
-        return new SpringRestControllerAspect(chaosMonkey, publisher());
+    public SpringRestControllerAspect restControllerAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringRestControllerAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
     @Conditional(AttackServiceCondition.class)
-    public SpringServiceAspect serviceAspect(ChaosMonkey chaosMonkey) {
-        return new SpringServiceAspect(chaosMonkey, publisher());
+    public SpringServiceAspect serviceAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringServiceAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
     @Conditional(AttackComponentCondition.class)
-    public SpringComponentAspect componentAspect(ChaosMonkey chaosMonkey) {
-        return new SpringComponentAspect(chaosMonkey, publisher());
+    public SpringComponentAspect componentAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringComponentAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
     @Conditional(AttackRepositoryCondition.class)
-    public SpringRepositoryAspect repositoryAspect(ChaosMonkey chaosMonkey) {
-        return new SpringRepositoryAspect(chaosMonkey, publisher());
+    public SpringRepositoryAspect repositoryAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringRepositoryAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnEnabledEndpoint
-    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint() {
-        return new ChaosMonkeyRestEndpoint(settings());
+    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(ChaosMonkeyRuntimeScope runtimeScope) {
+        return new ChaosMonkeyRestEndpoint(settings(), runtimeScope);
     }
 
     @Bean

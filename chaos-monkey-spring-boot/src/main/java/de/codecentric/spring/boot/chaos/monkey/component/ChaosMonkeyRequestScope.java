@@ -17,8 +17,14 @@
 package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +33,49 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 /**
  * @author Benjamin Wilms
  */
-public class ChaosMonkey {
+public class ChaosMonkeyRequestScope {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
-    private final List<ChaosMonkeyAssault> assaults;
+    private final List<ChaosMonkeyRequestAssault> assaults;
     private MetricEventPublisher metricEventPublisher;
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, MetricEventPublisher metricEventPublisher) {
+    private static class RequestAssaultAdapter implements ChaosMonkeyRequestAssault {
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(RequestAssaultAdapter.class);
+        private final ChaosMonkeyAssault rawAssault;
+
+
+        private RequestAssaultAdapter(ChaosMonkeyAssault rawAssault) {
+            LOGGER.warn("Adapting a " + rawAssault.getClass().getSimpleName() + " into a request assault. The class should extend its proper parent");
+
+            this.rawAssault = rawAssault;
+        }
+
+        @Override
+        public boolean isActive() {
+            return rawAssault.isActive();
+        }
+
+        @Override
+        public void attack() {
+            rawAssault.attack();
+        }
+    }
+
+    public ChaosMonkeyRequestScope(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyRequestAssault> assaults,
+                                   List<ChaosMonkeyAssault> legacyAssaults,
+                                   MetricEventPublisher metricEventPublisher) {
+        List<RequestAssaultAdapter> assaultAdapters = legacyAssaults.stream().
+                filter(it -> !(it instanceof ChaosMonkeyRequestAssault || it instanceof ChaosMonkeyRuntimeAssault)).
+                map(RequestAssaultAdapter::new).
+                collect(Collectors.toList());
+        List<ChaosMonkeyRequestAssault> requestAssaults = new ArrayList<>();
+        requestAssaults.addAll(assaults);
+        requestAssaults.addAll(assaultAdapters);
+
+
         this.chaosMonkeySettings = chaosMonkeySettings;
-        this.assaults = assaults;
+        this.assaults = requestAssaults;
         this.metricEventPublisher = metricEventPublisher;
     }
 

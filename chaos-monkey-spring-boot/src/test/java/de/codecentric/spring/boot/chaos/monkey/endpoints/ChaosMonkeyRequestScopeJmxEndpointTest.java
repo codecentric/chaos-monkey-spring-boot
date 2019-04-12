@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Benjamin Wilms
  */
-public class ChaosMonkeyJmxEndpointTest {
+public class ChaosMonkeyRequestScopeJmxEndpointTest {
 
     private ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint;
     private ChaosMonkeySettings chaosMonkeySettings;

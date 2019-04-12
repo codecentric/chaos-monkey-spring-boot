@@ -33,4 +33,8 @@ public class MetricEventPublisher implements ApplicationEventPublisherAware {
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
     }
+
+    public void publishMetricEvent(MetricType type, long metricValue) {
+        publisher.publishEvent(new MetricEvent(this, type, metricValue, null));
+    }
 }

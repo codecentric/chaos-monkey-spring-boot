@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
-public class ChaosMonkeyRestEndpointDisabledIntTest {
+public class ChaosMonkeyRequestScopeRestEndpointDisabledIntTest {
     @LocalServerPort
     private int serverPort;
 

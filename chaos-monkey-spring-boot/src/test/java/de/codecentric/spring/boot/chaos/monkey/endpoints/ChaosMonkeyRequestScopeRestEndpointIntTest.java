@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.*;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import lombok.Data;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
-public class ChaosMonkeyRestEndpointIntTest {
+public class ChaosMonkeyRequestScopeRestEndpointIntTest {
 
     @LocalServerPort
     private int serverPort;
@@ -71,7 +72,7 @@ public class ChaosMonkeyRestEndpointIntTest {
                 testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.OK, chaosMonkeySettingsResult.getStatusCode());
-        assertEquals(chaosMonkeySettings, chaosMonkeySettingsResult.getBody());
+        assertEquals(chaosMonkeySettings.toString(), chaosMonkeySettingsResult.getBody().toString());
     }
 
     @Test
@@ -120,7 +121,7 @@ public class ChaosMonkeyRestEndpointIntTest {
 
     @Test
     public void postAssaultConfigurationGoodCase() {
-        AssaultProperties assaultProperties = new AssaultProperties();
+        AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
         assaultProperties.setLevel(10);
         assaultProperties.setLatencyRangeEnd(100);
         assaultProperties.setLatencyRangeStart(200);
@@ -128,8 +129,22 @@ public class ChaosMonkeyRestEndpointIntTest {
         assaultProperties.setExceptionsActive(false);
         assaultProperties.setException(new AssaultException());
 
+        // Do not set memory properties - optional :)
         ResponseEntity<String> result =
                 testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Assault config has changed", result.getBody());
+    }
+
+
+    @Test
+    public void postMinimalUpdate() {
+        @Data class MinimalSubmission {
+            private int level = 10;
+        }
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/assaults", new MinimalSubmission(), String.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals("Assault config has changed", result.getBody());

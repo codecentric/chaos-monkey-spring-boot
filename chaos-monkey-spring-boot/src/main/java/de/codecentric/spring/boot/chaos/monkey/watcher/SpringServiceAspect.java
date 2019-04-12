@@ -16,7 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,11 +37,11 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
-    private final ChaosMonkey chaosMonkey;
+    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
     private MetricEventPublisher metricEventPublisher;
 
-    public SpringServiceAspect(ChaosMonkey chaosMonkey, MetricEventPublisher metricEventPublisher) {
-        this.chaosMonkey = chaosMonkey;
+    public SpringServiceAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope, MetricEventPublisher metricEventPublisher) {
+        this.chaosMonkeyRequestScope = chaosMonkeyRequestScope;
         this.metricEventPublisher = metricEventPublisher;
     }
 
@@ -58,7 +58,7 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-        chaosMonkey.callChaosMonkey(createSignature(signature));
+        chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
 
         return pjp.proceed();
     }

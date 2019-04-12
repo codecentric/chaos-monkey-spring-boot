@@ -29,7 +29,7 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * @author Thorsten Deelmann
  */
-public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAware {
+public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
     private ApplicationContext context;
@@ -55,7 +55,7 @@ public class KillAppAssault implements ChaosMonkeyAssault, ApplicationContextAwa
                 metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
 
             int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
-            Thread.sleep(5000); // wait befor kill to deliver some metrics
+            Thread.sleep(5000); // wait before kill to deliver some metrics
 
             System.exit(exit);
         } catch (Exception e) {
