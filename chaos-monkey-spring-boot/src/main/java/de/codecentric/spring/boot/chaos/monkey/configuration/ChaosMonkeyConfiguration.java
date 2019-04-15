@@ -34,13 +34,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.lang.Nullable;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Benjamin Wilms
@@ -113,7 +116,12 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkeyScheduler scheduler(@Nullable ScheduledTaskRegistrar registrar, ChaosMonkeyRuntimeScope runtimeScope) {
+    public ChaosMonkeyScheduler scheduler(@Nullable TaskScheduler scheduler, ChaosMonkeyRuntimeScope runtimeScope) {
+        ScheduledTaskRegistrar registrar = null;
+        if (scheduler != null) {
+            registrar = new ScheduledTaskRegistrar();
+            registrar.setTaskScheduler(scheduler);
+        }
         return new ChaosMonkeyScheduler(registrar, assaultProperties, runtimeScope);
     }
 
