@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -69,6 +66,9 @@ public class AssaultPropertiesUpdate {
     private Double memoryFillTargetFraction;
 
     @Nullable
+    private String runtimeAssaultCronExpression;
+
+    @Nullable
     private List<String> watchedCustomServices;
 
 
@@ -93,6 +93,7 @@ public class AssaultPropertiesUpdate {
         applyTo(memoryMillisecondsWaitNextIncrease, t::setMemoryMillisecondsWaitNextIncrease);
         applyTo(memoryFillIncrementFraction, t::setMemoryFillIncrementFraction);
         applyTo(memoryFillTargetFraction, t::setMemoryFillTargetFraction);
+        applyTo(runtimeAssaultCronExpression, t::setRuntimeAssaultCronExpression);
         applyTo(watchedCustomServices, t::setWatchedCustomServices);
     }
 }
