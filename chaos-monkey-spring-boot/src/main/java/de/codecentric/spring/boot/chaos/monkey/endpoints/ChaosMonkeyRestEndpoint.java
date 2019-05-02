@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
@@ -33,16 +34,19 @@ public class ChaosMonkeyRestEndpoint {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
     private final ChaosMonkeyRuntimeScope runtimeScope;
+    private final ChaosMonkeyScheduler scheduler;
 
-    public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings, ChaosMonkeyRuntimeScope runtimeScope) {
+    public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings, ChaosMonkeyRuntimeScope runtimeScope, ChaosMonkeyScheduler scheduler) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.runtimeScope = runtimeScope;
+        this.scheduler = scheduler;
     }
-
 
     @PostMapping("/assaults")
     public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
         assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
+        scheduler.reloadConfig();
+
         return ResponseEntity.ok().body("Assault config has changed");
     }
 

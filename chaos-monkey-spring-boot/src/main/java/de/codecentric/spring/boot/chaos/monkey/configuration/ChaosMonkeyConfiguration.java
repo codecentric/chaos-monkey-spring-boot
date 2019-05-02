@@ -17,10 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.*;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
+import de.codecentric.spring.boot.chaos.monkey.component.*;
 import de.codecentric.spring.boot.chaos.monkey.conditions.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
@@ -36,12 +33,17 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.lang.Nullable;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Benjamin Wilms
@@ -114,6 +116,16 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
+    public ChaosMonkeyScheduler scheduler(@Nullable TaskScheduler scheduler, ChaosMonkeyRuntimeScope runtimeScope) {
+        ScheduledTaskRegistrar registrar = null;
+        if (scheduler != null) {
+            registrar = new ScheduledTaskRegistrar();
+            registrar.setTaskScheduler(scheduler);
+        }
+        return new ChaosMonkeyScheduler(registrar, assaultProperties, runtimeScope);
+    }
+
+    @Bean
     public ChaosMonkeyRuntimeScope chaosMonkeyRuntimeScope(List<ChaosMonkeyRuntimeAssault> chaosMonkeyAssaults) {
         return new ChaosMonkeyRuntimeScope(settings(), chaosMonkeyAssaults);
     }
@@ -151,8 +163,8 @@ public class ChaosMonkeyConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnEnabledEndpoint
-    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(ChaosMonkeyRuntimeScope runtimeScope) {
-        return new ChaosMonkeyRestEndpoint(settings(), runtimeScope);
+    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(ChaosMonkeyRuntimeScope runtimeScope, ChaosMonkeyScheduler scheduler) {
+        return new ChaosMonkeyRestEndpoint(settings(), runtimeScope, scheduler);
     }
 
     @Bean
