@@ -19,12 +19,14 @@ package de.codecentric.spring.boot.chaos.monkey;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -65,9 +67,12 @@ public class ChaosDemoApplicationChaosMonkeyProfileTest {
     @Autowired
     private Environment env;
 
+    @Mock
+    private MetricEventPublisher metricsMock;
+
     @Before
     public void setUp() {
-        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault));
+        chaosMonkey = new ChaosMonkey(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault, killAppAssault), metricsMock);
     }
 
     @Test

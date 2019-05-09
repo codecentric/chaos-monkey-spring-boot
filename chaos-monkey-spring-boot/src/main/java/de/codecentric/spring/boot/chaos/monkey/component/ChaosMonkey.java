@@ -30,16 +30,21 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class ChaosMonkey {
 
     private ChaosMonkeySettings chaosMonkeySettings;
-
     private List<ChaosMonkeyAssault> assaults;
+    private MetricEventPublisher metricEventPublisher;
 
-    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults) {
+    public ChaosMonkey(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyAssault> assaults, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkeySettings = chaosMonkeySettings;
         this.assaults = assaults;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     public void callChaosMonkey() {
         if (isTrouble() && isEnabled()) {
+
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+
             List<ChaosMonkeyAssault> activeAssaults = assaults.stream()
                     .filter(ChaosMonkeyAssault::isActive)
                     .collect(Collectors.toList());
@@ -47,6 +52,9 @@ public class ChaosMonkey {
                 return;
             }
             getRandomFrom(activeAssaults).attack();
+
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
         }
 
     }

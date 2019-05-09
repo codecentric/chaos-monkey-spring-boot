@@ -16,6 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +36,11 @@ public class KillAppAssault implements ChaosMonkeyAssault{
     private ApplicationContext context;
 
     private ChaosMonkeySettings settings;
+    private MetricEventPublisher metricEventPublisher;
 
-    public KillAppAssault(ChaosMonkeySettings settings) {
+    public KillAppAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.settings = settings;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     @Override
@@ -49,11 +53,17 @@ public class KillAppAssault implements ChaosMonkeyAssault{
         try {
             LOGGER.info("Chaos Monkey - I am killing your Application!");
 
+            // metrics
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
+
             int exit = SpringApplication.exit(context, new ExitCodeGenerator() {
                 public int getExitCode() {
                     return 0;
                 }
             });
+            Thread.sleep(5000); // wait before kill to deliver some metrics
+
             System.exit(exit);
         } catch (Exception e) {
             LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
