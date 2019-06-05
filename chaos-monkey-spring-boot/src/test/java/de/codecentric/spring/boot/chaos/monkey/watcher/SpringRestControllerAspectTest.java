@@ -17,6 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.demo.chaos.monkey.restcontroller.DemoRestController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,19 +37,24 @@ public class SpringRestControllerAspectTest {
     @Mock
     private ChaosMonkey chaosMonkeyMock;
 
+    @Mock
+    private MetricEventPublisher metricsMock;
+    private String pointcutName = "execution.DemoRestController.sayHello";
+
     @Test
     public void chaosMonkeyIsCalled() {
         DemoRestController target = new DemoRestController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock);
+        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(serviceAspect);
 
         DemoRestController proxy = factory.getProxy();
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(1)).callChaosMonkey();
-        verifyNoMoreInteractions(chaosMonkeyMock);
+        verify(metricsMock, times(1)).publishMetricEvent(pointcutName, MetricType.RESTCONTROLLER);
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
 
@@ -56,9 +63,9 @@ public class SpringRestControllerAspectTest {
         DemoRestController target = new DemoRestController();
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock);
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyMock, metricsMock);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyMock, metricsMock);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyMock, metricsMock);
         factory.addAspect(controllerAspect);
         factory.addAspect(serviceAspect);
         factory.addAspect(repositoryAspect);
@@ -68,7 +75,8 @@ public class SpringRestControllerAspectTest {
         proxy.sayHello();
 
         verify(chaosMonkeyMock, times(0)).callChaosMonkey();
-        verifyNoMoreInteractions(chaosMonkeyMock);
+        verify(metricsMock, times(0)).publishMetricEvent(pointcutName, MetricType.RESTCONTROLLER);
+        verifyNoMoreInteractions(chaosMonkeyMock, metricsMock);
 
     }
 }

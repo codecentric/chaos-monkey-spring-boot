@@ -17,6 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkey;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,9 +35,11 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect{
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkey chaosMonkey;
+    private MetricEventPublisher metricEventPublisher;
 
-    public SpringServiceAspect(ChaosMonkey chaosMonkey) {
+    public SpringServiceAspect(ChaosMonkey chaosMonkey, MetricEventPublisher metricEventPublisher) {
         this.chaosMonkey = chaosMonkey;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
     @Pointcut("within(@org.springframework.stereotype.Service *)")
@@ -45,6 +49,10 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect{
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         LOGGER.debug(LOGGER.isDebugEnabled() ? "Controller class and public method detected: " + pjp.getSignature() : null);
+
+        // metrics
+        if (metricEventPublisher != null)
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
 
         chaosMonkey.callChaosMonkey();
 

@@ -16,6 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.apache.commons.lang3.RandomUtils;
@@ -25,6 +27,9 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -41,6 +46,9 @@ public class LatencyAssaultTest {
     @Mock
     private AssaultProperties assaultProperties;
 
+    @Mock
+    private MetricEventPublisher metricsMock;
+
     @Test
     public void threadSleepHasBeenCalled() throws Exception {
         mockStatic(Thread.class);
@@ -54,9 +62,11 @@ public class LatencyAssaultTest {
         when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
         when(RandomUtils.nextInt(latencyRangeStart, latencyRangeEnd)).thenReturn(sleepTimeMillis);
 
-        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings);
+        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricsMock);
         latencyAssault.attack();
 
+        verify(metricsMock, times(1)).publishMetricEvent(MetricType.LATENCY_ASSAULT);
+        verify(metricsMock, times(1)).publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), anyInt());
         verifyStatic(Thread.class, times(1));
         Thread.sleep(sleepTimeMillis);
     }

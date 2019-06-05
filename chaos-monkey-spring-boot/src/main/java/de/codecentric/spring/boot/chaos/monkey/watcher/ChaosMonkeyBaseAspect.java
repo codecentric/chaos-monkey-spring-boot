@@ -28,4 +28,11 @@ abstract class ChaosMonkeyBaseAspect {
     @Pointcut("execution(* *.*(..))")
     public void allPublicMethodPointcut() {
     }
+
+    String calculatePointcut(String target) {
+        return target
+                .replaceAll("\\(\\)", "")
+                .replaceAll("\\)", "")
+                .replaceAll("\\(", ".");
+    }
 }
