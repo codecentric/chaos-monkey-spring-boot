@@ -103,10 +103,23 @@ public class ChaosMonkeyRequestScopeRestEndpointIntTest {
     @Test
     public void getWatcherConfiguration() {
         ResponseEntity<WatcherProperties> result =
-                testRestTemplate.getForEntity(baseUrl + "/watcher", WatcherProperties.class);
+                testRestTemplate.getForEntity(baseUrl + "/watchers", WatcherProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(chaosMonkeySettings.getWatcherProperties().toString(), result.getBody().toString());
+    }
+
+    @Test
+    public void postWatcherConfigurationGoodCase() {
+
+        WatcherPropertiesUpdate watcherProperties = new WatcherPropertiesUpdate();
+        watcherProperties.setService(true);
+
+        ResponseEntity<String> result =
+                testRestTemplate.postForEntity(baseUrl + "/watchers", watcherProperties, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Watcher config has changed", result.getBody());
     }
 
     // Assault Tests

@@ -39,12 +39,16 @@ management.endpoints.web.exposure.include=health,info,chaosmonkey
 |Disable Chaos Monkey
 |POST
 
-|<<watcher,/chaosmonkey/watcher>>
-|Running Watcher configuration.
+|<<watchers,/chaosmonkey/watchers>>
+|Running Watchers configuration.
 
 NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the
 application starts.
 |GET
+
+|<<watcherspost,/chaosmonkey/watchers>>
+|Change Watchers Configuration
+|POST
 
 |<<assaultsget,/chaosmonkey/assaults>>
 |Running Assaults configuration
@@ -112,11 +116,10 @@ Chaos Monkey is enabled
 ----
 Chaos Monkey is disabled
 ----
-===== GET Watcher
-NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the application starts.
+===== GET Watchers
 [[watcher]]
 [source,json,subs="verbatim,attributes"]
-./chaosmonkey/watcher - Response 200 OK
+./chaosmonkey/watchers - Response 200 OK
 ----
 {
 "controller": true,
@@ -125,6 +128,25 @@ NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that 
 "repository": false,
 "component": false
 }
+----
+===== POST Watchers
+[[watcherspost]]
+====== Request to enable/disable Watchers
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/watchers - Request
+----
+{
+"controller": true,
+"restController": true,
+"service": true,
+"repository": true,
+"component": true
+}
+----
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/watchers - Response 200 OK
+----
+Watcher config has changed
 ----
 ===== GET Assaults
 [[assaultsget]]

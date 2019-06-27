@@ -20,7 +20,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

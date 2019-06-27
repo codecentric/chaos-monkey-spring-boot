@@ -31,8 +31,6 @@ import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.springframework.util.CollectionUtils.isEmpty;
-
 /**
  * @author Benjamin Wilms
  */

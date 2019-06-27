@@ -19,13 +19,14 @@ package de.codecentric.spring.boot.chaos.monkey.watcher;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,17 +34,13 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
+@AllArgsConstructor
+@Slf4j
 public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpringServiceAspect.class);
 
     private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
     private MetricEventPublisher metricEventPublisher;
-
-    public SpringServiceAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope, MetricEventPublisher metricEventPublisher) {
-        this.chaosMonkeyRequestScope = chaosMonkeyRequestScope;
-        this.metricEventPublisher = metricEventPublisher;
-    }
+    private WatcherProperties watcherProperties;
 
     @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void classAnnotatedWithControllerPointcut() {
@@ -51,16 +48,17 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
     @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-        LOGGER.debug(LOGGER.isDebugEnabled() ? "Service class and public method detected: " + pjp.getSignature() : null);
 
-        if (metricEventPublisher != null)
-            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
+        if (watcherProperties.isService()) {
+            log.debug("Watching public method on service class: {}", pjp.getSignature());
 
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
 
-        chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
 
+            chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
+        }
         return pjp.proceed();
     }
-
 }
