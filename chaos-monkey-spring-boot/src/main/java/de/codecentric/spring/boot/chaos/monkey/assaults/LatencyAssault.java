@@ -31,8 +31,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class LatencyAssault implements ChaosMonkeyRequestAssault {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
+
     private final ChaosMonkeySettings settings;
+
     private MetricEventPublisher metricEventPublisher;
+
     private AtomicInteger atomicTimeoutGauge;
 
     public LatencyAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
@@ -50,9 +53,7 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
     public void attack() {
         LOGGER.debug("Chaos Monkey - timeout");
 
-        int timeout = ThreadLocalRandom.current().nextInt(settings.getAssaultProperties().getLatencyRangeStart(),
-                settings.getAssaultProperties().getLatencyRangeEnd());
-        atomicTimeoutGauge.set(timeout);
+        atomicTimeoutGauge.set(getTimeout());
 
         // metrics
         if (metricEventPublisher != null) {
@@ -61,9 +62,23 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
         }
 
         try {
-            Thread.sleep(timeout);
+            Thread.sleep(atomicTimeoutGauge.get());
         } catch (InterruptedException e) {
             // do nothing
+        }
+    }
+
+    private int getTimeout() {
+        final int latencyRangeStart =
+                settings.getAssaultProperties().getLatencyRangeStart();
+        final int latencyRangeEnd =
+                settings.getAssaultProperties().getLatencyRangeEnd();
+
+        if (latencyRangeStart == latencyRangeEnd) {
+            return latencyRangeStart;
+        } else {
+            return ThreadLocalRandom.current().nextInt(latencyRangeStart,
+                    latencyRangeEnd);
         }
     }
 }
