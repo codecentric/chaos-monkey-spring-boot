@@ -53,7 +53,7 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
     public void attack() {
         LOGGER.debug("Chaos Monkey - timeout");
 
-        atomicTimeoutGauge.set(getTimeout());
+        atomicTimeoutGauge.set(determineLatency());
 
         // metrics
         if (metricEventPublisher != null) {
@@ -68,7 +68,7 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
         }
     }
 
-    private int getTimeout() {
+    private int determineLatency() {
         final int latencyRangeStart =
                 settings.getAssaultProperties().getLatencyRangeStart();
         final int latencyRangeEnd =
