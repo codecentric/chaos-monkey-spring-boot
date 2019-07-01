@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AssaultPropertiesLatencyRangeConstraint {
-    String message() default "Invalid range parameters. Value of latencyRangeEnd must not be greater than value of latencyRangeStart!";
+    String message() default "Invalid range parameters. Value of latencyRangeStart must not be greater than value of latencyRangeEnd!";
 
     Class<?>[] groups() default {};
 
