@@ -37,7 +37,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
         <spring.version>5.1.4.RELEASE</spring.version>
         <aspectj-weaver.version>1.8.13</aspectj-weaver.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
@@ -66,6 +66,7 @@
         <module>chaos-monkey-dependencies</module>
         <module>chaos-monkey-spring-boot</module>
         <module>demo-apps/chaos-monkey-demo-app</module>
+        <module>demo-apps/chaos-monkey-web-reactive-app</module>
         <module>demo-apps/chaos-monkey-demo-app-naked</module>
         <module>demo-apps/chaos-monkey-demo-app-ext-jar</module>
         <module>chaos-monkey-docs</module>
