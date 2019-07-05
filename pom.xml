@@ -41,7 +41,7 @@
         <spring.version>5.1.4.RELEASE</spring.version>
         <aspectj-weaver.version>1.8.13</aspectj-weaver.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
-        <lombok.version>1.16.20</lombok.version>
+        <lombok.version>1.18.8</lombok.version>
         <!-- plugin versions-->
         <flatten-maven-plugin.version>1.0.1</flatten-maven-plugin.version>
         <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>

@@ -28,10 +28,8 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.*;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.TaskScheduler;
@@ -131,30 +129,35 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     @Conditional(AttackControllerCondition.class)
     public SpringControllerAspect controllerAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
         return new SpringControllerAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     @Conditional(AttackRestControllerCondition.class)
     public SpringRestControllerAspect restControllerAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
         return new SpringRestControllerAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     @Conditional(AttackServiceCondition.class)
     public SpringServiceAspect serviceAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
         return new SpringServiceAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     @Conditional(AttackComponentCondition.class)
     public SpringComponentAspect componentAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
         return new SpringComponentAspect(chaosMonkeyRequestScope, publisher());
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     @Conditional(AttackRepositoryCondition.class)
     public SpringRepositoryAspect repositoryAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
         return new SpringRepositoryAspect(chaosMonkeyRequestScope, publisher());
