@@ -1,5 +1,6 @@
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import com.example.chaos.monkey.chaosdemo.component.HelloComponent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Benjamin Wilms
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(GreetingController.class)
+@WebMvcTest({GreetingController.class, HelloComponent.class})
 public class GreetingControllerTest {
 
     @Autowired
@@ -29,4 +30,14 @@ public class GreetingControllerTest {
         this.mockMvc.perform(get("/helloagain")).andExpect(status().isOk())
                 .andExpect(content().string(is("Again hello!")));
     }
+
+    @Test
+    public void shouldReturnHelloFromComponent() throws Exception {
+
+
+        this.mockMvc.perform(get("/hellocomponent")).andExpect(status().isOk())
+                .andExpect(content().string(is("Hello from Component")));
+    }
+
+
 }

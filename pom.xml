@@ -29,7 +29,7 @@
 
     <properties>
         <!-- project version -->
-        <revision>2.0.2</revision>
+        <revision>2.0.3-SNAPSHOT</revision>
         <!-- default settings -->
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -37,11 +37,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
         <spring.version>5.1.4.RELEASE</spring.version>
         <aspectj-weaver.version>1.8.13</aspectj-weaver.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
-        <lombok.version>1.16.20</lombok.version>
+        <lombok.version>1.18.8</lombok.version>
         <!-- plugin versions-->
         <flatten-maven-plugin.version>1.0.1</flatten-maven-plugin.version>
         <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
@@ -66,6 +66,7 @@
         <module>chaos-monkey-dependencies</module>
         <module>chaos-monkey-spring-boot</module>
         <module>demo-apps/chaos-monkey-demo-app</module>
+        <module>demo-apps/chaos-monkey-web-reactive-app</module>
         <module>demo-apps/chaos-monkey-demo-app-naked</module>
         <module>demo-apps/chaos-monkey-demo-app-ext-jar</module>
         <module>chaos-monkey-docs</module>
@@ -175,6 +176,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>
