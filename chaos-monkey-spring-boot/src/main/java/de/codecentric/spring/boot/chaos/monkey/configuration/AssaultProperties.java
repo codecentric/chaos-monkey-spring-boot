@@ -41,6 +41,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
 @Validated
 @EqualsAndHashCode
+@AssaultPropertiesLatencyRangeConstraint
 public class AssaultProperties {
     @Value("${level : 5}")
     @Min(value = 1)
