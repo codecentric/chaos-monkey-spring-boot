@@ -19,7 +19,6 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

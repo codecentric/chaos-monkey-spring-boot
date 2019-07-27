@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.watcher;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.restcontroller.DemoRestController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,10 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class SpringRestControllerAspectTest {
 
+    private DemoRestController target = new DemoRestController();
+    private WatcherProperties watcherProperties = new WatcherProperties();
+    private AspectJProxyFactory factory = new AspectJProxyFactory(target);
+
     @Mock
     private ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock;
 
@@ -45,41 +50,67 @@ public class SpringRestControllerAspectTest {
 
 
     @Test
-    public void chaosMonkeyIsCalled() {
-        DemoRestController target = new DemoRestController();
+    public void chaosMonkeyIsCalledWhenEnabledInConfig() {
+        watcherProperties.setRestController(true);
 
-        AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringRestControllerAspect serviceAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock);
-        factory.addAspect(serviceAspect);
+        addRelevantAspect();
 
-        DemoRestController proxy = factory.getProxy();
-        proxy.sayHello();
+        callTargetMethod();
 
-        verify(chaosMonkeyRequestScopeMock, times(1)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(1)).publishMetricEvent(pointcutName, MetricType.RESTCONTROLLER);
-        verifyNoMoreInteractions(chaosMonkeyRequestScopeMock, metricsMock);
-
+        verifyDependenciesCalledXTimes(1);
     }
 
     @Test
-    public void chaosMonkeyIsNotCalled() {
-        DemoRestController target = new DemoRestController();
+    public void chaosMonkeyIsNotCalledWhenDisabledInConfig() {
+        watcherProperties.setController(false);
 
-        AspectJProxyFactory factory = new AspectJProxyFactory(target);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock);
+        addRelevantAspect();
+
+        callTargetMethod();
+
+        verifyDependenciesCalledXTimes(0);
+    }
+
+    @Test
+    public void chaosMonkeyIsNotCalledByAspectsWithUnrelatedPointcuts() {
+        watcherProperties.setService(true);
+        watcherProperties.setComponent(true);
+        watcherProperties.setController(true);
+        watcherProperties.setRepository(true);
+        watcherProperties.setRestController(true);
+
+        addNonRelevantAspects();
+
+        callTargetMethod();
+
+        verifyDependenciesCalledXTimes(0);
+    }
+
+    private void addRelevantAspect() {
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        factory.addAspect(restControllerAspect);
+    }
+
+    private void addNonRelevantAspects() {
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+
         factory.addAspect(controllerAspect);
+        factory.addAspect(componentAspect);
         factory.addAspect(serviceAspect);
         factory.addAspect(repositoryAspect);
+    }
 
-
+    private void callTargetMethod() {
         DemoRestController proxy = factory.getProxy();
         proxy.sayHello();
+    }
 
-        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(pointcutName,MetricType.RESTCONTROLLER);
+    private void verifyDependenciesCalledXTimes(int i) {
+        verify(chaosMonkeyRequestScopeMock, times(i)).callChaosMonkey(simpleName);
+        verify(metricsMock, times(i)).publishMetricEvent(pointcutName, MetricType.RESTCONTROLLER);
         verifyNoMoreInteractions(chaosMonkeyRequestScopeMock, metricsMock);
-
     }
 }

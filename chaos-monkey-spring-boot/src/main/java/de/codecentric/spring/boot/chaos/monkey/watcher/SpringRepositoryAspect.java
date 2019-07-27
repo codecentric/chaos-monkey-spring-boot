@@ -19,6 +19,9 @@ package de.codecentric.spring.boot.chaos.monkey.watcher;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,32 +33,31 @@ import org.aspectj.lang.reflect.MethodSignature;
  */
 
 @Aspect
+@AllArgsConstructor
+@Slf4j
 public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect {
 
     private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
     private MetricEventPublisher metricEventPublisher;
-
-    public SpringRepositoryAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope, MetricEventPublisher metricEventPublisher) {
-        this.chaosMonkeyRequestScope = chaosMonkeyRequestScope;
-        this.metricEventPublisher = metricEventPublisher;
-    }
+    private WatcherProperties watcherProperties;
 
     @Pointcut("this(org.springframework.data.repository.CrudRepository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
     public void implementsCrudRepository() {
-
     }
 
     @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
-        // metrics
-        if (metricEventPublisher != null)
-            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
+        if (watcherProperties.isRepository()) {
+            log.debug("Watching public method on repository class: {}", pjp.getSignature());
 
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
+            if (metricEventPublisher != null)
+                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
 
-        chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
 
+            chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
+        }
         return pjp.proceed();
     }
 

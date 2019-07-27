@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
-import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;

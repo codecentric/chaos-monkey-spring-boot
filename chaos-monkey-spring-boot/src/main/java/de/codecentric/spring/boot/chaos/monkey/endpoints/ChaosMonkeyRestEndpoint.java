@@ -86,14 +86,16 @@ public class ChaosMonkeyRestEndpoint {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
     }
 
-    /***
-     * Watcher can only be viewed, not changed at runtime. They are initialized at Application start.
-     * @return watch settings
-     */
-    @GetMapping("/watcher")
+    @PostMapping("/watchers")
+    public ResponseEntity<String> updateWatcherProperties(@RequestBody @Validated WatcherPropertiesUpdate watcherProperties) {
+        watcherProperties.applyTo(chaosMonkeySettings.getWatcherProperties());
+        scheduler.reloadConfig();
+
+        return ResponseEntity.ok().body("Watcher config has changed");
+    }
+
+    @GetMapping("/watchers")
     public WatcherProperties getWatcherSettings() {
         return this.chaosMonkeySettings.getWatcherProperties();
     }
-
-
 }
