@@ -37,8 +37,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
-        <spring.version>5.1.4.RELEASE</spring.version>
+        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <spring.version>5.1.8.RELEASE</spring.version>
         <aspectj-weaver.version>1.8.13</aspectj-weaver.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <lombok.version>1.18.8</lombok.version>
@@ -61,6 +61,7 @@
         <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
 
 
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
     </properties>
     <modules>
         <module>chaos-monkey-dependencies</module>
@@ -124,7 +125,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>

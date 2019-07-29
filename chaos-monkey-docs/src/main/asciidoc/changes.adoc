@@ -1,8 +1,8 @@
 [[changes]]
 == Changes in {project-version} ==
 === Spring Boot Version
-- supported and tested Spring Boot versions, up to 2.1.2.RELEASE
-- supported and tested Spring Framework versions, up to 5.1.4.RELEASE
+- supported and tested Spring Boot versions, up to 2.1.6.RELEASE
+- supported and tested Spring Framework versions, up to 5.1.8.RELEASE
 
 === Assaults
 - Define any kind of Runtime Expection during your Chaos Experiments

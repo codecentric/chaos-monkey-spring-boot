@@ -13,3 +13,6 @@ Thanks to the great community, the Chaos Monkey for Spring Boot can throw any ki
 
 === AppKiller Assault ===
 When the configured methods are called in the application, the Chaos Monkey will shut down the application.
+
+=== Memory Assault ===
+tbd
