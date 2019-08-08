@@ -121,41 +121,9 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.10.19</version>
+      <artifactId>mockito-core</artifactId>
+      <version>3.0.0</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <version>1.7.4</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>powermock-api-mockito-common</artifactId>
-          <groupId>org.powermock</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mockito-core</artifactId>
-          <groupId>org.mockito</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <version>1.7.4</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>powermock-module-junit4-common</artifactId>
-          <groupId>org.powermock</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>hamcrest-core</artifactId>
-          <groupId>org.hamcrest</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
