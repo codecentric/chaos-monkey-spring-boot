@@ -21,19 +21,15 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Thorsten Deelmann
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({LatencyAssault.class, ThreadLocalRandom.class})
+@RunWith(MockitoJUnitRunner.class)
 public class LatencyAssaultTest {
 
     @Mock
@@ -44,22 +40,38 @@ public class LatencyAssaultTest {
 
 
     @Test
-    public void threadSleepHasBeenCalled() throws Exception {
-        mockStatic(Thread.class);
-        mockStatic(ThreadLocalRandom.class);
-        int sleepTimeMillis = 150;
+    public void threadSleepHasBeenCalled() {
         int latencyRangeStart = 100;
         int latencyRangeEnd = 200;
+        TestLatencyAssaultExecutor executor = new TestLatencyAssaultExecutor();
 
         when(assaultProperties.getLatencyRangeStart()).thenReturn(latencyRangeStart);
         when(assaultProperties.getLatencyRangeEnd()).thenReturn(latencyRangeEnd);
         when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
-        when(ThreadLocalRandom.current().nextInt(latencyRangeStart, latencyRangeEnd)).thenReturn(sleepTimeMillis);
 
-        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, null);
+        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, null, executor);
         latencyAssault.attack();
 
-        verifyStatic(Thread.class, times(1));
-        Thread.sleep(sleepTimeMillis);
+        assertTrue(executor.executed);
+        assertTrue(executor.duration > latencyRangeStart);
+        assertTrue(executor.duration < latencyRangeEnd);
+    }
+
+
+    public class TestLatencyAssaultExecutor implements ChaosMonkeyLatencyAssaultExecutor {
+
+        private long duration;
+        private boolean executed;
+
+        TestLatencyAssaultExecutor() {
+            this.duration = 0;
+            this.executed = false;
+        }
+
+        @Override
+        public void execute(long duration) {
+            this.duration = duration;
+            this.executed = true;
+        }
     }
 }

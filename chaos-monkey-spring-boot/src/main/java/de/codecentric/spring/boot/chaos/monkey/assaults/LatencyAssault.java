@@ -33,15 +33,21 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
     private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
 
     private final ChaosMonkeySettings settings;
+    private final ChaosMonkeyLatencyAssaultExecutor assaultExecutor;
 
     private MetricEventPublisher metricEventPublisher;
 
     private AtomicInteger atomicTimeoutGauge;
 
-    public LatencyAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
+    public LatencyAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher, ChaosMonkeyLatencyAssaultExecutor executor) {
         this.settings = settings;
         this.metricEventPublisher = metricEventPublisher;
         this.atomicTimeoutGauge = new AtomicInteger(0);
+        this.assaultExecutor = executor;
+    }
+
+    public LatencyAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher){
+        this(settings, metricEventPublisher, new LatencyAssaultExecutor());
     }
 
     @Override
@@ -61,11 +67,7 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
             metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
         }
 
-        try {
-            Thread.sleep(atomicTimeoutGauge.get());
-        } catch (InterruptedException e) {
-            // do nothing
-        }
+        assaultExecutor.execute(atomicTimeoutGauge.get());
     }
 
     private int determineLatency() {
