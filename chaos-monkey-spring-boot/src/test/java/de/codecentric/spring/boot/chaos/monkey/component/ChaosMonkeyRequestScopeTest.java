@@ -172,7 +172,6 @@ public class ChaosMonkeyRequestScopeTest {
     public void givenAssaultLevelTooHighExpectNoLogging() {
         given(this.assaultProperties.getLevel()).willReturn(1000);
         given(this.assaultProperties.getTroubleRandom()).willReturn(9);
-        given(this.latencyAssault.isActive()).willReturn(true);
 
         chaosMonkeyRequestScope.callChaosMonkey(null);
 
