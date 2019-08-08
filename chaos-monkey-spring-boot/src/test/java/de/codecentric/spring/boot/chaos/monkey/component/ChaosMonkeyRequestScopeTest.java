@@ -143,7 +143,6 @@ public class ChaosMonkeyRequestScopeTest {
     public void isExceptionActiveExpectExceptionAttack() {
         given(exceptionAssault.isActive()).willReturn(true);
         given(latencyAssault.isActive()).willReturn(false);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
 
         chaosMonkeyRequestScope.callChaosMonkey(null);
 
@@ -155,7 +154,6 @@ public class ChaosMonkeyRequestScopeTest {
     public void isLatencyActiveExpectLatencyAttack() {
         given(exceptionAssault.isActive()).willReturn(false);
         given(latencyAssault.isActive()).willReturn(true);
-        given(this.assaultProperties.chooseAssault(2)).willReturn(0);
 
         chaosMonkeyRequestScope.callChaosMonkey(null);
 
@@ -196,7 +194,6 @@ public class ChaosMonkeyRequestScopeTest {
     public void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
         String customService = "CustomService";
 
-        given(exceptionAssault.isActive()).willReturn(true);
         given(this.assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customService));
         given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
 
