@@ -53,8 +53,9 @@ public class LatencyAssaultTest {
         latencyAssault.attack();
 
         assertTrue(executor.executed);
-        assertTrue(executor.duration > latencyRangeStart);
-        assertTrue(executor.duration < latencyRangeEnd);
+        String assertionMessage = "Latency not in range 100-200, actual latency: " +executor.duration;
+        assertTrue(assertionMessage, executor.duration >= latencyRangeStart);
+        assertTrue(assertionMessage,executor.duration <= latencyRangeEnd);
     }
 
 
