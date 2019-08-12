@@ -1,12 +1,15 @@
+# java binaries
 *.class
+*.jar
+*.war
+/build
+bin
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-.idea/
-
 
 *.log
 maven-archiver*
@@ -18,42 +21,22 @@ target/
 # gnupg keyring
 /.gnupg
 
+# ide
 *#
 *.iml
 *.ipr
 *.iws
-*.jar
 *.sw?
 *~
 .#*
+.idea/
+.idea
+.project
+.settings
 .*.md.html
 .DS_Store
+.springBeans
+.flattened-pom.xml
+.vscode/
 .classpath
 .factorypath
-.gradle
-.idea
-.metadata
-.project
-.recommenders
-.settings
-.springBeans
-/build
-/code
-MANIFEST.MF
-_site/
-activemq-data
-bin
-build
-build.log
-dependency-reduced-pom.xml
-dump.rdb
-interpolated*.xml
-lib/
-manifest.yml
-overridedb.*
-target
-transaction-logs
-.flattened-pom.xml
-secrets.yml
-.gradletasknamecache
-.sts4-cache
