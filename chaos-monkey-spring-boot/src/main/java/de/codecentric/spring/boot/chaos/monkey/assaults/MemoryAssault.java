@@ -74,26 +74,25 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     }
 
     private void eatFreeMemory() {
-        int minimumFreeMemoryPercentage = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillIncrementFraction());
-
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         Vector<byte[]> memoryVector = new Vector<>();
-        long stolenHere = 0L;
-        int percentIncreaseValue = calculatePercentIncreaseValue(calculatePercentageRandom());
 
-        while (isActive() && runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
-            // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
+        long stolenMemoryTotal = 0L;
 
-            // increase memory random percent steps
-            memoryVector.add(createDirtyMemorySlice(percentIncreaseValue));
-            stolenHere += percentIncreaseValue;
-            long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
-            metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
+        while (isActive()) {
+            // overview of memory methods in java https://stackoverflow.com/a/18375641
+            long freeMemory = runtime.freeMemory();
+            long usedMemory = runtime.totalMemory() - freeMemory;
 
-            LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
+            if (cannotAllocateMoreMemory()) {
+                LOGGER.debug("Cannot allocate more memory");
+                break;
+            }
 
+            LOGGER.debug("Used memory in bytes: " + usedMemory);
+
+            stolenMemoryTotal = stealMemory(memoryVector, stolenMemoryTotal, getBytesToSteal());
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
-            percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillTargetFraction());
         }
 
         // Hold memory level and cleanUp after, only if experiment is running
@@ -107,8 +106,29 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         // quickly run gc for reuse
         Runtime.getRuntime().gc();
 
-        long stolenAfterComplete = stolenMemory.addAndGet(-stolenHere);
+        long stolenAfterComplete = MemoryAssault.stolenMemory.addAndGet(-stolenMemoryTotal);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);
+    }
+
+    private boolean cannotAllocateMoreMemory() {
+        double limit = runtime.maxMemory() * settings.getAssaultProperties().getMemoryFillTargetFraction();
+        return runtime.totalMemory() >= limit;
+    }
+
+    private int getBytesToSteal(){
+        return (int) (runtime.freeMemory() * settings.getAssaultProperties().getMemoryFillIncrementFraction());
+    }
+
+    private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal,
+                             int bytesToSteal) {
+        memoryVector.add(createDirtyMemorySlice(bytesToSteal));
+
+        stolenMemoryTotal += bytesToSteal;
+        long newStolenTotal = MemoryAssault.stolenMemory.addAndGet(bytesToSteal);
+        metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
+        LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
+
+        return stolenMemoryTotal;
     }
 
     private byte[] createDirtyMemorySlice(int size) {
@@ -118,14 +138,6 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         }
 
         return b;
-    }
-
-    private int calculatePercentIncreaseValue(double percentage) {
-        return (int) Math.min(Integer.MAX_VALUE / 4, runtime.freeMemory() * percentage);
-    }
-
-    private double calculatePercentageRandom() {
-        return ThreadLocalRandom.current().nextDouble(0.05, settings.getAssaultProperties().getMemoryFillTargetFraction());
     }
 
     private void waitUntil(int ms) {
