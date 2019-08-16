@@ -1,19 +1,15 @@
+# java binaries
 *.class
+*.jar
+*.war
+/build
+bin
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-.idea/
-*.iml
-*.iws
 
 *.log
 maven-archiver*
@@ -24,3 +20,23 @@ target/
 
 # gnupg keyring
 /.gnupg
+
+# ide
+*#
+*.iml
+*.ipr
+*.iws
+*.sw?
+*~
+.#*
+.idea/
+.idea
+.project
+.settings
+.*.md.html
+.DS_Store
+.springBeans
+.flattened-pom.xml
+.vscode/
+.classpath
+.factorypath
