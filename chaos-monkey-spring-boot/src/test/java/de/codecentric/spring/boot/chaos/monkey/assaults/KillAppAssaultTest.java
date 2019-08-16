@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
@@ -47,9 +47,8 @@ public class KillAppAssaultTest {
     private MetricEventPublisher metricsMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        when(mockAppender.getName()).thenReturn("MOCK");
         root.addAppender(mockAppender);
 
         captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
