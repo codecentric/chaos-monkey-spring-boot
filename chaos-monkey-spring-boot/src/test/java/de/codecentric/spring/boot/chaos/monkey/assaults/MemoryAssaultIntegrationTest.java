@@ -50,10 +50,10 @@ public class MemoryAssaultIntegrationTest {
     @Autowired
     private ChaosMonkeySettings settings;
 
-    @NotNull boolean isMemoryAssaultActiveOrignal;
+    @NotNull private boolean isMemoryAssaultActiveOrignal;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         isMemoryAssaultActiveOrignal = settings.getAssaultProperties().isMemoryActive();
         baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
     }
@@ -72,7 +72,8 @@ public class MemoryAssaultIntegrationTest {
     @Test
     public void memoryAssault_runAttack() throws Exception {
         Runtime rt = Runtime.getRuntime();
-        long initialMemory = rt.freeMemory();
+        long usedMemory = rt.totalMemory() -  rt.freeMemory();
+        long initialMemory = rt.maxMemory() - usedMemory;
         long start = System.nanoTime();
 
         Thread backgroundThread = new Thread(memoryAssault::attack);
@@ -80,7 +81,7 @@ public class MemoryAssaultIntegrationTest {
 
         try {
             while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
-                long remaining = rt.freeMemory();
+                long remaining = rt.maxMemory() - rt.totalMemory() -  rt.freeMemory();
                 if (remaining <= initialMemory / 2)
                     return;
             }
@@ -97,7 +98,8 @@ public class MemoryAssaultIntegrationTest {
         assaultProperties.setMemoryActive(false);
 
         Runtime rt = Runtime.getRuntime();
-        long initialMemory = rt.freeMemory();
+        long usedMemory = rt.totalMemory() -  rt.freeMemory();
+        long initialMemory = rt.maxMemory() - usedMemory;
         long start = System.nanoTime();
 
 
@@ -111,7 +113,7 @@ public class MemoryAssaultIntegrationTest {
         assertEquals(200, result.getStatusCodeValue());
 
         while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
-            long remaining = rt.freeMemory();
+            long remaining = rt.maxMemory() - rt.totalMemory() -  rt.freeMemory();
             if (remaining <= initialMemory / 4)
                 fail("Exhausted 75% of free memory even after cancellation");
         }
@@ -120,7 +122,8 @@ public class MemoryAssaultIntegrationTest {
     @Test
     public void allowInterruptionOfAssaultDuringHoldPeriod() throws Throwable {
         Runtime rt = Runtime.getRuntime();
-        long initialMemory = rt.freeMemory();
+        long usedMemory = rt.totalMemory() -  rt.freeMemory();
+        long initialMemory = rt.maxMemory() - usedMemory;
         long start = System.nanoTime();
 
         AtomicBoolean stillActive = new AtomicBoolean(true);
@@ -129,7 +132,7 @@ public class MemoryAssaultIntegrationTest {
         when(mockAssaultConfig.getMemoryFillTargetFraction()).thenReturn(0.25);
         when(mockAssaultConfig.getMemoryMillisecondsHoldFilledMemory()).thenReturn(10000);
         when(mockAssaultConfig.getMemoryMillisecondsWaitNextIncrease()).thenReturn(100);
-        when(mockAssaultConfig.isMemoryActive()).thenAnswer(iom -> stillActive.get());
+        when(mockAssaultConfig.isMemoryActive()).thenReturn(true);
 
         try {
             Thread backgroundThread = new Thread(memoryAssault::attack);
@@ -138,7 +141,7 @@ public class MemoryAssaultIntegrationTest {
             outer:
             {
                 while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
-                    long remaining = rt.freeMemory();
+                    long remaining = rt.maxMemory() - rt.totalMemory() -  rt.freeMemory();
                     if (remaining * 4.0 / 3.0 <= initialMemory)
                         break outer;
                 }
@@ -146,7 +149,14 @@ public class MemoryAssaultIntegrationTest {
                 fail("Memory did not reach half exhaustion before timeout");
             }
 
+            AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
+            assaultProperties.setMemoryActive(false);
+
             stillActive.set(false);
+            ResponseEntity<String> result =
+                    restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties,
+                            String.class);
+            assertEquals(200, result.getStatusCodeValue());
 
             backgroundThread.join(7500);
             assertFalse(backgroundThread.isAlive());
