@@ -79,7 +79,7 @@ public class MemoryAssaultIntegrationTest {
     }
 
     @Test
-    public void memoryAssault_runAttack() throws Exception {
+    public void memoryAssault_runAttack() {
         Runtime rt = Runtime.getRuntime();
         long start = System.nanoTime();
 
@@ -128,8 +128,7 @@ public class MemoryAssaultIntegrationTest {
         assaultProperties.setMemoryActive(false);
 
         Runtime rt = Runtime.getRuntime();
-        long usedMemory = rt.totalMemory() - rt.freeMemory();
-        long initialMemory = rt.maxMemory() - usedMemory;
+        long totalMemoryBeforeAttack = rt.totalMemory();
         long start = System.nanoTime();
 
 
@@ -137,16 +136,21 @@ public class MemoryAssaultIntegrationTest {
         backgroundThread.start();
 
         Thread.sleep(100);
+        long totalMemoryDuringAttack = rt.totalMemory();
+        assertTrue(totalMemoryBeforeAttack <= totalMemoryDuringAttack);
+
         ResponseEntity<String> result =
                 restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties,
                         String.class);
         assertEquals(200, result.getStatusCodeValue());
 
         while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
-            long remaining = rt.maxMemory() - rt.totalMemory() - rt.freeMemory();
-            if (remaining <= initialMemory / 4)
-                fail("Exhausted 75% of free memory even after cancellation");
+            // wait for thread to finish gracefully or time out
         }
+        assertFalse("Assault is still running", backgroundThread.isAlive());
+        long totalMemoryAfterAttack = rt.totalMemory();
+        // garbage collection should have ran by now
+        assertTrue(totalMemoryAfterAttack <= totalMemoryDuringAttack);
     }
 
     @Test
