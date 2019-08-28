@@ -127,29 +127,32 @@ public class MemoryAssaultIntegrationTest {
         assaultProperties.setMemoryActive(false);
 
         Runtime rt = Runtime.getRuntime();
-        long totalMemoryBeforeAttack = rt.totalMemory();
+        long usedMemoryBeforeAttack = rt.totalMemory() - rt.freeMemory();
         long start = System.nanoTime();
-
 
         Thread backgroundThread = new Thread(memoryAssault::attack);
         backgroundThread.start();
+        Thread.sleep(1000);
+        long usedMemoryDuringAttack = rt.totalMemory() - rt.freeMemory();
 
-        Thread.sleep(100);
-        long totalMemoryDuringAttack = rt.totalMemory();
-        assertTrue(totalMemoryBeforeAttack <= totalMemoryDuringAttack);
+        assertTrue(usedMemoryBeforeAttack <= usedMemoryDuringAttack);
 
         ResponseEntity<String> result =
                 restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties,
                         String.class);
         assertEquals(200, result.getStatusCodeValue());
 
+
         while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
             // wait for thread to finish gracefully or time out
         }
+
         assertFalse("Assault is still running", backgroundThread.isAlive());
-        long totalMemoryAfterAttack = rt.totalMemory();
+
+        long usedMemoryAfterAttack = rt.totalMemory() - rt.freeMemory();
         // garbage collection should have ran by now
-        assertTrue(totalMemoryAfterAttack <= totalMemoryDuringAttack);
+        assertTrue("Used more memory after attack than before. Used: " + HumanReadableSize.inMegabytes(usedMemoryAfterAttack) + " but should been lower than " + HumanReadableSize.inMegabytes(usedMemoryBeforeAttack),
+                usedMemoryAfterAttack <= usedMemoryBeforeAttack);
     }
 
     @Test
