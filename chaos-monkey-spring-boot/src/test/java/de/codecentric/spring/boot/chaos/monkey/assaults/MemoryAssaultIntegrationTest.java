@@ -98,7 +98,7 @@ public class MemoryAssaultIntegrationTest {
         // if timeout reached
         fail("Memory did not fill up in time. Filled " + HumanReadableSize.inMegabytes(rt.totalMemory())
                 + " MB but should have filled "
-                + HumanReadableSize.inMegabytes(((long) (rt.maxMemory() * memoryFillTargetFraction))) + " MB");
+                + HumanReadableSize.inMegabytes(rt.maxMemory() * memoryFillTargetFraction) + " MB");
     }
 
     /**
@@ -156,14 +156,13 @@ public class MemoryAssaultIntegrationTest {
     @Test
     public void allowInterruptionOfAssaultDuringHoldPeriod() throws Throwable {
         Runtime rt = Runtime.getRuntime();
-        long usedMemory = rt.totalMemory() - rt.freeMemory();
-        long initialMemory = rt.maxMemory() - usedMemory;
         long start = System.nanoTime();
+        double targetFraction = 0.25;
 
         AtomicBoolean stillActive = new AtomicBoolean(true);
         AssaultProperties originalAssaultProperties = settings.getAssaultProperties();
         AssaultProperties mockAssaultConfig = mock(AssaultProperties.class);
-        when(mockAssaultConfig.getMemoryFillTargetFraction()).thenReturn(0.25);
+        when(mockAssaultConfig.getMemoryFillTargetFraction()).thenReturn(targetFraction);
         when(mockAssaultConfig.getMemoryMillisecondsHoldFilledMemory()).thenReturn(10000);
         when(mockAssaultConfig.getMemoryMillisecondsWaitNextIncrease()).thenReturn(100);
         when(mockAssaultConfig.isMemoryActive()).thenReturn(true);
@@ -174,13 +173,17 @@ public class MemoryAssaultIntegrationTest {
 
             outer:
             {
+                double fillTargetMemory = rt.maxMemory() * targetFraction;
                 while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
-                    long remaining = rt.maxMemory() - rt.totalMemory() - rt.freeMemory();
-                    if (remaining * 4.0 / 3.0 <= initialMemory)
+                    long totalMemoryDuringAttack = rt.totalMemory();
+                    if (isInRange(totalMemoryDuringAttack, fillTargetMemory, 0.1)) {
                         break outer;
+                    }
                 }
 
-                fail("Memory did not reach half exhaustion before timeout");
+                fail("Memory did not fill up in time. Filled " + HumanReadableSize.inMegabytes(rt.totalMemory())
+                        + " MB but should have filled "
+                        + HumanReadableSize.inMegabytes(fillTargetMemory) + " MB");
             }
 
             AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
