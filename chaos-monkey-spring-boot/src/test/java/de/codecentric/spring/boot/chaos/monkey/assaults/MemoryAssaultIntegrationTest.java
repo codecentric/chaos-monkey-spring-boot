@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
         "management.endpoints.enabled-by-default=true",
         "chaos.monkey.assaults.memoryActive=true", "chaos.monkey.assaults.memoryFillTargetFraction=0.90",
         "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100",
-        "chaos.monkey.assaults.memoryFillIncrementFraction=1",
+        "chaos.monkey.assaults.memoryFillIncrementFraction=0.9",
         "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=5000",
         "spring.profiles.active=chaos-monkey"})
 public class MemoryAssaultIntegrationTest {
@@ -105,14 +105,12 @@ public class MemoryAssaultIntegrationTest {
      * Checks if `value` is in range of designated `target`, depending on
      * given `deviationFactor`
      *
-     * @param value
-     * @param deviationFactor
-     * @param target
+     * @param value - value to check if its in range
+     * @param deviationFactor - factor in percentage (10% = 0.1)
+     * @param target - value is in range with this
      * @return true if in range
      */
-    private boolean isInRange(double value, double target,
-                              double deviationFactor
-    ) {
+    private boolean isInRange(double value, double target, double deviationFactor) {
         double deviation = target * deviationFactor;
         double lowerBoundary = Math.max(target - deviation, 0);
         double upperBoundary = Math.max(target + deviation,
@@ -122,6 +120,7 @@ public class MemoryAssaultIntegrationTest {
     }
 
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Test
     public void runAndAbortAttack() throws Throwable {
         AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
