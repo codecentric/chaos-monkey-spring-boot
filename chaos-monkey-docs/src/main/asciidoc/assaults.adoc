@@ -1,18 +1,26 @@
 [[assaults]]
 == Assaults ==
+
 Assaults are the heart of Monkey's Chaos and he makes use of them based on your configuration.
 Following assaults are actual provided.
 
 === Latency Assault ===
+
 If Latency Assault is enabled, latency is added to a request. You control the number of requests where this should occur via the level.
 
 === Exception Assault ===
+
 You can determine at runtime whether an exception should occur when the method is used.
 
 Thanks to the great community, the Chaos Monkey for Spring Boot can throw any kind of RuntimeException. You can configure the required exception at runtime via the Actuator Endpoint.
 
 === AppKiller Assault ===
+
 When the configured methods are called in the application, the Chaos Monkey will shut down the application.
 
 === Memory Assault ===
+
 Memory Assaults attack the memory of the Java Virtual Machine.
+
+IMPORTANT: The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!
+IMPORTANT: The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!

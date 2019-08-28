@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import de.codecentric.spring.boot.chaos.monkey.Convert;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -23,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
+import java.lang.management.ManagementFactory;
 import java.util.Vector;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -41,6 +42,8 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     private final AtomicBoolean inAttack = new AtomicBoolean(false);
     private final ChaosMonkeySettings settings;
     private final MetricEventPublisher metricEventPublisher;
+    private final double javaVersion =
+            Double.parseDouble(ManagementFactory.getRuntimeMXBean().getSpecVersion());
 
     public MemoryAssault(Runtime runtime, ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.runtime = runtime;
@@ -64,6 +67,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         if (inAttack.compareAndSet(false, true)) {
             try {
+                LOGGER.debug("Detected java version: " + javaVersion);
                 eatFreeMemory();
             } finally {
                 inAttack.set(false);
@@ -104,7 +108,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         // clean Vector
         memoryVector.clear();
         // quickly run gc for reuse
-        Runtime.getRuntime().gc();
+        runtime.gc();
 
         long stolenAfterComplete = MemoryAssault.stolenMemory.addAndGet(-stolenMemoryTotal);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);
@@ -112,11 +116,17 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
     private boolean cannotAllocateMoreMemory() {
         double limit = runtime.maxMemory() * settings.getAssaultProperties().getMemoryFillTargetFraction();
-        return runtime.totalMemory() >= limit;
+        return runtime.totalMemory() > Math.floor(limit);
     }
 
-    private int getBytesToSteal(){
-        return (int) (runtime.freeMemory() * settings.getAssaultProperties().getMemoryFillIncrementFraction());
+    private int getBytesToSteal() {
+        int amount =
+                (int) (runtime.freeMemory() * settings.getAssaultProperties().getMemoryFillIncrementFraction());
+
+        // TODO: Check again when JAVA 8 can be dropped.
+        // seems filling more than 256 MB per slice is bad on java 8
+        // we keep running into heap errors and other OOMs.
+        return javaVersion > 1.8 ? amount : Math.min(Convert.toBytes(256), amount);
     }
 
     private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal,
@@ -126,14 +136,16 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         stolenMemoryTotal += bytesToSteal;
         long newStolenTotal = MemoryAssault.stolenMemory.addAndGet(bytesToSteal);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
-        LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
+        LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + Convert.toMegabytes(runtime
+                .freeMemory()));
 
         return stolenMemoryTotal;
     }
 
     private byte[] createDirtyMemorySlice(int size) {
         byte[] b = new byte[size];
-        for (int idx = 0; idx < size; idx += 4096) { // 4096 is commonly the size of a mwmory page, forcing a commit
+        for (int idx = 0; idx < size; idx += 4096) { // 4096
+            // is commonly the size of a memory page, forcing a commit
             b[idx] = 19;
         }
 

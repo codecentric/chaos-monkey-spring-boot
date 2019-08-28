@@ -1,11 +1,9 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import de.codecentric.spring.boot.chaos.monkey.HumanReadableSize;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.Convert;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Benjamin Wilms
@@ -32,10 +27,11 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
         "management.endpoints.web.exposure.include=chaosmonkey",
         "management.endpoints.enabled-by-default=true",
-        "chaos.monkey.assaults.memoryActive=true", "chaos.monkey.assaults.memoryFillTargetFraction=0.90",
+        "chaos.monkey.assaults.memoryActive=true",
+        "chaos.monkey.assaults.memoryFillTargetFraction=0.80",
         "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100",
-        "chaos.monkey.assaults.memoryFillIncrementFraction=0.9",
-        "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=5000",
+        "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
+        "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
         "spring.profiles.active=chaos-monkey"})
 public class MemoryAssaultIntegrationTest {
     @LocalServerPort
@@ -54,14 +50,14 @@ public class MemoryAssaultIntegrationTest {
     private ChaosMonkeySettings settings;
 
     @NotNull
-    private boolean isMemoryAssaultActiveOrignal;
+    private boolean isMemoryAssaultActiveOriginal;
 
     @NotNull
     private double memoryFillTargetFraction;
 
     @Before
     public void setUp() {
-        isMemoryAssaultActiveOrignal = settings.getAssaultProperties().isMemoryActive();
+        isMemoryAssaultActiveOriginal = settings.getAssaultProperties().isMemoryActive();
         memoryFillTargetFraction =
                 settings.getAssaultProperties().getMemoryFillTargetFraction();
         baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
@@ -69,7 +65,7 @@ public class MemoryAssaultIntegrationTest {
 
     @After
     public void tearDown() {
-        settings.getAssaultProperties().setMemoryActive(isMemoryAssaultActiveOrignal);
+        settings.getAssaultProperties().setMemoryActive(isMemoryAssaultActiveOriginal);
     }
 
     @Test
@@ -79,7 +75,7 @@ public class MemoryAssaultIntegrationTest {
     }
 
     @Test
-    public void memoryAssault_runAttack() {
+    public void runAttack() {
         Runtime rt = Runtime.getRuntime();
         long start = System.nanoTime();
 
@@ -87,33 +83,37 @@ public class MemoryAssaultIntegrationTest {
         backgroundThread.start();
 
         // make sure we timeout if we never reach the target fill fraction
-        while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
+        while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
             // if we reach target approximately (memory filled up
             // correctly) we can return (test is successful)
             double target = rt.maxMemory() * memoryFillTargetFraction;
-            if (isInRange(rt.totalMemory(), target, 0.1)) {
+            if (isInRange(rt.totalMemory(), target, 0.2)) {
                 return;
             }
         }
+
         // if timeout reached
-        fail("Memory did not fill up in time. Filled " + HumanReadableSize.inMegabytes(rt.totalMemory())
+        fail("Memory did not fill up in time. Filled " + Convert.toMegabytes(rt.totalMemory())
                 + " MB but should have filled "
-                + HumanReadableSize.inMegabytes(rt.maxMemory() * memoryFillTargetFraction) + " MB");
+                + Convert.toMegabytes(rt.maxMemory() * memoryFillTargetFraction) + " MB");
+
+
     }
 
     /**
      * Checks if `value` is in range of designated `target`, depending on
      * given `deviationFactor`
      *
-     * @param value - value to check if its in range
-     * @param deviationFactor - factor in percentage (10% = 0.1)
-     * @param target - value is in range with this
+     * @param value           value to check against target if its in range
+     * @param deviationFactor factor in percentage (10% = 0.1) of how much
+     *                        value is allowed to deviate from target
+     * @param target          value against value is checked against
      * @return true if in range
      */
     private boolean isInRange(double value, double target, double deviationFactor) {
         double deviation = target * deviationFactor;
         double lowerBoundary = Math.max(target - deviation, 0);
-        double upperBoundary = Math.max(target + deviation,
+        double upperBoundary = Math.min(target + deviation,
                 Runtime.getRuntime().maxMemory());
 
         return value >= lowerBoundary && value <= upperBoundary;
@@ -127,12 +127,13 @@ public class MemoryAssaultIntegrationTest {
         assaultProperties.setMemoryActive(false);
 
         Runtime rt = Runtime.getRuntime();
-        long usedMemoryBeforeAttack = rt.totalMemory() - rt.freeMemory();
         long start = System.nanoTime();
 
+        long usedMemoryBeforeAttack = rt.totalMemory() - rt.freeMemory();
         Thread backgroundThread = new Thread(memoryAssault::attack);
+
         backgroundThread.start();
-        Thread.sleep(1000);
+        Thread.sleep(100);
         long usedMemoryDuringAttack = rt.totalMemory() - rt.freeMemory();
 
         assertTrue(usedMemoryBeforeAttack <= usedMemoryDuringAttack);
@@ -143,65 +144,63 @@ public class MemoryAssaultIntegrationTest {
         assertEquals(200, result.getStatusCodeValue());
 
 
-        while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
+        while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
             // wait for thread to finish gracefully or time out
         }
 
         assertFalse("Assault is still running", backgroundThread.isAlive());
 
+        // TODO: Check again when JAVA 8 can be dropped.
+        // Apparently java 8 needs a bit more time to finish up things
+        Thread.sleep(1000);
+
         long usedMemoryAfterAttack = rt.totalMemory() - rt.freeMemory();
+
         // garbage collection should have ran by now
-        assertTrue("Used more memory after attack than before. Used: " + HumanReadableSize.inMegabytes(usedMemoryAfterAttack) + " but should been lower than " + HumanReadableSize.inMegabytes(usedMemoryBeforeAttack),
-                usedMemoryAfterAttack <= usedMemoryBeforeAttack);
+        assertTrue("Memory after attack was " + Convert.toMegabytes(usedMemoryAfterAttack) + " MB but should have been less  amount of memory during attack (" + Convert.toMegabytes(usedMemoryDuringAttack) + " MB).",
+                usedMemoryAfterAttack <= usedMemoryDuringAttack);
     }
 
     @Test
     public void allowInterruptionOfAssaultDuringHoldPeriod() throws Throwable {
+        AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
+        assaultProperties.setMemoryActive(false);
+
         Runtime rt = Runtime.getRuntime();
         long start = System.nanoTime();
-        double targetFraction = 0.25;
 
-        AtomicBoolean stillActive = new AtomicBoolean(true);
-        AssaultProperties originalAssaultProperties = settings.getAssaultProperties();
-        AssaultProperties mockAssaultConfig = mock(AssaultProperties.class);
-        when(mockAssaultConfig.getMemoryFillTargetFraction()).thenReturn(targetFraction);
-        when(mockAssaultConfig.getMemoryMillisecondsHoldFilledMemory()).thenReturn(10000);
-        when(mockAssaultConfig.getMemoryMillisecondsWaitNextIncrease()).thenReturn(100);
-        when(mockAssaultConfig.isMemoryActive()).thenReturn(true);
+        Thread backgroundThread = new Thread(memoryAssault::attack);
+        assertFalse("Assault already active", backgroundThread.isAlive());
 
-        try {
-            Thread backgroundThread = new Thread(memoryAssault::attack);
-            backgroundThread.start();
+        backgroundThread.start();
+        assertTrue("Assault not active", backgroundThread.isAlive());
 
-            outer:
-            {
-                double fillTargetMemory = rt.maxMemory() * targetFraction;
-                while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(20)) {
-                    long totalMemoryDuringAttack = rt.totalMemory();
-                    if (isInRange(totalMemoryDuringAttack, fillTargetMemory, 0.1)) {
-                        break outer;
-                    }
+        outer:
+        {
+            double fillTargetMemory = rt.maxMemory() * memoryFillTargetFraction;
+            while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
+                long totalMemoryDuringAttack = rt.totalMemory();
+                if (isInRange(totalMemoryDuringAttack, fillTargetMemory, 0.2)) {
+                    break outer;
                 }
-
-                fail("Memory did not fill up in time. Filled " + HumanReadableSize.inMegabytes(rt.totalMemory())
-                        + " MB but should have filled "
-                        + HumanReadableSize.inMegabytes(fillTargetMemory) + " MB");
             }
 
-            AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
-            assaultProperties.setMemoryActive(false);
-
-            stillActive.set(false);
-            ResponseEntity<String> result =
-                    restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties,
-                            String.class);
-            assertEquals(200, result.getStatusCodeValue());
-
-            backgroundThread.join(7500);
-            assertFalse(backgroundThread.isAlive());
-        } finally {
-            settings.setAssaultProperties(originalAssaultProperties);
+            fail("Memory did not fill up in time. Filled " + Convert.toMegabytes(rt.totalMemory())
+                    + " MB but should have filled "
+                    + Convert.toMegabytes(fillTargetMemory) + " MB");
         }
+
+        ResponseEntity<String> result =
+                restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties,
+                        String.class);
+        assertEquals("Request was not successful", 200,
+                result.getStatusCodeValue());
+
+        // TODO: Check again when JAVA 8 can be dropped.
+        // Apparently java 8 needs a bit more time to finish up things
+        Thread.sleep(1000);
+
+        assertFalse("Assault is still running", backgroundThread.isAlive());
     }
 
 }
