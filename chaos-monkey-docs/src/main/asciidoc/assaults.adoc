@@ -23,4 +23,3 @@ When the configured methods are called in the application, the Chaos Monkey will
 Memory Assaults attack the memory of the Java Virtual Machine.
 
 IMPORTANT: The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!
-IMPORTANT: The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!
