@@ -16,7 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import de.codecentric.spring.boot.chaos.monkey.Convert;
+import de.codecentric.spring.boot.chaos.monkey.SizeConverter;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
-import java.lang.management.ManagementFactory;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -124,7 +123,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         // TODO: Check again when JAVA 8 can be dropped.
         // seems filling more than 256 MB per slice is bad on java 8
         // we keep running into heap errors and other OOMs.
-        return isJava8OrLower() ? Math.min(Convert.toBytes(256), amount) : amount;
+        return isJava8OrLower() ? Math.min(SizeConverter.toBytes(256), amount) : amount;
     }
 
     private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal,
@@ -134,7 +133,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         stolenMemoryTotal += bytesToSteal;
         long newStolenTotal = MemoryAssault.stolenMemory.addAndGet(bytesToSteal);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
-        LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + Convert.toMegabytes(runtime
+        LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + SizeConverter.toMegabytes(runtime
                 .freeMemory()));
 
         return stolenMemoryTotal;

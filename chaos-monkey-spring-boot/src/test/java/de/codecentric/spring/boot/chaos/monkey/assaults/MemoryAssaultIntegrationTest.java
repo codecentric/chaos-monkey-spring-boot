@@ -1,6 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import de.codecentric.spring.boot.chaos.monkey.Convert;
+import de.codecentric.spring.boot.chaos.monkey.SizeConverter;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -93,9 +93,9 @@ public class MemoryAssaultIntegrationTest {
         }
 
         // if timeout reached
-        fail("Memory did not fill up in time. Filled " + Convert.toMegabytes(rt.totalMemory())
+        fail("Memory did not fill up in time. Filled " + SizeConverter.toMegabytes(rt.totalMemory())
                 + " MB but should have filled "
-                + Convert.toMegabytes(rt.maxMemory() * memoryFillTargetFraction) + " MB");
+                + SizeConverter.toMegabytes(rt.maxMemory() * memoryFillTargetFraction) + " MB");
 
 
     }
@@ -157,7 +157,7 @@ public class MemoryAssaultIntegrationTest {
         long usedMemoryAfterAttack = rt.totalMemory() - rt.freeMemory();
 
         // garbage collection should have ran by now
-        assertTrue("Memory after attack was " + Convert.toMegabytes(usedMemoryAfterAttack) + " MB but should have been less  amount of memory during attack (" + Convert.toMegabytes(usedMemoryDuringAttack) + " MB).",
+        assertTrue("Memory after attack was " + SizeConverter.toMegabytes(usedMemoryAfterAttack) + " MB but should have been less  amount of memory during attack (" + SizeConverter.toMegabytes(usedMemoryDuringAttack) + " MB).",
                 usedMemoryAfterAttack <= usedMemoryDuringAttack);
     }
 
@@ -185,9 +185,9 @@ public class MemoryAssaultIntegrationTest {
                 }
             }
 
-            fail("Memory did not fill up in time. Filled " + Convert.toMegabytes(rt.totalMemory())
+            fail("Memory did not fill up in time. Filled " + SizeConverter.toMegabytes(rt.totalMemory())
                     + " MB but should have filled "
-                    + Convert.toMegabytes(fillTargetMemory) + " MB");
+                    + SizeConverter.toMegabytes(fillTargetMemory) + " MB");
         }
 
         ResponseEntity<String> result =

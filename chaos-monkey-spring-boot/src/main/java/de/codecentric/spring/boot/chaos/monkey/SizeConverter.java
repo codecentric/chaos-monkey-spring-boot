@@ -1,6 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey;
 
-public class Convert {
+public class SizeConverter {
 
     private static final int FACTOR = 1024;
 
