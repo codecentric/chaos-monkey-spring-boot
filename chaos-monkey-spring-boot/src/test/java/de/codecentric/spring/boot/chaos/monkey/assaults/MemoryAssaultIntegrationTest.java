@@ -1,6 +1,5 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import de.codecentric.spring.boot.chaos.monkey.SizeConverter;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
