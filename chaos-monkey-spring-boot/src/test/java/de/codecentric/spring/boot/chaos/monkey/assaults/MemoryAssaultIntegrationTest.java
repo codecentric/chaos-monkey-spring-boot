@@ -113,7 +113,7 @@ public class MemoryAssaultIntegrationTest {
     private boolean isInRange(double value, double target, double deviationFactor) {
         double deviation = target * deviationFactor;
         double lowerBoundary = Math.max(target - deviation, 0);
-        double upperBoundary = Math.min(target + deviation,
+        double upperBoundary = Math.max(target + deviation,
                 Runtime.getRuntime().maxMemory());
 
         return value >= lowerBoundary && value <= upperBoundary;
