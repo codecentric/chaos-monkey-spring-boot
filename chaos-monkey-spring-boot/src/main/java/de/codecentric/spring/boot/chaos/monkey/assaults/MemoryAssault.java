@@ -42,8 +42,6 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     private final AtomicBoolean inAttack = new AtomicBoolean(false);
     private final ChaosMonkeySettings settings;
     private final MetricEventPublisher metricEventPublisher;
-    private final double javaVersion =
-            Double.parseDouble(ManagementFactory.getRuntimeMXBean().getSpecVersion());
 
     public MemoryAssault(Runtime runtime, ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
         this.runtime = runtime;
@@ -67,7 +65,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         if (inAttack.compareAndSet(false, true)) {
             try {
-                LOGGER.debug("Detected java version: " + javaVersion);
+                LOGGER.debug("Detected java version: " + System.getProperty("java.version"));
                 eatFreeMemory();
             } finally {
                 inAttack.set(false);
@@ -126,7 +124,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         // TODO: Check again when JAVA 8 can be dropped.
         // seems filling more than 256 MB per slice is bad on java 8
         // we keep running into heap errors and other OOMs.
-        return javaVersion > 1.8 ? amount : Math.min(Convert.toBytes(256), amount);
+        return isJava8OrLower() ? Math.min(Convert.toBytes(256), amount) : amount;
     }
 
     private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal,
@@ -164,5 +162,16 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
                 break;
             }
         }
+    }
+
+    /**
+     * Java 8 or lower: 1.6.0_23, 1.7.0, 1.7.0_80, 1.8.0_222
+     * Java 9 or later: 9.0.1, 11.0.4, 12, 12.0.1
+     *
+     * @return true if Java <= 8
+     */
+    private static boolean isJava8OrLower() {
+        String version = System.getProperty("java.version");
+        return version.startsWith("1.");
     }
 }
