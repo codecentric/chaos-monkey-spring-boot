@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.Vector;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -64,6 +63,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         if (inAttack.compareAndSet(false, true)) {
             try {
+                LOGGER.debug("Detected java version: " + System.getProperty("java.version"));
                 eatFreeMemory();
             } finally {
                 inAttack.set(false);
@@ -74,26 +74,25 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     }
 
     private void eatFreeMemory() {
-        int minimumFreeMemoryPercentage = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillIncrementFraction());
-
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         Vector<byte[]> memoryVector = new Vector<>();
-        long stolenHere = 0L;
-        int percentIncreaseValue = calculatePercentIncreaseValue(calculatePercentageRandom());
 
-        while (isActive() && runtime.freeMemory() >= minimumFreeMemoryPercentage && runtime.freeMemory() > percentIncreaseValue) {
-            // only if ChaosMonkey in general is enabled, triggers a stop if the attack is canceled during an experiment
+        long stolenMemoryTotal = 0L;
 
-            // increase memory random percent steps
-            memoryVector.add(createDirtyMemorySlice(percentIncreaseValue));
-            stolenHere += percentIncreaseValue;
-            long newStolenTotal = stolenMemory.addAndGet(percentIncreaseValue);
-            metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
+        while (isActive()) {
+            // overview of memory methods in java https://stackoverflow.com/a/18375641
+            long freeMemory = runtime.freeMemory();
+            long usedMemory = runtime.totalMemory() - freeMemory;
 
-            LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + runtime.freeMemory());
+            if (cannotAllocateMoreMemory()) {
+                LOGGER.debug("Cannot allocate more memory");
+                break;
+            }
 
+            LOGGER.debug("Used memory in bytes: " + usedMemory);
+
+            stolenMemoryTotal = stealMemory(memoryVector, stolenMemoryTotal, getBytesToSteal());
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
-            percentIncreaseValue = calculatePercentIncreaseValue(settings.getAssaultProperties().getMemoryFillTargetFraction());
         }
 
         // Hold memory level and cleanUp after, only if experiment is running
@@ -105,27 +104,49 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         // clean Vector
         memoryVector.clear();
         // quickly run gc for reuse
-        Runtime.getRuntime().gc();
+        runtime.gc();
 
-        long stolenAfterComplete = stolenMemory.addAndGet(-stolenHere);
+        long stolenAfterComplete = MemoryAssault.stolenMemory.addAndGet(-stolenMemoryTotal);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, stolenAfterComplete);
+    }
+
+    private boolean cannotAllocateMoreMemory() {
+        double limit = runtime.maxMemory() * settings.getAssaultProperties().getMemoryFillTargetFraction();
+        return runtime.totalMemory() > Math.floor(limit);
+    }
+
+    private int getBytesToSteal() {
+        int amount =
+                (int) (runtime.freeMemory() * settings.getAssaultProperties().getMemoryFillIncrementFraction());
+        boolean isJava8 = System.getProperty("java.version").startsWith("1.8");
+
+        // TODO: Check again when JAVA 8 can be dropped.
+        // seems filling more than 256 MB per slice is bad on java 8
+        // we keep running into heap errors and other OOMs.
+        return isJava8 ? Math.min(SizeConverter.toBytes(256), amount) : amount;
+    }
+
+    private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal,
+                             int bytesToSteal) {
+        memoryVector.add(createDirtyMemorySlice(bytesToSteal));
+
+        stolenMemoryTotal += bytesToSteal;
+        long newStolenTotal = MemoryAssault.stolenMemory.addAndGet(bytesToSteal);
+        metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
+        LOGGER.debug("Chaos Monkey - memory assault increase, free memory: " + SizeConverter.toMegabytes(runtime
+                .freeMemory()));
+
+        return stolenMemoryTotal;
     }
 
     private byte[] createDirtyMemorySlice(int size) {
         byte[] b = new byte[size];
-        for (int idx = 0; idx < size; idx += 4096) { // 4096 is commonly the size of a mwmory page, forcing a commit
+        for (int idx = 0; idx < size; idx += 4096) { // 4096
+            // is commonly the size of a memory page, forcing a commit
             b[idx] = 19;
         }
 
         return b;
-    }
-
-    private int calculatePercentIncreaseValue(double percentage) {
-        return (int) Math.min(Integer.MAX_VALUE / 4, runtime.freeMemory() * percentage);
-    }
-
-    private double calculatePercentageRandom() {
-        return ThreadLocalRandom.current().nextDouble(0.05, settings.getAssaultProperties().getMemoryFillTargetFraction());
     }
 
     private void waitUntil(int ms) {

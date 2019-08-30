@@ -83,12 +83,12 @@ public class AssaultProperties {
 
     @Value("${memoryFillIncrementFraction : 0.15}")
     @DecimalMax("1.0")
-    @DecimalMin("0.0")
+    @DecimalMin("0.01")
     private double memoryFillIncrementFraction;
 
     @Value("${memoryFillTargetFraction : 0.25}")
-    @DecimalMax("0.95")
-    @DecimalMin("0.05")
+    @DecimalMax("1.0")
+    @DecimalMin("0.01")
     private double memoryFillTargetFraction;
 
     @Value("${runtime.scope.assault.cron.expression:OFF}")
