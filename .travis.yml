@@ -5,7 +5,22 @@ jdk:
   - openjdk10
   - openjdk11
   - openjdk12
-sudo: false # faster builds
-
+cache:
+  directories:
+    - $HOME/.m2
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
+stages:
+  - name: deploy
+    if: type = push AND (branch = master OR tag IS present) # deploy on master or tag (not on PR)
+deploy:
+  provider: script
+  script: mvn deploy -DskipTests --settings .travis.settings.xml
+  skip_cleanup: true
+  on:
+    repo: codecentric/chaos-monkey-spring-boot
+    jdk: openjdk11
+env:
+  global:
+  - secure: NZgu90rHzv0onkJST0OWOqFw5ba9JA4t72Frts9arcU7GBCyWhwWqRBlz1nK8ctKnMj+OyU9mkgNcHx0tBQWcV/Zyl5U6zPu9IVFitYeTSGqXkjyNLva3OOTclOFD7W/SubvRVQqDqbA5ebol7e3PcqcCx/bnDXElDq8LHGMWIxVx71VPYPIx+H6aarbUlrjB/Fs3FKRdDHTl+KvSSOo80OPRee3AFBA8mUP+CYzgzYglYnqSHRy3RiY1HwocBKhihgzYZju8PaqVoMYDlFKP+KwFh/eDqLoJIIfKAiq44jr5wT03kAS9V3PgmkZFDityLWn0xWtqILG6h8+ntrHYi97p5LoR43uaQYdxXqQ5FqpUueaa7T1nAA5aYWCz2rKg1LUrkcE/QduY56sXj3BAVq6lbPRXpNzj8ULwmZd6b55/GEmQ1G/cCuAGhfw+uR1raK6hVTiZJC1Ii03JcsvyQrlxuanC1Q11+sDNDonZS62/Qogn+0qaMch86jzkLCOS8sxyPi5+jwRfvKk4kYmw6N9hD6jo/VsYWNc8fdSkzRrGFueL09S08fHzjiHJqQWcGp5HDXkeaKIIs7U822evNOYon8Eti/tPbifAq228G5gxC4uzsng6bJ4dM/xzvhCYX3lotj+kZhGAzuwnaCKUCmCCAF5AWkOCnh/6XUrvoM=
+  - secure: fFxl+0exUR6CR0zoX3oUOg8Hjbzb2xW1SovBiquzZwzZ+LSndPn059E2zyB/N9va+5+0nRN9NLKrQF6pad3enVUotCP5uQ2InYwX+WEWWnygQ6uM3XkkW3fEwgmgCjF4mIVa4BL2wWW6b4wi4vPNPcRlU3FIk5P11I3FwxjLK81yLXLK0kCyszEpfB2tPFfgmDs+koCWP+ul+OlefFeQSACbUEsPH8FGr6fboHcVinU4TSE6iLdiVysDXNCGvUtl9f+84i/FpkizlG7Oq3RA8gSHWtltLqHVAMLyB1MfTEPADesglLT/vtU1EtbwzJW+DtqzGYu39Uz0VOLfOMTFjTGSVG4FEM4VuahTqnSD2Wg0O9sv9xvYnXxzy3ChW/cNT5Sr61BHGwWBkGYDfXmjUfXKIpTNun/490mR6tIJsnYUyjiqXkzIGXbHQITONfZT4xb1KNJhHH0s5lRf5upDecEZVz8wp/NCa23Rrle2e9y1ZH5njFqj87OixYX74dSM2XRRoN8IeRV640cTGiUdHTHooj+okjIF0ZvagYA6Ed2+XYygXHH7GPUZaNkkF8DVvOS1LZheguj4yeVgPN8gobc1lrVkkec7mN0+77KTINxEZdHvcnBqg1Qi7m0zTKhfyQrZNrPaMoCb1S1SeGShurYWXgR95eEl3vZ/a5e/xrA=
