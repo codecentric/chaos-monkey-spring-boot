@@ -104,6 +104,6 @@ Except for the Watcher, you can also influence the behavior of the Chaos Monkey 
 
 |chaos.monkey.assaults.runtime.scope.assault.cron.expression
 |Cron expression like `*/1 * * * * ?` can be set to enable chaos monkey runtime assaults on a schedule
-|Any valid cron expression
+|Any valid cron expression (or OFF)
 |OFF
 |===
