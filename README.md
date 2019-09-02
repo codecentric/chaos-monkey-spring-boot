@@ -167,11 +167,11 @@ You can customize the behave by configuration, please take a look at the documen
 
 Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. The first number of the Chaos Monkey release will show you which is the right one for your Spring Boot version.
 
-|                                   | Chaos Monkey 1.0.1 | Chaos Monkey 1.5.0 | Chaos Monkey 2.0.0 | Chaos Monkey 2.0.1 | Chaos Monkey 2.0.2 |
-| --------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
-| <b>Spring Boot 1.5.0 - 1.5.19</b> |         no         |     <b>yes</b>     |         no         |         no         |         no         |
-| <b>Spring Boot 2.0.0 - 2.0.8</b>  |     <b>yes</b>     |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |
-| <b>Spring Boot 2.1.0 - 2.1.2</b>  |         no         |         no         |         no         |         no         |     <b>yes</b>     |
+|                                   | Chaos Monkey 1.0.1 | Chaos Monkey 1.5.0 | Chaos Monkey 2.0.0 | Chaos Monkey 2.0.1 | Chaos Monkey 2.0.2 | Chaos Monkey 2.1.0-SNAPSHOT |
+| --------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :-------------------------: |
+| <b>Spring Boot 1.5.0 - 1.5.19</b> |         no         |     <b>yes</b>     |         no         |         no         |         no         |             no              |
+| <b>Spring Boot 2.0.0 - 2.0.8</b>  |     <b>yes</b>     |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |         <b>yes</b>          |
+| <b>Spring Boot 2.1.0 - 2.1.2</b>  |         no         |         no         |         no         |         no         |     <b>yes</b>     |         <b>yes</b>          |
 
 <a name="docs"></a>
 ## Documentation
