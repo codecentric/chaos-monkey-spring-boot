@@ -20,6 +20,11 @@ Please help us to speed up problem diagnosis by providing as much information as
 New Pull Requests are highly welcome. However, before you provide us with a PR, please consider opening an issue using our GitHub issue tracker. This gives us the possibility to discuss the changes in details. If you're interested in an improvement or a new feature, try to provide us with your use case. 
 
 
+== Reporting Security Vulnerabilities
+If you found a security vulnerability please do not disclosure it publicly until we had a chance to fix it.
+
+Please do not use our issue tracker for security vulnerabilities you found. Instead use security@codecentric.de to disclose them responsibly. You can use our public PGP (Fingerprint: https://keyserver.ubuntu.com/pks/lookup?search=0x8921EEE5722496E4&fingerprint=on&op=index[`0x8921EEE5722496E4`]) key to encrypt your communication if needed.
+
 == Project Setup
 Fork and clone the repository 
 
