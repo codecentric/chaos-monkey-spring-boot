@@ -1,0 +1,50 @@
+= Contributing to Chaos Monkey for Spring Boot
+Thank you for willing to contribute! Every bit of help is highly welcome. 
+
+This document should help you get started if you want to contribute or hack on the code.
+
+**This is your first contribution to an open source project?** You can learn how to fork a project and how to create your first Pull Request from the excellent https://github.com/firstcontributions/first-contributions/blob/master/README.md[First Contributions] initiative.
+
+If you are unsure where to start, please head over to our https://github.com/codecentric/chaos-monkey-spring-boot/issues?q=is%3Aissue+is%3Aopen+label%3Agood-first-issue[Issue Tracker] where we have marked good beginner friendly issues. 
+
+
+== Using GitHub Issues
+We are using GitHub issues to track bugs, improvements and new features. If you have a general question on how to use Chaos Monkey for Spring Boot, please ask on Stack Overflow.
+
+
+=== Reporting Bugs
+Please help us to speed up problem diagnosis by providing as much information as possible. A small sample project that reproduces the error would be optimal for us. 
+
+
+=== Requests for Improvements & New Features
+New Pull Requests are highly welcome. However, before you provide us with a PR, please consider opening an issue using our GitHub issue tracker. This gives us the possibility to discuss the changes in details. If you're interested in an improvement or a new feature, try to provide us with your use case. 
+
+
+== Project Setup
+Fork and clone the repository 
+
+[NOTE]
+====
+To keep your fork in sync with the main project, link your `master` branch to the main repositories `master` branch. Do this by:
+
+[source, bash]
+----
+git remote add upstream https://github.com/codecentric/chaos-monkey-spring-boot.git
+----
+
+To fetch upstream changes switch to your master branch with `git checkout master` and then run `git pull upstream master`.
+====
+
+Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin. In order to work with the code you need to have https://maven.apache.org/[Maven] installed. To manage your Java version and to install Maven we recommend you to use https://sdkman.io/[sdkman]. In any case, make sure you have Java > 8 and maven installed.
+
+
+== Working With The Code
+Considering these recommendations will help a great deal in getting your pull request merged. 
+
+* Add the ASF license header comment to all new `.java` files (you can copy from existing files in the project). 
+* Add yourself as an `@author` to the `.java` files you modify.
+* Document your changes. This includes in code documentation but also user documentation.
+* Test your changes. 
+* It would be great to follow Chris Beam's recommendations on https://chris.beams.io/posts/git-commit/[How to Write a Git Commit Message]. 
+* Please update the https://github.com/codecentric/chaos-monkey-spring-boot/blob/master/chaos-monkey-docs/src/main/asciidoc/changes.adoc[Changes section].
+* Please make sure to run the tests before you commit your changes. Using Maven you can run `mvn test` which will run all tests when you run the command in the root folder of the repository.
