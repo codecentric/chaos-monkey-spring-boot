@@ -20,6 +20,11 @@ Please help us to speed up problem diagnosis by providing as much information as
 New Pull Requests are highly welcome. However, before you provide us with a PR, please consider opening an issue using our GitHub issue tracker. This gives us the possibility to discuss the changes in details. If you're interested in an improvement or a new feature, try to provide us with your use case. 
 
 
+== Reporting Security Vulnerabilities
+If you found a security vulnerability please do not disclosure it publicly until we had a chance to fix it.
+
+Please do not use our issue tracker for security vulnerabilities you found. Instead use security@codecentric.de to disclose them responsibly. You can use our public PGP (Fingerprint: https://keyserver.ubuntu.com/pks/lookup?search=0x8921EEE5722496E4&fingerprint=on&op=index[`0x8921EEE5722496E4`]) key to encrypt your communication if needed.
+
 == Project Setup
 Fork and clone the repository 
 
@@ -35,11 +40,11 @@ git remote add upstream https://github.com/codecentric/chaos-monkey-spring-boot.
 To fetch upstream changes switch to your master branch with `git checkout master` and then run `git pull upstream master`.
 ====
 
-Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin. In order to work with the code you need to have https://maven.apache.org/[Maven] installed. To manage your Java version and to install Maven we recommend you to use https://sdkman.io/[sdkman]. In any case, make sure you have Java > 8 and maven installed.
+Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin. In order to work with the code you need to have https://maven.apache.org/[Maven] installed. On Unix based systems we recommend using https://sdkman.io/[sdkman]. It helps you to manage your Java and Maven installations. On Windows you can fallback to installing Java SDK 8 or higher and the current Maven version directly.
 
 
 == Working With The Code
-Considering these recommendations will help a great deal in getting your pull request merged. 
+Considering these recommendations will help us in getting your pull request merged. 
 
 * Add the ASF license header comment to all new `.java` files (you can copy from existing files in the project). 
 * Add yourself as an `@author` to the `.java` files you modify.

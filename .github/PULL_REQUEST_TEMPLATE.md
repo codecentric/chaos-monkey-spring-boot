@@ -24,13 +24,15 @@ merge of your pull request!
 
 **Checklist**:
 
-<!-- add "N/A" to the end of each line that's irrelevant to your changes -->
-
-<!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
+<!-- add "N/A" to the end of each line that's irrelevant to your changes
+to check an item, place an "x" in the box like so: "- [x] Documentation" -->
 
 - [ ] Documentation added
+      <!-- Docs can be found in the folder `chaos-monkey-docs/src/main/asciidoc/` -->
 - [ ] Changelog updated
+      <!-- Changes can be found in the file `chaos-monkey-docs/src/main/asciidoc/changes.adoc` -->
 - [ ] Tests added
+      <!-- Thank you so much for that! -->
 - [ ] Ready to be merged
       <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
 
