@@ -2,32 +2,12 @@
 == Changes in {project-version}
 
 === Bug Fixes
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/60[#60] Fix the name of `AppKillerAssault`.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/77[#77] Fix `runChaos.sh` to work with current package version.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/80[#80] Fix an issue where `LatencyAssault` would crash with a runtime error.
 
 === Improvements
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/63[#63] Both `restController` and `rest-controller` can be used in configurations.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/65[#65] Arbitrary exceptions can now be injected.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/84[#84] Make watchers dynamically configurable at runtime. Please refer to <<watcher.adoc#_get_watchers>> for more information.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/91[#91] Introduce bug template for new issues.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/100[#100] Add docs for chaos monkey cron scheduler.
 
 === New Features
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/67[#67] Chaos on a schedule. Chaos Monkey for Spring boot can be triggered via Cron. Please refer to <<assaults.adoc#_chaos_monkey_assault_scheduler>> for more information.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/87[#87] Add support for Java 9, 10, 11 (LTS), 12
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/96[#96] Introduce new `MemoryAssault`. Please refer to <<assaults.adoc#_memory_assault>> for more information.
 
 === Contributors
 This release was only possible because of these great humans:
-
-- https://github.com/michalkarolik[michalkarolik]
-- https://github.com/Norwae[Norwae]
-- https://github.com/denniseffing[denniseffing]
-- https://github.com/sequarius[sequarius]
-- https://github.com/kevin-peters[kevin-peters]
-- https://github.com/fletchgqc[fletchgqc]
-- https://github.com/maiksensi[maiksensi]
-- https://github.com/WtfJoke[WtfJoke]
 
 Thank you for your support!
