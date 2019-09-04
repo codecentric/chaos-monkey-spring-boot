@@ -178,6 +178,7 @@ Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. T
 ## Documentation
 A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
 
+<a name="releases"></a>
 ### Chaos Monkey Releases
 - [Version 1.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/1.0.1/)
 - [Version 1.5.0](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0)
