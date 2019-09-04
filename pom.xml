@@ -49,6 +49,10 @@
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
+        <git-commit-id-plugin.version>3.0.1</git-commit-id-plugin.version>
+        <site-maven-plugin.version>0.12</site-maven-plugin.version>
+        <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
 
         <!-- GitHub Server settings.xml -->
         <github.global.server>github</github.global.server>
