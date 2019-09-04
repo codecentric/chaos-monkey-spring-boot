@@ -19,6 +19,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
+                <version>${git-commit-id-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -36,6 +37,7 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>output-html</id>
@@ -80,7 +82,7 @@
                     <plugin>
                         <groupId>com.github.github</groupId>
                         <artifactId>site-maven-plugin</artifactId>
-                        <version>0.12</version>
+                        <version>${site-maven-plugin.version}</version>
                         <configuration>
                             <message>Creating Reference Guide for ${project.version}</message>
                             <path>${project.version}</path>
@@ -100,7 +102,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>2.7</version>
+                        <version>${maven-project-info-reports-plugin.version}</version>
                     </plugin>
                 </plugins>
             </build>
