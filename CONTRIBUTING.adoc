@@ -9,7 +9,7 @@ If you are unsure where to start, please head over to our https://github.com/cod
 
 
 == Using GitHub Issues
-We are using GitHub issues to track bugs, improvements and new features. If you have a general question on how to use Chaos Monkey for Spring Boot, please ask on Stack Overflow.
+We are using GitHub issues to track bugs, improvements and new features. If you have a general question on how to use Chaos Monkey for Spring Boot, please ask on Stack Overflow using the tag https://stackoverflow.com/questions/tagged/spring-boot-chaos-monkey[`#spring-boot-chaos-monkey`].
 
 
 === Reporting Bugs
@@ -40,7 +40,7 @@ git remote add upstream https://github.com/codecentric/chaos-monkey-spring-boot.
 To fetch upstream changes switch to your master branch with `git checkout master` and then run `git pull upstream master`.
 ====
 
-Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin. In order to work with the code you need to have https://maven.apache.org/[Maven] installed. On Unix based systems we recommend using https://sdkman.io/[sdkman]. It helps you to manage your Java and Maven installations. On Windows you can fallback to installing Java SDK 8 or higher and the current Maven version directly.
+Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin. In order to work with the code you need to have https://maven.apache.org/[Maven] installed. On Unix based systems we recommend using https://sdkman.io/[sdkman]. It helps you to manage your Java and Maven installations. On Windows you can fallback to installing Java Development Kit 8 or higher and the current Maven version directly.
 
 
 == Working With The Code
