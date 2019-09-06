@@ -128,7 +128,7 @@ Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>chaos-monkey-spring-boot</artifactId>
-    <version>2.0.1</version>
+    <version>X.X.X</version>
 </dependency>
 {% endhighlight %}
 2. Start your app enabling the service using the property below:
