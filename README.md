@@ -174,6 +174,8 @@ Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. T
 | <b>Spring Boot 2.0.0 - 2.0.8</b>  |     <b>yes</b>     |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |         <b>yes</b>          |        <b>yes</b>          |
 | <b>Spring Boot 2.1.0 - 2.1.2</b>  |         no         |         no         |         no         |         no         |     <b>yes</b>     |         <b>yes</b>          |        <b>yes</b>          |
 
+For Chaos Monkey to work, you need to have the spring-web dependency in your app. You usually get this via `spring-boot-starter-web` or `spring-boot-starter-webflux`.
+
 <a name="docs"></a>
 ## Documentation
 A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
