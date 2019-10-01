@@ -45,9 +45,14 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect {
     public void classAnnotatedWithComponentPointcut() {
     }
 
-    @Around("classAnnotatedWithComponentPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
-    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+    @Pointcut("within(org.springframework.cloud.context..*)")
+    public void classInSpringCloudContextPackage() {
+    }
 
+
+    @Around("classAnnotatedWithComponentPointcut() && !classInSpringCloudContextPackage() " +
+            "&& allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
         if (watcherProperties.isComponent()) {
             log.debug("Watching public method on component class: {}", pjp.getSignature());
 

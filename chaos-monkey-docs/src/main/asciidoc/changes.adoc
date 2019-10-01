@@ -2,6 +2,7 @@
 == Changes in {project-version}
 
 === Bug Fixes
+https://github.com/codecentric/chaos-monkey-spring-boot/pull/120[#120] Fix `BeanCurrentlyInCreationException` at startup when having Spring Cloud dependencies.
 
 === Improvements
 
