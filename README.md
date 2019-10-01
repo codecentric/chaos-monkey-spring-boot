@@ -77,7 +77,7 @@ Spring Boot Chaos Monkey is a small library (30kb) and you have the following op
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>chaos-monkey-spring-boot</artifactId>
-    <version>X.X.X</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
@@ -168,7 +168,7 @@ You can customize the behave by configuration, please take a look at the documen
 
 Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. The first number of the Chaos Monkey release will show you which is the right one for your Spring Boot version.
 
-|                                   | Chaos Monkey 1.0.1 | Chaos Monkey 1.5.0 | Chaos Monkey 2.0.0 | Chaos Monkey 2.0.1 | Chaos Monkey 2.0.2 | Chaos Monkey 2.1.0          | Chaos Monkey 2.2.0-SNAPSHOT|
+|                                   | Chaos Monkey 1.0.1 | Chaos Monkey 1.5.0 | Chaos Monkey 2.0.0 | Chaos Monkey 2.0.1 | Chaos Monkey 2.0.2 | Chaos Monkey 2.1.1          | Chaos Monkey 2.2.0-SNAPSHOT|
 | --------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :-------------------------: |:-------------------------: |
 | <b>Spring Boot 1.5.0 - 1.5.19</b> |         no         |     <b>yes</b>     |         no         |         no         |         no         |             no              |            no              |
 | <b>Spring Boot 2.0.0 - 2.0.8</b>  |     <b>yes</b>     |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |         <b>yes</b>          |        <b>yes</b>          |
@@ -188,6 +188,7 @@ A detailed documentation about the configuration of the Chaos Monkey for Spring 
 - [Version 2.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.1)
 - [Version 2.0.2](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2)
 - [Version 2.1.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.0)
+- [Version 2.1.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.1)
 
 
 ### Chaos Monkey for Spring Boot SNAPSHOT
