@@ -39,21 +39,21 @@
         <project.reporting.outputEncoding>UTF-8
         </project.reporting.outputEncoding>
         <!-- dependency versions -->
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
-        <spring.version>5.1.8.RELEASE</spring.version>
-        <aspectj-weaver.version>1.8.13</aspectj-weaver.version>
-        <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
-        <lombok.version>1.18.8</lombok.version>
+        <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
+        <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
+        <spring.version>5.1.9.RELEASE</spring.version>
+        <aspectj-weaver.version>1.9.4</aspectj-weaver.version>
+        <jcl-over-slf4j.version>1.7.28</jcl-over-slf4j.version>
+        <lombok.version>1.18.10</lombok.version>
         <!-- plugin versions-->
-        <flatten-maven-plugin.version>1.0.1</flatten-maven-plugin.version>
+        <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
-        <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
         <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
         <git-commit-id-plugin.version>3.0.1</git-commit-id-plugin.version>
         <site-maven-plugin.version>0.12</site-maven-plugin.version>
-        <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
+        <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
 
         <!-- GitHub Server settings.xml -->
@@ -61,16 +61,13 @@
 
         <nexus-staging-maven-plugin.version>1.6.8
         </nexus-staging-maven-plugin.version>
-        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <junit.version>4.12</junit.version>
-        <assertj-core.version>2.6.0</assertj-core.version>
-        <mockito.version>3.0.0</mockito.version>
-        <asciidoctor-maven-plugin.version>1.5.6
-        </asciidoctor-maven-plugin.version>
+        <assertj-core.version>3.13.2</assertj-core.version>
+        <mockito.version>3.1.0</mockito.version>
 
-
-        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
     </properties>
     <modules>
         <module>chaos-monkey-dependencies</module>
