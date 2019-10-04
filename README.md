@@ -26,7 +26,7 @@ alt="Chaos Monkey for Spring Boot" width="260" height="155" border="10" /></a><b
 **Chaos Monkey for Spring Boot - new features**
 
 ## Contributions 
-Chaos Monkey is open source and welcomes contributions from all. The <a href="https://github.com/codecentric/chaos-monkey-spring-boot/blob/master/CONTRIBUTING.adoc" target="_blank">guideline</a> is where you should begin in order to best understand how to contribute to this project. 
+Chaos Monkey is open source and welcomes contributions from everyone. The <a href="https://github.com/codecentric/chaos-monkey-spring-boot/blob/master/CONTRIBUTING.adoc" target="_blank">contribution-guideline</a> is where you should begin in order to best understand how to contribute to this project. 
 
 
 ## Documentation
