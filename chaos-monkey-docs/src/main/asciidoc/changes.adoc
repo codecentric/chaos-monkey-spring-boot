@@ -4,10 +4,12 @@
 === Bug Fixes
 
 === Improvements
-
+	https://github.com/codecentric/chaos-monkey-spring-boot/pull/130 Improve contributions clarity 
 === New Features
 
 === Contributors
 This release was only possible because of these great humans:
+
+https://github.com/Chrispy404
 
 Thank you for your support!
