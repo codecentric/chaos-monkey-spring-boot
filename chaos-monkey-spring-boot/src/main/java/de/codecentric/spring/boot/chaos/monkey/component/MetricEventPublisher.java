@@ -25,7 +25,8 @@ public class MetricEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishMetricEvent(MetricType metricType, AtomicInteger atomicTimeoutGauge) {
-        MetricEvent metricEvent = new MetricEvent(this, metricType, atomicTimeoutGauge);
+        //MetricEvent constructor has been deprecated. So falling back to the internally used Constructor
+        MetricEvent metricEvent = new MetricEvent(this, metricType, atomicTimeoutGauge!=null? atomicTimeoutGauge.longValue() : -1,null);
         publisher.publishEvent(metricEvent);
     }
 

@@ -1,6 +1,6 @@
 [[changes]]
 == Changes in {project-version}
-
+https://github.com/codecentric/chaos-monkey-spring-boot/pull/131 Deprecated constructor usage removal
 === Bug Fixes
 
 === Improvements
@@ -9,5 +9,7 @@
 
 === Contributors
 This release was only possible because of these great humans:
+
+https://github.com/Abijithkrishna
 
 Thank you for your support!
