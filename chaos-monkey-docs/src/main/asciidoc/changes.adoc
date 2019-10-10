@@ -4,15 +4,21 @@
 === Bug Fixes
 
 === Improvements
+// - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/127[#127] Update dependencies to latest stable versions.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/130[#130] Improvement 'Improve contributions clarity in README'
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/136[#136] Add example entry in changelog
 
 === New Features
 
 === Contributors
 This release was only possible because of these great humans:
 
+// - https://github.com/octocat[@octocat]
+
 - https://github.com/ultcyber[@ultcyber]
 - https://github.com/Chrispy404[@Chrispy404]
+- https://github.com/Olfarmer[@Olfarmer]
 
 Thank you for your support!
