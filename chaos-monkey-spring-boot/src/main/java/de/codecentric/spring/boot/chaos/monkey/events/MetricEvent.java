@@ -30,11 +30,6 @@ public class MetricEvent extends ApplicationEvent {
         this(source, metricType, -1, null);
     }
 
-    @Deprecated
-    public MetricEvent(Object source, MetricType metricType, AtomicInteger gaugeValue) {
-        this(source, metricType, gaugeValue == null ? -1 : gaugeValue.longValue(), null);
-    }
-
     public MetricEvent(Object source, MetricType metricType, long metricValue, String methodSignature, String... tags) {
         super(source);
         this.metricType = metricType;
