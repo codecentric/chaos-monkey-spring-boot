@@ -25,12 +25,12 @@ Except for the Watcher, you can also influence the behavior of the Chaos Monkey 
 |chaos.monkey.assaults.latencyRangeStart
 |Minimum latency in ms added to the request
 |Integer.MIN_VALUE, Integer.MAX_VALUE
-|3000
+|1000
 
 |chaos.monkey.assaults.latencyRangeEnd
 |Maximum latency in ms added to the request
 |Integer.MIN_VALUE, Integer.MAX_VALUE
-|15000
+|3000
 
 |chaos.monkey.assaults.latencyActive
 |Latency assault active
