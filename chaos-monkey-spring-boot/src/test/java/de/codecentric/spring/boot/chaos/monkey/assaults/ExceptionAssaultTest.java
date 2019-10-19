@@ -20,96 +20,78 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.Collections;
 
-import static org.hamcrest.core.Is.isA;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Thorsten Deelmann
  */
-public class ExceptionAssaultTest {
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+class ExceptionAssaultTest {
 
     @Mock
-    private MetricEventPublisher metricsMock;
+    MetricEventPublisher metricsMock;
 
     @Test
-    public void throwsRuntimeExceptionWithDefaultAssaultSettings() {
-        exception.expect(RuntimeException.class);
-
+    void throwsRuntimeExceptionWithDefaultAssaultSettings() {
         ExceptionAssault exceptionAssault = new ExceptionAssault(getChaosMonkeySettings(), metricsMock);
-        exceptionAssault.attack();
+        assertThrows(RuntimeException.class, exceptionAssault::attack);
     }
 
     @Test
-    public void throwsRuntimeExceptionWithNullTypeAndNullArgument() {
-        exception.expect(RuntimeException.class);
-
+    void throwsRuntimeExceptionWithNullTypeAndNullArgument() {
         ChaosMonkeySettings settings = getChaosMonkeySettings();
         settings.getAssaultProperties().setException(null);
         ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
-        exceptionAssault.attack();
+        assertThrows(RuntimeException.class, exceptionAssault::attack);
     }
 
     @Test
-    public void throwsDefaultRuntimeExceptionWithNullTypeAndNonNullArgument() {
+    void throwsDefaultRuntimeExceptionWithNullTypeAndNonNullArgument() {
         String exceptionArgumentClassName = "java.lang.String";
         String exceptionArgumentValue = "Chaos Monkey - RuntimeException";
-        exception.expect(RuntimeException.class);
-        exception.expectMessage(exceptionArgumentValue);
 
         ChaosMonkeySettings settings = getChaosMonkeySettings();
         settings.getAssaultProperties().setException(getAssaultException(null, exceptionArgumentClassName, exceptionArgumentValue));
 
         ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
-        exceptionAssault.attack();
+        assertThrows(RuntimeException.class, exceptionAssault::attack, exceptionArgumentValue);
     }
 
     @Test
-    public void throwsRuntimeExceptionWithNonNullTypeAndNullArgument() {
-        exception.expect(isA(ArithmeticException.class));
-
+    void throwsRuntimeExceptionWithNonNullTypeAndNullArgument() {
         ChaosMonkeySettings settings = getChaosMonkeySettings();
         settings.getAssaultProperties().setException(getAssaultException("java.lang.ArithmeticException", null, null));
 
         ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
-        exceptionAssault.attack();
+        assertThrows(ArithmeticException.class, exceptionAssault::attack);
+
     }
 
     @Test
-    public void throwsRuntimeExceptionWithNonnullTypeAndNonNullArgument() {
+    void throwsRuntimeExceptionWithNonnullTypeAndNonNullArgument() {
         String exceptionArgumentClassName = "java.lang.String";
         String exceptionArgumentValue = "ArithmeticException Test";
-
-        exception.expect(isA(ArithmeticException.class));
-        exception.expectMessage(exceptionArgumentValue);
 
         ChaosMonkeySettings settings = getChaosMonkeySettings();
         settings.getAssaultProperties().setException(
                 getAssaultException("java.lang.ArithmeticException", exceptionArgumentClassName, exceptionArgumentValue));
 
         ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
-        exceptionAssault.attack();
+        assertThrows(ArithmeticException.class, exceptionAssault::attack, exceptionArgumentValue);
     }
 
     @Test
-    public void throwsGeneralException() {
-        exception.expect(isA(IOException.class));
-
+    void throwsGeneralException() {
         ChaosMonkeySettings settings = getChaosMonkeySettings();
         settings.getAssaultProperties().setException(getAssaultException("java.io.IOException", null, null));
 
         ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
-        exceptionAssault.attack();
+        assertThrows(IOException.class, exceptionAssault::attack);
     }
 
     private ChaosMonkeySettings getChaosMonkeySettings() {

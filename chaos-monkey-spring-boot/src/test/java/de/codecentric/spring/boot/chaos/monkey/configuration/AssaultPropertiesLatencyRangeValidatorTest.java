@@ -1,26 +1,26 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class AssaultPropertiesLatencyRangeValidatorTest {
+class AssaultPropertiesLatencyRangeValidatorTest {
 
     final AssaultPropertiesLatencyRangeValidator assaultPropertiesValidator = new AssaultPropertiesLatencyRangeValidator();
 
     @Test
-    public void rangeStartSmallerThanRangeEndIsValid() {
+    void rangeStartSmallerThanRangeEndIsValid() {
         validateRange(1000, 1001, true);
     }
 
     @Test
-    public void rangeStartAsBigAsRangeEndIsValid() {
+    void rangeStartAsBigAsRangeEndIsValid() {
         validateRange(1000, 1000, true);
     }
 
     @Test
-    public void rangeStartBiggerThanRangeEndIsNotValid() {
+    void rangeStartBiggerThanRangeEndIsNotValid() {
         validateRange(1001, 1000, false);
     }
 

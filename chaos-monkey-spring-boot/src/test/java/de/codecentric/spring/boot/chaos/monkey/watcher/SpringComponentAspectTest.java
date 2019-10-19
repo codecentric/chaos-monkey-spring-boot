@@ -21,10 +21,10 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
 import static org.mockito.Mockito.*;
@@ -32,8 +32,8 @@ import static org.mockito.Mockito.*;
 /**
  * @author Benjamin Wilms
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SpringComponentAspectTest {
+@ExtendWith(MockitoExtension.class)
+class SpringComponentAspectTest {
 
     private DemoComponent target = new DemoComponent();
     private WatcherProperties watcherProperties = new WatcherProperties();
@@ -50,7 +50,7 @@ public class SpringComponentAspectTest {
 
 
     @Test
-    public void chaosMonkeyIsCalledWhenEnabledInConfig() {
+    void chaosMonkeyIsCalledWhenEnabledInConfig() {
         watcherProperties.setComponent(true);
 
         addRelevantAspect();
@@ -61,7 +61,7 @@ public class SpringComponentAspectTest {
     }
 
     @Test
-    public void chaosMonkeyIsNotCalledWhenDisabledInConfig() {
+    void chaosMonkeyIsNotCalledWhenDisabledInConfig() {
         watcherProperties.setComponent(false);
 
         addRelevantAspect();
@@ -72,7 +72,7 @@ public class SpringComponentAspectTest {
     }
 
     @Test
-    public void chaosMonkeyIsNotCalledByAspectsWithUnrelatedPointcuts() {
+    void chaosMonkeyIsNotCalledByAspectsWithUnrelatedPointcuts() {
         watcherProperties.setService(true);
         watcherProperties.setComponent(true);
         watcherProperties.setController(true);

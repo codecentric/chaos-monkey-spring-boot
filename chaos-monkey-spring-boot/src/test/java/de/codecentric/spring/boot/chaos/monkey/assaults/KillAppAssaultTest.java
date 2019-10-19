@@ -20,23 +20,24 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Thorsten Deelmann
  */
-@RunWith(MockitoJUnitRunner.class)
-public class KillAppAssaultTest {
+@ExtendWith(MockitoExtension.class)
+class KillAppAssaultTest {
 
     @Mock
     private Appender mockAppender;
@@ -46,8 +47,8 @@ public class KillAppAssaultTest {
     @Mock
     private MetricEventPublisher metricsMock;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
         root.addAppender(mockAppender);
 
@@ -55,7 +56,7 @@ public class KillAppAssaultTest {
     }
 
     @Test
-    public void killsSpringBootApplication() {
+    void killsSpringBootApplication() {
         KillAppAssault killAppAssault = new KillAppAssault(null, metricsMock);
         killAppAssault.attack();
 

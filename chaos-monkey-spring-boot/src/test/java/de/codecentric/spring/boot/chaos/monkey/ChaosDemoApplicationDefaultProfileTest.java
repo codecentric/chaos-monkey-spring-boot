@@ -18,13 +18,11 @@ package de.codecentric.spring.boot.chaos.monkey;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
@@ -36,10 +34,9 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Benjamin Wilms
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
-public class ChaosDemoApplicationDefaultProfileTest {
+class ChaosDemoApplicationDefaultProfileTest {
 
     @Autowired(required = false)
     private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
@@ -48,28 +45,28 @@ public class ChaosDemoApplicationDefaultProfileTest {
     private Environment env;
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
 
         assertNull(chaosMonkeyRequestScope);
     }
 
     @Test
-    public void checkEnvWatcherController() {
+    void checkEnvWatcherController() {
         assertThat(env.getProperty("chaos.monkey.watcher.controller"), is("true"));
     }
 
     @Test
-    public void checkEnvAssaultLatencyRangeStart() {
+    void checkEnvAssaultLatencyRangeStart() {
         assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"), is("100"));
     }
 
     @Test
-    public void checkEnvAssaultLatencyRangeEnd() {
+    void checkEnvAssaultLatencyRangeEnd() {
         assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"), is("200"));
     }
 
     @Test
-    public void checkEnvCustomServiceWatcherList() {
+    void checkEnvCustomServiceWatcherList() {
 
         List<String> stringList = env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
         assertThat(stringList, hasSize(2));

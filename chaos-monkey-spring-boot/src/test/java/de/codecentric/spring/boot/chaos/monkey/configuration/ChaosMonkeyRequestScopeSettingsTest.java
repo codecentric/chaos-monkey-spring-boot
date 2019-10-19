@@ -16,23 +16,23 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Benjamin Wilms
  */
-public class ChaosMonkeyRequestScopeSettingsTest {
+class ChaosMonkeyRequestScopeSettingsTest {
 
     private ChaosMonkeySettings settings;
 
     @Test
-    public void noArgsTest() {
+    void noArgsTest() {
 
         settings = new ChaosMonkeySettings();
         ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
@@ -47,7 +47,7 @@ public class ChaosMonkeyRequestScopeSettingsTest {
     }
 
     @Test
-    public void allArgsTest() {
+    void allArgsTest() {
         ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
         AssaultProperties assaultProperties = getAssaultProperties();
         WatcherProperties watcherProperties = getWatcherProperties();
@@ -58,7 +58,7 @@ public class ChaosMonkeyRequestScopeSettingsTest {
     }
 
     @Test
-    public void lombokDataTest() {
+    void lombokDataTest() {
 
         ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
         AssaultProperties assaultProperties = getAssaultProperties();
@@ -72,7 +72,7 @@ public class ChaosMonkeyRequestScopeSettingsTest {
     }
 
     @Test
-    public void lombokDataSetTest() {
+    void lombokDataSetTest() {
 
         ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
         AssaultProperties assaultProperties = getAssaultProperties();
@@ -89,7 +89,7 @@ public class ChaosMonkeyRequestScopeSettingsTest {
     }
 
     @Test
-    public void lombokDataNullTest() {
+    void lombokDataNullTest() {
 
         settings = new ChaosMonkeySettings(null, null, null);
 

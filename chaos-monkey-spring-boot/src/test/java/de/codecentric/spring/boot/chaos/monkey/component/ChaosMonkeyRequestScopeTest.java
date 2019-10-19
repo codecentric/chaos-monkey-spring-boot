@@ -35,6 +35,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Benjamin Wilms
  */
+// TODO migrate to @ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ChaosMonkeyRequestScopeTest {
 
@@ -179,6 +180,8 @@ public class ChaosMonkeyRequestScopeTest {
         verify(exceptionAssault, never()).attack();
     }
 
+    // TODO This test fails if the class is annotated with @ExtendWith(MockitoExtension.class) because of unnecessary stubbings
+    //  in the @BeforeEach method
     @Test
     public void isChaosMonkeyExecutionDisabled() {
         given(this.chaosMonkeyProperties.isEnabled()).willReturn(false);

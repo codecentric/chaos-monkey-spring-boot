@@ -18,19 +18,19 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Thorsten Deelmann
  */
-@RunWith(MockitoJUnitRunner.class)
-public class LatencyAssaultTest {
+@ExtendWith(MockitoExtension.class)
+class LatencyAssaultTest {
 
     @Mock
     private ChaosMonkeySettings chaosMonkeySettings;
@@ -38,9 +38,8 @@ public class LatencyAssaultTest {
     @Mock
     private AssaultProperties assaultProperties;
 
-
     @Test
-    public void threadSleepHasBeenCalled() {
+    void threadSleepHasBeenCalled() {
         int latencyRangeStart = 100;
         int latencyRangeEnd = 200;
         TestLatencyAssaultExecutor executor = new TestLatencyAssaultExecutor();
@@ -54,12 +53,12 @@ public class LatencyAssaultTest {
 
         assertTrue(executor.executed);
         String assertionMessage = "Latency not in range 100-200, actual latency: " +executor.duration;
-        assertTrue(assertionMessage, executor.duration >= latencyRangeStart);
-        assertTrue(assertionMessage,executor.duration <= latencyRangeEnd);
+        assertTrue(executor.duration >= latencyRangeStart, assertionMessage);
+        assertTrue(executor.duration <= latencyRangeEnd,assertionMessage);
     }
 
 
-    public class TestLatencyAssaultExecutor implements ChaosMonkeyLatencyAssaultExecutor {
+    class TestLatencyAssaultExecutor implements ChaosMonkeyLatencyAssaultExecutor {
 
         private long duration;
         private boolean executed;
