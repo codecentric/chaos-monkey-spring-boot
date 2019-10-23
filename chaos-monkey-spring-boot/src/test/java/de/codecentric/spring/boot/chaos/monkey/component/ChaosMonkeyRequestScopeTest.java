@@ -57,9 +57,6 @@ public class ChaosMonkeyRequestScopeTest {
     private ExceptionAssault exceptionAssault;
 
     @Mock
-    private MemoryAssault memoryAssaultMock;
-
-    @Mock
     private MetricEventPublisher metricEventPublisherMock;
 
 
