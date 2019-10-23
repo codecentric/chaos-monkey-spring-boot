@@ -3,16 +3,14 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +20,6 @@ import static org.junit.Assert.*;
 /**
  * @author Benjamin Wilms
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
         "management.endpoints.web.exposure.include=chaosmonkey",
         "management.endpoints.enabled-by-default=true",
@@ -32,7 +29,7 @@ import static org.junit.Assert.*;
         "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
         "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
         "spring.profiles.active=chaos-monkey"})
-public class MemoryAssaultIntegrationTest {
+class MemoryAssaultIntegrationTest {
     @LocalServerPort
     private int serverPort;
 
@@ -54,27 +51,27 @@ public class MemoryAssaultIntegrationTest {
     @NotNull
     private double memoryFillTargetFraction;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         isMemoryAssaultActiveOriginal = settings.getAssaultProperties().isMemoryActive();
         memoryFillTargetFraction =
                 settings.getAssaultProperties().getMemoryFillTargetFraction();
         baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         settings.getAssaultProperties().setMemoryActive(isMemoryAssaultActiveOriginal);
     }
 
     @Test
-    public void memoryAssault_configured() {
+    void memoryAssault_configured() {
         assertNotNull(memoryAssault);
         assertTrue(memoryAssault.isActive());
     }
 
     @Test
-    public void runAttack() {
+    void runAttack() {
         Runtime rt = Runtime.getRuntime();
         long start = System.nanoTime();
 
@@ -121,7 +118,7 @@ public class MemoryAssaultIntegrationTest {
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Test
-    public void runAndAbortAttack() throws Throwable {
+    void runAndAbortAttack() throws Throwable {
         AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
         assaultProperties.setMemoryActive(false);
 
@@ -161,7 +158,7 @@ public class MemoryAssaultIntegrationTest {
     }
 
     @Test
-    public void allowInterruptionOfAssaultDuringHoldPeriod() throws Throwable {
+    void allowInterruptionOfAssaultDuringHoldPeriod() throws Throwable {
         AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
         assaultProperties.setMemoryActive(false);
 

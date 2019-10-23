@@ -10,7 +10,9 @@
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/130[#130] Improvement 'Improve contributions clarity in README'
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/136[#136] Add example entry in changelog
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/131[#131] Remove deprecated MetricEvent constructor and adapt usage
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/141[#141] Migrate tests to JUnit Jupiter
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/143[#143] Add Maven Wrapper
+
 
 === New Features
 

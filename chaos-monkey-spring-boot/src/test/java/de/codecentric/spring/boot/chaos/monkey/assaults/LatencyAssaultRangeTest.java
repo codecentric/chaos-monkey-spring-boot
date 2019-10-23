@@ -5,11 +5,11 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -22,23 +22,27 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LatencyAssaultRangeTest {
+@ExtendWith(MockitoExtension.class)
+class LatencyAssaultRangeTest {
 
     @Captor
     private ArgumentCaptor<AtomicInteger> captorTimeoutValue;
 
     @Test
-    public void fixedLatencyIsPossible() {
+    void fixedLatencyIsPossible() {
         final int fixedLatency = 1000;
 
         checkLatencyConfiguration(fixedLatency, fixedLatency, is(fixedLatency));
     }
 
     @Test
-    public void latencyRangeIsPossible() {
+    void latencyRangeIsPossible() {
         final int latencyRangeStart = 1000;
         final int latencyRangeEnd = 5000;
 

@@ -23,13 +23,11 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,13 +40,12 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Benjamin Wilms
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"chaos.monkey" +
         ".watcher.controller=true", "chaos.monkey.assaults.level=1", "chaos.monkey.assaults.latencyRangeStart=10", "chaos.monkey.assaults" +
         ".latencyRangeEnd=50", "chaos.monkey.assaults" +
         ".killApplicationActive=true", "spring.profiles" +
         ".active=chaos-monkey"})
-public class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
+class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
     @Autowired
     private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
@@ -69,24 +66,24 @@ public class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
     @Mock
     private MetricEventPublisher metricsMock;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricsMock);
     }
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         assertNotNull(chaosMonkeyRequestScope);
     }
 
 
     @Test
-    public void checkChaosSettingsObject() {
+    void checkChaosSettingsObject() {
         assertNotNull(monkeySettings);
     }
 
     @Test
-    public void checkChaosSettingsValues() {
+    void checkChaosSettingsValues() {
         assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
         assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(50));
         assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(10));

@@ -1,13 +1,11 @@
 package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -17,8 +15,8 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
-public class ChaosMonkeySchedulerTest {
+@ExtendWith(MockitoExtension.class)
+class ChaosMonkeySchedulerTest {
     @Mock
     private ScheduledTaskRegistrar registrar;
     @Mock
@@ -27,14 +25,14 @@ public class ChaosMonkeySchedulerTest {
     private ChaosMonkeyRuntimeScope scope;
 
     @Test
-    public void shouldTolerateMissingRegistry() {
+    void shouldTolerateMissingRegistry() {
         when(config.getRuntimeAssaultCronExpression()).thenReturn("*/5 * * * * ?");
         new ChaosMonkeyScheduler(null, config, scope);
         // no exception despite null injection
     }
 
     @Test
-    public void shouldRespectTheOffSetting() {
+    void shouldRespectTheOffSetting() {
         when(config.getRuntimeAssaultCronExpression()).thenReturn("OFF");
 
         new ChaosMonkeyScheduler(registrar, config, scope);
@@ -43,7 +41,7 @@ public class ChaosMonkeySchedulerTest {
     }
 
     @Test
-    public void shouldScheduleATask() {
+    void shouldScheduleATask() {
         String schedule = "*/1 * * * * ?";
         ScheduledTask scheduledTask = mock(ScheduledTask.class);
         when(config.getRuntimeAssaultCronExpression()).thenReturn(schedule);
@@ -55,7 +53,7 @@ public class ChaosMonkeySchedulerTest {
     }
 
     @Test
-    public void shouldScheduleANewTaskAfterAnUpdate() {
+    void shouldScheduleANewTaskAfterAnUpdate() {
         String schedule = "*/1 * * * * ?";
         ScheduledTask oldTask = mock(ScheduledTask.class);
         ScheduledTask newTask = mock(ScheduledTask.class);
@@ -70,7 +68,7 @@ public class ChaosMonkeySchedulerTest {
     }
 
     @Test
-    public void shouldTriggerRuntimeScopeRunAttack() {
+    void shouldTriggerRuntimeScopeRunAttack() {
         String schedule = "*/1 * * * * ?";
         when(config.getRuntimeAssaultCronExpression()).thenReturn(schedule);
         when(registrar.scheduleCronTask(any())).thenAnswer(iom -> {
@@ -86,8 +84,4 @@ public class ChaosMonkeySchedulerTest {
         return cronTask -> cronTask.getExpression().equals(schedule);
     }
 
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
 }
