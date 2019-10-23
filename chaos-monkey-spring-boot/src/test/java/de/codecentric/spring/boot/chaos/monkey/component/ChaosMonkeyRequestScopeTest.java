@@ -37,37 +37,37 @@ import static org.mockito.Mockito.*;
  * @author Benjamin Wilms
  */
 @ExtendWith(MockitoExtension.class)
-public class ChaosMonkeyRequestScopeTest {
+class ChaosMonkeyRequestScopeTest {
 
-    private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
-
-    @Mock
-    private AssaultProperties assaultProperties;
+    ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
     @Mock
-    private ChaosMonkeyProperties chaosMonkeyProperties;
+    AssaultProperties assaultProperties;
 
     @Mock
-    private ChaosMonkeySettings chaosMonkeySettings;
+    ChaosMonkeyProperties chaosMonkeyProperties;
 
     @Mock
-    private LatencyAssault latencyAssault;
+    ChaosMonkeySettings chaosMonkeySettings;
 
     @Mock
-    private ExceptionAssault exceptionAssault;
+    LatencyAssault latencyAssault;
 
     @Mock
-    private MetricEventPublisher metricEventPublisherMock;
+    ExceptionAssault exceptionAssault;
+
+    @Mock
+    MetricEventPublisher metricEventPublisherMock;
 
     @BeforeEach
-    public void setUpCommon() {
+    void setUpCommon() {
         given(chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(chaosMonkeyProperties);
 
         chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricEventPublisherMock);
     }
 
     @Test
-    public void givenChaosMonkeyExecutionIsDisabledExpectNoInteractions() {
+    void givenChaosMonkeyExecutionIsDisabledExpectNoInteractions() {
         given(chaosMonkeyProperties.isEnabled()).willReturn(false);
 
         chaosMonkeyRequestScope.callChaosMonkey(null);
@@ -80,7 +80,7 @@ public class ChaosMonkeyRequestScopeTest {
     class GivenChaosMonekyExecutionIsEnabled {
 
         @BeforeEach
-        public void setUpForChaosMonkeyExecutionEnabled() {
+        void setUpForChaosMonkeyExecutionEnabled() {
             given(assaultProperties.getLevel()).willReturn(1);
             given(assaultProperties.getTroubleRandom()).willReturn(1);
             given(chaosMonkeyProperties.isEnabled()).willReturn(true);
@@ -88,7 +88,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void allAssaultsActiveExpectLatencyAttack() {
+        void allAssaultsActiveExpectLatencyAttack() {
             given(exceptionAssault.isActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
             given(assaultProperties.chooseAssault(2)).willReturn(0);
@@ -99,7 +99,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void allAssaultsActiveExpectExceptionAttack() {
+        void allAssaultsActiveExpectExceptionAttack() {
             given(exceptionAssault.isActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
             given(assaultProperties.chooseAssault(2)).willReturn(1);
@@ -110,7 +110,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void isLatencyAssaultActive() {
+        void isLatencyAssaultActive() {
             given(latencyAssault.isActive()).willReturn(true);
             given(exceptionAssault.isActive()).willReturn(false);
 
@@ -120,7 +120,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void isExceptionAssaultActive() {
+        void isExceptionAssaultActive() {
             given(exceptionAssault.isActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(false);
 
@@ -130,7 +130,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void isExceptionAndLatencyAssaultActiveExpectExceptionAttack() {
+        void isExceptionAndLatencyAssaultActiveExpectExceptionAttack() {
             given(exceptionAssault.isActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
             given(assaultProperties.chooseAssault(2)).willReturn(1);
@@ -141,7 +141,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void isExceptionAndLatencyAssaultActiveExpectLatencyAttack() {
+        void isExceptionAndLatencyAssaultActiveExpectLatencyAttack() {
 
             given(exceptionAssault.isActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
@@ -153,7 +153,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void isExceptionActiveExpectExceptionAttack() {
+        void isExceptionActiveExpectExceptionAttack() {
             given(exceptionAssault.isActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(false);
 
@@ -163,7 +163,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void isLatencyActiveExpectLatencyAttack() {
+        void isLatencyActiveExpectLatencyAttack() {
             given(exceptionAssault.isActive()).willReturn(false);
             given(latencyAssault.isActive()).willReturn(true);
 
@@ -173,7 +173,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void givenNoAssaultsActiveExpectNoAttack() {
+        void givenNoAssaultsActiveExpectNoAttack() {
             chaosMonkeyRequestScope.callChaosMonkey(null);
 
             verify(latencyAssault, never()).attack();
@@ -181,7 +181,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void givenAssaultLevelTooHighExpectNoLogging() {
+        void givenAssaultLevelTooHighExpectNoLogging() {
             given(assaultProperties.getLevel()).willReturn(1000);
             given(assaultProperties.getTroubleRandom()).willReturn(9);
 
@@ -192,7 +192,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
+        void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
             String customService = "CustomService";
 
             given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customService));
@@ -205,7 +205,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void chaosMonkeyIsCalledWhenServiceNotWatched() {
+        void chaosMonkeyIsCalledWhenServiceNotWatched() {
             String customService = "CustomService";
 
             given(exceptionAssault.isActive()).willReturn(true);
@@ -221,7 +221,7 @@ public class ChaosMonkeyRequestScopeTest {
         }
 
         @Test
-        public void shouldMakeUncategorizedCustomAssaultsRequestScopeByDefault() {
+        void shouldMakeUncategorizedCustomAssaultsRequestScopeByDefault() {
             // create an assault that is neither runtime nor request
             ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
             given(customAssault.isActive()).willReturn(true);
