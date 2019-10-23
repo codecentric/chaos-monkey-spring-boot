@@ -71,6 +71,18 @@ public class ChaosMonkeyRequestScopeTest {
         chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricEventPublisherMock);
     }
 
+    // TODO This test fails if the class is annotated with @ExtendWith(MockitoExtension.class) because of unnecessary stubbings
+    //  in the @BeforeEach method
+    @Test
+    public void givenChaosMonkeyExecutionIsDisabledExpectNoInteractions() {
+        given(chaosMonkeyProperties.isEnabled()).willReturn(false);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null);
+
+        verify(latencyAssault, never()).attack();
+        verify(exceptionAssault, never()).attack();
+    }
+
     @Test
     public void allAssaultsActiveExpectLatencyAttack() {
         given(exceptionAssault.isActive()).willReturn(true);
@@ -170,18 +182,6 @@ public class ChaosMonkeyRequestScopeTest {
     public void givenAssaultLevelTooHighExpectNoLogging() {
         given(assaultProperties.getLevel()).willReturn(1000);
         given(assaultProperties.getTroubleRandom()).willReturn(9);
-
-        chaosMonkeyRequestScope.callChaosMonkey(null);
-
-        verify(latencyAssault, never()).attack();
-        verify(exceptionAssault, never()).attack();
-    }
-
-    // TODO This test fails if the class is annotated with @ExtendWith(MockitoExtension.class) because of unnecessary stubbings
-    //  in the @BeforeEach method
-    @Test
-    public void isChaosMonkeyExecutionDisabled() {
-        given(chaosMonkeyProperties.isEnabled()).willReturn(false);
 
         chaosMonkeyRequestScope.callChaosMonkey(null);
 
