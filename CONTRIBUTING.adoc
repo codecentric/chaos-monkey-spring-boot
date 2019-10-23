@@ -40,8 +40,18 @@ git remote add upstream https://github.com/codecentric/chaos-monkey-spring-boot.
 To fetch upstream changes switch to your master branch with `git checkout master` and then run `git pull upstream master`.
 ====
 
-Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin. In order to work with the code you need to have https://maven.apache.org/[Maven] installed. On Unix based systems we recommend using https://sdkman.io/[sdkman]. It helps you to manage your Java and Maven installations. On Windows you can fallback to installing Java Development Kit 8 or higher and the current Maven version directly.
+Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin.
+On Unix based systems we recommend using https://sdkman.io/[sdkman] to manage your Java installations.
+On Windows you can fallback to installing Java Development Kit 8 or higher directly.
 
+In order to work with the code you need to use https://maven.apache.org/[Maven].
+Chaos Monkey for Spring Boot uses the https://github.com/takari/maven-wrapper[Maven Wrapper].
+To build and test the code you can run
+
+[source, bash]
+----
+./mvnw clean verify
+----
 
 == Working With The Code
 Considering these recommendations will help us in getting your pull request merged. 
@@ -52,4 +62,4 @@ Considering these recommendations will help us in getting your pull request merg
 * Test your changes. 
 * It would be great to follow Chris Beam's recommendations on https://chris.beams.io/posts/git-commit/[How to Write a Git Commit Message]. 
 * Please update the https://github.com/codecentric/chaos-monkey-spring-boot/blob/master/chaos-monkey-docs/src/main/asciidoc/changes.adoc[Changes section].
-* Please make sure to run the tests before you commit your changes. Using Maven you can run `mvn test` which will run all tests when you run the command in the root folder of the repository.
+* Please make sure to run the tests before you commit your changes. Using Maven you can run `./mvnw test` which will run all tests when you run the command in the root folder of the repository.

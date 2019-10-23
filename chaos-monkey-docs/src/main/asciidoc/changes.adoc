@@ -10,6 +10,7 @@
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/130[#130] Improvement 'Improve contributions clarity in README'
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/136[#136] Add example entry in changelog
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/131[#131] Remove deprecated MetricEvent constructor and adapt usage
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/143[#143] Add Maven Wrapper
 
 === New Features
 
@@ -22,5 +23,6 @@ This release was only possible because of these great humans:
 - https://github.com/Chrispy404[@Chrispy404]
 - https://github.com/Olfarmer[@Olfarmer]
 - https://github.com/Yann-P[@Yann-P]
+- https://github.com/Riggs333[@Riggs333]
 
 Thank you for your support!
