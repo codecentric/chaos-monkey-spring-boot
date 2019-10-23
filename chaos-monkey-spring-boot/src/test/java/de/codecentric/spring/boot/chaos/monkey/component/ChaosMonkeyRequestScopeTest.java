@@ -59,16 +59,19 @@ public class ChaosMonkeyRequestScopeTest {
     @Mock
     private MetricEventPublisher metricEventPublisherMock;
 
+    @Before
+    public void setUpCommon() {
+        given(chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(chaosMonkeyProperties);
+
+        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricEventPublisherMock);
+    }
 
     @Before
-    public void setUp() {
+    public void setUpForChaosMonkeyExecutionEnabled() {
         given(assaultProperties.getLevel()).willReturn(1);
         given(assaultProperties.getTroubleRandom()).willReturn(1);
         given(chaosMonkeyProperties.isEnabled()).willReturn(true);
         given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
-        given(chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(chaosMonkeyProperties);
-
-        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricEventPublisherMock);
     }
 
     // TODO This test fails if the class is annotated with @ExtendWith(MockitoExtension.class) because of unnecessary stubbings
