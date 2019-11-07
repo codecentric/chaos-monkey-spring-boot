@@ -97,11 +97,13 @@ class SpringControllerAspectTest {
         SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRepositoryStereotypeAspect repositoryStereotypeAspect = new SpringRepositoryStereotypeAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
 
         factory.addAspect(serviceAspect);
         factory.addAspect(componentAspect);
         factory.addAspect(restControllerAspect);
         factory.addAspect(repositoryAspect);
+        factory.addAspect(repositoryStereotypeAspect);
     }
 
     private void callTargetMethod() {

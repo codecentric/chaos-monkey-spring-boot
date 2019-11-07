@@ -30,11 +30,8 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.*;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -171,6 +168,12 @@ public class ChaosMonkeyConfiguration {
     @ConditionalOnClass(name = "org.springframework.data.repository.CrudRepository")
     public SpringRepositoryAspect repositoryAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
         return new SpringRepositoryAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
+    }
+
+    @Bean
+    @DependsOn("chaosMonkeyRequestScope")
+    public SpringRepositoryStereotypeAspect repositoryStereotypeAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringRepositoryStereotypeAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
     }
 
     @Bean
