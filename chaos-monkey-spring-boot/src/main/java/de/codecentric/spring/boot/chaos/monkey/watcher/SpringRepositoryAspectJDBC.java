@@ -29,27 +29,27 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
 /**
- * @author Benjamin Wilms
+ * @author Eric Wyles
  */
 
 @Aspect
 @AllArgsConstructor
 @Slf4j
-public class SpringRepositoryAspect extends ChaosMonkeyBaseAspect {
+public class SpringRepositoryAspectJDBC extends ChaosMonkeyBaseAspect {
 
     private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
     private MetricEventPublisher metricEventPublisher;
     private WatcherProperties watcherProperties;
 
-    @Pointcut("this(org.springframework.data.repository.CrudRepository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
-    public void implementsCrudRepository() {
+    @Pointcut("within(@org.springframework.stereotype.Repository *)")
+    public void classAnnotatedWithRepositoryPointcut() {
     }
 
-    @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    @Around("classAnnotatedWithRepositoryPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
     public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
         if (watcherProperties.isRepository()) {
-            log.debug("Watching public method on repository class: {}", pjp.getSignature());
+            log.debug("Watching public method on repository stereotype class: {}", pjp.getSignature());
 
             if (metricEventPublisher != null)
                 metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);

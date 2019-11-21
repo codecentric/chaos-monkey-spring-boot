@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository;
-import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryImpl;
+import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryJDBC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -31,12 +30,12 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Benjamin Wilms
+ * @author Eric Wyles
  */
 @ExtendWith(MockitoExtension.class)
-class SpringRepositoryAspectTest {
+class SpringRepositoryAspectJDBCTest {
 
-    private DemoRepository target = new DemoRepositoryImpl();
+    private DemoRepositoryJDBC target = new DemoRepositoryJDBC();
     private WatcherProperties watcherProperties = new WatcherProperties();
     private AspectJProxyFactory factory = new AspectJProxyFactory(target);
 
@@ -46,8 +45,8 @@ class SpringRepositoryAspectTest {
     @Mock
     private MetricEventPublisher metricsMock;
 
-    private String pointcutName = "execution.DemoRepository.dummyPublicSaveMethod";
-    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod";
+    private String pointcutName = "execution.DemoRepositoryJDBC.sayHello";
+    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryJDBC.sayHello";
 
 
     @Test
@@ -88,27 +87,28 @@ class SpringRepositoryAspectTest {
     }
 
     private void addRelevantAspect() {
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        factory.addAspect(repositoryAspect);
+        SpringRepositoryAspectJDBC repositoryAspectJDBC = new SpringRepositoryAspectJDBC(chaosMonkeyRequestScopeMock, metricsMock,
+                watcherProperties);
+        factory.addAspect(repositoryAspectJDBC);
     }
 
     private void addNonRelevantAspects() {
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringRepositoryStereotypeAspect repositoryStereotypeAspect = new SpringRepositoryStereotypeAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRepositoryAspectJPA repositoryAspect = new SpringRepositoryAspectJPA(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
 
+        factory.addAspect(serviceAspect);
         factory.addAspect(controllerAspect);
         factory.addAspect(componentAspect);
         factory.addAspect(restControllerAspect);
-        factory.addAspect(serviceAspect);
-        factory.addAspect(repositoryStereotypeAspect);
+        factory.addAspect(repositoryAspect);
     }
 
     private void callTargetMethod() {
-        DemoRepository proxy = factory.getProxy();
-        proxy.dummyPublicSaveMethod();
+        DemoRepositoryJDBC proxy = factory.getProxy();
+        proxy.sayHello();
     }
 
     private void verifyDependenciesCalledXTimes(int i) {

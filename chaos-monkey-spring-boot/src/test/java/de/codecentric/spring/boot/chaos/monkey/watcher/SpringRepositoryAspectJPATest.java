@@ -20,7 +20,8 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryStereotype;
+import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository;
+import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -30,12 +31,12 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Eric Wyles
+ * @author Benjamin Wilms
  */
 @ExtendWith(MockitoExtension.class)
-class SpringRepositoryStereotypeAspectTest {
+class SpringRepositoryAspectJPATest {
 
-    private DemoRepositoryStereotype target = new DemoRepositoryStereotype();
+    private DemoRepository target = new DemoRepositoryImpl();
     private WatcherProperties watcherProperties = new WatcherProperties();
     private AspectJProxyFactory factory = new AspectJProxyFactory(target);
 
@@ -45,8 +46,8 @@ class SpringRepositoryStereotypeAspectTest {
     @Mock
     private MetricEventPublisher metricsMock;
 
-    private String pointcutName = "execution.DemoRepositoryStereotype.sayHello";
-    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryStereotype.sayHello";
+    private String pointcutName = "execution.DemoRepository.dummyPublicSaveMethod";
+    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepository.dummyPublicSaveMethod";
 
 
     @Test
@@ -87,27 +88,27 @@ class SpringRepositoryStereotypeAspectTest {
     }
 
     private void addRelevantAspect() {
-        SpringRepositoryStereotypeAspect repositoryStereotypeAspect = new SpringRepositoryStereotypeAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        factory.addAspect(repositoryStereotypeAspect);
-    }
-
-    private void addNonRelevantAspects() {
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-
-        factory.addAspect(serviceAspect);
-        factory.addAspect(controllerAspect);
-        factory.addAspect(componentAspect);
-        factory.addAspect(restControllerAspect);
+        SpringRepositoryAspectJPA repositoryAspect = new SpringRepositoryAspectJPA(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         factory.addAspect(repositoryAspect);
     }
 
+    private void addNonRelevantAspects() {
+        SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRepositoryAspectJDBC repositoryStereotypeAspect = new SpringRepositoryAspectJDBC(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+
+        factory.addAspect(controllerAspect);
+        factory.addAspect(componentAspect);
+        factory.addAspect(restControllerAspect);
+        factory.addAspect(serviceAspect);
+        factory.addAspect(repositoryStereotypeAspect);
+    }
+
     private void callTargetMethod() {
-        DemoRepositoryStereotype proxy = factory.getProxy();
-        proxy.sayHello();
+        DemoRepository proxy = factory.getProxy();
+        proxy.dummyPublicSaveMethod();
     }
 
     private void verifyDependenciesCalledXTimes(int i) {
