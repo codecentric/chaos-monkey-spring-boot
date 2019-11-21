@@ -2,6 +2,7 @@
 == Changes in {project-version}
 
 === Bug Fixes
+- https://github.com/codecentric/chaos-monkey-spring-boot/issues/147[#147] Repository Watcher does not work on non-JPA Repositories
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
