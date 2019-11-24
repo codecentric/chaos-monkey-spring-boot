@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService;
+import de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryJDBC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -30,12 +30,12 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Benjamin Wilms
+ * @author Eric Wyles
  */
 @ExtendWith(MockitoExtension.class)
-class SpringServiceAspectTest {
+class SpringRepositoryAspectJDBCTest {
 
-    private DemoService target = new DemoService();
+    private DemoRepositoryJDBC target = new DemoRepositoryJDBC();
     private WatcherProperties watcherProperties = new WatcherProperties();
     private AspectJProxyFactory factory = new AspectJProxyFactory(target);
 
@@ -45,13 +45,13 @@ class SpringServiceAspectTest {
     @Mock
     private MetricEventPublisher metricsMock;
 
-    private String pointcutName = "execution.DemoService.sayHello";
-    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService.sayHello";
+    private String pointcutName = "execution.DemoRepositoryJDBC.sayHello";
+    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.repository.DemoRepositoryJDBC.sayHello";
 
 
     @Test
     void chaosMonkeyIsCalledWhenEnabledInConfig() {
-        watcherProperties.setService(true);
+        watcherProperties.setRepository(true);
 
         addRelevantAspect();
 
@@ -62,7 +62,7 @@ class SpringServiceAspectTest {
 
     @Test
     void chaosMonkeyIsNotCalledWhenDisabledInConfig() {
-        watcherProperties.setService(false);
+        watcherProperties.setRepository(false);
 
         addRelevantAspect();
 
@@ -87,32 +87,33 @@ class SpringServiceAspectTest {
     }
 
     private void addRelevantAspect() {
-        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        factory.addAspect(serviceAspect);
+        SpringRepositoryAspectJDBC repositoryAspectJDBC = new SpringRepositoryAspectJDBC(chaosMonkeyRequestScopeMock, metricsMock,
+                watcherProperties);
+        factory.addAspect(repositoryAspectJDBC);
     }
 
     private void addNonRelevantAspects() {
+        SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringControllerAspect controllerAspect = new SpringControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringRepositoryAspectJPA repositoryAspect = new SpringRepositoryAspectJPA(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
-        SpringRepositoryAspectJDBC repositoryStereotypeAspect = new SpringRepositoryAspectJDBC(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
 
+        factory.addAspect(serviceAspect);
         factory.addAspect(controllerAspect);
         factory.addAspect(componentAspect);
         factory.addAspect(restControllerAspect);
         factory.addAspect(repositoryAspect);
-        factory.addAspect(repositoryStereotypeAspect);
     }
 
     private void callTargetMethod() {
-        DemoService proxy = factory.getProxy();
+        DemoRepositoryJDBC proxy = factory.getProxy();
         proxy.sayHello();
     }
 
     private void verifyDependenciesCalledXTimes(int i) {
         verify(chaosMonkeyRequestScopeMock, times(i)).callChaosMonkey(simpleName);
-        verify(metricsMock, times(i)).publishMetricEvent(pointcutName, MetricType.SERVICE);
+        verify(metricsMock, times(i)).publishMetricEvent(pointcutName, MetricType.REPOSITORY);
         verifyNoMoreInteractions(chaosMonkeyRequestScopeMock, metricsMock);
     }
 }

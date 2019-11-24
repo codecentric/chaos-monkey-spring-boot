@@ -16,32 +16,14 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
+import de.codecentric.spring.boot.chaos.monkey.assaults.*;
+import de.codecentric.spring.boot.chaos.monkey.component.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
+import de.codecentric.spring.boot.chaos.monkey.watcher.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -55,6 +37,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * @author Benjamin Wilms
@@ -122,7 +108,8 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults) {
+    public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults,
+                                                           List<ChaosMonkeyAssault> allAssaults) {
         return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher());
     }
 
@@ -167,10 +154,17 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     @DependsOn("chaosMonkeyRequestScope")
-    // Don't create this bean if Spring Data is not on the classpath.
-    @ConditionalOnClass(name = "org.springframework.data.repository.CrudRepository")
-    public SpringRepositoryAspect repositoryAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-        return new SpringRepositoryAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
+    @ConditionalOnClass(name = "org.springframework.data.repository.Repository")
+    // Creates aspects that match interfaces annotated with @Repository
+    public SpringRepositoryAspectJPA repositoryAspectJPA(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringRepositoryAspectJPA(chaosMonkeyRequestScope, publisher(), watcherProperties);
+    }
+
+    @Bean
+    @DependsOn("chaosMonkeyRequestScope")
+    // creates aspects that match simple classes annotated with @repository
+    public SpringRepositoryAspectJDBC repositoryAspectJDBC(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+        return new SpringRepositoryAspectJDBC(chaosMonkeyRequestScope, publisher(), watcherProperties);
     }
 
     @Bean

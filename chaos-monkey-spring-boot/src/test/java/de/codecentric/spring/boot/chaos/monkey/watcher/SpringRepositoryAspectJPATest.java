@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
  * @author Benjamin Wilms
  */
 @ExtendWith(MockitoExtension.class)
-class SpringRepositoryAspectTest {
+class SpringRepositoryAspectJPATest {
 
     private DemoRepository target = new DemoRepositoryImpl();
     private WatcherProperties watcherProperties = new WatcherProperties();
@@ -88,7 +88,7 @@ class SpringRepositoryAspectTest {
     }
 
     private void addRelevantAspect() {
-        SpringRepositoryAspect repositoryAspect = new SpringRepositoryAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRepositoryAspectJPA repositoryAspect = new SpringRepositoryAspectJPA(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         factory.addAspect(repositoryAspect);
     }
 
@@ -97,11 +97,13 @@ class SpringRepositoryAspectTest {
         SpringComponentAspect componentAspect = new SpringComponentAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringRestControllerAspect restControllerAspect = new SpringRestControllerAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
         SpringServiceAspect serviceAspect = new SpringServiceAspect(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
+        SpringRepositoryAspectJDBC repositoryStereotypeAspect = new SpringRepositoryAspectJDBC(chaosMonkeyRequestScopeMock, metricsMock, watcherProperties);
 
         factory.addAspect(controllerAspect);
         factory.addAspect(componentAspect);
         factory.addAspect(restControllerAspect);
         factory.addAspect(serviceAspect);
+        factory.addAspect(repositoryStereotypeAspect);
     }
 
     private void callTargetMethod() {
