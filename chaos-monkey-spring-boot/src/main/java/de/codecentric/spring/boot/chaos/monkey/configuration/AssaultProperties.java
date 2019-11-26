@@ -22,6 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.DecimalMax;
@@ -117,7 +118,7 @@ public class AssaultProperties {
 
     @JsonIgnore
     public boolean isWatchedCustomServicesActive() {
-        return watchedCustomServices != null && !watchedCustomServices.isEmpty();
+        return !CollectionUtils.isEmpty(watchedCustomServices);
     }
 
 
