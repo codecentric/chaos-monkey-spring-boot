@@ -14,6 +14,7 @@
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/141[#141] Migrate tests to JUnit Jupiter
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/143[#143] Add Maven Wrapper
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/148[#148] Add new aspect for watching non-JPA repositories.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/152[#152] Remove unnecessary empty-check on watchedCustomService.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/146[#146] Migrate ChaosMonkeyRequestScopeTest to JUnit Jupiter
 
 === New Features
@@ -29,5 +30,6 @@ This release was only possible because of these great humans:
 - https://github.com/Yann-P[@Yann-P]
 - https://github.com/Riggs333[@Riggs333]
 - https://github.com/ericwyles[@EricWyles]
+- https://github.com/Caps-Looking[@Caps-Looking]
 
 Thank you for your support!
