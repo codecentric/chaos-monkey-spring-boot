@@ -3,6 +3,8 @@
 
 === Bug Fixes
 - https://github.com/codecentric/chaos-monkey-spring-boot/issues/147[#147] Repository Watcher does not work on non-JPA Repositories
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/153[#153] Fix syntax error in `README.md`
+
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -16,6 +18,8 @@
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/148[#148] Add new aspect for watching non-JPA repositories.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/152[#152] Remove unnecessary empty-check on watchedCustomService.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/146[#146] Migrate ChaosMonkeyRequestScopeTest to JUnit Jupiter
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/154[#154] Add code of conduct 
+
 
 === New Features
 
