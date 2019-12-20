@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/codecentric/chaos-monkey-spring-boot.svg?branch=master)](https://travis-ci.org/codecentric/chaos-monkey-spring-boot)
 [![codecov](https://codecov.io/gh/codecentric/chaos-monkey-spring-boot/branch/master/graph/badge.svg)](https://codecov.io/gh/codecentric/chaos-monkey-spring-boot)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.codecentric/chaos-monkey-spring-boot/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.codecentric/chaos-monkey-spring-boot/)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.adoc)  
+
 # Chaos Monkey for Spring Boot
 ### inspired by Chaos Engineering at Netflix
 
