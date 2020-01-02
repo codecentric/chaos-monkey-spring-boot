@@ -223,7 +223,7 @@ Assault config has changed
     "type": "java.lang.IllegalArgumentException",
     "arguments": [{
       "className": "java.lang.String",
-      "value": "custom illegal argument exception"}] },
+      "value": "custom illegal argument exception"}] }
 }
 ----
 [source,txt,subs="verbatim,attributes"]

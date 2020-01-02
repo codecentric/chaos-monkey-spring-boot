@@ -1,20 +1,5 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import org.hamcrest.Matcher;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationEventPublisher;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.both;
@@ -28,47 +13,64 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.hamcrest.Matcher;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
+
 @ExtendWith(MockitoExtension.class)
 class LatencyAssaultRangeTest {
 
-    @Captor
-    private ArgumentCaptor<AtomicInteger> captorTimeoutValue;
+  @Captor private ArgumentCaptor<AtomicInteger> captorTimeoutValue;
 
-    @Test
-    void fixedLatencyIsPossible() {
-        final int fixedLatency = 1000;
+  @Test
+  void fixedLatencyIsPossible() {
+    final int fixedLatency = 1000;
 
-        checkLatencyConfiguration(fixedLatency, fixedLatency, is(fixedLatency));
-    }
+    checkLatencyConfiguration(fixedLatency, fixedLatency, is(fixedLatency));
+  }
 
-    @Test
-    void latencyRangeIsPossible() {
-        final int latencyRangeStart = 1000;
-        final int latencyRangeEnd = 5000;
+  @Test
+  void latencyRangeIsPossible() {
+    final int latencyRangeStart = 1000;
+    final int latencyRangeEnd = 5000;
 
-        checkLatencyConfiguration(latencyRangeStart, latencyRangeEnd,
-                is(both(greaterThan(latencyRangeStart)).and(lessThan(latencyRangeEnd))));
-    }
+    checkLatencyConfiguration(
+        latencyRangeStart,
+        latencyRangeEnd,
+        is(both(greaterThan(latencyRangeStart)).and(lessThan(latencyRangeEnd))));
+  }
 
-    private void checkLatencyConfiguration(int latencyRangeStart, int latencyRangeEnd, Matcher<Integer> expectedResult) {
-        final AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setLatencyRangeStart(latencyRangeStart);
-        assaultProperties.setLatencyRangeEnd(latencyRangeEnd);
+  private void checkLatencyConfiguration(
+      int latencyRangeStart, int latencyRangeEnd, Matcher<Integer> expectedResult) {
+    final AssaultProperties assaultProperties = new AssaultProperties();
+    assaultProperties.setLatencyRangeStart(latencyRangeStart);
+    assaultProperties.setLatencyRangeEnd(latencyRangeEnd);
 
-        final ChaosMonkeySettings chaosMonkeySettings = mock(ChaosMonkeySettings.class);
-        when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
+    final ChaosMonkeySettings chaosMonkeySettings = mock(ChaosMonkeySettings.class);
+    when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
 
-        final ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
-        doNothing().when(publisher).publishEvent(any(ApplicationEvent.class));
+    final ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
+    doNothing().when(publisher).publishEvent(any(ApplicationEvent.class));
 
-        final MetricEventPublisher metricEventPublisher = spy(new MetricEventPublisher());
-        metricEventPublisher.setApplicationEventPublisher(publisher);
+    final MetricEventPublisher metricEventPublisher = spy(new MetricEventPublisher());
+    metricEventPublisher.setApplicationEventPublisher(publisher);
 
-        final LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricEventPublisher);
-        latencyAssault.attack();
+    final LatencyAssault latencyAssault =
+        new LatencyAssault(chaosMonkeySettings, metricEventPublisher);
+    latencyAssault.attack();
 
-        verify(metricEventPublisher).publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
-        assertThat(captorTimeoutValue.getValue().get(), expectedResult);
-    }
-
+    verify(metricEventPublisher)
+        .publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
+    assertThat(captorTimeoutValue.getValue().get(), expectedResult);
+  }
 }

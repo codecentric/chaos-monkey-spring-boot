@@ -16,90 +16,100 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
-/**
- * @author Benjamin Wilms
- */
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/** @author Benjamin Wilms */
 class ChaosMonkeyRequestScopeJmxEndpointTest {
 
-    private ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint;
-    private ChaosMonkeySettings chaosMonkeySettings;
+  private ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint;
 
-    @BeforeEach
-    void setUp() {
+  private ChaosMonkeySettings chaosMonkeySettings;
 
-        AssaultProperties assaultProperties = new AssaultProperties();
-        assaultProperties.setLevel(1);
-        assaultProperties.setLatencyRangeStart(100);
-        assaultProperties.setLatencyRangeEnd(200);
-        WatcherProperties watcherProperties = new WatcherProperties();
-        watcherProperties.setComponent(true);
-        ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
-        chaosMonkeyProperties.setEnabled(true);
-        chaosMonkeySettings = new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
-        chaosMonkeyJmxEndpoint = new ChaosMonkeyJmxEndpoint(chaosMonkeySettings);
-    }
+  @BeforeEach
+  void setUp() {
 
-    @Test
-    void getAssaultProperties() {
+    AssaultProperties assaultProperties = new AssaultProperties();
+    assaultProperties.setLevel(1);
+    assaultProperties.setLatencyRangeStart(100);
+    assaultProperties.setLatencyRangeEnd(200);
+    WatcherProperties watcherProperties = new WatcherProperties();
+    watcherProperties.setComponent(true);
+    ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
+    chaosMonkeyProperties.setEnabled(true);
+    chaosMonkeySettings =
+        new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
+    chaosMonkeyJmxEndpoint = new ChaosMonkeyJmxEndpoint(chaosMonkeySettings);
+  }
 
-        assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties(), is(chaosMonkeySettings.getAssaultProperties()));
-    }
+  @Test
+  void getAssaultProperties() {
 
-    @Test
-    void toggleLatencyAssault() {
-        boolean latencyActive = chaosMonkeySettings.getAssaultProperties().isLatencyActive();
+    assertThat(
+        chaosMonkeyJmxEndpoint.getAssaultProperties(),
+        is(chaosMonkeySettings.getAssaultProperties()));
+  }
 
-        chaosMonkeyJmxEndpoint.toggleLatencyAssault();
+  @Test
+  void toggleLatencyAssault() {
+    boolean latencyActive = chaosMonkeySettings.getAssaultProperties().isLatencyActive();
 
-        assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().isLatencyActive(), not(latencyActive));
-    }
+    chaosMonkeyJmxEndpoint.toggleLatencyAssault();
 
-    @Test
-    void toggleExceptionAssault() {
-        boolean exceptionsActive = chaosMonkeySettings.getAssaultProperties().isExceptionsActive();
-        chaosMonkeyJmxEndpoint.toggleExceptionAssault();
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().isLatencyActive(), not(latencyActive));
+  }
 
-        assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().isExceptionsActive(), not(exceptionsActive));
-    }
+  @Test
+  void toggleExceptionAssault() {
+    boolean exceptionsActive = chaosMonkeySettings.getAssaultProperties().isExceptionsActive();
+    chaosMonkeyJmxEndpoint.toggleExceptionAssault();
 
-    @Test
-    void toggleKillApplicationAssault() {
-        boolean killApplicationActive = chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
-        chaosMonkeyJmxEndpoint.toggleKillApplicationAssault();
+    assertThat(
+        chaosMonkeyJmxEndpoint.getAssaultProperties().isExceptionsActive(), not(exceptionsActive));
+  }
 
-        assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().isKillApplicationActive(), not(killApplicationActive));
-    }
+  @Test
+  void toggleKillApplicationAssault() {
+    boolean killApplicationActive =
+        chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
+    chaosMonkeyJmxEndpoint.toggleKillApplicationAssault();
 
-    @Test
-    void isChaosMonkeyActive() {
-        assertThat(chaosMonkeyJmxEndpoint.isChaosMonkeyActive(), is(String.valueOf(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())));
-    }
+    assertThat(
+        chaosMonkeyJmxEndpoint.getAssaultProperties().isKillApplicationActive(),
+        not(killApplicationActive));
+  }
 
-    @Test
-    void enableChaosMonkey() {
-        assertThat(chaosMonkeyJmxEndpoint.enableChaosMonkey(), is("Chaos Monkey is enabled"));
-        assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
-    }
+  @Test
+  void isChaosMonkeyActive() {
+    assertThat(
+        chaosMonkeyJmxEndpoint.isChaosMonkeyActive(),
+        is(String.valueOf(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())));
+  }
 
-    @Test
-    void disableChaosMonkey() {
-        assertThat(chaosMonkeyJmxEndpoint.disableChaosMonkey(), is("Chaos Monkey is disabled"));
-        assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
-    }
+  @Test
+  void enableChaosMonkey() {
+    assertThat(chaosMonkeyJmxEndpoint.enableChaosMonkey(), is("Chaos Monkey is enabled"));
+    assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
+  }
 
-    @Test
-    void getWatcherProperties() {
-        assertThat(chaosMonkeyJmxEndpoint.getWatcherProperties(), is(chaosMonkeySettings.getWatcherProperties()));
-    }
+  @Test
+  void disableChaosMonkey() {
+    assertThat(chaosMonkeyJmxEndpoint.disableChaosMonkey(), is("Chaos Monkey is disabled"));
+    assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
+  }
+
+  @Test
+  void getWatcherProperties() {
+    assertThat(
+        chaosMonkeyJmxEndpoint.getWatcherProperties(),
+        is(chaosMonkeySettings.getWatcherProperties()));
+  }
 }

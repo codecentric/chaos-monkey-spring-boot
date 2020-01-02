@@ -18,13 +18,11 @@ package de.codecentric.spring.boot.demo.chaos.monkey.repository;
 
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Eric Wyles
- */
+/** @author Eric Wyles */
 @Repository
 public class DemoRepositoryJDBC {
 
-    public String sayHello() {
-        return "Hello from Repository!";
-    }
+  public String sayHello() {
+    return "Hello from Repository!";
+  }
 }

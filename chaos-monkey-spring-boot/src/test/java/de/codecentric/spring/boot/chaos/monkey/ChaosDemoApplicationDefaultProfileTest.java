@@ -16,63 +16,64 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
-/**
- * @author Benjamin Wilms
- */
-@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+/** @author Benjamin Wilms */
+@SpringBootTest(
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
 class ChaosDemoApplicationDefaultProfileTest {
 
-    @Autowired(required = false)
-    private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+  @Autowired(required = false)
+  private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-    @Autowired
-    private Environment env;
+  @Autowired private Environment env;
 
-    @Test
-    void contextLoads() {
+  @Test
+  void contextLoads() {
 
-        assertNull(chaosMonkeyRequestScope);
-    }
+    assertNull(chaosMonkeyRequestScope);
+  }
 
-    @Test
-    void checkEnvWatcherController() {
-        assertThat(env.getProperty("chaos.monkey.watcher.controller"), is("true"));
-    }
+  @Test
+  void checkEnvWatcherController() {
+    assertThat(env.getProperty("chaos.monkey.watcher.controller"), is("true"));
+  }
 
-    @Test
-    void checkEnvAssaultLatencyRangeStart() {
-        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"), is("100"));
-    }
+  @Test
+  void checkEnvAssaultLatencyRangeStart() {
+    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"), is("100"));
+  }
 
-    @Test
-    void checkEnvAssaultLatencyRangeEnd() {
-        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"), is("200"));
-    }
+  @Test
+  void checkEnvAssaultLatencyRangeEnd() {
+    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"), is("200"));
+  }
 
-    @Test
-    void checkEnvCustomServiceWatcherList() {
+  @Test
+  void checkEnvCustomServiceWatcherList() {
 
-        List<String> stringList = env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
-        assertThat(stringList, hasSize(2));
-        assertThat(stringList.get(0), is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello"));
-        assertThat(stringList.get(1), is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"));
-    }
-
-
+    List<String> stringList =
+        env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
+    assertThat(stringList, hasSize(2));
+    assertThat(
+        stringList.get(0),
+        is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello"));
+    assertThat(
+        stringList.get(1),
+        is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"));
+  }
 }

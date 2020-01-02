@@ -19,26 +19,20 @@ package de.codecentric.spring.boot.chaos.monkey.watcher;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 abstract class ChaosMonkeyBaseAspect {
-    @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
-    public void classInChaosMonkeyPackage() {
-    }
 
-    @Pointcut("execution(* *.*(..))")
-    public void allPublicMethodPointcut() {
-    }
+  @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
+  public void classInChaosMonkeyPackage() {}
 
-    String calculatePointcut(String target) {
-        return target
-                .replaceAll("\\(\\)", "")
-                .replaceAll("\\)", "")
-                .replaceAll("\\(", ".");
-    }
+  @Pointcut("execution(* *.*(..))")
+  public void allPublicMethodPointcut() {}
 
-    String createSignature(MethodSignature signature) {
-        return signature.getDeclaringTypeName() + "." + signature.getMethod().getName();
-    }
+  String calculatePointcut(String target) {
+    return target.replaceAll("\\(\\)", "").replaceAll("\\)", "").replaceAll("\\(", ".");
+  }
+
+  String createSignature(MethodSignature signature) {
+    return signature.getDeclaringTypeName() + "." + signature.getMethod().getName();
+  }
 }

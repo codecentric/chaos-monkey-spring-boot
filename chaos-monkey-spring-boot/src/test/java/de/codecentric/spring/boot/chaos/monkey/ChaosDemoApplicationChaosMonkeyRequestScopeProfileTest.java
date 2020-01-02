@@ -16,6 +16,11 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
@@ -23,79 +28,73 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-/**
- * @author Benjamin Wilms
- */
-@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"chaos.monkey" +
-        ".watcher.controller=true", "chaos.monkey.assaults.level=1", "chaos.monkey.assaults.latencyRangeStart=10", "chaos.monkey.assaults" +
-        ".latencyRangeEnd=50", "chaos.monkey.assaults" +
-        ".killApplicationActive=true", "spring.profiles" +
-        ".active=chaos-monkey"})
+/** @author Benjamin Wilms */
+@SpringBootTest(
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "chaos.monkey" + ".watcher.controller=true",
+      "chaos.monkey.assaults.level=1",
+      "chaos.monkey.assaults.latencyRangeStart=10",
+      "chaos.monkey.assaults" + ".latencyRangeEnd=50",
+      "chaos.monkey.assaults" + ".killApplicationActive=true",
+      "spring.profiles" + ".active=chaos-monkey"
+    })
 class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
-    @Autowired
-    private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+  @Autowired private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-    @Autowired
-    private ChaosMonkeySettings monkeySettings;
+  @Autowired private ChaosMonkeySettings monkeySettings;
 
-    @Autowired
-    private LatencyAssault latencyAssault;
+  @Autowired private LatencyAssault latencyAssault;
 
-    @Autowired
-    private ExceptionAssault exceptionAssault;
+  @Autowired private ExceptionAssault exceptionAssault;
 
-    @Autowired
-    private KillAppAssault killAppAssault;
+  @Autowired private KillAppAssault killAppAssault;
 
+  @Mock private MetricEventPublisher metricsMock;
 
-    @Mock
-    private MetricEventPublisher metricsMock;
+  @BeforeEach
+  void setUp() {
+    chaosMonkeyRequestScope =
+        new ChaosMonkeyRequestScope(
+            monkeySettings,
+            Arrays.asList(latencyAssault, exceptionAssault),
+            Collections.emptyList(),
+            metricsMock);
+  }
 
-    @BeforeEach
-    void setUp() {
-        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(monkeySettings, Arrays.asList(latencyAssault, exceptionAssault), Collections.emptyList(), metricsMock);
-    }
+  @Test
+  void contextLoads() {
+    assertNotNull(chaosMonkeyRequestScope);
+  }
 
-    @Test
-    void contextLoads() {
-        assertNotNull(chaosMonkeyRequestScope);
-    }
+  @Test
+  void checkChaosSettingsObject() {
+    assertNotNull(monkeySettings);
+  }
 
-
-    @Test
-    void checkChaosSettingsObject() {
-        assertNotNull(monkeySettings);
-    }
-
-    @Test
-    void checkChaosSettingsValues() {
-        assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
-        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(50));
-        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(10));
-        assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));
-        assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(true));
-        assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));
-        assertThat(monkeySettings.getAssaultProperties().isKillApplicationActive(), is(true));
-        assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices(), is(nullValue()));
-        assertThat(monkeySettings.getWatcherProperties().isController(), is(true));
-        assertThat(monkeySettings.getWatcherProperties().isRepository(), is(false));
-        assertThat(monkeySettings.getWatcherProperties().isRestController(), is(false));
-        assertThat(monkeySettings.getWatcherProperties().isService(), is(true));
-
-    }
+  @Test
+  void checkChaosSettingsValues() {
+    assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
+    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(50));
+    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(10));
+    assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));
+    assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(true));
+    assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));
+    assertThat(monkeySettings.getAssaultProperties().isKillApplicationActive(), is(true));
+    assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices(), is(nullValue()));
+    assertThat(monkeySettings.getWatcherProperties().isController(), is(true));
+    assertThat(monkeySettings.getWatcherProperties().isRepository(), is(false));
+    assertThat(monkeySettings.getWatcherProperties().isRestController(), is(false));
+    assertThat(monkeySettings.getWatcherProperties().isService(), is(true));
+  }
 }

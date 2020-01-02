@@ -28,37 +28,36 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
-
-/**
- * @author Benjamin Wilms
- */
-
+/** @author Benjamin Wilms */
 @Aspect
 @AllArgsConstructor
 @Slf4j
 public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
-    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
-    private MetricEventPublisher metricEventPublisher;
-    private WatcherProperties watcherProperties;
+  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-    @Pointcut("within(@org.springframework.stereotype.Service *)")
-    public void classAnnotatedWithControllerPointcut() {
+  private MetricEventPublisher metricEventPublisher;
+
+  private WatcherProperties watcherProperties;
+
+  @Pointcut("within(@org.springframework.stereotype.Service *)")
+  public void classAnnotatedWithControllerPointcut() {}
+
+  @Around(
+      "classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+
+    if (watcherProperties.isService()) {
+      log.debug("Watching public method on service class: {}", pjp.getSignature());
+
+      if (metricEventPublisher != null)
+        metricEventPublisher.publishMetricEvent(
+            calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
+
+      MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+      chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
     }
-
-    @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
-    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-
-        if (watcherProperties.isService()) {
-            log.debug("Watching public method on service class: {}", pjp.getSignature());
-
-            if (metricEventPublisher != null)
-                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
-
-            MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-            chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
-        }
-        return pjp.proceed();
-    }
+    return pjp.proceed();
+  }
 }

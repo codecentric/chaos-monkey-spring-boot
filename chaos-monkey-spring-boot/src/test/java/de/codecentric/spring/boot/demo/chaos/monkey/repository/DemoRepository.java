@@ -19,11 +19,9 @@ package de.codecentric.spring.boot.demo.chaos.monkey.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Repository
-public interface DemoRepository extends CrudRepository<Hello,Long> {
+public interface DemoRepository extends CrudRepository<Hello, Long> {
 
-    void dummyPublicSaveMethod();
+  void dummyPublicSaveMethod();
 }

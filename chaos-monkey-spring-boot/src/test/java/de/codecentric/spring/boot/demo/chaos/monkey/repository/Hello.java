@@ -5,35 +5,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Entity
 public class Hello {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String message;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    public Hello(long id, String message) {
-        this.id = id;
-        this.message = message;
-    }
+  private String message;
 
-    public long getId() {
-        return id;
-    }
+  public Hello(long id, String message) {
+    this.id = id;
+    this.message = message;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

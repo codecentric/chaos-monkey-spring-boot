@@ -6,7 +6,7 @@ import org.springframework.data.repository.RepositoryDefinition;
 @RepositoryDefinition(domainClass = Hello.class, idClass = Long.class)
 public interface HelloRepoAnnotation {
 
-    Hello save(Hello hello);
+  Hello save(Hello hello);
 
-    Optional<Hello> findById(Long id);
+  Optional<Hello> findById(Long id);
 }

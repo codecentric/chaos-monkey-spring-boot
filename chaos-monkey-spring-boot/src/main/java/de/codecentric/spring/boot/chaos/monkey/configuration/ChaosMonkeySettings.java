@@ -16,27 +16,22 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
 public class ChaosMonkeySettings {
 
-    @NotNull
-    private ChaosMonkeyProperties chaosMonkeyProperties;
-    @NotNull
-    private AssaultProperties assaultProperties;
-    @NotNull
-    private WatcherProperties watcherProperties;
+  @NotNull private ChaosMonkeyProperties chaosMonkeyProperties;
 
+  @NotNull private AssaultProperties assaultProperties;
+
+  @NotNull private WatcherProperties watcherProperties;
 }

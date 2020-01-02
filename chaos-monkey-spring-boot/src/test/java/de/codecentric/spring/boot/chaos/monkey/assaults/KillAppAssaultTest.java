@@ -16,6 +16,10 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
@@ -29,42 +33,40 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-/**
- * @author Thorsten Deelmann
- */
+/** @author Thorsten Deelmann */
 @ExtendWith(MockitoExtension.class)
 class KillAppAssaultTest {
 
-    @Mock
-    private Appender mockAppender;
-    @Captor
-    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+  @Mock private Appender mockAppender;
 
-    @Mock
-    private MetricEventPublisher metricsMock;
+  @Captor private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
-    @BeforeEach
-    void setUp() {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        root.addAppender(mockAppender);
+  @Mock private MetricEventPublisher metricsMock;
 
-        captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
-    }
+  @BeforeEach
+  void setUp() {
+    ch.qos.logback.classic.Logger root =
+        (ch.qos.logback.classic.Logger)
+            LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+    root.addAppender(mockAppender);
 
-    @Test
-    void killsSpringBootApplication() {
-        KillAppAssault killAppAssault = new KillAppAssault(null, metricsMock);
-        killAppAssault.attack();
+    captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
+  }
 
-        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+  @Test
+  void killsSpringBootApplication() {
+    KillAppAssault killAppAssault = new KillAppAssault(null, metricsMock);
+    killAppAssault.attack();
 
-        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
-        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
-        assertEquals("Chaos Monkey - I am killing your Application!", captorLoggingEvent.getAllValues().get(0).getMessage());
-        assertEquals("Chaos Monkey - Unable to kill the App, I am not the BOSS!", captorLoggingEvent.getAllValues().get(1).getMessage());
-    }
+    verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+
+    assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
+    assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
+    assertEquals(
+        "Chaos Monkey - I am killing your Application!",
+        captorLoggingEvent.getAllValues().get(0).getMessage());
+    assertEquals(
+        "Chaos Monkey - Unable to kill the App, I am not the BOSS!",
+        captorLoggingEvent.getAllValues().get(1).getMessage());
+  }
 }

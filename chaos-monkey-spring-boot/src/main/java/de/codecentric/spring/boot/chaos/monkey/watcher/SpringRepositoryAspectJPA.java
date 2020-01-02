@@ -28,36 +28,36 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Aspect
 @AllArgsConstructor
 @Slf4j
 public class SpringRepositoryAspectJPA extends ChaosMonkeyBaseAspect {
 
-    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
-    private MetricEventPublisher metricEventPublisher;
-    private WatcherProperties watcherProperties;
+  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-    @Pointcut("this(org.springframework.data.repository.Repository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
-    public void implementsCrudRepository() {
+  private MetricEventPublisher metricEventPublisher;
+
+  private WatcherProperties watcherProperties;
+
+  @Pointcut(
+      "this(org.springframework.data.repository.Repository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
+  public void implementsCrudRepository() {}
+
+  @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+
+    if (watcherProperties.isRepository()) {
+      log.debug("Watching public method on repository class: {}", pjp.getSignature());
+
+      if (metricEventPublisher != null)
+        metricEventPublisher.publishMetricEvent(
+            calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
+
+      MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+      chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
     }
-
-    @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
-    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-
-        if (watcherProperties.isRepository()) {
-            log.debug("Watching public method on repository class: {}", pjp.getSignature());
-
-            if (metricEventPublisher != null)
-                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
-
-            MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-            chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
-        }
-        return pjp.proceed();
-    }
-
+    return pjp.proceed();
+  }
 }

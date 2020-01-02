@@ -32,70 +32,76 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestControllerEndpoint(enableByDefault = false, id = "chaosmonkey")
 public class ChaosMonkeyRestEndpoint {
 
-    private final ChaosMonkeySettings chaosMonkeySettings;
-    private final ChaosMonkeyRuntimeScope runtimeScope;
-    private final ChaosMonkeyScheduler scheduler;
+  private final ChaosMonkeySettings chaosMonkeySettings;
 
-    public ChaosMonkeyRestEndpoint(ChaosMonkeySettings chaosMonkeySettings, ChaosMonkeyRuntimeScope runtimeScope, ChaosMonkeyScheduler scheduler) {
-        this.chaosMonkeySettings = chaosMonkeySettings;
-        this.runtimeScope = runtimeScope;
-        this.scheduler = scheduler;
-    }
+  private final ChaosMonkeyRuntimeScope runtimeScope;
 
-    @PostMapping("/assaults")
-    public ResponseEntity<String> updateAssaultProperties(@RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
-        assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
-        scheduler.reloadConfig();
+  private final ChaosMonkeyScheduler scheduler;
 
-        return ResponseEntity.ok().body("Assault config has changed");
-    }
+  public ChaosMonkeyRestEndpoint(
+      ChaosMonkeySettings chaosMonkeySettings,
+      ChaosMonkeyRuntimeScope runtimeScope,
+      ChaosMonkeyScheduler scheduler) {
+    this.chaosMonkeySettings = chaosMonkeySettings;
+    this.runtimeScope = runtimeScope;
+    this.scheduler = scheduler;
+  }
 
-    @PostMapping("/assaults/runtime/attack")
-    public ResponseEntity<String> attack() {
-        runtimeScope.callChaosMonkey();
-        return ResponseEntity.ok("Started runtime assaults");
-    }
+  @PostMapping("/assaults")
+  public ResponseEntity<String> updateAssaultProperties(
+      @RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
+    assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
+    scheduler.reloadConfig();
 
-    @GetMapping("/assaults")
-    public AssaultProperties getAssaultSettings() {
-        return this.chaosMonkeySettings.getAssaultProperties();
-    }
+    return ResponseEntity.ok().body("Assault config has changed");
+  }
 
-    @PostMapping("/enable")
-    public ResponseEntity<String> enableChaosMonkey() {
-        this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-        return ResponseEntity.ok().body("Chaos Monkey is enabled");
-    }
+  @PostMapping("/assaults/runtime/attack")
+  public ResponseEntity<String> attack() {
+    runtimeScope.callChaosMonkey();
+    return ResponseEntity.ok("Started runtime assaults");
+  }
 
-    @PostMapping("/disable")
-    public ResponseEntity<String> disableChaosMonkey() {
-        this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-        return ResponseEntity.ok().body("Chaos Monkey is disabled");
-    }
+  @GetMapping("/assaults")
+  public AssaultProperties getAssaultSettings() {
+    return this.chaosMonkeySettings.getAssaultProperties();
+  }
 
-    @GetMapping
-    public ChaosMonkeySettings status() {
-        return this.chaosMonkeySettings;
-    }
+  @PostMapping("/enable")
+  public ResponseEntity<String> enableChaosMonkey() {
+    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
+    return ResponseEntity.ok().body("Chaos Monkey is enabled");
+  }
 
-    @GetMapping("/status")
-    public ResponseEntity<String> getStatus() {
-        if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())
-            return ResponseEntity.status(HttpStatus.OK).body("Ready to be evil!");
-        else
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
-    }
+  @PostMapping("/disable")
+  public ResponseEntity<String> disableChaosMonkey() {
+    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
+    return ResponseEntity.ok().body("Chaos Monkey is disabled");
+  }
 
-    @PostMapping("/watchers")
-    public ResponseEntity<String> updateWatcherProperties(@RequestBody @Validated WatcherPropertiesUpdate watcherProperties) {
-        watcherProperties.applyTo(chaosMonkeySettings.getWatcherProperties());
-        scheduler.reloadConfig();
+  @GetMapping
+  public ChaosMonkeySettings status() {
+    return this.chaosMonkeySettings;
+  }
 
-        return ResponseEntity.ok().body("Watcher config has changed");
-    }
+  @GetMapping("/status")
+  public ResponseEntity<String> getStatus() {
+    if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())
+      return ResponseEntity.status(HttpStatus.OK).body("Ready to be evil!");
+    else return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
+  }
 
-    @GetMapping("/watchers")
-    public WatcherProperties getWatcherSettings() {
-        return this.chaosMonkeySettings.getWatcherProperties();
-    }
+  @PostMapping("/watchers")
+  public ResponseEntity<String> updateWatcherProperties(
+      @RequestBody @Validated WatcherPropertiesUpdate watcherProperties) {
+    watcherProperties.applyTo(chaosMonkeySettings.getWatcherProperties());
+    scheduler.reloadConfig();
+
+    return ResponseEntity.ok().body("Watcher config has changed");
+  }
+
+  @GetMapping("/watchers")
+  public WatcherProperties getWatcherSettings() {
+    return this.chaosMonkeySettings.getWatcherProperties();
+  }
 }
