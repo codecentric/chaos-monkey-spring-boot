@@ -65,6 +65,17 @@ is fine as long as you have a reason to do so. Please add a comment for new exce
 `./mvnw verify` also runs checkstyle while `./mvnw test` does not.
 ====
 
+=== IntelliJ Setup
+If you're using IntelliJ then we highly recommend to install the https://plugins.jetbrains.com/plugin/8527-google-java-format[google format plugin] via the plugin marketplace.
+Additionally, to make sure IntelliJ uses the correct code style, install the provided https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml[code style file].
+
+[NOTE]
+====
+Installation of code style (download the file first):
+
+Under `File -> Settings -> Editor -> Code Style` (Windows) or `Preferences -> Editor -> Code Style` (OSX)
+press the gear button and choose `Import Scheme`. Then, select the downloaded theme file and `Apply` the style.
+====
 
 == Working With The Code
 Considering these recommendations will help us in getting your pull request merged. 
