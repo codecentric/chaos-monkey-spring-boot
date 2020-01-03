@@ -53,9 +53,10 @@ public class SpringComponentAspect extends ChaosMonkeyBaseAspect {
     if (watcherProperties.isComponent()) {
       log.debug("Watching public method on component class: {}", pjp.getSignature());
 
-      if (metricEventPublisher != null)
+      if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
             calculatePointcut(pjp.toShortString()), MetricType.COMPONENT);
+      }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 

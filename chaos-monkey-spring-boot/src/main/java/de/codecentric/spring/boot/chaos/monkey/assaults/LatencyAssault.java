@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /** @author Thorsten Deelmann */
 public class LatencyAssault implements ChaosMonkeyRequestAssault {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LatencyAssault.class);
+  private static final Logger Logger = LoggerFactory.getLogger(LatencyAssault.class);
 
   private final ChaosMonkeySettings settings;
 
@@ -58,7 +58,7 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
 
   @Override
   public void attack() {
-    LOGGER.debug("Chaos Monkey - timeout");
+    Logger.debug("Chaos Monkey - timeout");
 
     atomicTimeoutGauge.set(determineLatency());
 

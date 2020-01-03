@@ -50,9 +50,10 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
     if (watcherProperties.isService()) {
       log.debug("Watching public method on service class: {}", pjp.getSignature());
 
-      if (metricEventPublisher != null)
+      if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
             calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
+      }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 

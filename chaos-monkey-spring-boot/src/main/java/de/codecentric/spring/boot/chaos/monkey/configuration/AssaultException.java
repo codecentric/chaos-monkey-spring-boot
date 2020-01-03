@@ -17,7 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "chaos.monkey.assaults.exception")
 public class AssaultException {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AssaultException.class);
+  private static final Logger Logger = LoggerFactory.getLogger(AssaultException.class);
 
   @Value("${type : java.lang.RuntimeException}")
   private String type;
@@ -49,7 +49,7 @@ public class AssaultException {
             constructor.newInstance(this.getExceptionArgumentValues().toArray(new Object[0]));
       }
     } catch (ReflectiveOperationException e) {
-      LOGGER.warn(
+      Logger.warn(
           "Cannot instantiate the class for provided type: {}. Fallback: Throw RuntimeException",
           type);
       instance = new RuntimeException("Chaos Monkey - RuntimeException");

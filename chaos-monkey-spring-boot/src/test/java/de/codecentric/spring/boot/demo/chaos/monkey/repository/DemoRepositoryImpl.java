@@ -19,12 +19,12 @@ public class DemoRepositoryImpl implements DemoRepository {
   }
 
   @Override
-  public Optional<Hello> findById(Long aLong) {
+  public Optional<Hello> findById(Long number) {
     return Optional.empty();
   }
 
   @Override
-  public boolean existsById(Long aLong) {
+  public boolean existsById(Long number) {
     return false;
   }
 
@@ -44,7 +44,7 @@ public class DemoRepositoryImpl implements DemoRepository {
   }
 
   @Override
-  public void deleteById(Long aLong) {}
+  public void deleteById(Long number) {}
 
   @Override
   public void delete(Hello hello) {}

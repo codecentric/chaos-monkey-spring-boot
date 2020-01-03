@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /** @author Thorsten Deelmann */
 public class ExceptionAssault implements ChaosMonkeyRequestAssault {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAssault.class);
+  private static final Logger Logger = LoggerFactory.getLogger(ExceptionAssault.class);
 
   private final ChaosMonkeySettings settings;
 
@@ -44,13 +44,14 @@ public class ExceptionAssault implements ChaosMonkeyRequestAssault {
 
   @Override
   public void attack() {
-    LOGGER.info("Chaos Monkey - exception");
+    Logger.info("Chaos Monkey - exception");
 
     AssaultException assaultException = this.settings.getAssaultProperties().getException();
 
     // metrics
-    if (metricEventPublisher != null)
+    if (metricEventPublisher != null) {
       metricEventPublisher.publishMetricEvent(MetricType.EXCEPTION_ASSAULT);
+    }
 
     assaultException.throwExceptionInstance();
   }

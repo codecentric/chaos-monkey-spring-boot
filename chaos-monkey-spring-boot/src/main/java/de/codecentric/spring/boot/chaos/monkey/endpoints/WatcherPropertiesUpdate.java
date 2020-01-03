@@ -25,10 +25,11 @@ public class WatcherPropertiesUpdate {
   @Nullable private Boolean component;
 
   private <T> void applyTo(T value, Consumer<T> setter) {
-    if (value != null) setter.accept(value);
+    if (value != null) {
+      setter.accept(value);
+    }
   }
 
-  @SuppressWarnings("all")
   public void applyTo(WatcherProperties t) {
     applyTo(controller, t::setController);
     applyTo(restController, t::setRestController);

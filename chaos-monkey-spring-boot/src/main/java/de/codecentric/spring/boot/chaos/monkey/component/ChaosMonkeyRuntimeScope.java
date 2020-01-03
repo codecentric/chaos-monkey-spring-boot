@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ChaosMonkeyRuntimeScope {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyRuntimeScope.class);
+  private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyRuntimeScope.class);
 
   private final ChaosMonkeySettings chaosMonkeySettings;
 
@@ -28,7 +28,7 @@ public class ChaosMonkeyRuntimeScope {
 
   public void callChaosMonkey() {
     if (isEnabled()) {
-      LOGGER.info("Executing all runtime-scoped attacks");
+      Logger.info("Executing all runtime-scoped attacks");
       chooseAndRunAttacks();
     }
   }

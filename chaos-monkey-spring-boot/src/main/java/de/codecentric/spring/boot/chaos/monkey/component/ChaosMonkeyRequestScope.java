@@ -62,8 +62,9 @@ public class ChaosMonkeyRequestScope {
   public void callChaosMonkey(String simpleName) {
     if (isEnabled() && isTrouble()) {
 
-      if (metricEventPublisher != null)
+      if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+      }
 
       // Custom watched services can be defined at runtime, if there are any, only
       // these will be attacked!
@@ -90,9 +91,10 @@ public class ChaosMonkeyRequestScope {
     }
     getRandomFrom(activeAssaults).attack();
 
-    if (metricEventPublisher != null)
+    if (metricEventPublisher != null) {
       metricEventPublisher.publishMetricEvent(
           MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
   }
 
   private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {
@@ -112,12 +114,12 @@ public class ChaosMonkeyRequestScope {
 
   private static class RequestAssaultAdapter implements ChaosMonkeyRequestAssault {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RequestAssaultAdapter.class);
+    private static final Logger Logger = LoggerFactory.getLogger(RequestAssaultAdapter.class);
 
     private final ChaosMonkeyAssault rawAssault;
 
     private RequestAssaultAdapter(ChaosMonkeyAssault rawAssault) {
-      LOGGER.warn(
+      Logger.warn(
           "Adapting a "
               + rawAssault.getClass().getSimpleName()
               + " into a request assault. The class should extend its proper parent");

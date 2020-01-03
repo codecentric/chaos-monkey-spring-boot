@@ -10,7 +10,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 public class ChaosMonkeyScheduler {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
+  private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
 
   @Nullable private final ScheduledTaskRegistrar scheduler;
 
@@ -29,7 +29,7 @@ public class ChaosMonkeyScheduler {
     this.runtimeScope = runtimeScope;
 
     if (scheduler == null) {
-      LOGGER.warn(
+      Logger.warn(
           "No ScheduledTaskRegistrar available in application context, scheduler is not functional");
     }
 
@@ -41,7 +41,7 @@ public class ChaosMonkeyScheduler {
     boolean active = !"OFF".equals(cronExpression);
 
     if (currentTask != null) {
-      LOGGER.info("Cancelling previous task");
+      Logger.info("Cancelling previous task");
       currentTask.cancel();
       currentTask = null;
     }
@@ -50,7 +50,7 @@ public class ChaosMonkeyScheduler {
       if (scheduler == null) {
         // We might consider an exception here, since the user intent could
         // clearly not be serviced
-        LOGGER.error("No scheduler available in application context, will not process schedule");
+        Logger.error("No scheduler available in application context, will not process schedule");
       } else {
         CronTask task = new CronTask(runtimeScope::callChaosMonkey, cronExpression);
         currentTask = scheduler.scheduleCronTask(task);

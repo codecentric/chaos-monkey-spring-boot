@@ -50,9 +50,10 @@ public class SpringRestControllerAspect extends ChaosMonkeyBaseAspect {
     if (watcherProperties.isRestController()) {
       log.debug("Watching public method on rest controller class: {}", pjp.getSignature());
 
-      if (metricEventPublisher != null)
+      if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
             calculatePointcut(pjp.toShortString()), MetricType.RESTCONTROLLER);
+      }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 

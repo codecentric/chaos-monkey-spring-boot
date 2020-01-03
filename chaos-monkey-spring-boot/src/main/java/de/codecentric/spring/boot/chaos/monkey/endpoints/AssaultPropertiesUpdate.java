@@ -71,14 +71,15 @@ public class AssaultPropertiesUpdate {
   @Nullable private List<String> watchedCustomServices;
 
   private <T> void applyTo(T value, Consumer<T> setter) {
-    if (value != null) setter.accept(value);
+    if (value != null) {
+      setter.accept(value);
+    }
   }
 
-  @SuppressWarnings("all")
   public void applyTo(AssaultProperties t) {
-    applyTo(level, t::setLevel);
-    applyTo(latencyActive, t::setLatencyActive);
-    applyTo(latencyRangeStart, t::setLatencyRangeStart);
+    this.applyTo(level, t::setLevel);
+    this.applyTo(latencyActive, t::setLatencyActive);
+    this.applyTo(latencyRangeStart, t::setLatencyRangeStart);
     applyTo(latencyRangeEnd, t::setLatencyRangeEnd);
 
     applyTo(exceptionsActive, t::setExceptionsActive);

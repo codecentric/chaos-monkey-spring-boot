@@ -80,7 +80,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntTest {
   }
 
   @Test
-  void postChaosMonkeySettingsEqualsNULL() {
+  void postChaosMonkeySettingsEqualsNull() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     HttpEntity<ChaosMonkeySettings> entity = new HttpEntity<>(null, headers);
@@ -90,7 +90,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntTest {
   }
 
   @Test
-  void postChaosMonkeySettingsValueObjectAssaultPropertiesNULL() {
+  void postChaosMonkeySettingsValueObjectAssaultPropertiesNull() {
     ResponseEntity<String> responseEntity =
         postChaosMonkeySettings(
             new ChaosMonkeySettings(new ChaosMonkeyProperties(), null, new WatcherProperties()));
@@ -98,7 +98,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntTest {
   }
 
   @Test
-  void postChaosMonkeySettingsValueObjectWatcherPropertiesNULL() {
+  void postChaosMonkeySettingsValueObjectWatcherPropertiesNull() {
     ResponseEntity<String> responseEntity =
         postChaosMonkeySettings(
             new ChaosMonkeySettings(new ChaosMonkeyProperties(), new AssaultProperties(), null));
@@ -165,6 +165,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntTest {
 
       private int level = 10;
     }
+
     ResponseEntity<String> result =
         testRestTemplate.postForEntity(
             baseUrl + "/assaults", new MinimalSubmission(), String.class);

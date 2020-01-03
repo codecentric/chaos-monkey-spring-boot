@@ -60,14 +60,14 @@ import org.springframework.util.StreamUtils;
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-  ChaosMonkeyProperties.class,
-  AssaultProperties.class,
-  WatcherProperties.class
+    ChaosMonkeyProperties.class,
+    AssaultProperties.class,
+    WatcherProperties.class
 })
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
+  private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
 
   private final ChaosMonkeyProperties chaosMonkeyProperties;
 
@@ -87,9 +87,9 @@ public class ChaosMonkeyConfiguration {
       String chaosLogo =
           StreamUtils.copyToString(
               new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
-      LOGGER.info(chaosLogo);
+      Logger.info(chaosLogo);
     } catch (IOException e) {
-      LOGGER.info("Chaos Monkey - ready to do evil");
+      Logger.info("Chaos Monkey - ready to do evil");
     }
   }
 
@@ -181,7 +181,7 @@ public class ChaosMonkeyConfiguration {
   @DependsOn("chaosMonkeyRequestScope")
   @ConditionalOnClass(name = "org.springframework.data.repository.Repository")
   // Creates aspects that match interfaces annotated with @Repository
-  public SpringRepositoryAspectJPA repositoryAspectJPA(
+  public SpringRepositoryAspectJPA repositoryAspectJpa(
       ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
     return new SpringRepositoryAspectJPA(chaosMonkeyRequestScope, publisher(), watcherProperties);
   }
@@ -189,7 +189,7 @@ public class ChaosMonkeyConfiguration {
   @Bean
   @DependsOn("chaosMonkeyRequestScope")
   // creates aspects that match simple classes annotated with @repository
-  public SpringRepositoryAspectJDBC repositoryAspectJDBC(
+  public SpringRepositoryAspectJDBC repositoryAspectJdbc(
       ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
     return new SpringRepositoryAspectJDBC(chaosMonkeyRequestScope, publisher(), watcherProperties);
   }

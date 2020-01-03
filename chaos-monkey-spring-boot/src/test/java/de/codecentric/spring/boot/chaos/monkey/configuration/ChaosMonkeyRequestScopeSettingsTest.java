@@ -31,7 +31,6 @@ class ChaosMonkeyRequestScopeSettingsTest {
 
   @Test
   void noArgsTest() {
-
     settings = new ChaosMonkeySettings();
     ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
     settings.setChaosMonkeyProperties(chaosMonkeyProperties);
@@ -55,7 +54,6 @@ class ChaosMonkeyRequestScopeSettingsTest {
 
   @Test
   void lombokDataTest() {
-
     ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
     AssaultProperties assaultProperties = getAssaultProperties();
     WatcherProperties watcherProperties = getWatcherProperties();
@@ -68,14 +66,16 @@ class ChaosMonkeyRequestScopeSettingsTest {
 
   @Test
   void lombokDataSetTest() {
+    settings = new ChaosMonkeySettings();
 
     ChaosMonkeyProperties chaosMonkeyProperties = getChaosMonkeyProperties();
-    AssaultProperties assaultProperties = getAssaultProperties();
-    WatcherProperties watcherProperties = getWatcherProperties();
-    settings = new ChaosMonkeySettings();
     settings.setChaosMonkeyProperties(chaosMonkeyProperties);
-    settings.setAssaultProperties(assaultProperties);
+
+    WatcherProperties watcherProperties = getWatcherProperties();
     settings.setWatcherProperties(watcherProperties);
+
+    AssaultProperties assaultProperties = getAssaultProperties();
+    settings.setAssaultProperties(assaultProperties);
 
     assertThat(settings.getChaosMonkeyProperties(), notNullValue());
     assertThat(settings.getAssaultProperties(), notNullValue());
@@ -84,7 +84,6 @@ class ChaosMonkeyRequestScopeSettingsTest {
 
   @Test
   void lombokDataNullTest() {
-
     settings = new ChaosMonkeySettings(null, null, null);
 
     assertThat(settings.getChaosMonkeyProperties(), nullValue());

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class AssaultExceptionValidator
     implements ConstraintValidator<AssaultExceptionConstraint, AssaultException> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AssaultExceptionValidator.class);
+  private static final Logger Logger = LoggerFactory.getLogger(AssaultExceptionValidator.class);
 
   @Override
   public boolean isValid(
@@ -26,7 +26,7 @@ public class AssaultExceptionValidator
       }
       return true;
     } catch (ReflectiveOperationException e) {
-      LOGGER.warn("Invalid combination of type ({}) and arguments provided", exception.getType());
+      Logger.warn("Invalid combination of type ({}) and arguments provided", exception.getType());
     }
     return false;
   }

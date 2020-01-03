@@ -14,19 +14,23 @@ public class Metrics implements ApplicationListener<MetricEvent> {
   }
 
   private void counter(MetricType type, String... tags) {
-    if (meterRegistry != null && tags != null)
+    if (meterRegistry != null && tags != null) {
       meterRegistry.counter(type.getMetricName(), tags).increment();
+    }
   }
 
   private void counterWatcher(MetricType type, String name) {
-    if (meterRegistry != null)
+    if (meterRegistry != null) {
       meterRegistry
           .counter(type.getMetricName() + ".watcher", "component", extractComponent(name))
           .increment();
+    }
   }
 
   private void gauge(MetricType type, double number) {
-    if (meterRegistry != null) meterRegistry.gauge(type.getMetricName() + ".gauge.", number);
+    if (meterRegistry != null) {
+      meterRegistry.gauge(type.getMetricName() + ".gauge.", number);
+    }
   }
 
   private String extractComponent(String name) {

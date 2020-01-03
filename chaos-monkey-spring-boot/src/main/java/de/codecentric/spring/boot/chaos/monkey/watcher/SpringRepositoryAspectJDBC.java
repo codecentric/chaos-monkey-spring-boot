@@ -50,9 +50,10 @@ public class SpringRepositoryAspectJDBC extends ChaosMonkeyBaseAspect {
     if (watcherProperties.isRepository()) {
       log.debug("Watching public method on repository stereotype class: {}", pjp.getSignature());
 
-      if (metricEventPublisher != null)
+      if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
             calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
+      }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 

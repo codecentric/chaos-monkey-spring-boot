@@ -30,7 +30,7 @@ import org.springframework.scheduling.annotation.Async;
 /** @author Benjamin Wilms */
 public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MemoryAssault.class);
+  private static final Logger Logger = LoggerFactory.getLogger(MemoryAssault.class);
 
   private static final AtomicLong stolenMemory = new AtomicLong(0);
 
@@ -57,22 +57,23 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
   @Override
   @Async
   public void attack() {
-    LOGGER.info("Chaos Monkey - memory assault");
+    Logger.info("Chaos Monkey - memory assault");
 
     // metrics
-    if (metricEventPublisher != null)
+    if (metricEventPublisher != null) {
       metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT);
+    }
 
     if (inAttack.compareAndSet(false, true)) {
       try {
-        LOGGER.debug("Detected java version: " + System.getProperty("java.version"));
+        Logger.debug("Detected java version: " + System.getProperty("java.version"));
         eatFreeMemory();
       } finally {
         inAttack.set(false);
       }
     }
 
-    LOGGER.info("Chaos Monkey - memory assault cleaned up");
+    Logger.info("Chaos Monkey - memory assault cleaned up");
   }
 
   private void eatFreeMemory() {
@@ -87,11 +88,11 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
       long usedMemory = runtime.totalMemory() - freeMemory;
 
       if (cannotAllocateMoreMemory()) {
-        LOGGER.debug("Cannot allocate more memory");
+        Logger.debug("Cannot allocate more memory");
         break;
       }
 
-      LOGGER.debug("Used memory in bytes: " + usedMemory);
+      Logger.debug("Used memory in bytes: " + usedMemory);
 
       stolenMemoryTotal = stealMemory(memoryVector, stolenMemoryTotal, getBytesToSteal());
       waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
@@ -99,7 +100,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
     // Hold memory level and cleanUp after, only if experiment is running
     if (isActive()) {
-      LOGGER.info("Memory fill reached, now sleeping and holding memory");
+      Logger.info("Memory fill reached, now sleeping and holding memory");
       waitUntil(settings.getAssaultProperties().getMemoryMillisecondsHoldFilledMemory());
     }
 
@@ -139,7 +140,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     long newStolenTotal = MemoryAssault.stolenMemory.addAndGet(bytesToSteal);
     metricEventPublisher.publishMetricEvent(
         MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
-    LOGGER.debug(
+    Logger.debug(
         "Chaos Monkey - memory assault increase, free memory: "
             + SizeConverter.toMegabytes(runtime.freeMemory()));
 

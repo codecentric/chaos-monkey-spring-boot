@@ -29,7 +29,7 @@ import org.springframework.context.ApplicationContextAware;
 /** @author Thorsten Deelmann */
 public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationContextAware {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KillAppAssault.class);
+  private static final Logger Logger = LoggerFactory.getLogger(KillAppAssault.class);
 
   private final ChaosMonkeySettings settings;
 
@@ -50,17 +50,18 @@ public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationCon
   @Override
   public void attack() {
     try {
-      LOGGER.info("Chaos Monkey - I am killing your Application!");
+      Logger.info("Chaos Monkey - I am killing your Application!");
 
-      if (metricEventPublisher != null)
+      if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
+      }
 
       int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
       Thread.sleep(5000); // wait before kill to deliver some metrics
 
       System.exit(exit);
     } catch (Exception e) {
-      LOGGER.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
+      Logger.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
     }
   }
 

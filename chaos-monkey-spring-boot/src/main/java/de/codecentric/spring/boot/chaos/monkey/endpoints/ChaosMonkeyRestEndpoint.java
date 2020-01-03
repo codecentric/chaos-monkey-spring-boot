@@ -86,9 +86,11 @@ public class ChaosMonkeyRestEndpoint {
 
   @GetMapping("/status")
   public ResponseEntity<String> getStatus() {
-    if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())
+    if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()) {
       return ResponseEntity.status(HttpStatus.OK).body("Ready to be evil!");
-    else return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
+    } else {
+      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
+    }
   }
 
   @PostMapping("/watchers")
