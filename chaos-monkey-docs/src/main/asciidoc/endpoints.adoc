@@ -41,9 +41,6 @@ management.endpoints.web.exposure.include=health,info,chaosmonkey
 
 |<<watchers,/chaosmonkey/watchers>>
 |Running Watchers configuration.
-
-NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the
-application starts.
 |GET
 
 |<<watcherspost,/chaosmonkey/watchers>>
