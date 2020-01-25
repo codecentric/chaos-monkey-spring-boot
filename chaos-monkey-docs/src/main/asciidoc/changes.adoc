@@ -6,7 +6,7 @@
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/163[#163] Fix wrong docs about configuration of watcher at runtime
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/160[#160] - Introduce Google Style Guide.
 
 === New Features
@@ -17,5 +17,6 @@ This release was only possible because of these great humans:
 
 // - https://github.com/octocat[@octocat]
 - https://github.com/maiksensi[@maiksensi]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!
