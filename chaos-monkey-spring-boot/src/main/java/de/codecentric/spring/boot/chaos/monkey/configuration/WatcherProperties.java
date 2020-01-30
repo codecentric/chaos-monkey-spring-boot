@@ -37,7 +37,7 @@ public class WatcherProperties {
     @Value("${restController:false}")
     private boolean restController;
 
-    @Value("${service:true}")
+    @Value("${service:false}")
     private boolean service;
 
     @Value("${repository:false}")

@@ -42,7 +42,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @EqualsAndHashCode
 @AssaultPropertiesLatencyRangeConstraint
 public class AssaultProperties {
-    @Value("${level : 5}")
+    @Value("${level : 1}")
     @Min(value = 1)
     @Max(value = 10000)
     private int level;
@@ -57,7 +57,7 @@ public class AssaultProperties {
     @Max(value = Integer.MAX_VALUE)
     private int latencyRangeEnd;
 
-    @Value("${latencyActive : true}")
+    @Value("${latencyActive : false}")
     private boolean latencyActive;
 
     @Value("${exceptionsActive : false}")
