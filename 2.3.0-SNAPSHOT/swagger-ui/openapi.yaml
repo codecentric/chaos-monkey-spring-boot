@@ -1,0 +1,53 @@
+openapi: "3.0.2"
+
+info:
+  title: Chaos Monkey For Spring Boot REST API
+  version: 1.0.0
+
+paths:
+  /actuator/chaosmonkey/watchers:
+    get:
+      summary: Get the configuration of the watchers
+      description: The watchers define what will be assaulted, if an assault is enabled.
+      tags:
+        - Actuator
+      responses:
+        '200':
+          description: Successfully returned the watcher configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Watchers"
+
+components:
+  schemas:
+    Watchers:
+      required:
+        - controller
+        - restController
+        - service
+        - repository
+        - component
+      properties:
+        controller:
+          type: boolean
+          description: Whether classes annotated with @Controller will be assaulted.
+        restController:
+          type: boolean
+          description: Whether classes annotated with @RestController will be assaulted.
+        service:
+          type: boolean
+          description: Whether classes annotated with @Service will be assaulted.
+        repository:
+          type: boolean
+          description: Whether classes annotated with @Repository will be assaulted.
+        component:
+          type: boolean
+          description: Whether classes annotated with @Component will be assaulted.
+          
+      example:
+        controller: false
+        restController: false
+        service: true
+        repository: true
+        component: false
