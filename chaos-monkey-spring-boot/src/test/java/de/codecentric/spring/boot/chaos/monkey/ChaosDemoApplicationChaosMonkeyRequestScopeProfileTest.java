@@ -41,12 +41,12 @@ import org.springframework.boot.test.context.SpringBootTest;
     classes = ChaosDemoApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = {
-      "chaos.monkey" + ".watcher.controller=true",
+      "chaos.monkey.watcher.controller=true",
       "chaos.monkey.assaults.level=1",
       "chaos.monkey.assaults.latencyRangeStart=10",
-      "chaos.monkey.assaults" + ".latencyRangeEnd=50",
-      "chaos.monkey.assaults" + ".killApplicationActive=true",
-      "spring.profiles" + ".active=chaos-monkey"
+      "chaos.monkey.assaults.latencyRangeEnd=50",
+      "chaos.monkey.assaults.killApplicationActive=true",
+      "spring.profiles.active=chaos-monkey"
     })
 class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
@@ -88,13 +88,13 @@ class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
     assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(50));
     assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(10));
     assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));
-    assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(true));
+    assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(false));
     assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));
     assertThat(monkeySettings.getAssaultProperties().isKillApplicationActive(), is(true));
     assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices(), is(nullValue()));
     assertThat(monkeySettings.getWatcherProperties().isController(), is(true));
     assertThat(monkeySettings.getWatcherProperties().isRepository(), is(false));
     assertThat(monkeySettings.getWatcherProperties().isRestController(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isService(), is(true));
+    assertThat(monkeySettings.getWatcherProperties().isService(), is(false));
   }
 }

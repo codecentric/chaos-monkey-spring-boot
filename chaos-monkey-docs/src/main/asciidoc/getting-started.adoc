@@ -56,20 +56,17 @@ java -cp your-app.jar
 
 It is your decision how you want to integrate and use the CM4SB. There is no difference between the two possibilities.
 
-=== Minimal property file to run CM4SB
-Activate the watcher you need for your experiments. In this example we want to make attacks on our *@Service* and *@RestController* annotated classes.
+=== Minimal CM4SB configuration via property file
+In this example, we want to make latency attacks on our *@Service* annotated classes.
 
-NOTE: *chaos.monkey.enabled=true* is optional, you can enable/disable the Chaos Monkey at runtime! (default=false)
 [source,txt,subs="verbatim,attributes"]
 .application.properties:
 ----
 spring.profiles.active=chaos-monkey
 chaos.monkey.enabled=true
 
-chaos.monkey.watcher.controller=false
-chaos.monkey.watcher.restController=true
 chaos.monkey.watcher.service=true
-chaos.monkey.watcher.repository=false
+chaos.monkey.assaults.latencyActive=true
 ----
 [source,yml,subs="verbatim,attributes"]
 .application.yml:
@@ -81,9 +78,9 @@ chaos:
   monkey:
     enabled: true
     watcher:
-      component: false
-      controller: false
-      repository: false
-      rest-controller: true
       service: true
+    assaults:
+      latencyActive: true
 ----
+
+Configuration via property file offers all available options, but requires a restart to apply changes. To avoid this, you can configure it via Actuator.
