@@ -9,44 +9,52 @@ import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 public class ChaosMonkeyScheduler {
-    private final Logger LOGGER = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
 
-    @Nullable private final ScheduledTaskRegistrar scheduler;
-    private final AssaultProperties config;
-    private final ChaosMonkeyRuntimeScope runtimeScope;
+  private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
 
-    @Nullable private ScheduledTask currentTask;
+  @Nullable private final ScheduledTaskRegistrar scheduler;
 
-    public ChaosMonkeyScheduler(ScheduledTaskRegistrar scheduler, AssaultProperties config, ChaosMonkeyRuntimeScope runtimeScope) {
-        this.scheduler = scheduler;
-        this.config = config;
-        this.runtimeScope = runtimeScope;
+  private final AssaultProperties config;
 
-        if (scheduler == null) {
-            LOGGER.warn("No ScheduledTaskRegistrar available in application context, scheduler is not functional");
-        }
+  private final ChaosMonkeyRuntimeScope runtimeScope;
 
-        reloadConfig();
+  @Nullable private ScheduledTask currentTask;
+
+  public ChaosMonkeyScheduler(
+      ScheduledTaskRegistrar scheduler,
+      AssaultProperties config,
+      ChaosMonkeyRuntimeScope runtimeScope) {
+    this.scheduler = scheduler;
+    this.config = config;
+    this.runtimeScope = runtimeScope;
+
+    if (scheduler == null) {
+      Logger.warn(
+          "No ScheduledTaskRegistrar available in application context, scheduler is not functional");
     }
 
-    public void reloadConfig() {
-        String cronExpression = config.getRuntimeAssaultCronExpression();
-        boolean active = !"OFF".equals(cronExpression);
+    reloadConfig();
+  }
 
-        if (currentTask != null) {
-            LOGGER.info("Cancelling previous task");
-            currentTask.cancel();
-            currentTask = null;
-        }
+  public void reloadConfig() {
+    String cronExpression = config.getRuntimeAssaultCronExpression();
+    boolean active = !"OFF".equals(cronExpression);
 
-        if (active) {
-            if (scheduler == null) {
-                // We might consider an exception here, since the user intent could clearly not be serviced
-                LOGGER.error("No scheduler available in application context, will not process schedule");
-            } else {
-                CronTask task = new CronTask(runtimeScope::callChaosMonkey, cronExpression);
-                currentTask = scheduler.scheduleCronTask(task);
-            }
-        }
+    if (currentTask != null) {
+      Logger.info("Cancelling previous task");
+      currentTask.cancel();
+      currentTask = null;
     }
+
+    if (active) {
+      if (scheduler == null) {
+        // We might consider an exception here, since the user intent could
+        // clearly not be serviced
+        Logger.error("No scheduler available in application context, will not process schedule");
+      } else {
+        CronTask task = new CronTask(runtimeScope::callChaosMonkey, cronExpression);
+        currentTask = scheduler.scheduleCronTask(task);
+      }
+    }
+  }
 }

@@ -16,6 +16,10 @@
 
 package com.example.chaos.monkey.chaosdemo;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,27 +28,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ChaosDemoApplicationTests {
 
-    @Autowired
-    private ApplicationContext ctx;
+  @Autowired private ApplicationContext ctx;
 
-    @Test
-    public void contextLoads() {
-    }
+  @Test
+  public void contextLoads() {}
 
-    @Test
-    @Ignore("This test fails, see issue #90. It wasn't picked up by the Maven surefire plugin unit its update to the latest version" +
-            " because of the class name's suffix 'Tests'")
-    public void checkMetricsBean() {
-        assertThat(ctx.getBean("metrics"), is(notNullValue()));
-
-    }
-
+  @Test
+  @Ignore(
+      "This test fails, see issue #90. It wasn't picked up by the Maven surefire plugin unit its update to the latest version"
+          + " because of the class name's suffix 'Tests'")
+  public void checkMetricsBean() {
+    assertThat(ctx.getBean("metrics"), is(notNullValue()));
+  }
 }

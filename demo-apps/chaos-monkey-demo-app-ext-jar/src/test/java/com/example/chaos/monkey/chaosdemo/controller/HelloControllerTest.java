@@ -16,6 +16,11 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,34 +28,26 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-/**
- * @author Benjamin Wilms
- */
-
+/** @author Benjamin Wilms */
 @RunWith(SpringRunner.class)
 @WebMvcTest(HelloController.class)
 public class HelloControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Test
-    public void shouldReturnHello() throws Exception {
+  @Test
+  public void shouldReturnHello() throws Exception {
 
+    this.mockMvc
+        .perform(get("/hello"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is("Hello!")));
+  }
 
-        this.mockMvc.perform(get("/hello")).andExpect(status().isOk())
-                .andExpect(content().string(is("Hello!")));
-    }
-
-
-    public void shouldReturnGoodbye() throws Exception {
-        this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk())
-                .andExpect(content().string(is("Goodbye!")));
-    }
-
+  public void shouldReturnGoodbye() throws Exception {
+    this.mockMvc
+        .perform(get("/goodbye"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is("Goodbye!")));
+  }
 }

@@ -6,8 +6,9 @@
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-https://github.com/codecentric/chaos-monkey-spring-boot/pull/163[#163] Fix wrong docs about configuration of watcher at runtime
-https://github.com/codecentric/chaos-monkey-spring-boot/issues/162 Change default configuration to everything off and predictable values
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/163[#163] Fix wrong docs about configuration of watcher at runtime
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/160[#160] Introduce Google Style Guide
+- https://github.com/codecentric/chaos-monkey-spring-boot/issues/162[#162] Change default configuration to everything off and predictable values
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -16,6 +17,7 @@ https://github.com/codecentric/chaos-monkey-spring-boot/issues/162 Change defaul
 This release was only possible because of these great humans:
 
 // - https://github.com/octocat[@octocat]
+- https://github.com/maiksensi[@maiksensi]
 - https://github.com/WtfJoke[@WtfJoke]
 - https://github.com/fletchgqc[@fletchgqc]
 

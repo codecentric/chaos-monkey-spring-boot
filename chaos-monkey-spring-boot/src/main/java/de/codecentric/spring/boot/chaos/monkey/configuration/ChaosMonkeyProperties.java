@@ -28,7 +28,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @EqualsAndHashCode
 public class ChaosMonkeyProperties {
 
-    @Value("${enabled:false}")
-    private boolean enabled;
-
+  @Value("${enabled:false}")
+  private boolean enabled;
 }

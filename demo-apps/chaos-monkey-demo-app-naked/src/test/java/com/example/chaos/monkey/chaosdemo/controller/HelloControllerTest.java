@@ -16,6 +16,12 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.example.chaos.monkey.chaosdemo.service.GreetingService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,65 +32,58 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-/**
- * @author Benjamin Wilms
- */
-
+/** @author Benjamin Wilms */
 @RunWith(SpringRunner.class)
 @WebMvcTest(HelloController.class)
 public class HelloControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @MockBean
-    private GreetingService greetingServiceMock;
-    private String responseService;
-    private String responseRepo;
+  @MockBean private GreetingService greetingServiceMock;
 
-    @Before
-    public void setup() {
-        responseService = "Hello from service!";
-        when(greetingServiceMock.greet()).thenReturn(responseService);
-        responseRepo = "Hello from repo!";
-        when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
-    }
+  private String responseService;
 
+  private String responseRepo;
 
-    @Test
-    public void shouldReturnHello() throws Exception {
+  @Before
+  public void setup() {
+    responseService = "Hello from service!";
+    when(greetingServiceMock.greet()).thenReturn(responseService);
+    responseRepo = "Hello from repo!";
+    when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
+  }
 
+  @Test
+  public void shouldReturnHello() throws Exception {
 
-        this.mockMvc.perform(get("/hello")).andExpect(status().isOk())
-                .andExpect(content().string(is("Hello!")));
-    }
+    this.mockMvc
+        .perform(get("/hello"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is("Hello!")));
+  }
 
-    @Test
-    public void callMockServiceGreet() throws Exception {
+  @Test
+  public void callMockServiceGreet() throws Exception {
 
+    this.mockMvc
+        .perform(get("/greet"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is(responseService)));
+  }
 
-        this.mockMvc.perform(get("/greet")).andExpect(status().isOk())
-                .andExpect(content().string(is(responseService)));
-    }
+  @Test
+  public void callMockServiceDbGreet() throws Exception {
 
+    this.mockMvc
+        .perform(get("/dbgreet"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is(responseRepo)));
+  }
 
-    @Test
-    public void callMockServiceDbGreet() throws Exception {
-
-
-        this.mockMvc.perform(get("/dbgreet")).andExpect(status().isOk())
-                .andExpect(content().string(is(responseRepo)));
-    }
-
-    public void shouldReturnGoodbye() throws Exception {
-        this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk())
-                .andExpect(content().string(is("Goodbye!")));
-    }
-
+  public void shouldReturnGoodbye() throws Exception {
+    this.mockMvc
+        .perform(get("/goodbye"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is("Goodbye!")));
+  }
 }

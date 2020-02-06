@@ -16,6 +16,10 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import com.example.chaos.monkey.chaosdemo.component.HelloComponent;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration;
@@ -23,43 +27,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
-
-/**
- * @author Benjamin Wilms
- */
-
+/** @author Benjamin Wilms */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-component-test.properties")
 public class HelloComponentIntegrationTest {
 
+  @Autowired private HelloComponent helloComponent;
 
-    @Autowired
-    private HelloComponent helloComponent;
+  @Autowired private ChaosMonkeyConfiguration chaosMonkeyConfiguration;
 
-    @Autowired
-    private ChaosMonkeyConfiguration chaosMonkeyConfiguration;
+  @Test
+  public void contextLoads() {
+    assertThat(helloComponent, notNullValue());
+  }
 
+  @Test
+  public void callingPublicMethodonComponent() {
 
-    @Test
-    public void contextLoads() {
-        assertThat(helloComponent, notNullValue());
-    }
+    assertTrue(chaosMonkeyConfiguration.settings().getWatcherProperties().isComponent());
 
-    @Test
-    public void callingPublicMethodonComponent() {
-
-        assertTrue(chaosMonkeyConfiguration.settings().getWatcherProperties().isComponent());
-
-        helloComponent.sayHello();
-    }
+    helloComponent.sayHello();
+  }
 }

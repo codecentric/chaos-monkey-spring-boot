@@ -15,61 +15,69 @@
   ~ limitations under the License.
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.codecentric</groupId>
-  <artifactId>chaos-monkey-spring-boot-parent</artifactId>
-  <version>${revision}</version>
-  <packaging>pom</packaging>
-  <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
-  <name>chaos-monkey-spring-boot-parent</name>
-  <description>Chaos Monkey for Spring Boot parent project</description>
-
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <properties>
     <!-- project version -->
-    <revision>2.3.0-SNAPSHOT</revision>
+    <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
     <!-- default settings -->
-    <java.version>1.8</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8
-        </project.reporting.outputEncoding>
-    <!-- dependency versions -->
-    <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
-    <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
-    <spring.version>5.1.9.RELEASE</spring.version>
     <aspectj-weaver.version>1.9.4</aspectj-weaver.version>
-    <jcl-over-slf4j.version>1.7.28</jcl-over-slf4j.version>
-    <lombok.version>1.18.10</lombok.version>
-    <!-- plugin versions-->
+    <assertj-core.version>3.13.2</assertj-core.version>
+    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+    <com.puppycrawl.tools.version>8.24</com.puppycrawl.tools.version>
     <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
+    <!-- dependency versions -->
+    <git-commit-id-plugin.version>3.0.1</git-commit-id-plugin.version>
+    <github.global.server>github</github.global.server>
+    <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+    <java.version>1.8</java.version>
+    <jcl-over-slf4j.version>1.7.28</jcl-over-slf4j.version>
+    <junit.jupiter.version>5.5.2</junit.jupiter.version>
+    <!-- plugin versions-->
+    <junit.version>4.12</junit.version>
+    <junit.vintage.version>5.5.2</junit.vintage.version>
+    <lombok.version>1.18.10</lombok.version>
+    <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
+    <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+    <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
     <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-    <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
-    <git-commit-id-plugin.version>3.0.1</git-commit-id-plugin.version>
-    <site-maven-plugin.version>0.12</site-maven-plugin.version>
-    <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
-    <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
 
     <!-- GitHub Server settings.xml -->
-    <github.global.server>github</github.global.server>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <nexus-staging-maven-plugin.version>1.6.8
-        </nexus-staging-maven-plugin.version>
-    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-    <junit.version>4.12</junit.version>
-    <junit.jupiter.version>5.5.2</junit.jupiter.version>
-    <junit.vintage.version>5.5.2</junit.vintage.version>
-    <assertj-core.version>3.13.2</assertj-core.version>
     <mockito.version>3.1.0</mockito.version>
+    <nexus-staging-maven-plugin.version>1.6.8
+    </nexus-staging-maven-plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8
+    </project.reporting.outputEncoding>
+    <revision>2.3.0-SNAPSHOT</revision>
+    <site-maven-plugin.version>0.12</site-maven-plugin.version>
+    <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
+    <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
 
-    <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+    <spring.version>5.1.9.RELEASE</spring.version>
   </properties>
+
+  <scm>
+    <connection>
+      scm:git:git://github.com/codecentric/chaos-monkey-spring-boot.git
+    </connection>
+    <developerConnection>
+      scm:git:ssh://git@github.com:codecentric/chaos-monkey-spring-boot.git
+    </developerConnection>
+    <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
+  </scm>
+  <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
+  <version>${revision}</version>
+
   <modules>
     <module>chaos-monkey-dependencies</module>
     <module>chaos-monkey-spring-boot</module>
@@ -79,64 +87,43 @@
     <module>demo-apps/chaos-monkey-demo-app-ext-jar</module>
     <module>chaos-monkey-docs</module>
   </modules>
+  <name>chaos-monkey-spring-boot-parent</name>
   <organization>
     <name>codecentric AG</name>
     <url>http://www.codecentric.de</url>
   </organization>
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
-  <scm>
-    <connection>
-            scm:git:git://github.com/codecentric/chaos-monkey-spring-boot.git
-        </connection>
-    <developerConnection>
-            scm:git:ssh://git@github.com:codecentric/chaos-monkey-spring-boot.git
-        </developerConnection>
-    <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
-  </scm>
-  <developers>
-    <developer>
-      <name>Benjamin Wilms</name>
-      <email>benjamin.wilms@codecentric.de</email>
-      <organization>codecentric AG</organization>
-    </developer>
-  </developers>
+  <packaging>pom</packaging>
 
+  <artifactId>chaos-monkey-spring-boot-parent</artifactId>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <version>${flatten-maven-plugin.version}</version>
         <configuration>
-          <updatePomFile>true</updatePomFile>
           <flattenMode>oss</flattenMode>
+          <updatePomFile>true</updatePomFile>
         </configuration>
         <executions>
           <execution>
-            <id>flatten</id>
-            <phase>process-resources</phase>
             <goals>
               <goal>flatten</goal>
             </goals>
+            <id>flatten</id>
+            <phase>process-resources</phase>
           </execution>
           <execution>
-            <id>flatten-clean</id>
-            <phase>clean</phase>
             <goals>
               <goal>clean</goal>
             </goals>
+            <id>flatten-clean</id>
+            <phase>clean</phase>
           </execution>
         </executions>
+        <groupId>org.codehaus.mojo</groupId>
+        <version>${flatten-maven-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven-plugin.version}</version>
         <executions>
           <execution>
             <goals>
@@ -144,71 +131,142 @@
             </goals>
           </execution>
           <execution>
-            <id>report</id>
-            <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
+            <id>report</id>
+            <phase>test</phase>
           </execution>
         </executions>
+        <groupId>org.jacoco</groupId>
+        <version>${jacoco-maven-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${nexus-staging-maven-plugin.version}</version>
-        <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <serverId>ossrh</serverId>
         </configuration>
+        <extensions>true</extensions>
+        <groupId>org.sonatype.plugins</groupId>
+        <version>${nexus-staging-maven-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>${maven-source-plugin.version}</version>
         <executions>
           <execution>
-            <id>attach-sources</id>
             <goals>
               <goal>jar-no-fork</goal>
             </goals>
+            <id>attach-sources</id>
           </execution>
         </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven-source-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
         <version>${maven-surefire-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${maven-javadoc-plugin.version}</version>
         <executions>
           <execution>
-            <id>attach-javadocs</id>
             <goals>
               <goal>jar</goal>
             </goals>
+            <id>attach-javadocs</id>
           </execution>
         </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven-javadoc-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <groupId>org.springframework.boot</groupId>
         <version>${spring-boot.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
         <version>${maven-deploy-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>google_checks.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+          <encoding>UTF-8</encoding>
+          <failsOnError>true</failsOnError>
+          <failOnViolation>true</failOnViolation>
+          <!-- change severity is needed as google checks only warns but we want to fail -->
+          <violationSeverity>warning</violationSeverity>
+          <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <artifactId>checkstyle</artifactId>
+            <groupId>com.puppycrawl.tools</groupId>
+            <version>${com.puppycrawl.tools.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <configuration>
+              <configLocation>google_checks.xml</configLocation>
+              <consoleOutput>true</consoleOutput>
+              <encoding>UTF-8</encoding>
+              <failsOnError>true</failsOnError>
+              <failOnViolation>true</failOnViolation>
+              <!-- change severity is needed as google checks only warns but we want to fail -->
+              <violationSeverity>warning</violationSeverity>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
+              <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <id>validate</id>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven-checkstyle-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
+  <description>Chaos Monkey for Spring Boot parent project</description>
+  <developers>
+    <developer>
+      <email>benjamin.wilms@codecentric.de</email>
+      <name>Benjamin Wilms</name>
+      <organization>codecentric AG</organization>
+    </developer>
+  </developers>
+  <distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+      </url>
+    </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <groupId>de.codecentric</groupId>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  <modelVersion>4.0.0</modelVersion>
+
   <profiles>
     <profile>
-      <id>release-sign-artifacts</id>
       <activation>
         <property>
           <name>performRelease</name>
@@ -218,32 +276,22 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>${maven-gpg-plugin.version}</version>
             <executions>
               <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
               </execution>
             </executions>
+            <groupId>org.apache.maven.plugins</groupId>
+            <version>${maven-gpg-plugin.version}</version>
           </plugin>
         </plugins>
       </build>
+      <id>release-sign-artifacts</id>
     </profile>
   </profiles>
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
-            </url>
-    </repository>
-  </distributionManagement>
 </project>

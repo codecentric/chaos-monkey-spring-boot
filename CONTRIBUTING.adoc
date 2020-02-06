@@ -53,13 +53,37 @@ To build and test the code you can run
 ./mvnw clean verify
 ----
 
+We are using the https://google.github.io/styleguide/javaguide.html[Google Style Guide]. This means,
+we use https://checkstyle.sourceforge.io/[checkstyle] to automatically check our code against the
+style guide rules.
+
+Some rules are disabled. You can find them in `./checkstyle-supressions.xml`. Adding more exceptions
+is fine as long as you have a reason to do so. Please add a comment for new exceptions.
+
+[NOTE]
+====
+`./mvnw verify` also runs checkstyle while `./mvnw test` does not.
+====
+
+=== IntelliJ Setup
+If you're using IntelliJ then we highly recommend to install the https://plugins.jetbrains.com/plugin/8527-google-java-format[google format plugin] via the plugin marketplace.
+Additionally, to make sure IntelliJ uses the correct code style, install the provided https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml[code style file].
+
+[NOTE]
+====
+Installation of code style (download the file first):
+
+Under `File -> Settings -> Editor -> Code Style` (Windows) or `Preferences -> Editor -> Code Style` (OSX)
+press the gear button and choose `Import Scheme`. Then, select the downloaded theme file and `Apply` the style.
+====
+
 == Working With The Code
 Considering these recommendations will help us in getting your pull request merged. 
 
 * Add the ASF license header comment to all new `.java` files (you can copy from existing files in the project). 
 * Add yourself as an `@author` to the `.java` files you modify.
 * Document your changes. This includes in code documentation but also user documentation.
-* Test your changes. 
+* Test your changes. Use `./mvnw verify` to run all build pipeline checks.
 * It would be great to follow Chris Beam's recommendations on https://chris.beams.io/posts/git-commit/[How to Write a Git Commit Message]. 
 * Please update the https://github.com/codecentric/chaos-monkey-spring-boot/blob/master/chaos-monkey-docs/src/main/asciidoc/changes.adoc[Changes section].
-* Please make sure to run the tests before you commit your changes. Using Maven you can run `./mvnw test` which will run all tests when you run the command in the root folder of the repository.
+* Please make sure to run the tests before you commit your changes. Using Maven you can run `./mvnw verify` which will run all tests and checks when you run the command in the root folder of the repository.

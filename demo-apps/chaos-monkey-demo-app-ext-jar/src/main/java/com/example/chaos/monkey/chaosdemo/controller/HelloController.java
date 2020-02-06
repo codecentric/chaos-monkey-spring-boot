@@ -20,25 +20,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Controller
 public class HelloController {
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok(sayHelloPlease());
-    }
+  @GetMapping("/hello")
+  public ResponseEntity<String> sayHello() {
+    return ResponseEntity.ok(sayHelloPlease());
+  }
 
-    @GetMapping("/goodbye")
-    public ResponseEntity<String> sayGoodbye() {
-        return ResponseEntity.ok("Goodbye!");
-    }
+  @GetMapping("/goodbye")
+  public ResponseEntity<String> sayGoodbye() {
+    return ResponseEntity.ok("Goodbye!");
+  }
 
-    private String sayHelloPlease() {
-        return "Hello!";
-    }
-
-
+  private String sayHelloPlease() {
+    return "Hello!";
+  }
 }

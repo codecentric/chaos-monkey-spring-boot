@@ -2,14 +2,12 @@ package com.example.chaos.monkey.chaosdemo.component;
 
 import org.springframework.stereotype.Component;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Component
 public class HelloComponent {
 
-    public String sayHello() {
+  public String sayHello() {
 
-        return "Hello from Component";
-    }
+    return "Hello from Component";
+  }
 }

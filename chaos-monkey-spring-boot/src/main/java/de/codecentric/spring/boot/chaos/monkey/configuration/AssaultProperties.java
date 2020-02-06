@@ -17,6 +17,12 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,16 +31,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
@@ -42,84 +39,81 @@ import java.util.concurrent.ThreadLocalRandom;
 @EqualsAndHashCode
 @AssaultPropertiesLatencyRangeConstraint
 public class AssaultProperties {
-    @Value("${level : 1}")
-    @Min(value = 1)
-    @Max(value = 10000)
-    private int level;
+  @Value("${level : 1}")
+  @Min(value = 1)
+  @Max(value = 10000)
+  private int level;
 
-    @Value("${latencyRangeStart : 1000}")
-    @Min(value = 1)
-    @Max(value = Integer.MAX_VALUE)
-    private int latencyRangeStart;
+  @Value("${latencyRangeStart : 1000}")
+  @Min(value = 1)
+  @Max(value = Integer.MAX_VALUE)
+  private int latencyRangeStart;
 
-    @Value("${latencyRangeEnd : 3000}")
-    @Min(value = 1)
-    @Max(value = Integer.MAX_VALUE)
-    private int latencyRangeEnd;
+  @Value("${latencyRangeEnd : 3000}")
+  @Min(value = 1)
+  @Max(value = Integer.MAX_VALUE)
+  private int latencyRangeEnd;
 
-    @Value("${latencyActive : false}")
-    private boolean latencyActive;
+  @Value("${latencyActive : false}")
+  private boolean latencyActive;
 
-    @Value("${exceptionsActive : false}")
-    private boolean exceptionsActive;
+  @Value("${exceptionsActive : false}")
+  private boolean exceptionsActive;
 
-    @AssaultExceptionConstraint
-    private AssaultException exception;
+  @AssaultExceptionConstraint private AssaultException exception;
 
-    @Value("${killApplicationActive : false}")
-    private boolean killApplicationActive;
+  @Value("${killApplicationActive : false}")
+  private boolean killApplicationActive;
 
-    @Value("${memoryActive : false}")
-    private volatile boolean memoryActive;
+  @Value("${memoryActive : false}")
+  private volatile boolean memoryActive;
 
-    @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
-    @Min(value = 1500)
-    @Max(value = Integer.MAX_VALUE)
-    private int memoryMillisecondsHoldFilledMemory;
+  @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
+  @Min(value = 1500)
+  @Max(value = Integer.MAX_VALUE)
+  private int memoryMillisecondsHoldFilledMemory;
 
-    @Value("${memoryMillisecondsWaitNextIncrease : 1000}")
-    @Min(value = 100)
-    @Max(value = 30000)
-    private int memoryMillisecondsWaitNextIncrease;
+  @Value("${memoryMillisecondsWaitNextIncrease : 1000}")
+  @Min(value = 100)
+  @Max(value = 30000)
+  private int memoryMillisecondsWaitNextIncrease;
 
-    @Value("${memoryFillIncrementFraction : 0.15}")
-    @DecimalMax("1.0")
-    @DecimalMin("0.01")
-    private double memoryFillIncrementFraction;
+  @Value("${memoryFillIncrementFraction : 0.15}")
+  @DecimalMax("1.0")
+  @DecimalMin("0.01")
+  private double memoryFillIncrementFraction;
 
-    @Value("${memoryFillTargetFraction : 0.25}")
-    @DecimalMax("1.0")
-    @DecimalMin("0.01")
-    private double memoryFillTargetFraction;
+  @Value("${memoryFillTargetFraction : 0.25}")
+  @DecimalMax("1.0")
+  @DecimalMin("0.01")
+  private double memoryFillTargetFraction;
 
-    @Value("${runtime.scope.assault.cron.expression:OFF}")
-    private String runtimeAssaultCronExpression;
+  @Value("${runtime.scope.assault.cron.expression:OFF}")
+  private String runtimeAssaultCronExpression;
 
-    @Value("${watchedCustomServices:#{null}}")
-    private List<String> watchedCustomServices;
+  @Value("${watchedCustomServices:#{null}}")
+  private List<String> watchedCustomServices;
 
-    public AssaultException getException() {
-        return exception == null ? new AssaultException() : exception;
-    }
+  public AssaultException getException() {
+    return exception == null ? new AssaultException() : exception;
+  }
 
-    public void setException(AssaultException exception) {
-        this.exception = exception;
-    }
+  public void setException(AssaultException exception) {
+    this.exception = exception;
+  }
 
-    @JsonIgnore
-    public int getTroubleRandom() {
-        return ThreadLocalRandom.current().nextInt(1, getLevel() + 1);
-    }
+  @JsonIgnore
+  public int getTroubleRandom() {
+    return ThreadLocalRandom.current().nextInt(1, getLevel() + 1);
+  }
 
-    @JsonIgnore
-    public int chooseAssault(int amount) {
-        return ThreadLocalRandom.current().nextInt(0, amount);
-    }
+  @JsonIgnore
+  public int chooseAssault(int amount) {
+    return ThreadLocalRandom.current().nextInt(0, amount);
+  }
 
-    @JsonIgnore
-    public boolean isWatchedCustomServicesActive() {
-        return !CollectionUtils.isEmpty(watchedCustomServices);
-    }
-
-
+  @JsonIgnore
+  public boolean isWatchedCustomServicesActive() {
+    return !CollectionUtils.isEmpty(watchedCustomServices);
+  }
 }
