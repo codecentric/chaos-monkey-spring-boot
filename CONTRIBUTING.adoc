@@ -53,21 +53,18 @@ To build and test the code you can run
 ./mvnw clean verify
 ----
 
-We are using the https://google.github.io/styleguide/javaguide.html[Google Style Guide]. This means,
-we use https://checkstyle.sourceforge.io/[checkstyle] to automatically check our code against the
-style guide rules.
-
-Some rules are disabled. You can find them in `./checkstyle-supressions.xml`. Adding more exceptions
-is fine as long as you have a reason to do so. Please add a comment for new exceptions.
+We are using the https://google.github.io/styleguide/javaguide.html[Google Style Guide]. The style guide
+is enforced via https://github.com/diffplug/spotless[Spotless]. A check for style violations can be
+run via `./mvnw spotless:check`. Use `./mvnw spotless:apply` to fix these violations.
 
 [NOTE]
 ====
-`./mvnw verify` also runs checkstyle while `./mvnw test` does not.
+`./mvnw verify` also runs spotless while `./mvnw test` does not.
 ====
 
 === IntelliJ Setup
-If you're using IntelliJ then we highly recommend to install the https://plugins.jetbrains.com/plugin/8527-google-java-format[google format plugin] via the plugin marketplace.
-Additionally, to make sure IntelliJ uses the correct code style, install the provided https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml[code style file].
+If you're using IntelliJ then we highly recommend installing the Google Style Guide file.
+Download the file https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml[code style file].
 
 [NOTE]
 ====

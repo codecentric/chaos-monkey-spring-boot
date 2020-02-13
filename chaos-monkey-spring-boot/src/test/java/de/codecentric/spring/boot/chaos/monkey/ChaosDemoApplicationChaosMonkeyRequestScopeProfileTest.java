@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package de.codecentric.spring.boot.chaos.monkey;
@@ -38,16 +39,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {
-      "chaos.monkey.watcher.controller=true",
-      "chaos.monkey.assaults.level=1",
-      "chaos.monkey.assaults.latencyRangeStart=10",
-      "chaos.monkey.assaults.latencyRangeEnd=50",
-      "chaos.monkey.assaults.killApplicationActive=true",
-      "spring.profiles.active=chaos-monkey"
-    })
+  classes = ChaosDemoApplication.class,
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+  properties = {
+    "chaos.monkey.watcher.controller=true",
+    "chaos.monkey.assaults.level=1",
+    "chaos.monkey.assaults.latencyRangeStart=10",
+    "chaos.monkey.assaults.latencyRangeEnd=50",
+    "chaos.monkey.assaults.killApplicationActive=true",
+    "spring.profiles.active=chaos-monkey"
+  }
+)
 class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
   @Autowired private ChaosMonkeyRequestScope chaosMonkeyRequestScope;

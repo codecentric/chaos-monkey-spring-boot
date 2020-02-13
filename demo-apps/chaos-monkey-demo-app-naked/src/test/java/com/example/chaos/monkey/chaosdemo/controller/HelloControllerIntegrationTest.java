@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package com.example.chaos.monkey.chaosdemo.controller;
@@ -35,8 +36,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 /** @author Benjamin Wilms */
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  classes = ChaosDemoApplication.class,
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @TestPropertySource("classpath:application-test.properties")
 public class HelloControllerIntegrationTest {
 
