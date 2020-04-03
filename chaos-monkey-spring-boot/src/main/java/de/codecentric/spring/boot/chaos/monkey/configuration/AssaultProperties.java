@@ -16,42 +16,37 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import static de.codecentric.spring.boot.chaos.monkey.configuration.AssaultPropertyMinMaxValidator.of;
+import static java.lang.Integer.MAX_VALUE;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import java.util.stream.Stream;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 /** @author Benjamin Wilms */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
-@Validated
 @EqualsAndHashCode
 @AssaultPropertiesLatencyRangeConstraint
-public class AssaultProperties {
+public class AssaultProperties implements Validator {
   @Value("${level : 1}")
-  @Min(value = 1)
-  @Max(value = 10000)
   private int level;
 
   @Value("${latencyRangeStart : 1000}")
-  @Min(value = 1)
-  @Max(value = Integer.MAX_VALUE)
   private int latencyRangeStart;
 
   @Value("${latencyRangeEnd : 3000}")
-  @Min(value = 1)
-  @Max(value = Integer.MAX_VALUE)
   private int latencyRangeEnd;
 
   @Value("${latencyActive : false}")
@@ -69,23 +64,15 @@ public class AssaultProperties {
   private volatile boolean memoryActive;
 
   @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
-  @Min(value = 1500)
-  @Max(value = Integer.MAX_VALUE)
   private int memoryMillisecondsHoldFilledMemory;
 
   @Value("${memoryMillisecondsWaitNextIncrease : 1000}")
-  @Min(value = 100)
-  @Max(value = 30000)
   private int memoryMillisecondsWaitNextIncrease;
 
   @Value("${memoryFillIncrementFraction : 0.15}")
-  @DecimalMax("1.0")
-  @DecimalMin("0.01")
   private double memoryFillIncrementFraction;
 
   @Value("${memoryFillTargetFraction : 0.25}")
-  @DecimalMax("1.0")
-  @DecimalMin("0.01")
   private double memoryFillTargetFraction;
 
   @Value("${runtime.scope.assault.cron.expression:OFF}")
@@ -115,5 +102,53 @@ public class AssaultProperties {
   @JsonIgnore
   public boolean isWatchedCustomServicesActive() {
     return !CollectionUtils.isEmpty(watchedCustomServices);
+  }
+
+  @Override
+  public boolean supports(Class<?> clazz) {
+    return AssaultProperties.class.equals(clazz);
+  }
+
+  @Override
+  public void validate(Object target, Errors errors) {
+    if (target == null) {
+      return;
+    }
+    AssaultProperties properties = (AssaultProperties) target;
+
+    getPropertiesToValidate(properties)
+        .filter(AssaultPropertyMinMaxValidator::isInvalid)
+        .forEach(
+            invalid -> {
+              errors.rejectValue(
+                  invalid.getPropertyName(),
+                  invalid.getPropertyName() + ".invalid",
+                  invalid.getValidationErrorMessage());
+            });
+  }
+
+  private Stream<AssaultPropertyMinMaxValidator> getPropertiesToValidate(
+      AssaultProperties properties) {
+    List<AssaultPropertyMinMaxValidator> toValidate = new ArrayList<>();
+    toValidate.add(of(properties.getLevel(), 1, 10000, "level"));
+    toValidate.add(of(properties.getLatencyRangeStart(), 1, MAX_VALUE, "latencyRangeStart"));
+    toValidate.add(of(properties.getLatencyRangeEnd(), 1, MAX_VALUE, "latencyRangeEnd"));
+    toValidate.add(
+        of(
+            properties.getMemoryMillisecondsHoldFilledMemory(),
+            1500,
+            MAX_VALUE,
+            "memoryMillisecondsHoldFilledMemory"));
+    toValidate.add(
+        of(
+            properties.getMemoryMillisecondsWaitNextIncrease(),
+            100,
+            30000,
+            "memoryMillisecondsWaitNextIncrease"));
+    toValidate.add(
+        of(properties.getMemoryFillIncrementFraction(), 0.01, 1.0, "memoryFillIncrementFraction"));
+    toValidate.add(
+        of(properties.getMemoryFillTargetFraction(), 0.01, 1.0, "memoryFillTargetFraction"));
+    return toValidate.stream();
   }
 }

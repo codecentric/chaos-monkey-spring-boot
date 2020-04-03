@@ -3,6 +3,7 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/174[#174] Fix serialization problem on `/actuator/chaosmonkey` with AssaultProperties
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.

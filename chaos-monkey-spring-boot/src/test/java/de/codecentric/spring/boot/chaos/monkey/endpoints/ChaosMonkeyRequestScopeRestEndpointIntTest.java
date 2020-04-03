@@ -201,6 +201,17 @@ class ChaosMonkeyRequestScopeRestEndpointIntTest {
   }
 
   @Test
+  void postAssaultConfigurationBadCaseLevelOutOfRange() {
+    AssaultProperties assaultProperties = new AssaultProperties();
+    assaultProperties.setLevel(Integer.MAX_VALUE);
+
+    ResponseEntity<String> result =
+        testRestTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
+
+    assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+  }
+
+  @Test
   void postAssaultConfigurationBadCaseLatencyRangeStartEmpty() {
     AssaultProperties assaultProperties = new AssaultProperties();
     assaultProperties.setLevel(1000);
