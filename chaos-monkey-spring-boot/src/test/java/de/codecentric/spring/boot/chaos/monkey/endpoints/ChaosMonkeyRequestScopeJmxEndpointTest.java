@@ -64,7 +64,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
     chaosMonkeyJmxEndpoint.toggleLatencyAssault();
 
-    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().isLatencyActive(), not(latencyActive));
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getLatencyActive(), not(latencyActive));
   }
 
   @Test
@@ -73,7 +73,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     chaosMonkeyJmxEndpoint.toggleExceptionAssault();
 
     assertThat(
-        chaosMonkeyJmxEndpoint.getAssaultProperties().isExceptionsActive(), not(exceptionsActive));
+        chaosMonkeyJmxEndpoint.getAssaultProperties().getExceptionsActive(), not(exceptionsActive));
   }
 
   @Test
@@ -83,7 +83,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     chaosMonkeyJmxEndpoint.toggleKillApplicationAssault();
 
     assertThat(
-        chaosMonkeyJmxEndpoint.getAssaultProperties().isKillApplicationActive(),
+        chaosMonkeyJmxEndpoint.getAssaultProperties().getKillApplicationActive(),
         not(killApplicationActive));
   }
 

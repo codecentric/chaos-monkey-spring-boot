@@ -34,32 +34,32 @@ public class ChaosMonkeyJmxEndpoint {
   }
 
   @ReadOperation
-  public AssaultProperties getAssaultProperties() {
-    return chaosMonkeySettings.getAssaultProperties();
+  public AssaultPropertiesUpdate getAssaultProperties() {
+    return chaosMonkeySettings.getAssaultProperties().toDto();
   }
 
   @WriteOperation
   public String toggleLatencyAssault() {
     this.chaosMonkeySettings
         .getAssaultProperties()
-        .setLatencyActive(!this.getAssaultProperties().isLatencyActive());
-    return String.valueOf(this.getAssaultProperties().isLatencyActive());
+        .setLatencyActive(!this.getAssaultProperties().getLatencyActive());
+    return String.valueOf(this.getAssaultProperties().getLatencyActive());
   }
 
   @WriteOperation
   public String toggleExceptionAssault() {
     this.chaosMonkeySettings
         .getAssaultProperties()
-        .setExceptionsActive(!this.getAssaultProperties().isExceptionsActive());
-    return String.valueOf(this.getAssaultProperties().isExceptionsActive());
+        .setExceptionsActive(!this.getAssaultProperties().getExceptionsActive());
+    return String.valueOf(this.getAssaultProperties().getExceptionsActive());
   }
 
   @WriteOperation
   public String toggleKillApplicationAssault() {
     this.chaosMonkeySettings
         .getAssaultProperties()
-        .setKillApplicationActive(!this.getAssaultProperties().isKillApplicationActive());
-    return String.valueOf(this.getAssaultProperties().isKillApplicationActive());
+        .setKillApplicationActive(!this.getAssaultProperties().getKillApplicationActive());
+    return String.valueOf(this.getAssaultProperties().getKillApplicationActive());
   }
 
   @ReadOperation()

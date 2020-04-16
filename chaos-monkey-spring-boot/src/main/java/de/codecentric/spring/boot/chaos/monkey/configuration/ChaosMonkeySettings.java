@@ -16,6 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeySettingsDto;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,4 +35,8 @@ public class ChaosMonkeySettings {
   @NotNull private AssaultProperties assaultProperties;
 
   @NotNull private WatcherProperties watcherProperties;
+
+  public ChaosMonkeySettingsDto toDto() {
+    return new ChaosMonkeySettingsDto(chaosMonkeyProperties, assaultProperties, watcherProperties);
+  }
 }
