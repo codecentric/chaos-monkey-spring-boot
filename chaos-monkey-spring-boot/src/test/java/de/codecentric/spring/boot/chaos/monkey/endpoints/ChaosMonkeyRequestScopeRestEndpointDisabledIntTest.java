@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
@@ -32,8 +33,9 @@ import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  classes = ChaosDemoApplication.class,
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
 class ChaosMonkeyRequestScopeRestEndpointDisabledIntTest {
 

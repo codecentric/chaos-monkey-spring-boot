@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright 2014-2018 the original author or authors.
+  ~ Copyright 2014 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
+  ~
   -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,7 +40,6 @@
     <junit.version>4.12</junit.version>
     <junit.vintage.version>5.5.2</junit.vintage.version>
     <lombok.version>1.18.10</lombok.version>
-    <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
@@ -64,6 +64,9 @@
     <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
 
     <spring.version>5.1.9.RELEASE</spring.version>
+
+    <google-java-format.version>1.3</google-java-format.version>
+    <spotless.plugin.version>1.27.0</spotless.plugin.version>
   </properties>
 
   <scm>
@@ -194,46 +197,26 @@
         <version>${maven-deploy-plugin.version}</version>
       </plugin>
       <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.plugin.version}</version>
         <configuration>
-          <configLocation>google_checks.xml</configLocation>
-          <consoleOutput>true</consoleOutput>
-          <encoding>UTF-8</encoding>
-          <failsOnError>true</failsOnError>
-          <failOnViolation>true</failOnViolation>
-          <!-- change severity is needed as google checks only warns but we want to fail -->
-          <violationSeverity>warning</violationSeverity>
-          <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+          <java>
+            <googleJavaFormat>
+              <version>${google-java-format.version}</version>
+            </googleJavaFormat>
+            <!-- TODO: Add a <licenseHeader> configuration to make all license headers in source
+                 files consistent -->
+          </java>
         </configuration>
-        <dependencies>
-          <dependency>
-            <artifactId>checkstyle</artifactId>
-            <groupId>com.puppycrawl.tools</groupId>
-            <version>${com.puppycrawl.tools.version}</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
-            <configuration>
-              <configLocation>google_checks.xml</configLocation>
-              <consoleOutput>true</consoleOutput>
-              <encoding>UTF-8</encoding>
-              <failsOnError>true</failsOnError>
-              <failOnViolation>true</failOnViolation>
-              <!-- change severity is needed as google checks only warns but we want to fail -->
-              <violationSeverity>warning</violationSeverity>
-              <includeTestSourceDirectory>true</includeTestSourceDirectory>
-              <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-            </configuration>
+            <phase>verify</phase>
             <goals>
               <goal>check</goal>
             </goals>
-            <id>validate</id>
-            <phase>validate</phase>
           </execution>
         </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>${maven-checkstyle-plugin.version}</version>
       </plugin>
     </plugins>
   </build>

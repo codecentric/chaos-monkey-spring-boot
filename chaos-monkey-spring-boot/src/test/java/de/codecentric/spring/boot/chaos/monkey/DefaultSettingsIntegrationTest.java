@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package de.codecentric.spring.boot.chaos.monkey;
@@ -27,12 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+  classes = ChaosDemoApplication.class,
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @ActiveProfiles("chaos-monkey")
 class DefaultSettingsIntegrationTest {
 
-  @Autowired
-  private ChaosMonkeySettings monkeySettings;
+  @Autowired private ChaosMonkeySettings monkeySettings;
 
   @Test
   void masterSwitchShouldDefaultToOff() {

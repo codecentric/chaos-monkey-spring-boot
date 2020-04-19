@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
@@ -60,9 +61,9 @@ import org.springframework.util.StreamUtils;
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-    ChaosMonkeyProperties.class,
-    AssaultProperties.class,
-    WatcherProperties.class
+  ChaosMonkeyProperties.class,
+  AssaultProperties.class,
+  WatcherProperties.class
 })
 @EnableScheduling
 public class ChaosMonkeyConfiguration {

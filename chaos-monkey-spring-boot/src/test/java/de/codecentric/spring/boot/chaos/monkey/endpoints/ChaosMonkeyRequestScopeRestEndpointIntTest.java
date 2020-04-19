@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
@@ -40,8 +41,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  classes = ChaosDemoApplication.class,
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
 class ChaosMonkeyRequestScopeRestEndpointIntTest {
 
