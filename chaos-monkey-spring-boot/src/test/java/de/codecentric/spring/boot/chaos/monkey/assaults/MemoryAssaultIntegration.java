@@ -52,7 +52,7 @@ import org.springframework.http.ResponseEntity;
     "spring.profiles.active=chaos-monkey"
   }
 )
-class MemoryAssaultIntegrationTest {
+class MemoryAssaultIntegration {
 
   @LocalServerPort private int serverPort;
 
