@@ -55,7 +55,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
     assertThat(
         chaosMonkeyJmxEndpoint.getAssaultProperties(),
-        is(chaosMonkeySettings.getAssaultProperties()));
+        is(chaosMonkeySettings.getAssaultProperties().toDto()));
   }
 
   @Test
