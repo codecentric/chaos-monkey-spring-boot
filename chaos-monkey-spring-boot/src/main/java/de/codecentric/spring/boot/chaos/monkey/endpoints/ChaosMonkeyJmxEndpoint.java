@@ -16,7 +16,6 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;

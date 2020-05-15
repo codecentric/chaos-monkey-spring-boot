@@ -64,7 +64,8 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
     chaosMonkeyJmxEndpoint.toggleLatencyAssault();
 
-    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getLatencyActive(), not(latencyActive));
+    assertThat(
+        chaosMonkeyJmxEndpoint.getAssaultProperties().getLatencyActive(), not(latencyActive));
   }
 
   @Test
