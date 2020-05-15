@@ -48,7 +48,7 @@ public class ChaosMonkeyRestEndpoint {
   }
 
   @PostMapping("/assaults")
-  public ResponseEntity<?> updateAssaultProperties(
+  public ResponseEntity<String> updateAssaultProperties(
       @RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
     assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
     scheduler.reloadConfig();
