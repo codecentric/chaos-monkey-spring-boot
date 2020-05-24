@@ -10,6 +10,7 @@
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/160[#160] Introduce Google Style Guide
 - https://github.com/codecentric/chaos-monkey-spring-boot/issues/162[#162] Change default configuration to everything off and predictable values
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/175[#175] Because https://github.com/codecentric/chaos-monkey-spring-boot/pull/160[#160] failed horribly regarding ease of development, introduce spotless instead
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/177[#177] Harmonize test naming.
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -21,5 +22,6 @@ This release was only possible because of these great humans:
 - https://github.com/maiksensi[@maiksensi]
 - https://github.com/WtfJoke[@WtfJoke]
 - https://github.com/fletchgqc[@fletchgqc]
+- https://github.com/Glosur[@glosur]
 
 Thank you for your support!
