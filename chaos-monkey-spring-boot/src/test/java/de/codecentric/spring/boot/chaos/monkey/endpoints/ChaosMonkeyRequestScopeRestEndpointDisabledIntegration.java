@@ -37,7 +37,7 @@ import org.springframework.test.context.TestPropertySource;
   webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
-class ChaosMonkeyRequestScopeRestEndpointDisabledIntTest {
+class ChaosMonkeyRequestScopeRestEndpointDisabledIntegration {
 
   @LocalServerPort private int serverPort;
 
