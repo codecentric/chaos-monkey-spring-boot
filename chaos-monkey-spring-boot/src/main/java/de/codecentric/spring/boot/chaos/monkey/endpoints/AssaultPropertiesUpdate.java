@@ -15,12 +15,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * Is used to update properties. Partial updates are allowed: i. e. {@code {"level": 2}} is fine.
+ * This is also why we're using ObjectTypes (and not the corresponding primitives).
+ */
 @Data
 @NoArgsConstructor
 @Validated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AssaultPropertiesUpdate {
-
   @Nullable
   @Min(value = 1)
   @Max(value = 10000)

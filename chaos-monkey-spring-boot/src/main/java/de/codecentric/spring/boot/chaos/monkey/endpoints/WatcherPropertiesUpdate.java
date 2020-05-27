@@ -6,11 +6,9 @@ import java.util.function.Consumer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
-import org.springframework.validation.annotation.Validated;
 
 @Data
 @NoArgsConstructor
-@Validated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WatcherPropertiesUpdate {
 

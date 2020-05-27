@@ -18,7 +18,6 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
@@ -52,7 +51,6 @@ public class ChaosMonkeyRestEndpoint {
       @RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
     assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
     scheduler.reloadConfig();
-
     return ResponseEntity.ok().body("Assault config has changed");
   }
 
@@ -63,8 +61,8 @@ public class ChaosMonkeyRestEndpoint {
   }
 
   @GetMapping("/assaults")
-  public AssaultProperties getAssaultSettings() {
-    return this.chaosMonkeySettings.getAssaultProperties();
+  public AssaultPropertiesUpdate getAssaultSettings() {
+    return this.chaosMonkeySettings.getAssaultProperties().toDto();
   }
 
   @PostMapping("/enable")
@@ -80,8 +78,8 @@ public class ChaosMonkeyRestEndpoint {
   }
 
   @GetMapping
-  public ChaosMonkeySettings status() {
-    return this.chaosMonkeySettings;
+  public ChaosMonkeySettingsDto status() {
+    return this.chaosMonkeySettings.toDto();
   }
 
   @GetMapping("/status")

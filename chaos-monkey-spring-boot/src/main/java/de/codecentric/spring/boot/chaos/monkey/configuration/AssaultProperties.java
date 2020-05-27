@@ -17,6 +17,8 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.validation.constraints.DecimalMax;
@@ -115,5 +117,10 @@ public class AssaultProperties {
   @JsonIgnore
   public boolean isWatchedCustomServicesActive() {
     return !CollectionUtils.isEmpty(watchedCustomServices);
+  }
+
+  public AssaultPropertiesUpdate toDto() {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.convertValue(this, AssaultPropertiesUpdate.class);
   }
 }
