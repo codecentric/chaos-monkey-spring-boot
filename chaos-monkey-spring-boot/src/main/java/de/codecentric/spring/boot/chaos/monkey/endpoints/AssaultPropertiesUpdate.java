@@ -47,6 +47,8 @@ public class AssaultPropertiesUpdate {
 
   @Nullable private Boolean killApplicationActive;
 
+  @Nullable private String killApplicationCronExpression;
+
   @Nullable private volatile Boolean memoryActive;
 
   @Nullable
@@ -69,6 +71,8 @@ public class AssaultPropertiesUpdate {
   @DecimalMin("0.05")
   private Double memoryFillTargetFraction;
 
+  @Nullable private String memoryCronExpression;
+
   @Nullable private String runtimeAssaultCronExpression;
 
   @Nullable private List<String> watchedCustomServices;
@@ -89,12 +93,14 @@ public class AssaultPropertiesUpdate {
     applyTo(exception, t::setException);
 
     applyTo(killApplicationActive, t::setKillApplicationActive);
+    applyTo(killApplicationCronExpression, t::setKillApplicationCronExpression);
 
     applyTo(memoryActive, t::setMemoryActive);
     applyTo(memoryMillisecondsHoldFilledMemory, t::setMemoryMillisecondsHoldFilledMemory);
     applyTo(memoryMillisecondsWaitNextIncrease, t::setMemoryMillisecondsWaitNextIncrease);
     applyTo(memoryFillIncrementFraction, t::setMemoryFillIncrementFraction);
     applyTo(memoryFillTargetFraction, t::setMemoryFillTargetFraction);
+    applyTo(memoryCronExpression, t::setMemoryCronExpression);
     applyTo(runtimeAssaultCronExpression, t::setRuntimeAssaultCronExpression);
     applyTo(watchedCustomServices, t::setWatchedCustomServices);
   }

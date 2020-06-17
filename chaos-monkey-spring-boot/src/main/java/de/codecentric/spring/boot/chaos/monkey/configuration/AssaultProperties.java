@@ -33,7 +33,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ * @author Maxime Bouchenoire
+ */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
@@ -67,6 +70,9 @@ public class AssaultProperties {
   @Value("${killApplicationActive : false}")
   private boolean killApplicationActive;
 
+  @Value("${killApplication.cron.expression:OFF}")
+  private String killApplicationCronExpression;
+
   @Value("${memoryActive : false}")
   private volatile boolean memoryActive;
 
@@ -89,6 +95,9 @@ public class AssaultProperties {
   @DecimalMax("1.0")
   @DecimalMin("0.01")
   private double memoryFillTargetFraction;
+
+  @Value("${memory.cron.expression:OFF}")
+  private String memoryCronExpression;
 
   @Value("${runtime.scope.assault.cron.expression:OFF}")
   private String runtimeAssaultCronExpression;

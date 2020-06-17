@@ -157,11 +157,13 @@ Watcher config has changed
 "latencyActive": true,
 "exceptionsActive": false,
 "killApplicationActive": false,
+"killApplicationCronExpression": "OFF",
 "memoryActive": false,
 "memoryMillisecondsHoldFilledMemory": 90000,
 "memoryMillisecondsWaitNextIncrease": 1000,
 "memoryFillIncrementFraction": 0.15,
 "memoryFillTargetFraction": 0.25,
+"memoryCronExpression": "OFF",
 "runtimeAssaultCronExpression": "OFF",
 "watchedCustomServices": null
 }

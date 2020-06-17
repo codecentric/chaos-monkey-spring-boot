@@ -57,7 +57,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ * @author Maxime Bouchenoire
+ */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
@@ -138,13 +141,15 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   public ChaosMonkeyScheduler scheduler(
-      @Nullable TaskScheduler scheduler, ChaosMonkeyRuntimeScope runtimeScope) {
+      @Nullable TaskScheduler scheduler,
+      KillAppAssault killAppAssault,
+      MemoryAssault memoryAssault) {
     ScheduledTaskRegistrar registrar = null;
     if (scheduler != null) {
       registrar = new ScheduledTaskRegistrar();
       registrar.setTaskScheduler(scheduler);
     }
-    return new ChaosMonkeyScheduler(registrar, assaultProperties, runtimeScope);
+    return new ChaosMonkeyScheduler(registrar, assaultProperties, killAppAssault, memoryAssault);
   }
 
   @Bean
