@@ -42,6 +42,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -54,6 +55,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
@@ -69,6 +71,8 @@ import org.springframework.util.StreamUtils;
 public class ChaosMonkeyConfiguration {
 
   private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
+
+  private static final String CHAOS_MONKEY_TASK_SCHEDULER = "chaosMonkeyTaskScheduler";
 
   private final ChaosMonkeyProperties chaosMonkeyProperties;
 
@@ -138,13 +142,20 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   public ChaosMonkeyScheduler scheduler(
-      @Nullable TaskScheduler scheduler, ChaosMonkeyRuntimeScope runtimeScope) {
+      @Nullable @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
+      ChaosMonkeyRuntimeScope runtimeScope) {
+    Logger.info("Creating chaos monkey scheduler with scheduler  : " + scheduler);
     ScheduledTaskRegistrar registrar = null;
     if (scheduler != null) {
       registrar = new ScheduledTaskRegistrar();
       registrar.setTaskScheduler(scheduler);
     }
     return new ChaosMonkeyScheduler(registrar, assaultProperties, runtimeScope);
+  }
+
+  @Bean(name = CHAOS_MONKEY_TASK_SCHEDULER)
+  public TaskScheduler chaosMonkeyTaskScheduler() {
+    return new ThreadPoolTaskScheduler();
   }
 
   @Bean
