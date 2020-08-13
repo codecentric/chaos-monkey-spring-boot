@@ -144,7 +144,6 @@ public class ChaosMonkeyConfiguration {
   public ChaosMonkeyScheduler scheduler(
       @Nullable @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
       ChaosMonkeyRuntimeScope runtimeScope) {
-    Logger.info("Creating chaos monkey scheduler with scheduler  : " + scheduler);
     ScheduledTaskRegistrar registrar = null;
     if (scheduler != null) {
       registrar = new ScheduledTaskRegistrar();
