@@ -4,6 +4,7 @@
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/180[#180] Fixes serialization issues when using actuator combined with spring cloud dependencies (see https://github.com/codecentric/chaos-monkey-spring-boot/issues/72[#72] for more details)
+- https://github.com/codecentric/chaos-monkey-spring-boot/issues/184[#184] Use chaos monkey specific scheduler to avoid multiple scheduler conflict issue when we have more than one scheduler already defined in the application code
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
