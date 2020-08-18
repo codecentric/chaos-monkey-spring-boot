@@ -28,13 +28,6 @@ class ChaosMonkeySchedulerTest {
   @Mock private ChaosMonkeyRuntimeScope scope;
 
   @Test
-  void shouldTolerateMissingRegistry() {
-    when(config.getRuntimeAssaultCronExpression()).thenReturn("*/5 * * * * ?");
-    new ChaosMonkeyScheduler(null, config, scope);
-    // no exception despite null injection
-  }
-
-  @Test
   void shouldRespectTheOffSetting() {
     when(config.getRuntimeAssaultCronExpression()).thenReturn("OFF");
 

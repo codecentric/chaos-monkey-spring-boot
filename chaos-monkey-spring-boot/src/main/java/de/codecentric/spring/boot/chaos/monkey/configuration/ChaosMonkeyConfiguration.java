@@ -52,7 +52,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.lang.Nullable;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -142,13 +141,10 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   public ChaosMonkeyScheduler scheduler(
-      @Nullable @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
+      @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
       ChaosMonkeyRuntimeScope runtimeScope) {
-    ScheduledTaskRegistrar registrar = null;
-    if (scheduler != null) {
-      registrar = new ScheduledTaskRegistrar();
-      registrar.setTaskScheduler(scheduler);
-    }
+    ScheduledTaskRegistrar registrar = new ScheduledTaskRegistrar();
+    registrar.setTaskScheduler(scheduler);
     return new ChaosMonkeyScheduler(registrar, assaultProperties, runtimeScope);
   }
 
