@@ -28,11 +28,6 @@ public class ChaosMonkeyScheduler {
     this.config = config;
     this.runtimeScope = runtimeScope;
 
-    if (scheduler == null) {
-      Logger.warn(
-          "No ScheduledTaskRegistrar available in application context, scheduler is not functional");
-    }
-
     reloadConfig();
   }
 
@@ -47,14 +42,8 @@ public class ChaosMonkeyScheduler {
     }
 
     if (active) {
-      if (scheduler == null) {
-        // We might consider an exception here, since the user intent could
-        // clearly not be serviced
-        Logger.error("No scheduler available in application context, will not process schedule");
-      } else {
-        CronTask task = new CronTask(runtimeScope::callChaosMonkey, cronExpression);
-        currentTask = scheduler.scheduleCronTask(task);
-      }
+      CronTask task = new CronTask(runtimeScope::callChaosMonkey, cronExpression);
+      currentTask = scheduler.scheduleCronTask(task);
     }
   }
 }
