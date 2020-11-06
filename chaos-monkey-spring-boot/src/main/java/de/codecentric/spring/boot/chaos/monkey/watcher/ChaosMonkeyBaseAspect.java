@@ -25,7 +25,7 @@ abstract class ChaosMonkeyBaseAspect {
   @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
   public void classInChaosMonkeyPackage() {}
 
-  @Pointcut("execution(* *.*(..))")
+  @Pointcut("!within(is(FinalType)) && execution(* *.*(..))")
   public void allPublicMethodPointcut() {}
 
   String calculatePointcut(String target) {
