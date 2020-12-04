@@ -33,9 +33,8 @@ import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
 class ChaosMonkeyRequestScopeRestEndpointDisabledIntegration {
 

@@ -34,9 +34,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 /** @author Benjamin Wilms */
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-component-test.properties")
 public class HelloComponentIntegrationTest {
 

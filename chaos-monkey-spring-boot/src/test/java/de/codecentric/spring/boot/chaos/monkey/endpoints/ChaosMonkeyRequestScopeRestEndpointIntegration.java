@@ -41,9 +41,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
 class ChaosMonkeyRequestScopeRestEndpointIntegration {
 

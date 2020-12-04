@@ -39,19 +39,18 @@ import org.springframework.http.ResponseEntity;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties = {
-    "management.endpoints.web.exposure.include=chaosmonkey",
-    "management.endpoints.enabled-by-default=true",
-    "chaos.monkey.assaults.memoryActive=true",
-    "chaos.monkey.assaults.memoryFillTargetFraction=0.80",
-    "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100",
-    "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
-    "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
-    "spring.profiles.active=chaos-monkey"
-  }
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "management.endpoints.web.exposure.include=chaosmonkey",
+      "management.endpoints.enabled-by-default=true",
+      "chaos.monkey.assaults.memoryActive=true",
+      "chaos.monkey.assaults.memoryFillTargetFraction=0.80",
+      "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100",
+      "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
+      "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
+      "spring.profiles.active=chaos-monkey"
+    })
 class MemoryAssaultIntegration {
 
   @LocalServerPort private int serverPort;

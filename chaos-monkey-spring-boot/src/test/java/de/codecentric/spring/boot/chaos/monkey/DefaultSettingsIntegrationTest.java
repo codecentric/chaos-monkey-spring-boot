@@ -29,9 +29,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("chaos-monkey")
 class DefaultSettingsIntegrationTest {
 
