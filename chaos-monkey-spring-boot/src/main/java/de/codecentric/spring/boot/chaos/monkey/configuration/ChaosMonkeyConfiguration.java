@@ -43,7 +43,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -203,7 +203,7 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnEnabledEndpoint
+  @ConditionalOnAvailableEndpoint
   public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(
       ChaosMonkeyRuntimeScope runtimeScope, ChaosMonkeyScheduler scheduler) {
     return new ChaosMonkeyRestEndpoint(settings(), runtimeScope, scheduler);
@@ -211,7 +211,7 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnEnabledEndpoint
+  @ConditionalOnAvailableEndpoint
   public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
     return new ChaosMonkeyJmxEndpoint(settings());
   }

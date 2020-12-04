@@ -44,8 +44,7 @@ public class ChaosMonkeyRequestScope {
       List<ChaosMonkeyAssault> legacyAssaults,
       MetricEventPublisher metricEventPublisher) {
     List<RequestAssaultAdapter> assaultAdapters =
-        legacyAssaults
-            .stream()
+        legacyAssaults.stream()
             .filter(
                 it ->
                     !(it instanceof ChaosMonkeyRequestAssault
