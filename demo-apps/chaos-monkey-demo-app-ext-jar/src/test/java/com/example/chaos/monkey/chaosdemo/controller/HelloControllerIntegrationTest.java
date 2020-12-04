@@ -17,9 +17,9 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import org.junit.Test;
@@ -54,7 +54,6 @@ public class HelloControllerIntegrationTest {
 
   @Test
   public void checkHelloEndpoint() {
-
     ResponseEntity<String> response =
         testRestTemplate.getForEntity(
             "http://localhost:" + this.serverPort + "/hello", String.class);
@@ -64,7 +63,6 @@ public class HelloControllerIntegrationTest {
 
   @Test
   public void checkGoodbyeEndpoint() {
-
     ResponseEntity<String> response =
         testRestTemplate.getForEntity(
             "http://localhost:" + this.serverPort + "/goodbye", String.class);

@@ -16,9 +16,9 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
@@ -36,7 +36,6 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @BeforeEach
   void setUp() {
-
     AssaultProperties assaultProperties = new AssaultProperties();
     assaultProperties.setLevel(1);
     assaultProperties.setLatencyRangeStart(100);
@@ -52,7 +51,6 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @Test
   void getAssaultProperties() {
-
     assertThat(
         chaosMonkeyJmxEndpoint.getAssaultProperties(),
         is(chaosMonkeySettings.getAssaultProperties().toDto()));

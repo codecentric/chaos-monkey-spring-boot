@@ -17,10 +17,10 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -45,7 +45,6 @@ class DefaultProfileIntegration {
 
   @Test
   void contextLoads() {
-
     assertNull(chaosMonkeyRequestScope);
   }
 
@@ -66,7 +65,6 @@ class DefaultProfileIntegration {
 
   @Test
   void checkEnvCustomServiceWatcherList() {
-
     List<String> stringList =
         env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
     assertThat(stringList, hasSize(2));

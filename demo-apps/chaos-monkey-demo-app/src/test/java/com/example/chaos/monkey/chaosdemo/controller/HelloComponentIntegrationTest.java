@@ -17,8 +17,8 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
@@ -50,7 +50,6 @@ public class HelloComponentIntegrationTest {
 
   @Test
   public void callingPublicMethodonComponent() {
-
     assertTrue(chaosMonkeyConfiguration.settings().getWatcherProperties().isComponent());
 
     helloComponent.sayHello();
