@@ -17,7 +17,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;

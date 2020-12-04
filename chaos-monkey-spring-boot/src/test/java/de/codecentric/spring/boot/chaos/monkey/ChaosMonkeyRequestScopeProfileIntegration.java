@@ -20,7 +20,7 @@ package de.codecentric.spring.boot.chaos.monkey;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;

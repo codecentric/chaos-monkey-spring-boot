@@ -14,14 +14,14 @@ import com.example.chaos.monkey.chaosdemo.repo.HelloRepoAnnotation;
 import com.example.chaos.monkey.chaosdemo.repo.HelloRepoJpa;
 import com.example.chaos.monkey.chaosdemo.repo.HelloRepoSearchAndSorting;
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /** @author Benjamin Wilms */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GreetingServiceTest {
 
   @Mock private HelloRepo helloRepoMock;
@@ -34,7 +34,7 @@ public class GreetingServiceTest {
 
   private GreetingService greetingService;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     greetingService =
         new GreetingService(

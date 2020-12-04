@@ -16,21 +16,16 @@
 
 package com.example.chaos.monkey.chaosdemo;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ChaosDemoApplicationTests {
-
-  @Rule public final ExpectedException exception = ExpectedException.none();
 
   @Autowired private ApplicationContext ctx;
 
@@ -39,8 +34,9 @@ public class ChaosDemoApplicationTests {
 
   @Test
   public void checkNotMetricsBean() {
-    exception.expect(NoSuchBeanDefinitionException.class);
-    exception.expectMessage("No bean named 'metrics' available");
-    Object metrics = ctx.getBean("metrics");
+    assertThrows(
+        NoSuchBeanDefinitionException.class,
+        () -> ctx.getBean("metrics"),
+        "No bean named 'metrics' available");
   }
 }

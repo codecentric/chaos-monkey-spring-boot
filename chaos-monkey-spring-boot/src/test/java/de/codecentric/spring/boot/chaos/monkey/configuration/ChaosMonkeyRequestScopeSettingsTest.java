@@ -20,7 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -115,7 +115,7 @@ class ChaosMonkeyRequestScopeSettingsTest {
         is(assaultProperties.getLatencyRangeStart()));
 
     int troubleRandom = settings.getAssaultProperties().getTroubleRandom();
-    assertTrue("Trouble random is to high!", troubleRandom < 1001);
+    assertTrue(troubleRandom < 1001, "Trouble random is to high!");
 
     assertThat(settings.getAssaultProperties().getLevel(), is(assaultProperties.getLevel()));
   }

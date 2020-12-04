@@ -18,7 +18,7 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;

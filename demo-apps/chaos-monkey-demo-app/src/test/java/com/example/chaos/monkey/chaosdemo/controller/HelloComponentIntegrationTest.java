@@ -19,20 +19,17 @@ package com.example.chaos.monkey.chaosdemo.controller;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import com.example.chaos.monkey.chaosdemo.component.HelloComponent;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /** @author Benjamin Wilms */
-@RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = ChaosDemoApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
