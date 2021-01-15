@@ -1,0 +1,24 @@
+name: Chaos Monkey Build
+
+on: [push]
+
+jobs:
+  build:
+    name: "Java: ${{ matrix.java }}"
+    strategy:
+      matrix:
+        java: [8, 11]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Run Spotless
+        run: ./mvnw spotless:check
+      - name: Run Maven verify
+        run: ./mvnw verify -B
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
