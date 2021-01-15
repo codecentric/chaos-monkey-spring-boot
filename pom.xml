@@ -25,7 +25,6 @@
     <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
     <!-- default settings -->
     <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
-    <assertj-core.version>3.18.1</assertj-core.version>
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <com.puppycrawl.tools.version>8.38</com.puppycrawl.tools.version>
     <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>

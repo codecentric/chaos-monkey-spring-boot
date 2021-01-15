@@ -17,7 +17,6 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
@@ -55,7 +54,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
   private String baseUrl;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
   }
 
@@ -65,9 +64,9 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
     chaosMonkeyProperties.setEnabled(false);
     chaosMonkeySettings.setChaosMonkeyProperties(chaosMonkeyProperties);
 
-    then(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode())
-        .isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
-
+    assertEquals(
+        postChaosMonkeySettings(chaosMonkeySettings).getStatusCode(),
+        HttpStatus.METHOD_NOT_ALLOWED);
     assertEquals(false, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
   }
 
