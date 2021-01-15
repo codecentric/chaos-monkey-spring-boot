@@ -1,0 +1,32 @@
+{
+	// Template from https://github.com/microsoft/vscode-dev-containers/tree/master/containers/java-8/.devcontainer
+	"name": "CMSB (Java)",
+	"image": "mcr.microsoft.com/vscode/devcontainers/java:8",
+	
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"java.home": "/docker-java-home",
+		"java.configuration.runtimes": [{
+			"default": true,
+			"name": "JavaSE-1.8",
+			"path": "/usr/local/sdkman/candidates/java/current"
+		}]
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"vscjava.vscode-java-pack",
+		"gabrielbb.vscode-lombok",
+		"pivotal.vscode-boot-dev-pack"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "java -version",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
+}
