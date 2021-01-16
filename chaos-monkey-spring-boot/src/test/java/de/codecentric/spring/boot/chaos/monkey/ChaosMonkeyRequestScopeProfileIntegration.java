@@ -18,9 +18,9 @@
 package de.codecentric.spring.boot.chaos.monkey;
 
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
@@ -39,17 +39,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties = {
-    "chaos.monkey.watcher.controller=true",
-    "chaos.monkey.assaults.level=1",
-    "chaos.monkey.assaults.latencyRangeStart=10",
-    "chaos.monkey.assaults.latencyRangeEnd=50",
-    "chaos.monkey.assaults.killApplicationActive=true",
-    "spring.profiles.active=chaos-monkey"
-  }
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "chaos.monkey.watcher.controller=true",
+      "chaos.monkey.assaults.level=1",
+      "chaos.monkey.assaults.latencyRangeStart=10",
+      "chaos.monkey.assaults.latencyRangeEnd=50",
+      "chaos.monkey.assaults.killApplicationActive=true",
+      "spring.profiles.active=chaos-monkey"
+    })
 class ChaosMonkeyRequestScopeProfileIntegration {
 
   @Autowired private ChaosMonkeyRequestScope chaosMonkeyRequestScope;

@@ -17,7 +17,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -33,9 +33,8 @@ import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
 class ChaosMonkeyRequestScopeRestEndpointDisabledIntegration {
 

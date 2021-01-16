@@ -17,11 +17,11 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.test.util.AssertionErrors.assertFalse;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
@@ -39,19 +39,18 @@ import org.springframework.http.ResponseEntity;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties = {
-    "management.endpoints.web.exposure.include=chaosmonkey",
-    "management.endpoints.enabled-by-default=true",
-    "chaos.monkey.assaults.memoryActive=true",
-    "chaos.monkey.assaults.memoryFillTargetFraction=0.80",
-    "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100",
-    "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
-    "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
-    "spring.profiles.active=chaos-monkey"
-  }
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "management.endpoints.web.exposure.include=chaosmonkey",
+      "management.endpoints.enabled-by-default=true",
+      "chaos.monkey.assaults.memoryActive=true",
+      "chaos.monkey.assaults.memoryFillTargetFraction=0.80",
+      "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100",
+      "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
+      "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
+      "spring.profiles.active=chaos-monkey"
+    })
 class MemoryAssaultIntegration {
 
   @LocalServerPort private int serverPort;
@@ -166,12 +165,12 @@ class MemoryAssaultIntegration {
 
     // garbage collection should have ran by now
     assertTrue(
+        usedMemoryAfterAttack <= usedMemoryDuringAttack,
         "Memory after attack was "
             + SizeConverter.toMegabytes(usedMemoryAfterAttack)
             + " MB but should have been less  amount of memory during attack ("
             + SizeConverter.toMegabytes(usedMemoryDuringAttack)
-            + " MB).",
-        usedMemoryAfterAttack <= usedMemoryDuringAttack);
+            + " MB).");
   }
 
   @Test
@@ -186,7 +185,7 @@ class MemoryAssaultIntegration {
     assertFalse("Assault already active", backgroundThread.isAlive());
 
     backgroundThread.start();
-    assertTrue("Assault not active", backgroundThread.isAlive());
+    assertTrue(backgroundThread.isAlive(), "Assault not active");
 
     outer:
     {
@@ -208,7 +207,7 @@ class MemoryAssaultIntegration {
 
     ResponseEntity<String> result =
         restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
-    assertEquals("Request was not successful", 200, result.getStatusCodeValue());
+    assertEquals(200, result.getStatusCodeValue(), "Request was not successful");
 
     // TODO: Check again when JAVA 8 can be dropped.
     // Apparently java 8 needs a bit more time to finish up things
