@@ -30,14 +30,14 @@ Fork and clone the repository
 
 [NOTE]
 ====
-To keep your fork in sync with the main project, link your `master` branch to the main repositories `master` branch. Do this by:
+To keep your fork in sync with the main project, link your `main` branch to the main repositories `main` branch. Do this by:
 
 [source, bash]
 ----
 git remote add upstream https://github.com/codecentric/chaos-monkey-spring-boot.git
 ----
 
-To fetch upstream changes switch to your master branch with `git checkout master` and then run `git pull upstream master`.
+To fetch upstream changes switch to your main branch with `git checkout main` and then run `git pull upstream main`.
 ====
 
 Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin.
@@ -82,5 +82,5 @@ Considering these recommendations will help us in getting your pull request merg
 * Document your changes. This includes in code documentation but also user documentation.
 * Test your changes. Use `./mvnw verify` to run all build pipeline checks.
 * It would be great to follow Chris Beam's recommendations on https://chris.beams.io/posts/git-commit/[How to Write a Git Commit Message]. 
-* Please update the https://github.com/codecentric/chaos-monkey-spring-boot/blob/master/chaos-monkey-docs/src/main/asciidoc/changes.adoc[Changes section].
+* Please update the https://github.com/codecentric/chaos-monkey-spring-boot/blob/main/chaos-monkey-docs/src/main/asciidoc/changes.adoc[Changes section].
 * Please make sure to run the tests before you commit your changes. Using Maven you can run `./mvnw verify` which will run all tests and checks when you run the command in the root folder of the repository.
