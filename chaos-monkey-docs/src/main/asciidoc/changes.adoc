@@ -16,6 +16,7 @@
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/177[#177] Harmonize test naming.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/194[#194] Introduce dev containers (for https://github.com/features/codespaces[Github Codespaces] and https://code.visualstudio.com/docs/remote/containers[VS Code])
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/192[#192] Upgrade dependencies (Spring Boot 2.3.6 and many more...) and removed JUnit 4
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/195[#195] Switch from Travis to Github Actions + switch to default branch "main"
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
