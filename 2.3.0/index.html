@@ -529,8 +529,8 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Benjamin Wilms</span><br>
 <span id="email" class="email"><a href="https://twitter.com/mrbwilms">@MrBWilms</a></span><br>
-<span id="revnumber">version 2.3.0-SNAPSHOT,</span>
-<span id="revdate">30.01.2020</span>
+<span id="revnumber">version 2.3.0,</span>
+<span id="revdate">29.01.2021</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -583,7 +583,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 </ul>
 </li>
-<li><a href="#changes">8. Changes in 2.3.0-SNAPSHOT</a>
+<li><a href="#changes">8. Changes in 2.3.0</a>
 <ul class="sectlevel2">
 <li><a href="#_bug_fixes">8.1. Bug Fixes</a></li>
 <li><a href="#_improvements">8.2. Improvements</a></li>
@@ -654,7 +654,7 @@ table.CodeRay td.code>pre{padding:0}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.3.0<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -689,7 +689,7 @@ table.CodeRay td.code>pre{padding:0}
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.3.0<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -700,7 +700,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.3.0-SNAPSHOT-jar-with-dependencies.jar
+    -Dloader.path=chaos-monkey-spring-boot-2.3.0-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -1562,17 +1562,53 @@ lost.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.3.0-SNAPSHOT</a></h2>
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.3.0</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">8.1. Bug Fixes</a></h3>
-
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/180">#180</a> Fixes serialization issues when using actuator combined with spring cloud dependencies (see <a href="https://github.com/codecentric/chaos-monkey-spring-boot/issues/72">#72</a> for more details)</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/issues/184">#184</a> Use chaos monkey specific scheduler to avoid multiple scheduler conflict issue when we have more than one scheduler already defined in the application code</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/191">#191</a> Prevent chaos monkey from attempting to proxy final components which fails with an <code>IllegalArgumentException</code></p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_improvements"><a class="anchor" href="#_improvements"></a><a class="link" href="#_improvements">8.2. Improvements</a></h3>
-<div class="paragraph">
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/163">#163</a> Fix wrong docs about configuration of watcher at runtime
-<a href="https://github.com/codecentric/chaos-monkey-spring-boot/issues/162" class="bare">github.com/codecentric/chaos-monkey-spring-boot/issues/162</a> Change default configuration to everything off and predictable values</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/163">#163</a> Fix wrong docs about configuration of watcher at runtime</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/160">#160</a> Introduce Google Style Guide</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/issues/162">#162</a> Change default configuration to everything off and predictable values</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/175">#175</a> Because <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/160">#160</a> failed horribly regarding ease of development, introduce spotless instead</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/177">#177</a> Harmonize test naming.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/194">#194</a> Introduce dev containers (for <a href="https://github.com/features/codespaces">Github Codespaces</a> and <a href="https://code.visualstudio.com/docs/remote/containers">VS Code</a>)</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/192">#192</a> Upgrade dependencies (Spring Boot 2.3.6 and many more&#8230;&#8203;) and removed JUnit 4</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/195">#195</a> Switch from Travis to Github Actions + Switch to default branch "main"</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -1587,10 +1623,16 @@ lost.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="https://github.com/maiksensi">@maiksensi</a></p>
+</li>
+<li>
 <p><a href="https://github.com/WtfJoke">@WtfJoke</a></p>
 </li>
 <li>
 <p><a href="https://github.com/fletchgqc">@fletchgqc</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Glosur">@glosur</a></p>
 </li>
 </ul>
 </div>
@@ -1603,7 +1645,7 @@ lost.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.3.0-SNAPSHOT<br>
+Version 2.3.0<br>
 </div>
 </div>
 </body>
