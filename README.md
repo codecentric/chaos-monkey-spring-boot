@@ -128,7 +128,7 @@ Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required.
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>chaos-monkey-spring-boot</artifactId>
-    <version>2.0.1</version>
+    <version>[latest version]</version>
 </dependency>
 {% endhighlight %}
 2. Start your app enabling the service using the property below:
@@ -164,15 +164,15 @@ The following assaults are being provided:
 You can customize the behave by configuration, please take a look at the documentation.
 
 <a name="support"></a>
-## Support for Spring Boot 1.5.x, 2.0.x and 2.1.x
+## Support for Spring Boot 1.5.x and 2.x
 
 Chaos Monkey for Spring Boot versions will follow the versions of Spring Boot. The first number of the Chaos Monkey release will show you which is the right one for your Spring Boot version.
 
-|                                   | Chaos Monkey 1.0.1 | Chaos Monkey 1.5.0 | Chaos Monkey 2.0.0 | Chaos Monkey 2.0.1 | Chaos Monkey 2.0.2 | Chaos Monkey 2.1.1 | Chaos Monkey 2.2.0 |
+|                                   | Chaos Monkey 1.0.1 | Chaos Monkey 1.5.0 | Chaos Monkey 2.0.0 | Chaos Monkey 2.0.1 | Chaos Monkey 2.0.2 | Chaos Monkey 2.1.1 | Chaos Monkey 2.2+  |
 | --------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
 | <b>Spring Boot 1.5.0 - 1.5.19</b> |         no         |     <b>yes</b>     |         no         |         no         |         no         |         no         |         no         |
 | <b>Spring Boot 2.0.0 - 2.0.8</b>  |     <b>yes</b>     |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |
-| <b>Spring Boot 2.1.0 - 2.1.2</b>  |         no         |         no         |         no         |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |
+| <b>Spring Boot 2.1.0+</b>         |         no         |         no         |         no         |         no         |     <b>yes</b>     |     <b>yes</b>     |     <b>yes</b>     |
 
 For Chaos Monkey to work, you need to have the spring-web dependency in your app. You usually get this via `spring-boot-starter-web` or `spring-boot-starter-webflux`.
 
@@ -190,10 +190,11 @@ A detailed documentation about the configuration of the Chaos Monkey for Spring 
 - [Version 2.1.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.0)
 - [Version 2.1.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.1)
 - [Version 2.2.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.2.0)
+- [Version 2.3.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.3.0)
 
 
 ### Chaos Monkey for Spring Boot SNAPSHOT
-- [Version 2.3.0-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.3.0-SNAPSHOT)
+- [Version 2.3.1-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.3.1-SNAPSHOT)
 
 <a name="snapshots"></a>
 ## Snapshots
@@ -224,11 +225,11 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
 </dependency>
 ```
 
-#### Chaos Monkey for Spring Boot 2.2.x
+#### Chaos Monkey for Spring Boot 2.x
 ```xml
 <dependency>
   <groupId>de.codecentric</groupId>
   <artifactId>chaos-monkey-spring-boot</artifactId>
-  <version>2.3.0-SNAPSHOT</version>
+  <version>2.3.1-SNAPSHOT</version>
 </dependency>
 ```
