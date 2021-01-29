@@ -71,7 +71,7 @@
       scm:git:git://github.com/codecentric/chaos-monkey-spring-boot.git
     </connection>
     <developerConnection>
-      scm:git:ssh://git@github.com:codecentric/chaos-monkey-spring-boot.git
+      scm:git:ssh://git@github.com/codecentric/chaos-monkey-spring-boot.git
     </developerConnection>
     <url>https://github.com/codecentric/chaos-monkey-spring-boot</url>
   </scm>
