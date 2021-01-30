@@ -48,9 +48,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -60,7 +60,7 @@ import org.springframework.util.StreamUtils;
 
 /** @author Benjamin Wilms */
 @Configuration
-@Profile("chaos-monkey")
+@Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({
   ChaosMonkeyProperties.class,
   AssaultProperties.class,
