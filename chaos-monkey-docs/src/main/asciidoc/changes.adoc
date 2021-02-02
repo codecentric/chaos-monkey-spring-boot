@@ -3,20 +3,9 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/180[#180] Fixes serialization issues when using actuator combined with spring cloud dependencies (see https://github.com/codecentric/chaos-monkey-spring-boot/issues/72[#72] for more details)
-- https://github.com/codecentric/chaos-monkey-spring-boot/issues/184[#184] Use chaos monkey specific scheduler to avoid multiple scheduler conflict issue when we have more than one scheduler already defined in the application code
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/191[#191] Prevent chaos monkey from attempting to proxy final components which fails with an `IllegalArgumentException`
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/163[#163] Fix wrong docs about configuration of watcher at runtime
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/160[#160] Introduce Google Style Guide
-- https://github.com/codecentric/chaos-monkey-spring-boot/issues/162[#162] Change default configuration to everything off and predictable values
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/175[#175] Because https://github.com/codecentric/chaos-monkey-spring-boot/pull/160[#160] failed horribly regarding ease of development, introduce spotless instead
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/177[#177] Harmonize test naming.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/194[#194] Introduce dev containers (for https://github.com/features/codespaces[Github Codespaces] and https://code.visualstudio.com/docs/remote/containers[VS Code])
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/192[#192] Upgrade dependencies (Spring Boot 2.3.6 and many more...) and removed JUnit 4
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/195[#195] Switch from Travis to Github Actions + Switch to default branch "main"
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -25,9 +14,5 @@
 This release was only possible because of these great humans:
 
 // - https://github.com/octocat[@octocat]
-- https://github.com/maiksensi[@maiksensi]
-- https://github.com/WtfJoke[@WtfJoke]
-- https://github.com/fletchgqc[@fletchgqc]
-- https://github.com/Glosur[@glosur]
 
 Thank you for your support!
