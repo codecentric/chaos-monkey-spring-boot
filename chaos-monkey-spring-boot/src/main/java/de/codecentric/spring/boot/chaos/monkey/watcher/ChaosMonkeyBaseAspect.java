@@ -28,6 +28,9 @@ abstract class ChaosMonkeyBaseAspect {
   @Pointcut("!within(is(FinalType)) && execution(* *.*(..))")
   public void allPublicMethodPointcut() {}
 
+  @Pointcut("execution(* postProcess*Initialization(..)) || execution(* onApplicationEvent(..))")
+  public void springHooksPointcut() {}
+
   String calculatePointcut(String target) {
     return target.replaceAll("\\(\\)", "").replaceAll("\\)", "").replaceAll("\\(", ".");
   }

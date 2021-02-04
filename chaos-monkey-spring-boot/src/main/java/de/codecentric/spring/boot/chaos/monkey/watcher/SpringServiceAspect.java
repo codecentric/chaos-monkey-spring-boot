@@ -41,10 +41,11 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
   private WatcherProperties watcherProperties;
 
   @Pointcut("within(@org.springframework.stereotype.Service *)")
-  public void classAnnotatedWithControllerPointcut() {}
+  public void classAnnotatedWithServicePointcut() {}
 
   @Around(
-      "classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+      "classAnnotatedWithServicePointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()"
+          + "&& !springHooksPointcut()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
     if (watcherProperties.isService()) {
