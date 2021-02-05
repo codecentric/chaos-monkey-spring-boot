@@ -77,7 +77,7 @@ Spring Boot Chaos Monkey is a small library (30kb) and you have the following op
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>chaos-monkey-spring-boot</artifactId>
-    <version>2.1.1</version>
+    <version>2.3.1</version>
 </dependency>
 ```
 
@@ -93,7 +93,7 @@ As long as you don't set the property  "<b>chaos.monkey.enabled</b>" to "<b>true
 As you can see, you don't have to change the source code!
 
 ## Dynamic Configuration at runtime
-Since version 1.5.0 and 2.0.0 the Chaos Monkey for Spring Boot can be configured at runtime via a Spring Boot Actuator Endpoint.
+The Chaos Monkey for Spring Boot can be configured at runtime via a Spring Boot Actuator Endpoint.
 
 > Take a look at the current [snapshots](#snapshots) and [documentation](#releases).
 
@@ -178,23 +178,22 @@ For Chaos Monkey to work, you need to have the spring-web dependency in your app
 
 <a name="docs"></a>
 ## Documentation
-A detailed documentation about the configuration of the Chaos Monkey for Spring Boot can be found here.
+[Detailed documentation](https://codecentric.github.io/chaos-monkey-spring-boot/latest) about the configuration of the Chaos Monkey for Spring Boot.
+
+Before version 2.3.1, documentation was created per-release. This old documentation can be found here:
 
 <a name="releases"></a>
-### Chaos Monkey Releases
-- [Version 1.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/1.0.1/)
-- [Version 1.5.0](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0)
-- [Version 2.0.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
-- [Version 2.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.1)
-- [Version 2.0.2](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2)
-- [Version 2.1.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.0)
-- [Version 2.1.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.1)
-- [Version 2.2.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.2.0)
+### Legacy Releases
+
 - [Version 2.3.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.3.0)
-
-
-### Chaos Monkey for Spring Boot SNAPSHOT
-- [Version 2.3.1-SNAPSHOT](https://codecentric.github.io/chaos-monkey-spring-boot/2.3.1-SNAPSHOT)
+- [Version 2.2.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.2.0)
+- [Version 2.1.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.1)
+- [Version 2.1.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.1.0)
+- [Version 2.0.2](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2)
+- [Version 2.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.1)
+- [Version 2.0.0](https://codecentric.github.io/chaos-monkey-spring-boot/2.0.0)
+- [Version 1.5.0](https://codecentric.github.io/chaos-monkey-spring-boot/1.5.0)
+- [Version 1.0.1](https://codecentric.github.io/chaos-monkey-spring-boot/1.0.1/)
 
 <a name="snapshots"></a>
 ## Snapshots
@@ -213,23 +212,4 @@ You can access snapshot builds from the sonatype snapshot repository by adding t
 		<enabled>false</enabled>
 	</releases>
 </repository>
-```
-
-### Latest snapshots
-#### Chaos Monkey for Spring Boot 1.5.x
-```xml
-<dependency>
-  <groupId>de.codecentric</groupId>
-  <artifactId>chaos-monkey-spring-boot</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
-</dependency>
-```
-
-#### Chaos Monkey for Spring Boot 2.x
-```xml
-<dependency>
-  <groupId>de.codecentric</groupId>
-  <artifactId>chaos-monkey-spring-boot</artifactId>
-  <version>2.3.1-SNAPSHOT</version>
-</dependency>
 ```
