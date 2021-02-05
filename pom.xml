@@ -40,7 +40,6 @@
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-    <maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
     <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
     <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -264,6 +263,13 @@
                 </goals>
                 <id>sign-artifacts</id>
                 <phase>verify</phase>
+                <!-- To avoid maven gpg: signing failed: Inappropriate ioctl for device in CI -->
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
               </execution>
             </executions>
             <groupId>org.apache.maven.plugins</groupId>

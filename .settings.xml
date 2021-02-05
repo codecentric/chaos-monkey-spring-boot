@@ -8,5 +8,9 @@
 	  <username>${env.SONATYPE_USERTOKEN}</username>
       <password>${env.SONATYPE_USERTOKENPASSWORD}</password>
     </server>
+    <server>
+      <id>gpg.passphrase</id>
+      <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+    </server>
   </servers>
 </settings>
