@@ -3,6 +3,7 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/202[#202] Remove reference to old spring-boot-actuator-autoconfigure
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -13,6 +14,6 @@
 === Contributors
 This release was only possible because of these great humans:
 
-// - https://github.com/octocat[@octocat]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!
