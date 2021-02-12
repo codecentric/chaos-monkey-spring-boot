@@ -38,8 +38,8 @@ jobs:
 
   deploy:
     needs: build
-    name: "Publish artifacts"
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    name: "Publish snapshot artifacts"
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
