@@ -3,6 +3,7 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/200[#200] Prevent chaos monkey from proxying BeanPostProcessor and ApplicationListener methods (see https://github.com/codecentric/chaos-monkey-spring-boot/issues/199[#199] for more details)
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -14,6 +15,8 @@
 === Contributors
 This release was only possible because of these great humans:
 
+// - https://github.com/octocat[@octocat]
+- https://github.com/alexfincham[@alexfincham]
 - https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!

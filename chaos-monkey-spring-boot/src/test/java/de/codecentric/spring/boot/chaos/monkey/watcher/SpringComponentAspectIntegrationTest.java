@@ -24,11 +24,14 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent;
+import de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.FinalDemoComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -40,15 +43,27 @@ class SpringComponentAspectIntegrationTest {
   private static final String demoComponentPointcutName = "execution.DemoComponent.sayHello";
   private static final String finalDemoComponentPointcutName =
       "execution.FinalDemoComponent.sayHello";
+  private static final String beanPostProcessorComponentPointcutName =
+      "execution.BeanPostProcessorComponent.postProcessBeforeInitialization";
+  private static final String applicationListenerComponentPointcutName =
+      "execution.ApplicationListenerComponent.onApplicationEvent";
 
   private static final String demoComponentSimpleName =
       "de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello";
   private static final String finalDemoComponentSimpleName =
       "de.codecentric.spring.boot.demo.chaos.monkey.component.FinalDemoComponent.sayHello";
+  private static final String beanPostProcessorComponentSimpleName =
+      "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent.postProcessBeforeInitialization";
+  private static final String applicationListenerComponentSimpleName =
+      "de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent.onApplicationEvent";
 
   @Autowired DemoComponent demoComponent;
 
   @Autowired FinalDemoComponent finalDemoComponent;
+
+  @Autowired BeanPostProcessorComponent beanPostProcessorComponent;
+
+  @Autowired ApplicationListenerComponent applicationListenerComponent;
 
   @Autowired ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock;
 
@@ -70,8 +85,24 @@ class SpringComponentAspectIntegrationTest {
         .publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
   }
 
+  @Test
+  public void chaosMonkeyDoesNotProxyIgnoredSpringInterfaces() {
+    beanPostProcessorComponent.postProcessBeforeInitialization(new Object(), "fakeBean");
+    applicationListenerComponent.onApplicationEvent(mock(ApplicationEvent.class));
+
+    verify(chaosMonkeyRequestScopeMock, times(0))
+        .callChaosMonkey(beanPostProcessorComponentSimpleName);
+    verify(metricsMock, times(0))
+        .publishMetricEvent(beanPostProcessorComponentPointcutName, MetricType.COMPONENT);
+
+    verify(chaosMonkeyRequestScopeMock, times(0))
+        .callChaosMonkey(applicationListenerComponentSimpleName);
+    verify(metricsMock, times(0))
+        .publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
+  }
+
   @Configuration
-  @EnableAspectJAutoProxy
+  @EnableAspectJAutoProxy(proxyTargetClass = true)
   public static class TestContext {
 
     @Bean
@@ -100,6 +131,16 @@ class SpringComponentAspectIntegrationTest {
     @Bean
     FinalDemoComponent finalDemoComponent() {
       return mock(FinalDemoComponent.class);
+    }
+
+    @Bean
+    BeanPostProcessorComponent beanPostProcessorComponent() {
+      return mock(BeanPostProcessorComponent.class);
+    }
+
+    @Bean
+    ApplicationListenerComponent applicationListenerComponent() {
+      return mock(ApplicationListenerComponent.class);
     }
   }
 }
