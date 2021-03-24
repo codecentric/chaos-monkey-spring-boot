@@ -80,9 +80,9 @@ public class AssaultPropertiesUpdate {
   }
 
   public void applyTo(AssaultProperties t) {
-    this.applyTo(level, t::setLevel);
-    this.applyTo(latencyActive, t::setLatencyActive);
-    this.applyTo(latencyRangeStart, t::setLatencyRangeStart);
+    applyTo(level, t::setLevel);
+    applyTo(latencyActive, t::setLatencyActive);
+    applyTo(latencyRangeStart, t::setLatencyRangeStart);
     applyTo(latencyRangeEnd, t::setLatencyRangeEnd);
 
     applyTo(exceptionsActive, t::setExceptionsActive);
