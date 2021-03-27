@@ -20,14 +20,12 @@ import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeySettingsDto;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /** @author Benjamin Wilms */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode
 public class ChaosMonkeySettings {
 
   @NotNull private ChaosMonkeyProperties chaosMonkeyProperties;

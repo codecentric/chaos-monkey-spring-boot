@@ -17,30 +17,22 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /** @author Benjamin Wilms */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.watcher")
-@EqualsAndHashCode
 public class WatcherProperties {
 
-  @Value("${controller:false}")
-  private boolean controller;
+  private boolean controller = false;
 
-  @Value("${restController:false}")
-  private boolean restController;
+  private boolean restController = false;
 
-  @Value("${service:false}")
-  private boolean service;
+  private boolean service = false;
 
-  @Value("${repository:false}")
-  private boolean repository;
+  private boolean repository = false;
 
-  @Value("${component:false}")
-  private boolean component;
+  private boolean component = false;
 }
