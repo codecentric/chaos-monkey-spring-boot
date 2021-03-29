@@ -31,7 +31,7 @@ jobs:
           SONATYPE_USERTOKENPASSWORD: ${{ secrets.SONATYPE_USERTOKENPASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       - name: Publish gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./chaos-monkey-docs/target/generated-docs
