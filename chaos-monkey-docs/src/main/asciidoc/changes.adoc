@@ -9,6 +9,7 @@
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/204[#204] [CI] Added release workflow
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/213[#213] Upgrade to Spring Boot 2.3.9
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
