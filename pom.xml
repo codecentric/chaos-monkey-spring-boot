@@ -22,47 +22,46 @@
 
   <properties>
     <!-- project version -->
-    <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
+    <revision>2.3.2-SNAPSHOT</revision>
     <!-- default settings -->
-    <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
-    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-    <com.puppycrawl.tools.version>8.38</com.puppycrawl.tools.version>
-    <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>
-    <!-- dependency versions -->
-    <git-commit-id-plugin.version>4.0.3</git-commit-id-plugin.version>
-    <github.global.server>github</github.global.server>
-    <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
     <java.version>1.8</java.version>
-    <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- GitHub Server settings.xml -->
+    <github.global.server>github</github.global.server>
+
+    <!-- spring versions -->
+    <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
+    <spring-cloud.version>Hoxton.SR10</spring-cloud.version>
+    <spring.version>5.2.13.RELEASE</spring.version>
+
+    <!-- dependency versions -->
     <junit.jupiter.version>5.7.0</junit.jupiter.version>
+    <mockito.version>3.6.28</mockito.version>
+    <lombok.version>1.18.18</lombok.version>
+    <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
+    <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
+
     <!-- plugin versions-->
-    <lombok.version>1.18.16</lombok.version>
+    <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+    <git-commit-id-plugin.version>4.0.3</git-commit-id-plugin.version>
+    <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
     <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-
-    <!-- GitHub Server settings.xml -->
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-
-    <mockito.version>3.6.28</mockito.version>
-    <nexus-staging-maven-plugin.version>1.6.8
-    </nexus-staging-maven-plugin.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8
-    </project.reporting.outputEncoding>
-    <revision>2.3.2-SNAPSHOT</revision>
-    <site-maven-plugin.version>0.12</site-maven-plugin.version>
-    <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
-    <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
-
-    <spring.version>5.2.11.RELEASE</spring.version>
-
-    <google-java-format.version>1.7</google-java-format.version>
+    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+    <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>
     <spotless.plugin.version>2.6.1</spotless.plugin.version>
+    <google-java-format.version>1.7</google-java-format.version>
+    <site-maven-plugin.version>0.12</site-maven-plugin.version>
   </properties>
 
   <scm>
