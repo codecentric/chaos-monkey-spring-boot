@@ -34,6 +34,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          enable_jekyll: true
           publish_dir: ./chaos-monkey-docs/target/generated-docs
           destination_dir: latest
           commit_message: ${{ github.event.head_commit.message }}
