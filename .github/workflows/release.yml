@@ -40,6 +40,7 @@ jobs:
         run: |
           NEXT_VERSION=`semver $VERSION -i`-SNAPSHOT
           ./mvnw versions:set-property -Dproperty=revision -DnewVersion=$NEXT_VERSION
+          cp chaos-monkey-docs/src/main/asciidoc/changes.adoc.template chaos-monkey-docs/src/main/asciidoc/changes.adoc
           git commit -m "Prepare for next version: $NEXT_VERSION" -o pom.xml
       - name: Push (Release Tag + Main Branch)
         run: git push --follow-tags
