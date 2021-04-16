@@ -28,7 +28,8 @@ abstract class ChaosMonkeyBaseAspect {
   @Pointcut("!within(is(FinalType)) && execution(* *.*(..))")
   public void allPublicMethodPointcut() {}
 
-  @Pointcut("execution(* postProcess*Initialization(..)) || execution(* onApplicationEvent(..))")
+  @Pointcut(
+      "execution(* postProcess*Initialization(..)) || (execution(* onApplicationEvent(..)) && !execution(* onApplicationEvent(org.springframework.web.context.support.RequestHandledEvent)))")
   public void springHooksPointcut() {}
 
   String calculatePointcut(String target) {
