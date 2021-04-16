@@ -3,6 +3,7 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/219[#219] Assaults could not be activated by actuator
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
