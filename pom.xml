@@ -35,14 +35,14 @@
     <github.global.server>github</github.global.server>
 
     <!-- spring versions -->
-    <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
+    <spring-boot.version>2.3.10.RELEASE</spring-boot.version>
     <spring-cloud.version>Hoxton.SR10</spring-cloud.version>
-    <spring.version>5.2.13.RELEASE</spring.version>
+    <spring.version>5.2.14.RELEASE</spring.version>
 
     <!-- dependency versions -->
     <junit.jupiter.version>5.7.0</junit.jupiter.version>
     <mockito.version>3.6.28</mockito.version>
-    <lombok.version>1.18.18</lombok.version>
+    <lombok.version>1.18.20</lombok.version>
     <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
     <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
 
