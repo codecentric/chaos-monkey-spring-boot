@@ -3,12 +3,9 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/219[#219] Assaults could not be activated by actuator
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/222[#222] Fix sometimes wrong spring.factories in external jar (see #218)
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/221[#221] Upgrade to Spring Boot 2.3.10
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
