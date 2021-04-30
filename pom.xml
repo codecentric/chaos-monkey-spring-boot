@@ -57,7 +57,7 @@
     <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
     <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-    <maven-assembly-plugin.version>2.1</maven-assembly-plugin.version>
+    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>
     <spotless.plugin.version>2.6.1</spotless.plugin.version>
