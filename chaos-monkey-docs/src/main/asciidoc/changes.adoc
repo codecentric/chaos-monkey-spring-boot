@@ -3,11 +3,9 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/226[#226] Fix #223 spring.factories is sometimes overwritten in external jar
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/214[#214] Upgrade to Spring boot 2.4.5
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
