@@ -17,6 +17,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
@@ -57,7 +58,7 @@ public class SpringRepositoryAspectJDBC extends ChaosMonkeyBaseAspect {
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-      chaosMonkeyRequestScope.callChaosMonkey(createSignature(signature));
+      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.REPOSITORY, createSignature(signature));
     }
     return pjp.proceed();
   }

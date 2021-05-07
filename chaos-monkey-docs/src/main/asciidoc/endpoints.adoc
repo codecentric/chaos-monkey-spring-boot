@@ -1,6 +1,6 @@
 [[endpoints]]
 == Spring Boot Actuator Endpoints ==
-Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP]. This allows you to change configuration at runtime.
+Chaos Monkey for Spring Boot offers you some built in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP]. This allows you to change configuration at runtime.
 
 '''
 

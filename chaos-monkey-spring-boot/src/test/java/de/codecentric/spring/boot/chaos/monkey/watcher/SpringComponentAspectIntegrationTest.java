@@ -21,6 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
@@ -72,7 +73,8 @@ class SpringComponentAspectIntegrationTest {
   @Test
   public void chaosMonkeyIsCalledWhenComponentIsNotFinal() {
     demoComponent.sayHello();
-    verify(chaosMonkeyRequestScopeMock, times(1)).callChaosMonkey(demoComponentSimpleName);
+    verify(chaosMonkeyRequestScopeMock, times(1))
+        .callChaosMonkey(ChaosTarget.COMPONENT, demoComponentSimpleName);
     verify(metricsMock, times(1))
         .publishMetricEvent(demoComponentPointcutName, MetricType.COMPONENT);
   }
@@ -80,7 +82,8 @@ class SpringComponentAspectIntegrationTest {
   @Test
   public void chaosMonkeyIsNotCalledWhenComponentIsFinal() {
     finalDemoComponent.sayHello();
-    verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(finalDemoComponentSimpleName);
+    verify(chaosMonkeyRequestScopeMock, times(0))
+        .callChaosMonkey(ChaosTarget.COMPONENT, finalDemoComponentSimpleName);
     verify(metricsMock, times(0))
         .publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
   }
@@ -91,12 +94,12 @@ class SpringComponentAspectIntegrationTest {
     applicationListenerComponent.onApplicationEvent(mock(ApplicationEvent.class));
 
     verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(beanPostProcessorComponentSimpleName);
+        .callChaosMonkey(null, beanPostProcessorComponentSimpleName);
     verify(metricsMock, times(0))
         .publishMetricEvent(beanPostProcessorComponentPointcutName, MetricType.COMPONENT);
 
     verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(applicationListenerComponentSimpleName);
+        .callChaosMonkey(null, applicationListenerComponentSimpleName);
     verify(metricsMock, times(0))
         .publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
   }
