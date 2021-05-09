@@ -529,8 +529,8 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Benjamin Wilms</span><br>
 <span id="email" class="email"><a href="https://twitter.com/mrbwilms">@MrBWilms</a></span><br>
-<span id="revnumber">version 2.3.10,</span>
-<span id="revdate">23.04.2021</span>
+<span id="revnumber">version 2.4.5,</span>
+<span id="revdate">06.05.2021</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -583,7 +583,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 </ul>
 </li>
-<li><a href="#changes">8. Changes in 2.3.10</a>
+<li><a href="#changes">8. Changes in 2.4.5</a>
 <ul class="sectlevel2">
 <li><a href="#_bug_fixes">8.1. Bug Fixes</a></li>
 <li><a href="#_improvements">8.2. Improvements</a></li>
@@ -654,7 +654,7 @@ table.CodeRay td.code>pre{padding:0}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.3.10<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.4.5<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -689,7 +689,7 @@ table.CodeRay td.code>pre{padding:0}
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.3.10<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.4.5<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -700,7 +700,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.3.10-jar-with-dependencies.jar
+    -Dloader.path=chaos-monkey-spring-boot-2.4.5-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -1562,17 +1562,14 @@ lost.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.3.10</a></h2>
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.4.5</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">8.1. Bug Fixes</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/219">#219</a> Assaults could not be activated by actuator</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/222">#222</a> Fix sometimes wrong spring.factories in external jar (see #218)</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/226">#226</a> Fix #223 spring.factories is sometimes overwritten in external jar</p>
 </li>
 </ul>
 </div>
@@ -1582,7 +1579,7 @@ lost.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/221">#221</a> Upgrade to Spring Boot 2.3.10</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/214">#214</a> Upgrade to Spring boot 2.4.5</p>
 </li>
 </ul>
 </div>
@@ -1605,7 +1602,7 @@ lost.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.3.10<br>
+Version 2.4.5<br>
 </div>
 </div>
 </body>
