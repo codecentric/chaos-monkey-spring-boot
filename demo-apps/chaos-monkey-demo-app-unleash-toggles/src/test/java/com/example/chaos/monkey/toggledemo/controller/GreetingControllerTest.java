@@ -8,16 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.chaos.monkey.toggledemo.component.HelloComponent;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -52,7 +47,7 @@ public class GreetingControllerTest {
         .andExpect(content().string(is("Again hello!")));
   }
 
-  /** @see GreetingController#sayHelloFromComponent()  */
+  /** @see GreetingController#sayHelloFromComponent() */
   @Test
   public void shouldReturnHelloFromComponent() throws Exception {
     when(helloComponent.sayHello()).thenReturn("Hello from Component");
@@ -62,5 +57,4 @@ public class GreetingControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().string(is("Hello from Component")));
   }
-
 }
