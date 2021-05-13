@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class UnleashChaosTogglesTest {
-  UnleashChaosToggles sut;
-  FakeUnleash fakeUnleash;
+  private UnleashChaosToggles sut;
+  private FakeUnleash fakeUnleash;
 
   @BeforeEach
   public void setup() {
