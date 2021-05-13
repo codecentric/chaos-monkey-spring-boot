@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class DefaultChaosToggleNameMapperTest {
 
-  DefaultChaosToggleNameMapper sut;
+  private DefaultChaosToggleNameMapper sut;
 
   @BeforeEach
   public void setup() {
