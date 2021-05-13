@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class DefaultChaosTogglesTest {
 
-  DefaultChaosToggles sut;
+  private DefaultChaosToggles sut;
 
   @BeforeEach
   public void setup() {
