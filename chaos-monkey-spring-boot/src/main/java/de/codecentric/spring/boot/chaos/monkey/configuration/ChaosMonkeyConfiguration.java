@@ -41,6 +41,10 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJDB
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJPA;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.web.client.ChaosMonkeyRestTemplateInterceptor;
+import de.codecentric.spring.boot.chaos.monkey.web.client.ChaosMonkeyRestTemplatePostProcessor;
+import de.codecentric.spring.boot.chaos.monkey.web.client.RestTemplateAssault;
+import de.codecentric.spring.boot.chaos.monkey.web.client.RestTemplateErrorResponseAssault;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -50,6 +54,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,9 +72,9 @@ import org.springframework.util.StreamUtils;
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-  ChaosMonkeyProperties.class,
-  AssaultProperties.class,
-  WatcherProperties.class
+    ChaosMonkeyProperties.class,
+    AssaultProperties.class,
+    WatcherProperties.class
 })
 @Import(UnleashChaosConfiguration.class)
 @EnableScheduling
@@ -241,5 +246,47 @@ public class ChaosMonkeyConfiguration {
   @ConditionalOnAvailableEndpoint
   public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
     return new ChaosMonkeyJmxEndpoint(settings());
+  }
+
+  @Configuration
+  @ConditionalOnProperty(
+      prefix = "chaos.monkey.web.client",
+      value = "enabled",
+      havingValue = "true")
+  @EnableConfigurationProperties(
+      WebClientAssaultProperties.class
+  )
+  static class ChaosMonkeyWebClientConfiguration {
+
+    @Configuration
+    @ConditionalOnProperty(
+        prefix = "chaos.monkey.web.client.rest-template",
+        value = "enabled",
+        havingValue = "true")
+    static class ChaosMonkeyRestTemplateConfiguration {
+
+      @Bean
+      public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(
+          final ChaosMonkeyRestTemplateInterceptor chaosMonkeyRestTemplateInterceptor) {
+        return new ChaosMonkeyRestTemplatePostProcessor(chaosMonkeyRestTemplateInterceptor);
+      }
+
+      @Bean
+      public ChaosMonkeyRestTemplateInterceptor chaosMonkeyRestTemplateInterceptor(
+          final List<RestTemplateAssault> restTemplateAssaults,
+          final WebClientAssaultProperties properties) {
+        return new ChaosMonkeyRestTemplateInterceptor(restTemplateAssaults, properties);
+      }
+
+      @Bean
+      @ConditionalOnProperty(
+          prefix = "chaos.monkey.web.client.rest-template.",
+          value = "error-response",
+          havingValue = "true")
+      public RestTemplateAssault restTemplateErrorResponseAssault() {
+        return new RestTemplateErrorResponseAssault();
+      }
+    }
+
   }
 }
