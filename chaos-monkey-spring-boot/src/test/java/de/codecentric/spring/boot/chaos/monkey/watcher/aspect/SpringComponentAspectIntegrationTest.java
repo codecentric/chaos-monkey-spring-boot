@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;

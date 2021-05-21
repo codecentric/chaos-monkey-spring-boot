@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.web.client;
+package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -6,20 +6,18 @@ import org.springframework.web.client.RestTemplate;
 
 public class ChaosMonkeyRestTemplatePostProcessor implements BeanPostProcessor {
 
-  private final ChaosMonkeyRestTemplateInterceptor interceptor;
+  private final ChaosMonkeyRestTemplateWatcher interceptor;
 
-  public ChaosMonkeyRestTemplatePostProcessor(
-      final ChaosMonkeyRestTemplateInterceptor interceptor) {
+  public ChaosMonkeyRestTemplatePostProcessor(final ChaosMonkeyRestTemplateWatcher interceptor) {
     this.interceptor = interceptor;
   }
 
   @Override
-  public Object postProcessBeforeInitialization(
-      final Object bean,
-      final String beanName) throws BeansException {
+  public Object postProcessBeforeInitialization(final Object bean, final String beanName)
+      throws BeansException {
 
     if (bean instanceof RestTemplate) {
-      //inject interceptors
+      // inject interceptors
       ((RestTemplate) bean).getInterceptors().add(interceptor);
     }
     return bean;

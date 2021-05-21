@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
@@ -33,7 +33,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Aspect
 @AllArgsConstructor
 @Slf4j
-public class SpringRepositoryAspectJPA extends ChaosMonkeyBaseAspect {
+public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
@@ -41,24 +41,25 @@ public class SpringRepositoryAspectJPA extends ChaosMonkeyBaseAspect {
 
   private WatcherProperties watcherProperties;
 
-  @Pointcut(
-      "this(org.springframework.data.repository.Repository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
-  public void implementsCrudRepository() {}
+  @Pointcut("within(@org.springframework.stereotype.Service *)")
+  public void classAnnotatedWithServicePointcut() {}
 
-  @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+  @Around(
+      "classAnnotatedWithServicePointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()"
+          + "&& !springHooksPointcut()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
-    if (watcherProperties.isRepository()) {
-      log.debug("Watching public method on repository class: {}", pjp.getSignature());
+    if (watcherProperties.isService()) {
+      log.debug("Watching public method on service class: {}", pjp.getSignature());
 
       if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
+            calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
       }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.REPOSITORY, createSignature(signature));
+      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.SERVICE, createSignature(signature));
     }
     return pjp.proceed();
   }
