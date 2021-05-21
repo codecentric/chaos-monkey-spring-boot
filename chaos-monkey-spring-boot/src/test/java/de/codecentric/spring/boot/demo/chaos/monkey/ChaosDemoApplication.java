@@ -32,9 +32,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import reactor.netty.http.client.HttpClient;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @SpringBootApplication
 @EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class})
 public class ChaosDemoApplication {
