@@ -169,6 +169,12 @@
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>${asciidoctor-maven-plugin.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty-http</artifactId>
+                <version>${reactor-netty.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

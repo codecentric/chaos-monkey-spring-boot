@@ -45,6 +45,7 @@
     <lombok.version>1.18.20</lombok.version>
     <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
     <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
+    <reactor-netty.version>1.0.7</reactor-netty.version>
     <unleash.version>4.2.1</unleash.version>
 
     <!-- demo dependencies -->
