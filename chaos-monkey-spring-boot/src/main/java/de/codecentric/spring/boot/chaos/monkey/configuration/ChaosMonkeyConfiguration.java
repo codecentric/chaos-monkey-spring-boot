@@ -43,6 +43,8 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRestControll
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringServiceAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplatePostProcessor;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher;
+import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientPostProcessor;
+import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientWatcher;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -66,13 +68,15 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-  ChaosMonkeyProperties.class,
-  AssaultProperties.class,
-  WatcherProperties.class
+    ChaosMonkeyProperties.class,
+    AssaultProperties.class,
+    WatcherProperties.class
 })
 @Import({
   UnleashChaosConfiguration.class,
@@ -250,30 +254,50 @@ public class ChaosMonkeyConfiguration {
     return new ChaosMonkeyJmxEndpoint(settings());
   }
 
+
   @Configuration
-  static class ChaosMonkeyWebClientConfiguration {
+  @ConditionalOnProperty(
+      prefix = "chaos.monkey.watcher",
+      value = "rest-template",
+      havingValue = "true")
+  static class ChaosMonkeyRestTemplateConfiguration {
 
-    @Configuration
-    @ConditionalOnProperty(
-        prefix = "chaos.monkey.watcher",
-        value = "rest-template",
-        havingValue = "true")
-    static class ChaosMonkeyRestTemplateConfiguration {
+    @Bean
+    public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(
+        final ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateWatcher) {
+      return new ChaosMonkeyRestTemplatePostProcessor(chaosMonkeyRestTemplateWatcher);
+    }
 
-      @Bean
-      public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(
-          final ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateWatcher) {
-        return new ChaosMonkeyRestTemplatePostProcessor(chaosMonkeyRestTemplateWatcher);
-      }
+    @Bean
+    public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(
+        final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
+        final WatcherProperties watcherProperties,
+        final AssaultProperties assaultProperties) {
+      return new ChaosMonkeyRestTemplateWatcher(
+          chaosMonkeyRequestScope, watcherProperties, assaultProperties);
+    }
+  }
 
-      @Bean
-      public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(
-          final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-          final WatcherProperties watcherProperties,
-          final AssaultProperties assaultProperties) {
-        return new ChaosMonkeyRestTemplateWatcher(
-            chaosMonkeyRequestScope, watcherProperties, assaultProperties);
-      }
+  @Configuration
+  @ConditionalOnProperty(
+      prefix = "chaos.monkey.watcher",
+      value = "web-client",
+      havingValue = "true")
+  static class ChaosMonkeyWebClienConfiguration {
+
+    @Bean
+    public ChaosMonkeyWebClientPostProcessor chaosMonkeyWebClientPostProcessor(
+        final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
+      return new ChaosMonkeyWebClientPostProcessor(chaosMonkeyWebClientWatcher);
+    }
+
+    @Bean
+    public ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher(
+        final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
+        final WatcherProperties watcherProperties,
+        final AssaultProperties assaultProperties) {
+      return new ChaosMonkeyWebClientWatcher(
+          chaosMonkeyRequestScope, watcherProperties, assaultProperties);
     }
   }
 }

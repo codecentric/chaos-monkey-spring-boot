@@ -32,7 +32,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import reactor.netty.http.client.HttpClient;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ */
 @SpringBootApplication
 @EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class})
 public class ChaosDemoApplication {
@@ -51,6 +53,15 @@ public class ChaosDemoApplication {
   }
 
   @Bean
+  public WebClient webClient(final TestOutgoingConfigurationProperties properties){
+    HttpClient client = HttpClient.create()
+        .responseTimeout(Duration.ofMillis(properties.timeOut));
+    return WebClient.builder()
+        .clientConnector(new ReactorClientHttpConnector(client))
+        .build();
+  }
+
+  @Bean
   public WebClient webClient(
       final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
     HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
@@ -60,7 +71,6 @@ public class ChaosDemoApplication {
   @Data
   @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
   static class TestOutgoingConfigurationProperties {
-
     private Long timeOut = 10000L;
   }
 }
