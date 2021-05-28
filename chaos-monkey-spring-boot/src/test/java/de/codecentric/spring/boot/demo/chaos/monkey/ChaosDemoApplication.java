@@ -16,7 +16,7 @@
 
 package de.codecentric.spring.boot.demo.chaos.monkey;
 
-import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication.TestRestTemplateConfigurationProperties;
+import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication.TestOutgoingConfigurationProperties;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import lombok.Data;
@@ -26,11 +26,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ */
 @SpringBootApplication
-@EnableConfigurationProperties(value = {TestRestTemplateConfigurationProperties.class})
+@EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class})
 public class ChaosDemoApplication {
 
   public static void main(String[] args) {
@@ -38,15 +43,24 @@ public class ChaosDemoApplication {
   }
 
   @Bean
-  public RestTemplate restTemplate(final TestRestTemplateConfigurationProperties properties) {
+  public RestTemplate restTemplate(final TestOutgoingConfigurationProperties properties) {
     return new RestTemplateBuilder()
         .setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS))
         .build();
   }
 
+  @Bean
+  public WebClient webClient(final TestOutgoingConfigurationProperties properties){
+    HttpClient client = HttpClient.create()
+        .responseTimeout(Duration.ofMillis(properties.timeOut));
+    return WebClient.builder()
+        .clientConnector(new ReactorClientHttpConnector(client))
+        .build();
+  }
+
   @Data
   @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
-  static class TestRestTemplateConfigurationProperties {
+  static class TestOutgoingConfigurationProperties {
     private Long timeOut = 10000L;
   }
 }

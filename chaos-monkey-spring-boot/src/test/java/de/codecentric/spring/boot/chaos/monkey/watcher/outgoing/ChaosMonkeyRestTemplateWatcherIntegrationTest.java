@@ -15,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 class ChaosMonkeyRestTemplateWatcherIntegrationTest {
@@ -40,6 +42,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
   @SpringBootTest(
       properties = {
+        "chaos.monkey.enabled=true",
         "chaos.monkey.watcher.rest-template=true",
         "chaos.monkey.assaults.exceptions-active=true"
       },
@@ -54,7 +57,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
       try {
         this.demoRestTemplateService.callWithRestTemplate();
         fail("No HttpClientErrorException occurred!");
-      } catch (HttpClientErrorException ex) {
+      } catch (HttpStatusCodeException ex) {
         String message = ex.getMessage();
         assertThat(message)
             .isEqualTo(ex.getRawStatusCode() + " " + ERROR_TEXT + ": [" + ERROR_BODY + "]");
@@ -65,6 +68,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
   @Slf4j
   @SpringBootTest(
       properties = {
+        "chaos.monkey.enabled=true",
         "chaos.monkey.watcher.rest-template=true",
         "chaos.monkey.assaults.latency-active=true",
         "chaos.monkey.test.rest-template.time-out=20"
