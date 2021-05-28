@@ -50,7 +50,7 @@ public class ChaosDemoApplication {
   }
 
   @Bean
-  public WebClient webClient(final TestOutgoingConfigurationProperties properties){
+  public WebClient webClient(final TestOutgoingConfigurationProperties properties) {
     HttpClient client = HttpClient.create()
         .responseTimeout(Duration.ofMillis(properties.timeOut));
     return WebClient.builder()
@@ -61,6 +61,7 @@ public class ChaosDemoApplication {
   @Data
   @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
   static class TestOutgoingConfigurationProperties {
+
     private Long timeOut = 10000L;
   }
 }
