@@ -16,13 +16,14 @@ public class DemoWebClientService {
   }
 
   public String callWithWebClient() {
-    String result = this.webClient
-        .method(HttpMethod.GET)
-        .uri("https://www.google.de")
-        .retrieve()
-        .bodyToMono(String.class)
-        .block();
-    log.info("{}",result);
+    String result =
+        this.webClient
+            .method(HttpMethod.GET)
+            .uri("https://www.google.de")
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+    log.info("{}", result);
     return result;
   }
 }

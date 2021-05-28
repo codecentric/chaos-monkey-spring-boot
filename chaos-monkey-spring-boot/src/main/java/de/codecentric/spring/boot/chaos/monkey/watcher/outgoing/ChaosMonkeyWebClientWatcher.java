@@ -11,9 +11,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import reactor.core.publisher.Mono;
 
-/**
- * @author Marcel Becker
- */
+/** @author Marcel Becker */
 public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
@@ -30,8 +28,8 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
   }
 
   @Override
-  public Mono<ClientResponse> filter(ClientRequest clientRequest,
-      ExchangeFunction exchangeFunction) {
+  public Mono<ClientResponse> filter(
+      ClientRequest clientRequest, ExchangeFunction exchangeFunction) {
     Mono<ClientResponse> response;
     response = exchangeFunction.exchange(clientRequest);
     if (watcherProperties.isWebClient()) {
@@ -55,23 +53,21 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
   static class ErrorClientResponse {
 
     static final HttpStatus[] ERROR_STATUS_CODES = {
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        HttpStatus.BAD_REQUEST,
-        HttpStatus.FORBIDDEN,
-        HttpStatus.UNAUTHORIZED,
-        HttpStatus.NOT_FOUND,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      HttpStatus.BAD_REQUEST,
+      HttpStatus.FORBIDDEN,
+      HttpStatus.UNAUTHORIZED,
+      HttpStatus.NOT_FOUND,
     };
 
     static final String ERROR_BODY =
         "{\"error\": \"This is a Chaos Monkey for Spring Boot generated failure\"}";
 
     private static ClientResponse getResponse() {
-      return ClientResponse
-          .create(ERROR_STATUS_CODES[new Random().nextInt(ERROR_STATUS_CODES.length)])
+      return ClientResponse.create(
+              ERROR_STATUS_CODES[new Random().nextInt(ERROR_STATUS_CODES.length)])
           .body(ERROR_BODY)
           .build();
     }
   }
-
-
 }

@@ -19,16 +19,15 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
 
   @SpringBootTest(
       properties = {
-          "chaos.monkey.watcher.web-client=true",
-          "chaos.monkey.enabled=true",
-          "chaos.monkey.assaults.exceptions-active=true"
+        "chaos.monkey.watcher.web-client=true",
+        "chaos.monkey.enabled=true",
+        "chaos.monkey.assaults.exceptions-active=true"
       },
       classes = {ChaosDemoApplication.class})
   @ActiveProfiles("chaos-monkey")
   static class ExceptionAssaultIntegrationTest {
 
-    @Autowired
-    private DemoWebClientService demoWebClientService;
+    @Autowired private DemoWebClientService demoWebClientService;
 
     @Test
     public void testWebClientExceptionAssault() {
@@ -45,17 +44,16 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
   @Slf4j
   @SpringBootTest(
       properties = {
-          "chaos.monkey.enabled=true",
-          "chaos.monkey.watcher.web-client=true",
-          "chaos.monkey.assaults.latency-active=true",
-          "chaos.monkey.test.rest-template.time-out=20"
+        "chaos.monkey.enabled=true",
+        "chaos.monkey.watcher.web-client=true",
+        "chaos.monkey.assaults.latency-active=true",
+        "chaos.monkey.test.rest-template.time-out=20"
       },
       classes = {ChaosDemoApplication.class})
   @ActiveProfiles("chaos-monkey")
   static class LatencyAssaultIntegrationTest {
 
-    @Autowired
-    private DemoWebClientService demoRestTemplateService;
+    @Autowired private DemoWebClientService demoRestTemplateService;
 
     @Test
     public void testWebClientLatencyAssault() {

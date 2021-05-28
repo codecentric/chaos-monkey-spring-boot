@@ -4,9 +4,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * @author Marcel Becker
- */
+/** @author Marcel Becker */
 public class ChaosMonkeyRestTemplatePostProcessor implements BeanPostProcessor {
 
   private final ChaosMonkeyRestTemplateWatcher interceptor;

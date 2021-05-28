@@ -68,15 +68,13 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-    ChaosMonkeyProperties.class,
-    AssaultProperties.class,
-    WatcherProperties.class
+  ChaosMonkeyProperties.class,
+  AssaultProperties.class,
+  WatcherProperties.class
 })
 @Import(UnleashChaosConfiguration.class)
 @EnableScheduling
@@ -249,7 +247,6 @@ public class ChaosMonkeyConfiguration {
   public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
     return new ChaosMonkeyJmxEndpoint(settings());
   }
-
 
   @Configuration
   @ConditionalOnProperty(

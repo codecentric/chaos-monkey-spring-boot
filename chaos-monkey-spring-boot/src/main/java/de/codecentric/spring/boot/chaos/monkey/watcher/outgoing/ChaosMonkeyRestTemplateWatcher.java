@@ -16,9 +16,7 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-/**
- * @author Marcel Becker
- */
+/** @author Marcel Becker */
 public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestInterceptor {
 
   private final WatcherProperties watcherProperties;
@@ -53,7 +51,7 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
             throw exception;
           }
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+          throw new RuntimeException(e);
         }
       }
     }
@@ -67,11 +65,11 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
         "{\"error\": \"This is a Chaos Monkey for Spring Boot generated failure\"}";
 
     static final int[] ERROR_STATUS_CODES = {
-        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-        HttpStatus.BAD_REQUEST.value(),
-        HttpStatus.FORBIDDEN.value(),
-        HttpStatus.UNAUTHORIZED.value(),
-        HttpStatus.NOT_FOUND.value(),
+      HttpStatus.INTERNAL_SERVER_ERROR.value(),
+      HttpStatus.BAD_REQUEST.value(),
+      HttpStatus.FORBIDDEN.value(),
+      HttpStatus.UNAUTHORIZED.value(),
+      HttpStatus.NOT_FOUND.value(),
     };
 
     @Override
@@ -85,8 +83,7 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
     }
 
     @Override
-    public void close() {
-    }
+    public void close() {}
 
     @Override
     public InputStream getBody() throws IOException {
