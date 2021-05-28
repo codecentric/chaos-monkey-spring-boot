@@ -1,11 +1,12 @@
 [[changes]]
-== Changes in {project-version}
+== Changes in 2.4.6-SNAPSHOT
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+https://github.com/codecentric/chaos-monkey-spring-boot/pull/227[#224]
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
