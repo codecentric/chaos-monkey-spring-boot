@@ -1,12 +1,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
-import static de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher.ErrorResponse.ERROR_BODY;
-import static de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher.ErrorResponse.ERROR_TEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientWatcher.ErrorClientResponse;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoWebClientService;
@@ -17,9 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 class ChaosMonkeyWebClientWatcherIntegrationTest {
@@ -36,9 +29,6 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
 
     @Autowired
     private DemoWebClientService demoWebClientService;
-
-    @Autowired
-    private AssaultProperties assaultProperties;
 
     @Test
     public void testWebClientExceptionAssault() {
