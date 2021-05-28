@@ -13,6 +13,7 @@ https://github.com/codecentric/chaos-monkey-spring-boot/pull/227[#224]
 
 === Contributors
 This release was only possible because of these great humans:
+Albert-Hugo
 
 // - https://github.com/octocat[@octocat]
 
