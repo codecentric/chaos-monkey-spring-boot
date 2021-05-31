@@ -1,5 +1,5 @@
 [[changes]]
-== Changes in 2.4.6-SNAPSHOT
+== Changes in {project-version}
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
