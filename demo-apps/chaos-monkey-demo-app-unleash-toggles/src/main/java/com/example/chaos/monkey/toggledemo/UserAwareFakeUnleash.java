@@ -18,7 +18,6 @@ public class UserAwareFakeUnleash implements Unleash {
   private final UnleashContextProvider contextProvider;
 
   public UserAwareFakeUnleash(UnleashContextProvider contextProvider) {
-
     this.contextProvider = contextProvider;
   }
 

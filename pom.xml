@@ -45,6 +45,11 @@
     <lombok.version>1.18.20</lombok.version>
     <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
     <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
+    <unleash.version>4.2.1</unleash.version>
+
+    <!-- demo dependencies -->
+    <micrometer.version>1.6.6</micrometer.version>
+    <spring-security.version>5.4.6</spring-security.version>
 
     <!-- plugin versions-->
     <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>

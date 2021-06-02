@@ -15,7 +15,7 @@ class DefaultChaosTogglesTest {
   }
 
   @Test
-  public void defaultToggleShouldBeEnabledAlwaysl() {
+  public void defaultToggleShouldBeEnabledAlways() {
     assertTrue(sut.isEnabled("chaos.monkey.repository"));
     assertTrue(sut.isEnabled(""));
   }

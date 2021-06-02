@@ -27,9 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
@@ -62,45 +59,26 @@ public class HelloControllerIntegrationTest {
 
   @Test
   public void checkHelloEndpointChaosUser() {
-    String username = "chaosuser";
-    String password = "password";
-    HttpHeaders headers = new HttpHeaders();
-    headers.setBasicAuth(username, password);
-
     ResponseEntity<String> response =
-        testRestTemplate.exchange(
-            "http://localhost:" + this.serverPort + "/hello",
-            HttpMethod.GET,
-            new HttpEntity<Object>(headers),
-            String.class);
+        testRestTemplate
+            .withBasicAuth("chaosuser", "password")
+            .getForEntity("http://localhost:" + this.serverPort + "/hello", String.class);
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
   }
 
   @Test
   public void checkHelloEndpointNormalUser() {
-    String username = "user";
-    String password = "password";
-    HttpHeaders headers = new HttpHeaders();
-    headers.setBasicAuth(username, password);
-
     ResponseEntity<String> response =
-        testRestTemplate.exchange(
-            "http://localhost:" + this.serverPort + "/hello",
-            HttpMethod.GET,
-            new HttpEntity<Object>(headers),
-            String.class);
+        testRestTemplate
+            .withBasicAuth("user", "password")
+            .getForEntity("http://localhost:" + this.serverPort + "/hello", String.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
   @Test
   public void checkGoodbyeEndpoint() {
-    String username = "user";
-    String password = "password";
-    HttpHeaders headers = new HttpHeaders();
-    headers.setBasicAuth(username, password);
-
     ResponseEntity<String> response =
         testRestTemplate.getForEntity(
             "http://localhost:" + this.serverPort + "/goodbye", String.class);

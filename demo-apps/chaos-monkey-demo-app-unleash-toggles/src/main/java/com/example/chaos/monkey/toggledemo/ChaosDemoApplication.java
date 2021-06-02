@@ -24,18 +24,11 @@ import no.finn.unleash.UnleashContextProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @SpringBootApplication
 public class ChaosDemoApplication {
@@ -62,7 +55,9 @@ public class ChaosDemoApplication {
   public Unleash unleash(UnleashContextProvider contextProvider) {
     UserAwareFakeUnleash unleash = new UserAwareFakeUnleash(contextProvider);
 
-    //        unleash.enable("chaos.monkey.controller");
+    // The following line is commented out, but demonstrates how you can enable a toggle with
+    // the demo app without running an actual Unleash server
+    // unleash.enable("chaos.monkey.controller");
     return unleash;
   }
 
@@ -74,48 +69,5 @@ public class ChaosDemoApplication {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
-  }
-
-  @Configuration
-  @EnableWebSecurity
-  public static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final PasswordEncoder passwordEncoder;
-
-    public WebSecurityConfig(PasswordEncoder passwordEncoder) {
-      this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.authorizeRequests()
-          .antMatchers("/", "/home")
-          .permitAll()
-          .anyRequest()
-          .authenticated()
-          .and()
-          .httpBasic()
-          .and()
-          .logout()
-          .permitAll();
-    }
-
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-      UserDetails user =
-          User.withUsername("user")
-              .password(passwordEncoder.encode("password"))
-              .roles("USER")
-              .build();
-
-      UserDetails chaosuser =
-          User.withUsername("chaosuser")
-              .password(passwordEncoder.encode("password"))
-              .roles("USER")
-              .build();
-
-      return new InMemoryUserDetailsManager(user, chaosuser);
-    }
   }
 }
