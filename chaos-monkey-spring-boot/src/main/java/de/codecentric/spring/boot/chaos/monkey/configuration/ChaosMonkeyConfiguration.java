@@ -67,6 +67,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /** @author Benjamin Wilms */
 @Configuration
@@ -257,6 +259,7 @@ public class ChaosMonkeyConfiguration {
       prefix = "chaos.monkey.watcher",
       value = "rest-template",
       havingValue = "true")
+  @ConditionalOnClass(value = RestTemplate.class)
   static class ChaosMonkeyRestTemplateConfiguration {
 
     @Bean
@@ -266,6 +269,7 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(
         final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
         final WatcherProperties watcherProperties,
@@ -280,7 +284,8 @@ public class ChaosMonkeyConfiguration {
       prefix = "chaos.monkey.watcher",
       value = "web-client",
       havingValue = "true")
-  static class ChaosMonkeyWebClienConfiguration {
+  @ConditionalOnClass(value = WebClient.class)
+  static class ChaosMonkeyWebClientConfiguration {
 
     @Bean
     public ChaosMonkeyWebClientPostProcessor chaosMonkeyWebClientPostProcessor(
@@ -289,6 +294,7 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
+    @DependsOn("chaosMonkeyRequestScope")
     public ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher(
         final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
         final WatcherProperties watcherProperties,
