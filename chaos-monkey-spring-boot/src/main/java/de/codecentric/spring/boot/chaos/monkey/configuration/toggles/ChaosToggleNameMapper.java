@@ -4,7 +4,7 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 
 /**
  * A way to map individual ChaosTargets (controllers, repositories, etc) and the corresponding
- * method. Implementations will can make the name to toggle mapping as coarse or as detailed as
+ * method. Implementations can make the name to toggle mapping as coarse or as detailed as
  * desired.
  *
  * @author Clint Checketts
