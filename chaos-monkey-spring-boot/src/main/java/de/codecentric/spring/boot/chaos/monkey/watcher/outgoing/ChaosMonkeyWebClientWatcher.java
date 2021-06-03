@@ -1,6 +1,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import java.util.Random;
@@ -34,7 +35,8 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
     response = exchangeFunction.exchange(clientRequest);
     if (watcherProperties.isWebClient()) {
       try {
-        chaosMonkeyRequestScope.callChaosMonkey(this.getClass().getSimpleName());
+        chaosMonkeyRequestScope.callChaosMonkey(
+            ChaosTarget.WEB_CLIENT, this.getClass().getSimpleName());
       } catch (final Exception exception) {
         try {
           if (exception.getClass().equals(assaultProperties.getException().getExceptionClass())) {

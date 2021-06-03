@@ -1,6 +1,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import java.io.ByteArrayInputStream;
@@ -42,7 +43,8 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
     response = clientHttpRequestExecution.execute(httpRequest, bytes);
     if (watcherProperties.isRestTemplate()) {
       try {
-        chaosMonkeyRequestScope.callChaosMonkey(this.getClass().getSimpleName());
+        chaosMonkeyRequestScope.callChaosMonkey(
+            ChaosTarget.REST_TEMPLATE, this.getClass().getSimpleName());
       } catch (final Exception exception) {
         try {
           if (exception.getClass().equals(assaultProperties.getException().getExceptionClass())) {
