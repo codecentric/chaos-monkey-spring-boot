@@ -120,6 +120,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>no.finn.unleash</groupId>
+            <artifactId>unleash-client-java</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
 
     </dependencies>
     <build>

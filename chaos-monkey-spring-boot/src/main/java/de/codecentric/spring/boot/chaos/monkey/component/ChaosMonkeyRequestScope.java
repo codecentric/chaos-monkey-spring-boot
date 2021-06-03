@@ -23,6 +23,8 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +37,8 @@ public class ChaosMonkeyRequestScope {
   private final ChaosMonkeySettings chaosMonkeySettings;
 
   private final List<ChaosMonkeyRequestAssault> assaults;
+  private final ChaosToggles chaosToggles;
+  private final ChaosToggleNameMapper chaosToggleNameMapper;
 
   private MetricEventPublisher metricEventPublisher;
 
@@ -42,7 +46,9 @@ public class ChaosMonkeyRequestScope {
       ChaosMonkeySettings chaosMonkeySettings,
       List<ChaosMonkeyRequestAssault> assaults,
       List<ChaosMonkeyAssault> legacyAssaults,
-      MetricEventPublisher metricEventPublisher) {
+      MetricEventPublisher metricEventPublisher,
+      ChaosToggles chaosToggles,
+      ChaosToggleNameMapper chaosToggleNameMapper) {
     List<RequestAssaultAdapter> assaultAdapters =
         legacyAssaults.stream()
             .filter(
@@ -58,10 +64,12 @@ public class ChaosMonkeyRequestScope {
     this.chaosMonkeySettings = chaosMonkeySettings;
     this.assaults = requestAssaults;
     this.metricEventPublisher = metricEventPublisher;
+    this.chaosToggles = chaosToggles;
+    this.chaosToggleNameMapper = chaosToggleNameMapper;
   }
 
-  public void callChaosMonkey(String simpleName) {
-    if (isEnabled() && isTrouble()) {
+  public void callChaosMonkey(ChaosTarget type, String simpleName) {
+    if (isEnabled(type, simpleName) && isTrouble()) {
 
       if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
@@ -109,8 +117,9 @@ public class ChaosMonkeyRequestScope {
         >= chaosMonkeySettings.getAssaultProperties().getLevel();
   }
 
-  private boolean isEnabled() {
-    return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled();
+  private boolean isEnabled(ChaosTarget type, String name) {
+    return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()
+        && chaosToggles.isEnabled(chaosToggleNameMapper.mapName(type, name));
   }
 
   private static class RequestAssaultAdapter implements ChaosMonkeyRequestAssault {

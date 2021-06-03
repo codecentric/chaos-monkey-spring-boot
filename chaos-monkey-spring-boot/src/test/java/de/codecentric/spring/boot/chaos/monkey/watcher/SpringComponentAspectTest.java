@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
@@ -118,7 +119,8 @@ class SpringComponentAspectTest {
   }
 
   private void verifyDependenciesCalledXTimes(int i) {
-    verify(chaosMonkeyRequestScopeMock, times(i)).callChaosMonkey(simpleName);
+    verify(chaosMonkeyRequestScopeMock, times(i))
+        .callChaosMonkey(ChaosTarget.COMPONENT, simpleName);
     verify(metricsMock, times(i)).publishMetricEvent(pointcutName, MetricType.COMPONENT);
     verifyNoMoreInteractions(chaosMonkeyRequestScopeMock, metricsMock);
   }

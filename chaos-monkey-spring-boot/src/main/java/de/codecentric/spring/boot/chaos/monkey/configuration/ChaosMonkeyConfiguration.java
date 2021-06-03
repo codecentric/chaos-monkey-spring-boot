@@ -29,6 +29,10 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
@@ -50,6 +54,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.TaskScheduler;
@@ -66,6 +71,7 @@ import org.springframework.util.StreamUtils;
   AssaultProperties.class,
   WatcherProperties.class
 })
+@Import(UnleashChaosConfiguration.class)
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
 
@@ -135,8 +141,29 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   public ChaosMonkeyRequestScope chaosMonkeyRequestScope(
-      List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults) {
-    return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher());
+      List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults,
+      List<ChaosMonkeyAssault> allAssaults,
+      ChaosToggles chaosToggles,
+      ChaosToggleNameMapper chaosToggleNameMapper) {
+    return new ChaosMonkeyRequestScope(
+        settings(),
+        chaosMonkeyAssaults,
+        allAssaults,
+        publisher(),
+        chaosToggles,
+        chaosToggleNameMapper);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ChaosToggleNameMapper.class)
+  public ChaosToggleNameMapper chaosToggleNameMapper(ChaosMonkeyProperties chaosMonkeyProperties) {
+    return new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix());
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ChaosToggles.class)
+  public ChaosToggles chaosToggles() {
+    return new DefaultChaosToggles();
   }
 
   @Bean

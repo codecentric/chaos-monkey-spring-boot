@@ -26,4 +26,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ChaosMonkeyProperties {
 
   private boolean enabled = false;
+
+  private String togglePrefix = "chaos.monkey";
 }

@@ -82,6 +82,12 @@
                 <artifactId>spring-boot-starter-webflux</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
+            <dependency>
+                <groupId>no.finn.unleash</groupId>
+                <artifactId>unleash-client-java</artifactId>
+                <version>${unleash.version}</version>
+                <optional>true</optional>
+            </dependency>
 
             <dependency>
                 <groupId>com.h2database</groupId>

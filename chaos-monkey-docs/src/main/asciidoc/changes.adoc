@@ -10,11 +10,13 @@
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/220[#220] Added `ChaosToggles` and `ChaosToggleNameMapper` interfaces as well as support for a default https://github.com/Unleash/unleash[Unleash] based `ChaosToggles` implementation
 
 === Contributors
 This release was only possible because of these great humans:
 - https://github.com/Albert-Hugo[@Albert-Hugo]
 
 // - https://github.com/octocat[@octocat]
+ - https://github.com/checketts[@checketts]
 
 Thank you for your support!
