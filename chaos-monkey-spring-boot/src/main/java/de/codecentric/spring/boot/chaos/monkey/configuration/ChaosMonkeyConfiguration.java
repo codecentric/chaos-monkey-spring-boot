@@ -35,6 +35,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChao
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringBootHealthIndicatorAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringComponentAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAspectJDBC;
@@ -52,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -237,6 +239,14 @@ public class ChaosMonkeyConfiguration {
   public SpringRepositoryAspectJDBC repositoryAspectJdbc(
       ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
     return new SpringRepositoryAspectJDBC(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  }
+
+  @Bean
+  @DependsOn("chaosMonkeyRequestScope")
+  @ConditionalOnClass(HealthIndicator.class)
+  public SpringBootHealthIndicatorAspect springBootHealthIndicatorAspect(
+      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+    return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope);
   }
 
   @Bean

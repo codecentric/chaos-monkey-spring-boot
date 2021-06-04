@@ -39,4 +39,6 @@ public class WatcherProperties {
   private boolean restTemplate = false;
 
   private boolean webClient = false;
+
+  private boolean actuatorHealth = false;
 }
