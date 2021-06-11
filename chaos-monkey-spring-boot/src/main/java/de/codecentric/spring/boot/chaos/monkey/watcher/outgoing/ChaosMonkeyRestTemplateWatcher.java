@@ -41,8 +41,7 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
       byte[] bytes,
       ClientHttpRequestExecution clientHttpRequestExecution)
       throws IOException {
-    ClientHttpResponse response;
-    response = clientHttpRequestExecution.execute(httpRequest, bytes);
+    ClientHttpResponse response = clientHttpRequestExecution.execute(httpRequest, bytes);
     if (watcherProperties.isRestTemplate()) {
       try {
         chaosMonkeyRequestScope.callChaosMonkey(
