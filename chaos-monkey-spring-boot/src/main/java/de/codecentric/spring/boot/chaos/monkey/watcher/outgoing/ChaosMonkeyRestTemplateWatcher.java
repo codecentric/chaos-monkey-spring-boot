@@ -89,7 +89,7 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
 
     @Override
     public InputStream getBody() throws IOException {
-      ByteArrayInputStream inputStream =
+      InputStream inputStream =
           new ByteArrayInputStream(ERROR_BODY.getBytes(StandardCharsets.UTF_8));
       inputStream.close();
       return inputStream;
