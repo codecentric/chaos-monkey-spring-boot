@@ -53,7 +53,7 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
   @ActiveProfiles("chaos-monkey")
   static class LatencyAssaultIntegrationTest {
 
-    @Autowired private DemoWebClientService demoRestTemplateService;
+    @Autowired private DemoWebClientService demoWebClientService;
 
     @Test
     public void testWebClientLatencyAssault() {
