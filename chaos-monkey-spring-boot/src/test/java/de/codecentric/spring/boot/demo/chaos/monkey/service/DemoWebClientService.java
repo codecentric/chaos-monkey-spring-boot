@@ -19,7 +19,7 @@ public class DemoWebClientService {
     String result =
         this.webClient
             .method(HttpMethod.GET)
-            .uri("https://www.google.de")
+            .uri("https://www.codecentric.de")
             .retrieve()
             .bodyToMono(String.class)
             .block();

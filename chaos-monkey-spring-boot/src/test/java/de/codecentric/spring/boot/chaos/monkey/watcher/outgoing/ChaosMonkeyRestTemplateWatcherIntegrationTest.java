@@ -4,9 +4,11 @@ import static de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonk
 import static de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher.ErrorResponse.ERROR_TEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoRestTemplateService;
+import io.netty.handler.timeout.ReadTimeoutException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 class ChaosMonkeyRestTemplateWatcherIntegrationTest {
@@ -79,7 +80,8 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
     @Test
     public void testRestTemplateLatencyAssault() {
-assertThatThrownBy(() -> this.demoRestTemplateService.callWithWebClient()).hasCauseInstanceOf(ReadTimeoutException.class);
+      assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate())
+          .hasCauseInstanceOf(ReadTimeoutException.class);
     }
   }
 }

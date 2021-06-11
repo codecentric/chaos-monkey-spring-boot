@@ -41,6 +41,7 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAs
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAspectJPA;
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRestControllerAspect;
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateCustomizer;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplatePostProcessor;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientPostProcessor;
@@ -70,13 +71,15 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-  ChaosMonkeyProperties.class,
-  AssaultProperties.class,
-  WatcherProperties.class
+    ChaosMonkeyProperties.class,
+    AssaultProperties.class,
+    WatcherProperties.class
 })
 @Import(UnleashChaosConfiguration.class)
 @EnableScheduling
@@ -260,8 +263,14 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(
+        final ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer) {
+      return new ChaosMonkeyRestTemplatePostProcessor(restTemplateCustomizer);
+    }
+
+    @Bean
+    public ChaosMonkeyRestTemplateCustomizer chaosMonkeyRestTemplateCustomizer(
         final ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateWatcher) {
-      return new ChaosMonkeyRestTemplatePostProcessor(chaosMonkeyRestTemplateWatcher);
+      return new ChaosMonkeyRestTemplateCustomizer(chaosMonkeyRestTemplateWatcher);
     }
 
     @Bean

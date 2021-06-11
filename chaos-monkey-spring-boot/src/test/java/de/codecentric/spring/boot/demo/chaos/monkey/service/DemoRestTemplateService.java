@@ -14,6 +14,6 @@ public class DemoRestTemplateService {
   }
 
   public ResponseEntity<?> callWithRestTemplate() {
-    return this.restTemplate.getForEntity("https://www.google.de", String.class);
+    return this.restTemplate.getForEntity("https://www.codecentric.de", String.class);
   }
 }

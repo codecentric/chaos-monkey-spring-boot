@@ -36,7 +36,7 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
     if (watcherProperties.isWebClient()) {
       try {
         chaosMonkeyRequestScope.callChaosMonkey(
-            ChaosTarget.WEB_CLIENT, this.getClass().getSimpleName());
+            ChaosTarget.WEB_CLIENT, clientRequest.url().toString());
       } catch (final Exception exception) {
         try {
           if (exception.getClass().equals(assaultProperties.getException().getExceptionClass())) {

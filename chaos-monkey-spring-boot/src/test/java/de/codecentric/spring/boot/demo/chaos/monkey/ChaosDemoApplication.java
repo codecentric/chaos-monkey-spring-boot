@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.Builder;
 import reactor.netty.http.client.HttpClient;
 
 /** @author Benjamin Wilms */
@@ -41,16 +42,19 @@ public class ChaosDemoApplication {
   }
 
   @Bean
-  public RestTemplate restTemplate(final TestOutgoingConfigurationProperties properties) {
-    return new RestTemplateBuilder()
+  public RestTemplate restTemplateWithTimeout(
+      final TestOutgoingConfigurationProperties properties,
+      final RestTemplateBuilder restTemplateBuilder) {
+    return restTemplateBuilder
         .setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS))
         .build();
   }
 
   @Bean
-  public WebClient webClient(final TestOutgoingConfigurationProperties properties) {
+  public WebClient webClient(
+      final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
     HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
-    return WebClient.builder().clientConnector(new ReactorClientHttpConnector(client)).build();
+    return webClientBuilder.clientConnector(new ReactorClientHttpConnector(client)).build();
   }
 
   @Data

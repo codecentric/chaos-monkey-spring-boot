@@ -16,6 +16,8 @@ import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.lang.Nullable;
+import org.springframework.util.StreamUtils;
 
 /** @author Marcel Becker */
 public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestInterceptor {
@@ -44,7 +46,7 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
     if (watcherProperties.isRestTemplate()) {
       try {
         chaosMonkeyRequestScope.callChaosMonkey(
-            ChaosTarget.REST_TEMPLATE, this.getClass().getSimpleName());
+            ChaosTarget.REST_TEMPLATE, httpRequest.getURI().toString());
       } catch (final Exception exception) {
         try {
           if (exception.getClass().equals(assaultProperties.getException().getExceptionClass())) {
@@ -74,6 +76,8 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
       HttpStatus.NOT_FOUND.value(),
     };
 
+    @Nullable private InputStream responseStream;
+
     @Override
     public int getRawStatusCode() {
       return ERROR_STATUS_CODES[new Random().nextInt(ERROR_STATUS_CODES.length)];
@@ -85,14 +89,22 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
     }
 
     @Override
-    public void close() {}
+    public void close() {
+      try {
+        if (this.responseStream == null) {
+          getBody();
+        }
+        StreamUtils.drain(this.responseStream);
+        this.responseStream.close();
+      } catch (Exception ex) {
+        // ignore {@see #org.springframework.http.client.SimpleClientHttpResponse.close()}
+      }
+    }
 
     @Override
     public InputStream getBody() throws IOException {
-      InputStream inputStream =
-          new ByteArrayInputStream(ERROR_BODY.getBytes(StandardCharsets.UTF_8));
-      inputStream.close();
-      return inputStream;
+      responseStream = new ByteArrayInputStream(ERROR_BODY.getBytes(StandardCharsets.UTF_8));
+      return responseStream;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientWatcher.ErrorClientResponse;
@@ -8,7 +9,6 @@ import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoWebClientService;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,13 +57,9 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
 
     @Test
     public void testWebClientLatencyAssault() {
-      try {
-        this.demoRestTemplateService.callWithWebClient();
-        fail("No ReadTimeoutException occurred!");
-      } catch (Exception ex) {
-        BDDAssertions.then(ex.getCause() instanceof ReadTimeoutException).isTrue();
-        log.debug("exception caught, everything is fine!", ex);
-      }
+
+      assertThatThrownBy(() -> this.demoWebClientService.callWithWebClient())
+          .hasCauseInstanceOf(ReadTimeoutException.class);
     }
   }
 }
