@@ -79,12 +79,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
     @Test
     public void testRestTemplateLatencyAssault() {
-      try {
-        this.demoRestTemplateService.callWithRestTemplate();
-        fail("No ResourceAccessException occurred!");
-      } catch (ResourceAccessException ex) {
-        log.debug("exception caught, everything is fine!", ex);
-      }
+assertThatThrownBy(() -> this.demoRestTemplateService.callWithWebClient()).hasCauseInstanceOf(ReadTimeoutException.class);
     }
   }
 }
