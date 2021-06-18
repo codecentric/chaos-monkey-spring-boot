@@ -71,15 +71,13 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-    ChaosMonkeyProperties.class,
-    AssaultProperties.class,
-    WatcherProperties.class
+  ChaosMonkeyProperties.class,
+  AssaultProperties.class,
+  WatcherProperties.class
 })
 @Import(UnleashChaosConfiguration.class)
 @EnableScheduling

@@ -8,8 +8,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoRestTemplateService;
-import io.netty.handler.timeout.ReadTimeoutException;
 import java.util.Optional;
+import javax.net.ssl.SSLException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,9 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
     @Test
     public void testRestTemplateLatencyAssault() {
       assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate())
-          .hasCauseInstanceOf(ReadTimeoutException.class);
+          .hasCauseInstanceOf(SSLException.class)
+          .hasMessage(
+              "I/O error on GET request for \"https://www.codecentric.de\": Read timed out; nested exception is javax.net.ssl.SSLException: Read timed out");
     }
   }
 }

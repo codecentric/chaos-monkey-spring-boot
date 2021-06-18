@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -67,19 +66,11 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
     static final String ERROR_BODY =
         "{\"error\": \"This is a Chaos Monkey for Spring Boot generated failure\"}";
 
-    static final int[] ERROR_STATUS_CODES = {
-      HttpStatus.INTERNAL_SERVER_ERROR.value(),
-      HttpStatus.BAD_REQUEST.value(),
-      HttpStatus.FORBIDDEN.value(),
-      HttpStatus.UNAUTHORIZED.value(),
-      HttpStatus.NOT_FOUND.value(),
-    };
-
     @Nullable private InputStream responseStream;
 
     @Override
     public int getRawStatusCode() {
-      return ERROR_STATUS_CODES[new Random().nextInt(ERROR_STATUS_CODES.length)];
+      return HttpStatus.INTERNAL_SERVER_ERROR.value();
     }
 
     @Override
