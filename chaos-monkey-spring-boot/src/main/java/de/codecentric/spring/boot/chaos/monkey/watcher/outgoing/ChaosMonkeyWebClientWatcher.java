@@ -34,7 +34,7 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
   @Override
   public Mono<ClientResponse> filter(
       ClientRequest clientRequest, ExchangeFunction exchangeFunction) {
-    final RequestFilterWrapper requestFilterWrapper = shouldExecute(clientRequest);
+    final RequestFilterWrapper requestFilterWrapper = handleOncePerRequest(clientRequest);
     Mono<ClientResponse> response = exchangeFunction.exchange(requestFilterWrapper.clientRequest);
     if (requestFilterWrapper.filter) {
       if (watcherProperties.isWebClient()) {
@@ -57,7 +57,7 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
     return response;
   }
 
-  private RequestFilterWrapper shouldExecute(final ClientRequest clientRequest) {
+  private RequestFilterWrapper handleOncePerRequest(final ClientRequest clientRequest) {
     final String filterName = this.getClass().getName() + ALREADY_FILTERED_SUFFIX;
     final Boolean filter;
     final ClientRequest request;

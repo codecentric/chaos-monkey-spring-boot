@@ -44,6 +44,7 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringServiceAspec
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateCustomizer;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplatePostProcessor;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher;
+import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientCustomizer;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientPostProcessor;
 import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientWatcher;
 import java.io.IOException;
@@ -294,6 +295,12 @@ public class ChaosMonkeyConfiguration {
     public ChaosMonkeyWebClientPostProcessor chaosMonkeyWebClientPostProcessor(
         final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
       return new ChaosMonkeyWebClientPostProcessor(chaosMonkeyWebClientWatcher);
+    }
+
+    @Bean
+    public ChaosMonkeyWebClientCustomizer chaosMonkeyWebClientCustomizer(
+        final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
+      return new ChaosMonkeyWebClientCustomizer(chaosMonkeyWebClientWatcher);
     }
 
     @Bean
