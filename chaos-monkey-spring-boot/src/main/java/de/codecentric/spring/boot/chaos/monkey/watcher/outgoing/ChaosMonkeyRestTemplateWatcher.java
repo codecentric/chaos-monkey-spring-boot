@@ -8,6 +8,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -66,6 +68,8 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
     static final String ERROR_BODY =
         "{\"error\": \"This is a Chaos Monkey for Spring Boot generated failure\"}";
 
+    private static final Logger Logger = LoggerFactory.getLogger(ErrorResponse.class);
+
     @Nullable private InputStream responseStream;
 
     @Override
@@ -87,12 +91,13 @@ public class ChaosMonkeyRestTemplateWatcher implements ClientHttpRequestIntercep
         StreamUtils.drain(this.responseStream);
         this.responseStream.close();
       } catch (Exception ex) {
+        Logger.debug("Exception while closing the error response", ex);
         // ignore {@see #org.springframework.http.client.SimpleClientHttpResponse.close()}
       }
     }
 
     @Override
-    public InputStream getBody() throws IOException {
+    public InputStream getBody() {
       responseStream = new ByteArrayInputStream(ERROR_BODY.getBytes(StandardCharsets.UTF_8));
       return responseStream;
     }

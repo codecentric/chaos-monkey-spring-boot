@@ -13,7 +13,7 @@ public class DemoRestTemplateService {
     this.restTemplate = restTemplate;
   }
 
-  public ResponseEntity<?> callWithRestTemplate() {
+  public ResponseEntity<String> callWithRestTemplate() {
     return this.restTemplate.getForEntity("https://www.codecentric.de", String.class);
   }
 }

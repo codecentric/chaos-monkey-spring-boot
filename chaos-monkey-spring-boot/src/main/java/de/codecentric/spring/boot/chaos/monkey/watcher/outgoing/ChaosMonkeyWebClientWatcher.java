@@ -65,8 +65,8 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
       filter = Boolean.FALSE;
       request = clientRequest;
     } else {
-      request = ClientRequest.from(clientRequest).attribute(filterName, Boolean.TRUE).build();
       filter = Boolean.TRUE;
+      request = ClientRequest.from(clientRequest).attribute(filterName, Boolean.TRUE).build();
     }
     return new RequestFilterWrapper(request, filter);
   }

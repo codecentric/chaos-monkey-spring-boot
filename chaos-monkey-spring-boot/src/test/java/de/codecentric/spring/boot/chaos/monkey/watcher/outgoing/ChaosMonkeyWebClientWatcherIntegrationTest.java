@@ -57,7 +57,6 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
 
     @Test
     public void testWebClientLatencyAssault() {
-
       assertThatThrownBy(() -> this.demoWebClientService.callWithWebClient())
           .hasCauseInstanceOf(ReadTimeoutException.class);
     }
