@@ -48,7 +48,6 @@
                         <configuration>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
                             <backend>html5</backend>
-                            <sourceHighlighter>coderay</sourceHighlighter>
                             <resources>
                                 <resource>
                                     <directory>src/main/asciidoc</directory>
@@ -61,6 +60,7 @@
                                 <project-version>${project.version}</project-version>
                                 <commit-id>${git.commit.id.abbrev}</commit-id>
                                 <commit-time>${git.commit.time}</commit-time>
+                                <source-highlighter>coderay</source-highlighter>
                             </attributes>
                         </configuration>
                     </execution>
