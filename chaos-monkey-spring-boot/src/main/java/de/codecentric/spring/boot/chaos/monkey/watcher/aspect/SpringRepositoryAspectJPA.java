@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
@@ -29,11 +29,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
-/** @author Eric Wyles */
+/** @author Benjamin Wilms */
 @Aspect
 @AllArgsConstructor
 @Slf4j
-public class SpringRepositoryAspectJDBC extends ChaosMonkeyBaseAspect {
+public class SpringRepositoryAspectJPA extends ChaosMonkeyBaseAspect {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
@@ -41,15 +41,15 @@ public class SpringRepositoryAspectJDBC extends ChaosMonkeyBaseAspect {
 
   private WatcherProperties watcherProperties;
 
-  @Pointcut("within(@org.springframework.stereotype.Repository *)")
-  public void classAnnotatedWithRepositoryPointcut() {}
+  @Pointcut(
+      "this(org.springframework.data.repository.Repository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
+  public void implementsCrudRepository() {}
 
-  @Around(
-      "classAnnotatedWithRepositoryPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+  @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
     if (watcherProperties.isRepository()) {
-      log.debug("Watching public method on repository stereotype class: {}", pjp.getSignature());
+      log.debug("Watching public method on repository class: {}", pjp.getSignature());
 
       if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(

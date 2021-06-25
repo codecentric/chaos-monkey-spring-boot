@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
@@ -33,7 +33,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Aspect
 @AllArgsConstructor
 @Slf4j
-public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
+public class SpringComponentAspect extends ChaosMonkeyBaseAspect {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
@@ -41,25 +41,27 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
 
   private WatcherProperties watcherProperties;
 
-  @Pointcut("within(@org.springframework.stereotype.Service *)")
-  public void classAnnotatedWithServicePointcut() {}
+  @Pointcut("within(@org.springframework.stereotype.Component *)")
+  public void classAnnotatedWithComponentPointcut() {}
+
+  @Pointcut("within(org.springframework.cloud.context..*)")
+  public void classInSpringCloudContextPackage() {}
 
   @Around(
-      "classAnnotatedWithServicePointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()"
-          + "&& !springHooksPointcut()")
+      "classAnnotatedWithComponentPointcut() && !classInSpringCloudContextPackage() "
+          + "&& allPublicMethodPointcut() && !classInChaosMonkeyPackage() && !springHooksPointcut()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-
-    if (watcherProperties.isService()) {
-      log.debug("Watching public method on service class: {}", pjp.getSignature());
+    if (watcherProperties.isComponent()) {
+      log.debug("Watching public method on component class: {}", pjp.getSignature());
 
       if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.SERVICE);
+            calculatePointcut(pjp.toShortString()), MetricType.COMPONENT);
       }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.SERVICE, createSignature(signature));
+      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.COMPONENT, createSignature(signature));
     }
     return pjp.proceed();
   }

@@ -35,4 +35,8 @@ public class WatcherProperties {
   private boolean repository = false;
 
   private boolean component = false;
+
+  private boolean restTemplate = false;
+
+  private boolean webClient = false;
 }

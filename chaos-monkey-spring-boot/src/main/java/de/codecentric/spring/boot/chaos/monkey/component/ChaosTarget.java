@@ -5,7 +5,9 @@ public enum ChaosTarget {
   REST_CONTROLLER("restController"),
   REPOSITORY("repository"),
   COMPONENT("component"),
-  SERVICE("service");
+  SERVICE("service"),
+  REST_TEMPLATE("restTemplate"),
+  WEB_CLIENT("webClient");
 
   private final String name;
 
