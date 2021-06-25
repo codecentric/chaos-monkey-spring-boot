@@ -35,12 +35,12 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChao
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJDBC;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJPA;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringComponentAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringControllerAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAspectJDBC;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAspectJPA;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRestControllerAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringServiceAspect;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -71,7 +71,11 @@ import org.springframework.util.StreamUtils;
   AssaultProperties.class,
   WatcherProperties.class
 })
-@Import(UnleashChaosConfiguration.class)
+@Import({
+  UnleashChaosConfiguration.class,
+  ChaosMonkeyWebClientConfiguration.class,
+  ChaosMonkeyRestTemplateConfiguration.class
+})
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
 

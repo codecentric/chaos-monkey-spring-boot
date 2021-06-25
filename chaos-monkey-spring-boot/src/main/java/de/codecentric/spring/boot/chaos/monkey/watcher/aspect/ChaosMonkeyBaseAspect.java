@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
