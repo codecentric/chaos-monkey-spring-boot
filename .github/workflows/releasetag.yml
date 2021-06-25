@@ -39,3 +39,30 @@ jobs:
           publish_dir: ./chaos-monkey-docs/target/generated-docs
           destination_dir: latest
           commit_message: ${{ github.event.head_commit.message }}
+
+  create_github_release:
+    name: "Create Github Release"
+    needs: deploy
+    runs-on: ubuntu-latest
+    env:
+      TAG_NAME: ${{ github.ref }}
+    steps:
+      - name: Set TAG_NAME without ref
+        run: echo "TAG_NAME_WITHOUT_REF=${TAG_NAME//refs\/tags\/}" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - name: Convert changelog to docbook
+        uses: docker://asciidoctor/docker-asciidoctor:1.7
+        with:
+          args: "asciidoctor -b docbook chaos-monkey-docs/src/main/asciidoc/changes.adoc"
+      - name: Convert changelog from docbook to markdown
+        uses: docker://pandoc/core:2.14
+        with:
+          args: "-f docbook -t gfm -o changes.md chaos-monkey-docs/src/main/asciidoc/changes.xml --wrap=none"
+      - name: Replace {project-version} with release version
+        run: sed -i "s/{project-version}/$TAG_NAME_WITHOUT_REF/g" changes.md
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: changes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
