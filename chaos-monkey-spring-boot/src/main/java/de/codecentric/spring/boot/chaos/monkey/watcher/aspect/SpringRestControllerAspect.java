@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher;
+package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
@@ -33,7 +33,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Aspect
 @AllArgsConstructor
 @Slf4j
-public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
+public class SpringRestControllerAspect extends ChaosMonkeyBaseAspect {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
@@ -41,24 +41,25 @@ public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
 
   private WatcherProperties watcherProperties;
 
-  @Pointcut("within(@org.springframework.stereotype.Controller *)")
+  @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
   public void classAnnotatedWithControllerPointcut() {}
 
   @Around(
       "classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
-    if (watcherProperties.isController()) {
-      log.debug("Watching public method on controller class: {}", pjp.getSignature());
+    if (watcherProperties.isRestController()) {
+      log.debug("Watching public method on rest controller class: {}", pjp.getSignature());
 
       if (metricEventPublisher != null) {
         metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.CONTROLLER);
+            calculatePointcut(pjp.toShortString()), MetricType.RESTCONTROLLER);
       }
 
       MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.CONTROLLER, createSignature(signature));
+      chaosMonkeyRequestScope.callChaosMonkey(
+          ChaosTarget.REST_CONTROLLER, createSignature(signature));
     }
     return pjp.proceed();
   }

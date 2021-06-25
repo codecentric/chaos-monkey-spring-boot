@@ -14,6 +14,18 @@ With the help of https://docs.spring.io/spring/docs/current/spring-framework-ref
 execution of a _public_ method and will either not execute any action or start one of its assaults. You can customize the behave by
 <<configuration,configuration>>.
 
+Besides the _AOP_ based watchers, Chaos Monkey for Spring Boot also provides watchers for:
+
+- RestTemplate
+- WebClient
+
+The watchers will inject exception and latency based assaults for all _RestTemplate_ and _WebClient_ beans in the Spring Context based on the given assault configuration.
+
+[IMPORTANT]
+====
+_RestTemplates_ and _WebClients_ which are created not as a bean via _new RestTemplate()_ and _WebClient.create()_ are not getting instrumented.
+====
+
 === Customize Watcher
 You can customize the behavior of all watchers using the property *watchedCustomServices* and decide which classes and public methods
 should be attacked. If no signatures are stored, all classes and public methods, recognized by the watchers are attacked by default.
