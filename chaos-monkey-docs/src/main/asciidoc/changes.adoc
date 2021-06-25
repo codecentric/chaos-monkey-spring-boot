@@ -7,21 +7,20 @@
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/227[#227] Fix #224 by not deploying demo projects to maven central
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/234[#234] Upgrade dependencies / Upgrade to Spring Boot 2.5.2
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/220[#220] Added `ChaosToggles` and `ChaosToggleNameMapper` interfaces as well as support for a default https://github.com/Unleash/unleash[Unleash] based `ChaosToggles` implementation
-
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/229[#93] Added support to attack outgoing requests with _RestTemplate_ and _WebClient_
 
 === Contributors
 This release was only possible because of these great humans:
 
-- https://github.com/Albert-Hugo[@Albert-Hugo]
-
 // - https://github.com/octocat[@octocat]
- - https://github.com/checketts[@checketts]
-
- - https://github.com/tuxdevelop[@tuxdevelop]
+- https://github.com/Albert-Hugo[@Albert-Hugo]
+- https://github.com/checketts[@checketts]
+- https://github.com/tuxdevelop[@tuxdevelop]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!

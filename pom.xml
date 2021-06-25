@@ -35,40 +35,39 @@
     <github.global.server>github</github.global.server>
 
     <!-- spring versions -->
-    <spring-boot.version>2.4.5</spring-boot.version>
-    <spring-cloud.version>2020.0.2</spring-cloud.version>
-    <spring.version>5.3.6</spring.version>
+    <spring-boot.version>2.5.2</spring-boot.version>
+    <spring-cloud.version>2020.0.3</spring-cloud.version>
+    <spring.version>5.3.8</spring.version>
 
     <!-- dependency versions -->
-    <junit.jupiter.version>5.7.1</junit.jupiter.version>
-    <mockito.version>3.8.0</mockito.version>
+    <junit.jupiter.version>5.7.2</junit.jupiter.version>
+    <mockito.version>3.9.0</mockito.version>
     <lombok.version>1.18.20</lombok.version>
     <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
-    <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
-    <reactor-netty.version>1.0.7</reactor-netty.version>
-    <unleash.version>4.2.1</unleash.version>
+    <jcl-over-slf4j.version>1.7.31</jcl-over-slf4j.version>
+    <reactor-netty.version>1.0.8</reactor-netty.version>
+    <unleash.version>4.4.0</unleash.version>
 
     <!-- demo dependencies -->
-    <micrometer.version>1.6.6</micrometer.version>
-    <spring-security.version>5.4.6</spring-security.version>
+    <micrometer.version>1.7.1</micrometer.version>
+    <spring-security.version>5.5.1</spring-security.version>
 
     <!-- plugin versions-->
-    <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-    <git-commit-id-plugin.version>4.0.3</git-commit-id-plugin.version>
-    <asciidoctor-maven-plugin.version>1.6.0</asciidoctor-maven-plugin.version>
+    <git-commit-id-plugin.version>4.0.5</git-commit-id-plugin.version>
+    <asciidoctor-maven-plugin.version>2.1.0</asciidoctor-maven-plugin.version>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
-    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+    <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+    <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
     <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
-    <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
+    <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>
-    <spotless.plugin.version>2.6.1</spotless.plugin.version>
+    <spotless.plugin.version>2.12.1</spotless.plugin.version>
     <google-java-format.version>1.7</google-java-format.version>
-    <site-maven-plugin.version>0.12</site-maven-plugin.version>
   </properties>
 
   <scm>
