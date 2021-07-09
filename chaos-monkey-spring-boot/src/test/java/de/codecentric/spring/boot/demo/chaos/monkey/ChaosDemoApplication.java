@@ -51,12 +51,6 @@ public class ChaosDemoApplication {
   }
 
   @Bean
-  public WebClient webClient(final TestOutgoingConfigurationProperties properties) {
-    HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
-    return WebClient.builder().clientConnector(new ReactorClientHttpConnector(client)).build();
-  }
-
-  @Bean
   public WebClient webClient(
       final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
     HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
