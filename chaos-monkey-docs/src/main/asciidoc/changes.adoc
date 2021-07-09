@@ -3,7 +3,7 @@
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-
+- https://github.com/codecentric/chaos-monkey-spring-boot/issues/232[#232] Unresolvable circular reference error when `FactoryBean` is annotated with `@Component`
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/227[#227] Fix #224 by not deploying demo projects to maven central
@@ -22,5 +22,6 @@ This release was only possible because of these great humans:
 - https://github.com/checketts[@checketts]
 - https://github.com/tuxdevelop[@tuxdevelop]
 - https://github.com/WtfJoke[@WtfJoke]
+- https://github.com/mmerla[@mmerla]
 
 Thank you for your support!

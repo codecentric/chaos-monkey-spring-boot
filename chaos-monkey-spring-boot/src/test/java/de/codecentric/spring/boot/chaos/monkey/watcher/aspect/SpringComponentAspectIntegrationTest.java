@@ -28,6 +28,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
+import de.codecentric.spring.boot.demo.chaos.monkey.component.FactoryBeanComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.FinalDemoComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,10 @@ class SpringComponentAspectIntegrationTest {
       "execution.BeanPostProcessorComponent.postProcessBeforeInitialization";
   private static final String applicationListenerComponentPointcutName =
       "execution.ApplicationListenerComponent.onApplicationEvent";
+  private static final String beanFactorySingletonComponentPointcutName =
+      "execution.FactoryBeanComponent.isSingleton";
+  private static final String beanFactoryObjectTypeComponentPointcutName =
+      "execution.FactoryBeanComponent.getObjectType";
 
   private static final String demoComponentSimpleName =
       "de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello";
@@ -57,6 +62,10 @@ class SpringComponentAspectIntegrationTest {
       "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent.postProcessBeforeInitialization";
   private static final String applicationListenerComponentSimpleName =
       "de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent.onApplicationEvent";
+  private static final String beanFactorySingletonComponentSimpleName =
+      "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanFactoryComponent.isSingleton";
+  private static final String beanFactoryObjectTypeComponentSimpleName =
+      "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanFactoryComponent.getObjectType";
 
   @Autowired DemoComponent demoComponent;
 
@@ -69,6 +78,8 @@ class SpringComponentAspectIntegrationTest {
   @Autowired ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock;
 
   @Autowired MetricEventPublisher metricsMock;
+
+  @Autowired FactoryBeanComponent factoryBeanComponent;
 
   @Test
   public void chaosMonkeyIsCalledWhenComponentIsNotFinal() {
@@ -92,6 +103,7 @@ class SpringComponentAspectIntegrationTest {
   public void chaosMonkeyDoesNotProxyIgnoredSpringInterfaces() {
     beanPostProcessorComponent.postProcessBeforeInitialization(new Object(), "fakeBean");
     applicationListenerComponent.onApplicationEvent(mock(ApplicationEvent.class));
+    factoryBeanComponent.getObject();
 
     verify(chaosMonkeyRequestScopeMock, times(0))
         .callChaosMonkey(null, beanPostProcessorComponentSimpleName);
@@ -102,6 +114,15 @@ class SpringComponentAspectIntegrationTest {
         .callChaosMonkey(null, applicationListenerComponentSimpleName);
     verify(metricsMock, times(0))
         .publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
+
+    verify(chaosMonkeyRequestScopeMock, times(0))
+        .callChaosMonkey(null, beanFactorySingletonComponentSimpleName);
+    verify(chaosMonkeyRequestScopeMock, times(0))
+        .callChaosMonkey(null, beanFactoryObjectTypeComponentSimpleName);
+    verify(metricsMock, times(0))
+        .publishMetricEvent(beanFactorySingletonComponentPointcutName, MetricType.COMPONENT);
+    verify(metricsMock, times(0))
+        .publishMetricEvent(beanFactoryObjectTypeComponentPointcutName, MetricType.COMPONENT);
   }
 
   @Configuration
@@ -139,6 +160,11 @@ class SpringComponentAspectIntegrationTest {
     @Bean
     BeanPostProcessorComponent beanPostProcessorComponent() {
       return mock(BeanPostProcessorComponent.class);
+    }
+
+    @Bean
+    FactoryBeanComponent factoryBeanComponent() {
+      return mock(FactoryBeanComponent.class);
     }
 
     @Bean

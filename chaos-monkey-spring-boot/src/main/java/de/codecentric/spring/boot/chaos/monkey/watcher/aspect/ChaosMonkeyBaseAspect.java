@@ -29,7 +29,7 @@ abstract class ChaosMonkeyBaseAspect {
   public void allPublicMethodPointcut() {}
 
   @Pointcut(
-      "execution(* postProcess*Initialization(..)) || (execution(* onApplicationEvent(..)) && !execution(* onApplicationEvent(org.springframework.web.context.support.RequestHandledEvent)))")
+      "execution(* postProcess*Initialization(..)) || (execution(* onApplicationEvent(..)) && !execution(* onApplicationEvent(org.springframework.web.context.support.RequestHandledEvent))) || execution(* org.springframework.beans.factory.FactoryBean+.*(..))")
   public void springHooksPointcut() {}
 
   String calculatePointcut(String target) {
