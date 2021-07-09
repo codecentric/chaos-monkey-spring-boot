@@ -14,6 +14,12 @@ With the help of https://docs.spring.io/spring/docs/current/spring-framework-ref
 execution of a _public_ method and will either not execute any action or start one of its assaults. You can customize the behave by
 <<configuration,configuration>>.
 
+Next to the _Spring_ stereotype _AOP_ watchers, Chaos Monkey can also watch the
+
+* https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.health.auto-configured-health-indicators[Spring Boot HealthIndicators]
+
+and assault the health checks with exceptions and latency. Exceptions will let the _HealthIndicators_ go into status _DOWN_ and the latency assault postpone the response.
+
 Besides the _AOP_ based watchers, Chaos Monkey for Spring Boot also provides watchers for:
 
 - RestTemplate

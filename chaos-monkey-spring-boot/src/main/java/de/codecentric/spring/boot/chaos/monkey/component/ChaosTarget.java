@@ -7,7 +7,8 @@ public enum ChaosTarget {
   COMPONENT("component"),
   SERVICE("service"),
   REST_TEMPLATE("restTemplate"),
-  WEB_CLIENT("webClient");
+  WEB_CLIENT("webClient"),
+  ACTUATOR_HEALTH("actuatorHealth");
 
   private final String name;
 
