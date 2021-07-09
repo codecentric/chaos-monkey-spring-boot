@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
-import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -216,7 +215,7 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   @DependsOn("chaosMonkeyRequestScope")
-  @ConditionalOnClass(HealthIndicator.class)
+  @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
   public SpringBootHealthIndicatorAspect springBootHealthIndicatorAspect(
       ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
     return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope);
