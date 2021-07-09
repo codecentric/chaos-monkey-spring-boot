@@ -26,6 +26,9 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChao
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.*;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,24 +45,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
-
-/**
- * @author Benjamin Wilms
- */
+/** @author Benjamin Wilms */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-    ChaosMonkeyProperties.class,
-    AssaultProperties.class,
-    WatcherProperties.class
+  ChaosMonkeyProperties.class,
+  AssaultProperties.class,
+  WatcherProperties.class
 })
 @Import({
-    UnleashChaosConfiguration.class,
-    ChaosMonkeyWebClientConfiguration.class,
-    ChaosMonkeyRestTemplateConfiguration.class
+  UnleashChaosConfiguration.class,
+  ChaosMonkeyWebClientConfiguration.class,
+  ChaosMonkeyRestTemplateConfiguration.class
 })
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
