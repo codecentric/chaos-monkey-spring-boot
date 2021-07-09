@@ -17,38 +17,15 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
+import de.codecentric.spring.boot.chaos.monkey.assaults.*;
+import de.codecentric.spring.boot.chaos.monkey.component.*;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringBootHealthIndicatorAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAspectJDBC;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRepositoryAspectJPA;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.SpringServiceAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplatePostProcessor;
-import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher;
-import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientPostProcessor;
-import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientWatcher;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,34 +33,33 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
-/** @author Benjamin Wilms */
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.List;
+
+/**
+ * @author Benjamin Wilms
+ */
 @Configuration
 @Profile("chaos-monkey")
 @EnableConfigurationProperties({
-  ChaosMonkeyProperties.class,
-  AssaultProperties.class,
-  WatcherProperties.class
+    ChaosMonkeyProperties.class,
+    AssaultProperties.class,
+    WatcherProperties.class
 })
 @Import({
-  UnleashChaosConfiguration.class,
-  ChaosMonkeyWebClientConfiguration.class,
-  ChaosMonkeyRestTemplateConfiguration.class
+    UnleashChaosConfiguration.class,
+    ChaosMonkeyWebClientConfiguration.class,
+    ChaosMonkeyRestTemplateConfiguration.class
 })
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
@@ -262,55 +238,5 @@ public class ChaosMonkeyConfiguration {
   @ConditionalOnAvailableEndpoint
   public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
     return new ChaosMonkeyJmxEndpoint(settings());
-  }
-
-  @Configuration
-  @ConditionalOnProperty(
-      prefix = "chaos.monkey.watcher",
-      value = "rest-template",
-      havingValue = "true")
-  @ConditionalOnClass(value = RestTemplate.class)
-  static class ChaosMonkeyRestTemplateConfiguration {
-
-    @Bean
-    public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(
-        final ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateWatcher) {
-      return new ChaosMonkeyRestTemplatePostProcessor(chaosMonkeyRestTemplateWatcher);
-    }
-
-    @Bean
-    @DependsOn("chaosMonkeyRequestScope")
-    public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(
-        final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-        final WatcherProperties watcherProperties,
-        final AssaultProperties assaultProperties) {
-      return new ChaosMonkeyRestTemplateWatcher(
-          chaosMonkeyRequestScope, watcherProperties, assaultProperties);
-    }
-  }
-
-  @Configuration
-  @ConditionalOnProperty(
-      prefix = "chaos.monkey.watcher",
-      value = "web-client",
-      havingValue = "true")
-  @ConditionalOnClass(value = WebClient.class)
-  static class ChaosMonkeyWebClientConfiguration {
-
-    @Bean
-    public ChaosMonkeyWebClientPostProcessor chaosMonkeyWebClientPostProcessor(
-        final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
-      return new ChaosMonkeyWebClientPostProcessor(chaosMonkeyWebClientWatcher);
-    }
-
-    @Bean
-    @DependsOn("chaosMonkeyRequestScope")
-    public ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher(
-        final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-        final WatcherProperties watcherProperties,
-        final AssaultProperties assaultProperties) {
-      return new ChaosMonkeyWebClientWatcher(
-          chaosMonkeyRequestScope, watcherProperties, assaultProperties);
-    }
   }
 }
