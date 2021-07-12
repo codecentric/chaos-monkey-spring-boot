@@ -39,7 +39,7 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
     if (metricEventPublisher != null) {
       metricEventPublisher.publishMetricEvent(MetricType.CPU_ASSAULT);
     }
-    double load = settings.getAssaultProperties().getMemoryFillIncrementFraction();
+    double load = settings.getAssaultProperties().getCpuLoadTargetFraction();
 
     List<Thread> threads = new ArrayList<>();
     for (int num = 0; os.getProcessCpuLoad() < load; num++) {
