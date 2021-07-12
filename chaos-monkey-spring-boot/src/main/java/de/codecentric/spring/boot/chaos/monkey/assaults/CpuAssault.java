@@ -47,7 +47,13 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
       Thread thread =
           new Thread(
               () -> {
-                while (!Thread.interrupted()) ;
+                long f1 = 0;
+                long f2 = 1;
+                while (!Thread.interrupted()) {
+                  // next fibonacci number
+                  f2 = f1 + f2;
+                  f1 = f2 - f1;
+                }
               },
               "CPU Assault thread " + num);
       threads.add(thread);
