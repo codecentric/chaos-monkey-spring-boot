@@ -128,7 +128,8 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   public CpuAssault cpuAssault() {
-    return new CpuAssault(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings(), publisher());
+    return new CpuAssault(
+        ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings(), publisher());
   }
 
   @Bean

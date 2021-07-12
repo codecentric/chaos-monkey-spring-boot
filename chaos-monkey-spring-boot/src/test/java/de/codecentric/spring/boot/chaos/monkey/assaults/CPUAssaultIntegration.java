@@ -17,48 +17,41 @@
 
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.sun.management.OperatingSystemMXBean;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import java.lang.management.ManagementFactory;
+import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.validation.constraints.NotNull;
-import java.lang.management.ManagementFactory;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * @author Lukas Morawietz
- */
+/** @author Lukas Morawietz */
 @SpringBootTest(
-        classes = ChaosDemoApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "management.endpoints.web.exposure.include=chaosmonkey",
-                "management.endpoints.enabled-by-default=true",
-                "chaos.monkey.assaults.cpuActive=true",
-                "chaos.monkey.assaults.cpuLoadTargetFraction=1.0",
-                "chaos.monkey.assaults.cpuMillisecondsHoldLoad=2000",
-                "spring.profiles.active=chaos-monkey"
-        })
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "management.endpoints.web.exposure.include=chaosmonkey",
+      "management.endpoints.enabled-by-default=true",
+      "chaos.monkey.assaults.cpuActive=true",
+      "chaos.monkey.assaults.cpuLoadTargetFraction=1.0",
+      "chaos.monkey.assaults.cpuMillisecondsHoldLoad=2000",
+      "spring.profiles.active=chaos-monkey"
+    })
 class CPUAssaultIntegration {
 
-  @Autowired
-  private CpuAssault cpuAssault;
+  @Autowired private CpuAssault cpuAssault;
 
-  @Autowired
-  private ChaosMonkeySettings settings;
+  @Autowired private ChaosMonkeySettings settings;
 
-  @NotNull
-  private boolean isCpuAssaultActiveOriginal;
+  @NotNull private boolean isCpuAssaultActiveOriginal;
 
-  @NotNull
-  private double cpuLoadTargetFraction;
+  @NotNull private double cpuLoadTargetFraction;
 
   @BeforeEach
   void setUp() {
@@ -96,20 +89,20 @@ class CPUAssaultIntegration {
 
     // if timeout reached
     fail(
-            "CPU did not fill up in time. Filled "
-                    + os.getProcessCpuLoad() * 100
-                    + "% but should have filled "
-                    + cpuLoadTargetFraction * 100
-                    + "%");
+        "CPU did not fill up in time. Filled "
+            + os.getProcessCpuLoad() * 100
+            + "% but should have filled "
+            + cpuLoadTargetFraction * 100
+            + "%");
   }
 
   /**
    * Checks if `value` is in range of designated `target`, depending on given `deviationFactor`
    *
-   * @param value           value to check against target if its in range
+   * @param value value to check against target if its in range
    * @param deviationFactor factor in percentage (10% = 0.1) of how much value is allowed to deviate
-   *                        from target
-   * @param target          value against value is checked against
+   *     from target
+   * @param target value against value is checked against
    * @return true if in range
    */
   private boolean isInRange(double value, double target, double deviationFactor) {

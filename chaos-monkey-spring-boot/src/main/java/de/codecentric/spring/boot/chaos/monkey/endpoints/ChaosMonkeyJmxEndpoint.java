@@ -64,8 +64,8 @@ public class ChaosMonkeyJmxEndpoint {
   @WriteOperation
   public String toggleCpuAssault() {
     this.chaosMonkeySettings
-            .getAssaultProperties()
-            .setCpuActive(!this.getAssaultProperties().getCpuActive());
+        .getAssaultProperties()
+        .setCpuActive(!this.getAssaultProperties().getCpuActive());
     return String.valueOf(this.getAssaultProperties().getCpuActive());
   }
 
