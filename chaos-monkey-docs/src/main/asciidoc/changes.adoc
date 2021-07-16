@@ -2,9 +2,11 @@
 == Changes in {project-version}
 
 === Bug Fixes
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/243[#243] Fix health indicator assault is always active
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Improvements
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/242[#238] Also attack jvm proxies, in particular crud repository interface implementations.
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
