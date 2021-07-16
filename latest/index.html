@@ -444,8 +444,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Benjamin Wilms</span><br>
 <span id="email" class="email"><a href="https://twitter.com/mrbwilms">@MrBWilms</a></span><br>
-<span id="revnumber">version 2.5.0,</span>
-<span id="revdate">09.07.2021</span>
+<span id="revnumber">version 2.5.1,</span>
+<span id="revdate">16.07.2021</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -515,11 +515,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#changes">9. Changes in 2.5.0</a>
+<li><a href="#changes">9. Changes in 2.5.1</a>
 <ul class="sectlevel2">
 <li><a href="#_bug_fixes">9.1. Bug Fixes</a></li>
-<li><a href="#_new_features">9.2. New Features</a></li>
-<li><a href="#_contributors">9.3. Contributors</a></li>
+<li><a href="#_improvements">9.2. Improvements</a></li>
+<li><a href="#_new_features">9.3. New Features</a></li>
+<li><a href="#_contributors">9.4. Contributors</a></li>
 </ul>
 </li>
 </ul>
@@ -585,7 +586,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.5.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.5.1<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -620,7 +621,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.5.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.5.1<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -631,7 +632,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.5.0-jar-with-dependencies.jar
+    -Dloader.path=chaos-monkey-spring-boot-2.5.1-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -1724,62 +1725,41 @@ lost.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 2.5.0</a></h2>
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 2.5.1</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">9.1. Bug Fixes</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/issues/232">#232</a> Unresolvable circular reference error when <code>FactoryBean</code> is annotated with <code>@Component</code>
-=== Improvements</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/227">#227</a> Fix #224 by not deploying demo projects to maven central</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/234">#234</a> Upgrade dependencies / Upgrade to Spring Boot 2.5.2</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/243">#243</a> Fix health indicator assault is always active</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">9.2. New Features</a></h3>
+<h3 id="_improvements"><a class="anchor" href="#_improvements"></a><a class="link" href="#_improvements">9.2. Improvements</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/220">#220</a> Added <code>ChaosToggles</code> and <code>ChaosToggleNameMapper</code> interfaces as well as support for a default <a href="https://github.com/Unleash/unleash">Unleash</a> based <code>ChaosToggles</code> implementation</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/229">#93</a> Added support to attack outgoing requests with <em>RestTemplate</em> and <em>WebClient</em></p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/240">#240</a> Added support to attack <em>HealthIndicator</em> with exception and latency assault</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/242">#238</a> Also attack jvm proxies, in particular crud repository interface implementations.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">9.3. Contributors</a></h3>
+<h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">9.3. New Features</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">9.4. Contributors</a></h3>
 <div class="paragraph">
 <p>This release was only possible because of these great humans:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/Albert-Hugo">@Albert-Hugo</a></p>
-</li>
-<li>
-<p><a href="https://github.com/checketts">@checketts</a></p>
-</li>
-<li>
-<p><a href="https://github.com/tuxdevelop">@tuxdevelop</a></p>
-</li>
-<li>
-<p><a href="https://github.com/WtfJoke">@WtfJoke</a></p>
-</li>
-<li>
-<p><a href="https://github.com/mmerla">@mmerla</a></p>
+<p><a href="https://github.com/F43nd1r">@F43nd1r</a></p>
 </li>
 </ul>
 </div>
@@ -1792,7 +1772,7 @@ lost.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.5.0<br>
+Version 2.5.1<br>
 </div>
 </div>
 <style>
