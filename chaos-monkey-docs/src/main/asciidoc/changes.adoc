@@ -16,5 +16,6 @@
 This release was only possible because of these great humans:
 
 // - https://github.com/octocat[@octocat]
+- https://github.com/F43nd1r[@F43nd1r]
 
 Thank you for your support!
