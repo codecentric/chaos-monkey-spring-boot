@@ -218,7 +218,7 @@ public class ChaosMonkeyConfiguration {
   @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
   public SpringBootHealthIndicatorAspect springBootHealthIndicatorAspect(
       ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope);
+    return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope, watcherProperties);
   }
 
   @Bean
