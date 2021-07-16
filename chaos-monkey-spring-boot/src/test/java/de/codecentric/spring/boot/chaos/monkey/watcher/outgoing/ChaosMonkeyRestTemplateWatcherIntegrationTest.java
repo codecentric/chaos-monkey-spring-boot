@@ -10,6 +10,7 @@ import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoRestTemplateServ
 import java.util.Optional;
 import javax.net.ssl.SSLException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +24,8 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
       properties = {"chaos.monkey.watcher.rest-template=true"},
       classes = {ChaosDemoApplication.class})
   @ActiveProfiles("chaos-monkey")
-  static class WatcherIntegrationTest {
+  @Nested
+  class WatcherIntegrationTest {
 
     @Autowired private RestTemplate restTemplate;
 
@@ -45,7 +47,8 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
       },
       classes = {ChaosDemoApplication.class})
   @ActiveProfiles("chaos-monkey")
-  static class ExceptionAssaultIntegrationTest {
+  @Nested
+  class ExceptionAssaultIntegrationTest {
 
     @Autowired private DemoRestTemplateService demoRestTemplateService;
 

@@ -2,6 +2,7 @@ package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,20 +19,23 @@ public class SpringBootHealthIndicatorAspect extends ChaosMonkeyBaseAspect {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
+  private final WatcherProperties watcherProperties;
+
   @Pointcut("execution(* org.springframework.boot.actuate.health.HealthIndicator.getHealth(..))")
   public void getHealthPointCut() {}
 
   @Around("getHealthPointCut() && !classInChaosMonkeyPackage()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-    MethodSignature signature = (MethodSignature) pjp.getSignature();
-    Health health;
-    try {
-      health = (Health) pjp.proceed();
-      this.chaosMonkeyRequestScope.callChaosMonkey(
-          ChaosTarget.ACTUATOR_HEALTH, createSignature(signature));
-    } catch (final Exception e) {
-      log.error("Exception occurred", e);
-      health = Health.down(e).build();
+    Health health = (Health) pjp.proceed();
+    if (watcherProperties.isActuatorHealth()) {
+      MethodSignature signature = (MethodSignature) pjp.getSignature();
+      try {
+        this.chaosMonkeyRequestScope.callChaosMonkey(
+            ChaosTarget.ACTUATOR_HEALTH, createSignature(signature));
+      } catch (final Exception e) {
+        log.error("Exception occurred", e);
+        health = Health.down(e).build();
+      }
     }
     return health;
   }
