@@ -26,19 +26,17 @@ public class SpringBootHealthIndicatorAspect extends ChaosMonkeyBaseAspect {
 
   @Around("getHealthPointCut() && !classInChaosMonkeyPackage()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+    Health health = (Health) pjp.proceed();
     if (watcherProperties.isActuatorHealth()) {
       MethodSignature signature = (MethodSignature) pjp.getSignature();
-      Health health;
       try {
-        health = (Health) pjp.proceed();
         this.chaosMonkeyRequestScope.callChaosMonkey(
             ChaosTarget.ACTUATOR_HEALTH, createSignature(signature));
       } catch (final Exception e) {
         log.error("Exception occurred", e);
         health = Health.down(e).build();
       }
-      return health;
     }
-    return pjp.proceed();
+    return health;
   }
 }
