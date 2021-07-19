@@ -6,11 +6,11 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CpuAssault implements ChaosMonkeyRuntimeAssault {
+  private static final double leeway = 0.05;
   private static final Logger Logger = LoggerFactory.getLogger(CpuAssault.class);
 
   private final ChaosMonkeySettings settings;
@@ -42,47 +42,108 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
     }
     double load = settings.getAssaultProperties().getCpuLoadTargetFraction();
 
-    List<Thread> threads = new ArrayList<>();
-    for (int num = 0; os.getProcessCpuLoad() < load; num++) {
-      Thread thread =
-          new Thread(
-              () -> {
-                long f1 = 0;
-                long f2 = 1;
-                while (!Thread.interrupted()) {
-                  // next fibonacci number
-                  f2 = f1 + f2;
-                  f1 = f2 - f1;
-                }
-              },
-              "CPU Assault thread " + num);
-      threads.add(thread);
-      thread.start();
+    if (os.getProcessCpuLoad() >= 0) {
+      ThreadManager threadManager = new ThreadManager(os, load);
+      // initial ramp up
+      while (os.getProcessCpuLoad() < load && isActive()) {
+        threadManager.tick();
+      }
+      final long targetMs =
+          System.currentTimeMillis() + settings.getAssaultProperties().getCpuMillisecondsHoldLoad();
+      // hold for specified time
+      while (targetMs > System.currentTimeMillis() && isActive()) {
+        threadManager.tick();
+      }
+      threadManager.stop();
+      Logger.info("Chaos Monkey - cpu assault cleaned up");
+    } else {
+      Logger.warn("Chaos Monkey - cpu information not available, assault not executed");
     }
-    waitUntil(settings.getAssaultProperties().getCpuMillisecondsHoldLoad());
-    for (Thread thread : threads) {
-      thread.interrupt();
-      while (thread.isAlive()) {
+  }
+
+  private static class ThreadManager {
+    private final OperatingSystemMXBean os;
+    private final double targetLoad;
+    private final List<WorkerThread> runningThreads = new ArrayList<>();
+    private final List<WorkerThread> pausedThreads = new ArrayList<>();
+    private double lastLoad;
+
+    private ThreadManager(OperatingSystemMXBean os, double targetLoad) {
+      this.os = os;
+      this.targetLoad = targetLoad;
+    }
+
+    public void tick() {
+      double load = os.getProcessCpuLoad();
+      // only change things if we have new data
+      if (load != lastLoad) {
+        lastLoad = load;
+        if (load < targetLoad) {
+          WorkerThread thread;
+          if (pausedThreads.isEmpty()) {
+            thread = new WorkerThread("CPU Assault thread " + runningThreads.size());
+            thread.start();
+          } else {
+            thread = pausedThreads.remove(0);
+            synchronized (thread) {
+              thread.shouldPause = false;
+              thread.notify();
+            }
+          }
+          runningThreads.add(thread);
+        } else if (load > targetLoad + leeway && !runningThreads.isEmpty()) {
+          WorkerThread thread = runningThreads.remove(0);
+          thread.shouldPause = true;
+          pausedThreads.add(thread);
+        }
+        // make sure the managing thread doesn't generate too much load
         try {
-          thread.join();
-        } catch (InterruptedException e) {
-          thread.interrupt();
+          Thread.sleep(200);
+        } catch (InterruptedException ignored) {
         }
       }
     }
-    Logger.info("Chaos Monkey - cpu assault cleaned up");
+
+    public void stop() {
+      runningThreads.addAll(pausedThreads);
+      for (Thread thread : runningThreads) {
+        thread.interrupt();
+        while (thread.isAlive()) {
+          try {
+            thread.join();
+          } catch (InterruptedException e) {
+            thread.interrupt();
+          }
+        }
+      }
+    }
   }
 
-  private void waitUntil(int ms) {
-    final long startNano = System.nanoTime();
-    long now = startNano;
-    while (startNano + TimeUnit.MILLISECONDS.toNanos(ms) > now && isActive()) {
-      try {
-        long elapsed = TimeUnit.NANOSECONDS.toMillis(startNano - now);
-        Thread.sleep(Math.min(100, ms - elapsed));
-        now = System.nanoTime();
-      } catch (InterruptedException e) {
-        break;
+  private static class WorkerThread extends Thread {
+    private volatile boolean shouldPause = false;
+
+    public WorkerThread(String name) {
+      super(name);
+    }
+
+    @Override
+    public void run() {
+      long f1 = 0;
+      long f2 = 1;
+      while (!interrupted()) {
+        try {
+          if (shouldPause) {
+            synchronized (this) {
+              wait();
+            }
+          }
+          // next fibonacci number
+          f2 = f1 + f2;
+          f1 = f2 - f1;
+        } catch (InterruptedException e) {
+          // set interrupt flag for outer check
+          interrupt();
+        }
       }
     }
   }

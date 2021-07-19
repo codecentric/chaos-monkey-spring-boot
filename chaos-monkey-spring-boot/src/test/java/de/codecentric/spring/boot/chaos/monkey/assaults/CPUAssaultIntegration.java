@@ -32,18 +32,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /** @author Lukas Morawietz */
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {
-      "management.endpoints.web.exposure.include=chaosmonkey",
-      "management.endpoints.enabled-by-default=true",
-      "chaos.monkey.assaults.cpuActive=true",
-      "chaos.monkey.assaults.cpuLoadTargetFraction=1.0",
-      "chaos.monkey.assaults.cpuMillisecondsHoldLoad=2000",
-      "spring.profiles.active=chaos-monkey"
-    })
-class CPUAssaultIntegration {
+abstract class CPUAssaultIntegration {
+
+  @SpringBootTest(
+      classes = ChaosDemoApplication.class,
+      webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+      properties = {
+        "management.endpoints.web.exposure.include=chaosmonkey",
+        "management.endpoints.enabled-by-default=true",
+        "chaos.monkey.assaults.cpuActive=true",
+        "chaos.monkey.assaults.cpuLoadTargetFraction=0.3",
+        "chaos.monkey.assaults.cpuMillisecondsHoldLoad=5000",
+        "spring.profiles.active=chaos-monkey"
+      })
+  static class LowCPUAssaultIntegration extends CPUAssaultIntegration {}
+
+  @SpringBootTest(
+      classes = ChaosDemoApplication.class,
+      webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+      properties = {
+        "management.endpoints.web.exposure.include=chaosmonkey",
+        "management.endpoints.enabled-by-default=true",
+        "chaos.monkey.assaults.cpuActive=true",
+        "chaos.monkey.assaults.cpuLoadTargetFraction=0.8",
+        "chaos.monkey.assaults.cpuMillisecondsHoldLoad=5000",
+        "spring.profiles.active=chaos-monkey"
+      })
+  static class HighCPUAssaultIntegration extends CPUAssaultIntegration {}
+
+  @SpringBootTest(
+      classes = ChaosDemoApplication.class,
+      webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+      properties = {
+        "management.endpoints.web.exposure.include=chaosmonkey",
+        "management.endpoints.enabled-by-default=true",
+        "chaos.monkey.assaults.cpuActive=true",
+        "chaos.monkey.assaults.cpuLoadTargetFraction=1.0",
+        "chaos.monkey.assaults.cpuMillisecondsHoldLoad=5000",
+        "spring.profiles.active=chaos-monkey"
+      })
+  static class MaxCPUAssaultIntegration extends CPUAssaultIntegration {}
 
   @Autowired private CpuAssault cpuAssault;
 
@@ -81,19 +109,31 @@ class CPUAssaultIntegration {
     // make sure we timeout if we never reach the target fill fraction
     while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
       // if we reach target approximately (cpu filled up
-      // correctly) we can return (test is successful)
+      // correctly) check if it is still held after some time (and not just passed)
       if (isInRange(os.getProcessCpuLoad(), cpuLoadTargetFraction, 0.05)) {
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException ignored) {
+        }
+        assertTrue(
+            isInRange(os.getProcessCpuLoad(), cpuLoadTargetFraction, 0.05),
+            String.format(
+                "Failed to hold CPU load. Was %.2f %% but should have been %.2f %%",
+                os.getProcessCpuLoad() * 100, cpuLoadTargetFraction * 100));
         return;
+      }
+      // have to wait between checks to make sure the test thread doesn't generate too much load
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException ignored) {
       }
     }
 
     // if timeout reached
     fail(
-        "CPU did not fill up in time. Filled "
-            + os.getProcessCpuLoad() * 100
-            + "% but should have filled "
-            + cpuLoadTargetFraction * 100
-            + "%");
+        String.format(
+            "CPU did not fill up in time. Filled %.2f %% but should have filled %.2f %%",
+            os.getProcessCpuLoad() * 100, cpuLoadTargetFraction * 100));
   }
 
   /**
