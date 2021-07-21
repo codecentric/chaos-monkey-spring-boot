@@ -4,12 +4,12 @@ How to activate Chaos Monkey for Spring Boot in your existing Spring Boot App?
 
 There are two ways to integrate the Chaos Monkey for Spring Boot into your existing Spring Boot app. Either it is an integral part of your project and is listed in the POM or you can include it as an external dependency when starting your Spring Boot App.
 
-=== Dependency in your POM file ===
+=== Adding the dependency ===
 
-1.) Let´s activate Chaos Monkey for Spring Boot, only 2 steps are required
+1.) Add Chaos Monkey for Spring Boot as dependency for your project
 
-[source,xml,subs="verbatim,attributes"]
-.pom.xml
+[source,xml,indent=0,subs="verbatim,attributes",role="primary"]
+.Maven
 ----
 <dependency>
     <groupId>de.codecentric</groupId>
@@ -18,14 +18,27 @@ There are two ways to integrate the Chaos Monkey for Spring Boot into your exist
 </dependency>
 ----
 
-2.) Start your Spring Boot App Command-Line example:
+[source,groovy,indent=0,subs="verbatim,attributes",role="secondary"]
+.Gradle
+----
+implementation 'de.codecentric:chaos-monkey-spring-boot:{project-version}'
+----
+
+[source,kotlin,indent=0,subs="verbatim,attributes",role="secondary"]
+.Gradle Kotlin
+----
+implementation("de.codecentric:chaos-monkey-spring-boot:{project-version}")
+----
+
+2.) Start your Spring Boot App with the `chaos-monkey` spring profile enabled - command line example:
 
 [source,txt,subs="verbatim,attributes"]
 .command-line
 ----
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 ----
-=== External dependency JAR file
+==== External dependency JAR file
+If you dont want to add Chaos Monkey for Spring Boot to your dependencies, you can use the external jar solution instead.
 You can extend your existing application with the CM4SB and add it as an external dependency at startup. For this it is necessary to use the PropertiesLauncher of Spring Boot.
 
 You can specify the necessary properties to activate the CM4SB as an external property file using the parameter *--spring.config.location*.
