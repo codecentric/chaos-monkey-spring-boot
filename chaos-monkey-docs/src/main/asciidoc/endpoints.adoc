@@ -54,6 +54,10 @@ management.endpoints.web.exposure.include=health,info,chaosmonkey
 |<<assaultspost,/chaosmonkey/assaults>>
 |Change Assaults configuration
 |POST
+
+|<<assaultspost,/chaosmonkey/assaults/runtime/attack>>
+|Execute configured runtime Assault
+|POST
 |===
 
 
@@ -227,6 +231,14 @@ Assault config has changed
 ./chaosmonkey/assaults - Response 200 OK
 ----
 Assault config has changed
+----
+
+==== POST Assault Attack
+[[assaultsattack]]
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults/runtime/attack - Response 200 OK
+----
+Started runtime assaults
 ----
 
 === JMX Endpoint
