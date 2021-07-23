@@ -1,5 +1,6 @@
-package de.codecentric.spring.boot.chaos.monkey.configuration;
+package de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.slf4j.Logger;
