@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.util.AssertionErrors.assertFalse;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;

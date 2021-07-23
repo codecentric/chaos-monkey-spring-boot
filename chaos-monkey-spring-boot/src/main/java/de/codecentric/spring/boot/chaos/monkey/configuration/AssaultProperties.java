@@ -18,63 +18,42 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.annotation.Validated;
 
 /** @author Benjamin Wilms */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
-@Validated
-@AssaultPropertiesLatencyRangeConstraint
 public class AssaultProperties {
-  @Min(value = 1)
-  @Max(value = 10000)
   private int level = 1;
 
-  @Min(value = 1)
-  @Max(value = Integer.MAX_VALUE)
   private int latencyRangeStart = 1000;
 
-  @Min(value = 1)
-  @Max(value = Integer.MAX_VALUE)
   private int latencyRangeEnd = 3000;
 
   private boolean latencyActive = false;
 
   private boolean exceptionsActive = false;
 
-  @AssaultExceptionConstraint private AssaultException exception;
+  private AssaultException exception;
 
   private boolean killApplicationActive = false;
 
   private volatile boolean memoryActive = false;
 
-  @Min(value = 1500)
-  @Max(value = Integer.MAX_VALUE)
   private int memoryMillisecondsHoldFilledMemory = 90000;
 
-  @Min(value = 100)
-  @Max(value = 30000)
   private int memoryMillisecondsWaitNextIncrease = 1000;
 
-  @DecimalMax("1.0")
-  @DecimalMin("0.01")
   private double memoryFillIncrementFraction = 0.15;
 
-  @DecimalMax("1.0")
-  @DecimalMin("0.01")
   private double memoryFillTargetFraction = 0.25;
 
   @Value("${chaos.monkey.assaults.runtime.scope.assault.cron.expression:OFF}")
