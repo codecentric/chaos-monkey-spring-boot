@@ -19,6 +19,9 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
@@ -51,11 +54,14 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
   private String baseUrl;
 
   @BeforeEach
   void setUp() {
     baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
   }
 
   @Test
@@ -131,21 +137,22 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   // Assault Tests
   @Test
-  void getAssaultConfiguration() {
-    ResponseEntity<AssaultProperties> result =
-        testRestTemplate.getForEntity(baseUrl + "/assaults", AssaultProperties.class);
+  void getAssaultConfiguration() throws JsonProcessingException {
+    ResponseEntity<AssaultPropertiesUpdate> result =
+        testRestTemplate.getForEntity(baseUrl + "/assaults", AssaultPropertiesUpdate.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
     assertEquals(
-        chaosMonkeySettings.getAssaultProperties().toString(), result.getBody().toString());
+        objectMapper.writeValueAsString(chaosMonkeySettings.getAssaultProperties()),
+        objectMapper.writeValueAsString(result.getBody()));
   }
 
   @Test
   void postAssaultConfigurationGoodCase() {
     AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(10);
-    assaultProperties.setLatencyRangeEnd(100);
-    assaultProperties.setLatencyRangeStart(200);
+    assaultProperties.setLatencyRangeStart(100);
+    assaultProperties.setLatencyRangeEnd(200);
     assaultProperties.setLatencyActive(true);
     assaultProperties.setExceptionsActive(false);
     assaultProperties.setException(new AssaultException());
@@ -176,7 +183,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postAssaultConfigurationBadCaseLevelEmpty() {
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLatencyRangeEnd(100);
     assaultProperties.setLatencyRangeStart(200);
     assaultProperties.setLatencyActive(true);
@@ -189,7 +196,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postAssaultConfigurationBadCaseLatencyRangeEndEmpty() {
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(1000);
     assaultProperties.setLatencyRangeStart(200);
     assaultProperties.setLatencyActive(true);
@@ -202,7 +209,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postAssaultConfigurationBadCaseLatencyRangeStartEmpty() {
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(1000);
     assaultProperties.setLatencyRangeEnd(200);
     assaultProperties.setLatencyActive(true);
@@ -218,7 +225,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
     AssaultException exception = new AssaultException();
     exception.setType("SomeInvalidException");
 
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(10);
     assaultProperties.setLatencyRangeEnd(100);
     assaultProperties.setLatencyRangeStart(200);

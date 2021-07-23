@@ -2,13 +2,15 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdateLatencyRangeValidator;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
-class AssaultPropertiesLatencyRangeValidatorTest {
+class AssaultPropertiesUpdateLatencyRangeValidatorTest {
 
-  final AssaultPropertiesLatencyRangeValidator assaultPropertiesValidator =
-      new AssaultPropertiesLatencyRangeValidator();
+  final AssaultPropertiesUpdateLatencyRangeValidator assaultPropertiesValidator =
+      new AssaultPropertiesUpdateLatencyRangeValidator();
 
   @Test
   void rangeStartSmallerThanRangeEndIsValid() {
@@ -25,9 +27,24 @@ class AssaultPropertiesLatencyRangeValidatorTest {
     validateRange(1001, 1000, false);
   }
 
+  @Test
+  void noRangeIsValid() {
+    validateRange(null, null, true);
+  }
+
+  @Test
+  void onlyRangeStartIsNotValid() {
+    validateRange(1000, null, false);
+  }
+
+  @Test
+  void onlyRangeEndIsNotValid() {
+    validateRange(null, 1000, false);
+  }
+
   private void validateRange(
-      final int rangeStart, final int rangeEnd, final boolean expectedValidationResult) {
-    final AssaultProperties assaultProperties = new AssaultProperties();
+      final Integer rangeStart, final Integer rangeEnd, final boolean expectedValidationResult) {
+    final AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLatencyRangeStart(rangeStart);
     assaultProperties.setLatencyRangeEnd(rangeEnd);
 

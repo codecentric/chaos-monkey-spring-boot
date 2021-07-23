@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultExceptionConstraint;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+
 import java.util.List;
 import java.util.function.Consumer;
 import javax.validation.constraints.DecimalMax;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 @NoArgsConstructor
 @Validated
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@AssaultPropertiesUpdateLatencyRangeConstraint
 public class AssaultPropertiesUpdate {
   @Nullable
   @Min(value = 1)
