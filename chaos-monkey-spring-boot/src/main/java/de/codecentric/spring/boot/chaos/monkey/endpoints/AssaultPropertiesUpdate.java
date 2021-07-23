@@ -78,7 +78,7 @@ public class AssaultPropertiesUpdate {
 
   @Nullable
   @DecimalMax("1.0")
-  @DecimalMin("0.01")
+  @DecimalMin("0.1")
   private Double cpuLoadTargetFraction;
 
   @Nullable private String runtimeAssaultCronExpression;
