@@ -22,7 +22,7 @@
 
   <properties>
     <!-- project version -->
-    <revision>2.5.1-SNAPSHOT</revision>
+    <revision>2.5.2-SNAPSHOT</revision>
     <!-- default settings -->
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -174,6 +174,12 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <groupId>org.apache.maven.plugins</groupId>
         <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <includes>
+            <include>**/*Test*.java</include>
+            <include>**/*Integration*.java</include>
+          </includes>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
