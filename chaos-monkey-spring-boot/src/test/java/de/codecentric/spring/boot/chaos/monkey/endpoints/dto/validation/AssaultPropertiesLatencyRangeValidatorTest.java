@@ -3,7 +3,6 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultPropertiesUpdateLatencyRangeValidator;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 

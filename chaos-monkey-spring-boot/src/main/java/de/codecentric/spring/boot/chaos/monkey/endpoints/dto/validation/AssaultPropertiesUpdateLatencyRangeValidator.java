@@ -1,7 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation;
 
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
