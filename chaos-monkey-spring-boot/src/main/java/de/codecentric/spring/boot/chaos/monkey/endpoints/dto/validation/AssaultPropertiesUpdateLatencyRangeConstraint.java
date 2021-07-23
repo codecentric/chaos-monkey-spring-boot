@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.endpoints;
+package de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

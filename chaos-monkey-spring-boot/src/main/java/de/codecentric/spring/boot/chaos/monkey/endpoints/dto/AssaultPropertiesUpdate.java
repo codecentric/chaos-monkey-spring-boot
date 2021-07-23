@@ -1,8 +1,7 @@
-package de.codecentric.spring.boot.chaos.monkey.endpoints;
+package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultExceptionConstraint;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 
 import java.util.List;
@@ -11,6 +10,9 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultExceptionConstraint;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultPropertiesUpdateLatencyRangeConstraint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -45,7 +47,8 @@ public class AssaultPropertiesUpdate {
 
   @Nullable private Boolean exceptionsActive;
 
-  @AssaultExceptionConstraint private AssaultException exception;
+  @AssaultExceptionConstraint
+  private AssaultException exception;
 
   @Nullable private Boolean killApplicationActive;
 
