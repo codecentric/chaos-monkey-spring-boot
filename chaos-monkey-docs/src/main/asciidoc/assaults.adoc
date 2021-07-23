@@ -2,29 +2,39 @@
 == Assaults ==
 
 Assaults are the heart of Monkey's Chaos and he makes use of them based on your configuration.
-Following assaults are actual provided.
+The following assaults are provided:
 
-=== Latency Assault ===
+=== Request Assaults ===
+
+These assaults attack some point of your application and are triggered by a <<watcher>>, for example when a method of your component is called.
+
+==== Latency Assault ====
 
 If Latency Assault is enabled, latency is added to a request. You control the number of requests where this should occur via the level.
 
-=== Exception Assault ===
+==== Exception Assault ====
 
 You can determine at runtime whether an exception should occur when the method is used.
 
 Thanks to the great community, the Chaos Monkey for Spring Boot can throw any kind of RuntimeException. You can configure the required exception at runtime via the Actuator Endpoint.
 
-=== AppKiller Assault ===
+=== Runtime Assaults ===
+
+These assaults attack your whole application.
+
+NOTE: You need to trigger these Assaults yourself either using <<chaos_monkey_assault_scheduler, Assault Scheduling>> or the <<assaultsattack, Chaos Monkey Endpoint>>.
+
+==== AppKiller Assault ====
 
 When the configured methods are called in the application, the Chaos Monkey will shut down the application.
 
-=== Memory Assault ===
+==== Memory Assault ====
 
 Memory Assaults attack the memory of the Java Virtual Machine.
 
 IMPORTANT: The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!
 
-
 === Chaos Monkey Assault Scheduler ===
+[[chaos_monkey_assault_scheduler]]
 
-You can schedule Chaos Monkey Runtime Assaults (Memory, AppKiller) using cron expressions.
+You can schedule Chaos Monkey Runtime Assaults (Memory, AppKiller) using cron expressions. See also <<configuration>>
