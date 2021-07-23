@@ -1,10 +1,9 @@
 [[getting-started]]
 == Getting started ==
-How to activate Chaos Monkey for Spring Boot in your existing Spring Boot App?
+There are two ways to active Chaos Monkey for Spring Boot (CM4SB) into your existing Spring Boot app. Either it is an integral part of your project and is added to your regular dependencies (eg. `pom.xml/build.gradle(.kts)`) or you can include it as an external dependency when starting your Spring Boot App.
 
-There are two ways to integrate the Chaos Monkey for Spring Boot into your existing Spring Boot app. Either it is an integral part of your project and is listed in the POM or you can include it as an external dependency when starting your Spring Boot App.
-
-=== Adding the dependency ===
+=== Adding Chaos Monkey for Spring Boot ===
+==== As dependency
 
 1.) Add Chaos Monkey for Spring Boot as dependency for your project
 
@@ -37,7 +36,7 @@ implementation("de.codecentric:chaos-monkey-spring-boot:{project-version}")
 ----
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 ----
-==== External dependency JAR file
+==== Using external dependency jar file
 If you dont want to add Chaos Monkey for Spring Boot to your dependencies, you can use the external jar solution instead.
 You can extend your existing application with the CM4SB and add it as an external dependency at startup. For this it is necessary to use the PropertiesLauncher of Spring Boot.
 
@@ -45,8 +44,8 @@ You can specify the necessary properties to activate the CM4SB as an external pr
 
 https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files[Spring Boot external config documentation]
 
-This special JAR file is also available via Maven:
-[source,xml,subs="verbatim,attributes"]
+This special JAR file is also available through Maven Central:
+[source,xml,subs="verbatim,attributes",role="primary"]
 .pom.xml
 ----
 <dependency>
@@ -56,6 +55,19 @@ This special JAR file is also available via Maven:
     <version>{project-version}</version>
 </dependency>
 ----
+
+[source,groovy,indent=0,subs="verbatim,attributes",role="secondary"]
+.Gradle
+----
+implementation 'de.codecentric:chaos-monkey-spring-boot:{project-version}:jar-with-dependencies'
+----
+
+[source,kotlin,indent=0,subs="verbatim,attributes",role="secondary"]
+.Gradle Kotlin
+----
+implementation("de.codecentric:chaos-monkey-spring-boot:{project-version}:jar-with-dependencies")
+----
+
 Start your Spring Boot application, add Chaos Monkey for Spring Boot JAR and properties.
 [source,txt,subs="verbatim,attributes"]
 .command-line
@@ -67,12 +79,12 @@ java -cp your-app.jar
     --spring.config.location=file:./chaos-monkey.properties
 ----
 
-It is your decision how you want to integrate and use the CM4SB. There is no difference between the two possibilities.
+It is your decision how you want to integrate and use the CM4SB. There is no difference between the two possibilities. However its easier to add it as a dependency so you dont need to adjust the starting of your application.
 
 === Minimal CM4SB configuration via property file
-In this example, we want to make latency attacks on our *@Service* annotated classes.
+In this example, we want to make latency attacks on our `*@Service*` annotated classes.
 
-[source,txt,subs="verbatim,attributes"]
+[source,txt,subs="verbatim,attributes",role="primary"]
 .application.properties:
 ----
 spring.profiles.active=chaos-monkey
@@ -81,7 +93,7 @@ chaos.monkey.enabled=true
 chaos.monkey.watcher.service=true
 chaos.monkey.assaults.latencyActive=true
 ----
-[source,yml,subs="verbatim,attributes"]
+[source,yml,subs="verbatim,attributes",role="secondary"]
 .application.yml:
 ----
 spring:
