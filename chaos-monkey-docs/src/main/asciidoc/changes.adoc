@@ -1,6 +1,8 @@
 [[changes]]
 == Changes in {project-version}
 
+Built with Spring Boot {spring-boot-version}
+
 === Bug Fixes
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/251[#251] Fix missing AssaultPropertiesUpdate validation.
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
