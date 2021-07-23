@@ -64,6 +64,24 @@
                             </attributes>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>output-docbook</id>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>src/main/asciidoc</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-docbook</outputDirectory>
+                            <backend>docbook</backend>
+                            <doctype>book</doctype>
+                            <attributes>
+                                <project-version>${project.version}</project-version>
+                                <spring-boot-version>${spring-boot.version}</spring-boot-version>
+                                <commit-id>${git.commit.id.abbrev}</commit-id>
+                                <commit-time>${git.commit.time}</commit-time>
+                            </attributes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
