@@ -20,6 +20,9 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeySettingsDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

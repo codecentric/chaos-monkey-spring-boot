@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.endpoints;
+package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;

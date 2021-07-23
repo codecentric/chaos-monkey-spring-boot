@@ -15,7 +15,7 @@
  *
  */
 
-package de.codecentric.spring.boot.chaos.monkey.endpoints;
+package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;

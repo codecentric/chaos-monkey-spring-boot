@@ -1,6 +1,8 @@
 [[changes]]
 == Changes in {project-version}
 
+Built with Spring Boot {spring-boot-version}
+
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 

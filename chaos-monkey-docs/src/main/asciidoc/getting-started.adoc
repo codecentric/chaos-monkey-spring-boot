@@ -54,6 +54,8 @@ java -cp your-app.jar
     --spring.config.location=file:./chaos-monkey.properties
 ----
 
+CAUTION: Each Chaos Monkey version is built for a specific Spring Boot version, which can be found on the https://github.com/codecentric/chaos-monkey-spring-boot/releases[release page]. If you're using a different Spring Boot version in your application, Chaos Monkey might break when it is added as external jar.
+
 It is your decision how you want to integrate and use the CM4SB. There is no difference between the two possibilities.
 
 === Minimal CM4SB configuration via property file

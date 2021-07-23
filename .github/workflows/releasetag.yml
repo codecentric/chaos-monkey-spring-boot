@@ -50,16 +50,24 @@ jobs:
       - name: Set TAG_NAME without ref
         run: echo "TAG_NAME_WITHOUT_REF=${TAG_NAME//refs\/tags\/}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
-      - name: Convert changelog to docbook
-        uses: docker://asciidoctor/docker-asciidoctor:1.7
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
         with:
-          args: "asciidoctor -b docbook chaos-monkey-docs/src/main/asciidoc/changes.adoc"
+          distribution: 'adopt'
+          java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Convert changelog to docbook
+        run: ./mvnw asciidoctor:process-asciidoc@output-docbook -pl chaos-monkey-docs
       - name: Convert changelog from docbook to markdown
         uses: docker://pandoc/core:2.14
         with:
-          args: "-f docbook -t gfm -o changes.md chaos-monkey-docs/src/main/asciidoc/changes.xml --wrap=none"
-      - name: Replace {project-version} with release version
-        run: sed -i "s/{project-version}/$TAG_NAME_WITHOUT_REF/g" changes.md
+          args: "-f docbook -t gfm -o changes.md chaos-monkey-docs/target/generated-docbook/changes.xml --wrap=none"
       - name: Create Github Release
         uses: softprops/action-gh-release@v1
         with:
