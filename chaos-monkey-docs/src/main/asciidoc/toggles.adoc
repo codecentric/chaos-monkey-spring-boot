@@ -1,0 +1,114 @@
+[[Toggles]]
+== Chaos Toggles and Name Mapping ==
+Chaos Monkey for Spring Boot supports toggles, also known as feature flags. Feature flags are evaluated on every request, allowing the ability to conditionally enable an assault.
+
+Toggles provide:
+
+* An additional mechanism to enable or disable assaults
+* Allow the ability to limit chaos assaults to a specific user or role
+* Provides an extension mechanism for users to implement their own logic
+
+'''
+
+=== Implementation
+==== Defaults
+By default, all toggles are enabled and respect the Chaos Monkey properties used for configuration.
+
+NOTE: Toggles only control if an already configured assault will be used. The assault must be configured via the typical properties or actuator before a toggle will be evaluated.
+
+==== Using Unleash to control toggles
+https://github.com/Unleash/unleash[Unleash] is an open source service and SDK that can be used to configure toggles.
+
+Chaos Monkey includes a minimal configuration for Unleash. To leverage it:
+
+1. Include the https://github.com/unleash/unleash-client-java[Unleash Java SDK] on your classpath
+2. https://github.com/unleash/unleash-client-java#create-a-new-unleash-instance[Configure the Unleash] SDK as needed
+3. Enable the property `chaos.monkey.toggle.unleash.enabled=true`
+
+NOTE: When using Unleash all toggles are DISABLED by default. So if the Chaos Monkey properties are enabled, but they don't seem to be functioning, check your Unleash toggles.
+
+The default ChaosToggleNameMapper is in place and will check for toggles named the following (based on the target of an assault):
+
+ chaos.monkey.controller
+ chaos.monkey.component
+ chaos.monkey.repository
+ chaos.monkey.restController
+ chaos.monkey.service
+ chaos.monkey.unknown
+
+If the assault has been enabled via properties then enabling that toggle in Unleash with the matching name will allow the corresponding assault to happen.
+
+=== Creating your own
+==== ChaosToggleNameMapper
+
+To control the names of the toggles, you can provide a bean that implements the `ChaosToggleNameMapper` interface.
+
+[source,java,subs="verbatim,attributes"]
+.ChaosToggleNameMapper interface:
+----
+public interface ChaosToggleNameMapper {
+  String mapName(ChaosTarget type, String name);
+}
+----
+
+The supplied name to the interface is the class name and method being assaulted.
+
+[source,java,subs="verbatim,attributes"]
+.MyVeryDetailedToggleNameMapper implementation:
+----
+public class MyVeryDetailedToggleNameMapper extends DefaultChaosToggleNameMapper {
+  public MyAppToggleMapper(String prefix) {
+    super(prefix);
+  }
+
+  @Override
+  public String mapName(ChaosTarget type, String name) {
+    return togglePrefix + "." + type.getName() + "." + name;
+  }
+}
+----
+
+This would create an extremely detailed toggle name so that individual methods and classes could be toggled individually:
+
+ chaos.monkey.controller.com.example.chaos.monkey.toggledemo.controller.HelloController.sayHello
+
+==== ChaosToggles Interface
+The `ChaosToggles` interface is where the actual check to enable or disable an assault is.
+
+[source,java,subs="verbatim,attributes"]
+.ChaosToggles interface:
+----
+public interface ChaosToggles {
+  boolean isEnabled(String toggleName);
+}
+----
+
+To add you own logic to control which toggles are enabled, you can provide a bean that implements the `ChaosToggles` interface.
+
+[source,java,subs="verbatim,attributes"]
+.MyHeaderChaosToggles implementation:
+----
+public class MyParamChaosToggles implements ChaosToggles {
+  @Override
+  public boolean isEnabled(String toggleName) {
+    HttpServletRequest curRequest =
+                    ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+    String chaosParam =  curRequest.getParameter("chaos");
+    return chaosParam != null && toggleName.startsWith(chaosParam);
+  }
+}
+----
+
+This implementation would enable chaos attacks for requests that include a `chaos` request parameter that starts with the toggle name.
+
+[source,curl,subs="verbatim,attributes"]
+----
+curl http://localhost:8080/hello?chaos=chaos.monkey.repository
+----
+
+=== Toggle Recommendations
+
+By leveraging toggles it is possible to leave Chaos Monkey enabled in all environments, and conditionally trigger assaults based on feature flags or custom logic.
+
+Make sure that any logic in custom `ChaosToggles` implementations are quick, since they can potentially be called multiple times per request.

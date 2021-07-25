@@ -17,27 +17,18 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
+import com.sun.management.OperatingSystemMXBean;
+import de.codecentric.spring.boot.chaos.monkey.assaults.*;
+import de.codecentric.spring.boot.chaos.monkey.component.*;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJDBC;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJPA;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.*;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.List;
 import org.slf4j.Logger;
@@ -47,10 +38,7 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -65,6 +53,11 @@ import org.springframework.util.StreamUtils;
   ChaosMonkeyProperties.class,
   AssaultProperties.class,
   WatcherProperties.class
+})
+@Import({
+  UnleashChaosConfiguration.class,
+  ChaosMonkeyWebClientConfiguration.class,
+  ChaosMonkeyRestTemplateConfiguration.class
 })
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
@@ -134,9 +127,36 @@ public class ChaosMonkeyConfiguration {
   }
 
   @Bean
+  public CpuAssault cpuAssault() {
+    return new CpuAssault(
+        ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings(), publisher());
+  }
+
+  @Bean
   public ChaosMonkeyRequestScope chaosMonkeyRequestScope(
-      List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults) {
-    return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher());
+      List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults,
+      List<ChaosMonkeyAssault> allAssaults,
+      ChaosToggles chaosToggles,
+      ChaosToggleNameMapper chaosToggleNameMapper) {
+    return new ChaosMonkeyRequestScope(
+        settings(),
+        chaosMonkeyAssaults,
+        allAssaults,
+        publisher(),
+        chaosToggles,
+        chaosToggleNameMapper);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ChaosToggleNameMapper.class)
+  public ChaosToggleNameMapper chaosToggleNameMapper(ChaosMonkeyProperties chaosMonkeyProperties) {
+    return new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix());
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ChaosToggles.class)
+  public ChaosToggles chaosToggles() {
+    return new DefaultChaosToggles();
   }
 
   @Bean
@@ -199,6 +219,14 @@ public class ChaosMonkeyConfiguration {
   public SpringRepositoryAspectJDBC repositoryAspectJdbc(
       ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
     return new SpringRepositoryAspectJDBC(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  }
+
+  @Bean
+  @DependsOn("chaosMonkeyRequestScope")
+  @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
+  public SpringBootHealthIndicatorAspect springBootHealthIndicatorAspect(
+      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+    return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope, watcherProperties);
   }
 
   @Bean

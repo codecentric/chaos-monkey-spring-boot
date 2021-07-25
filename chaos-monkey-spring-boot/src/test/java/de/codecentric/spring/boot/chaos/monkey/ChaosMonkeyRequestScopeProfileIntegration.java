@@ -28,6 +28,8 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,7 +72,10 @@ class ChaosMonkeyRequestScopeProfileIntegration {
             monkeySettings,
             Arrays.asList(latencyAssault, exceptionAssault),
             Collections.emptyList(),
-            metricsMock);
+            metricsMock,
+            new DefaultChaosToggles(),
+            new DefaultChaosToggleNameMapper(
+                monkeySettings.getChaosMonkeyProperties().getTogglePrefix()));
   }
 
   @Test

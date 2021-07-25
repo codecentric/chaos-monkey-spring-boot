@@ -77,8 +77,7 @@ press the gear button and choose `Import Scheme`. Then, select the downloaded th
 == Working With The Code
 Considering these recommendations will help us in getting your pull request merged. 
 
-* Add the ASF license header comment to all new `.java` files (you can copy from existing files in the project). 
-* Add yourself as an `@author` to the `.java` files you modify.
+* Add the ASF license header comment to all new `.java` files (you can copy from existing files in the project).
 * Document your changes. This includes in code documentation but also user documentation.
 * Test your changes. Use `./mvnw verify` to run all build pipeline checks.
 * It would be great to follow Chris Beam's recommendations on https://chris.beams.io/posts/git-commit/[How to Write a Git Commit Message]. 

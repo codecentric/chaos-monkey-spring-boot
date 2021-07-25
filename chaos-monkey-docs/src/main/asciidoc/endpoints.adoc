@@ -1,6 +1,6 @@
 [[endpoints]]
 == Spring Boot Actuator Endpoints ==
-Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP]. This allows you to change configuration at runtime.
+Chaos Monkey for Spring Boot offers you some built in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP]. This allows you to change configuration at runtime.
 
 '''
 
@@ -53,6 +53,10 @@ management.endpoints.web.exposure.include=health,info,chaosmonkey
 
 |<<assaultspost,/chaosmonkey/assaults>>
 |Change Assaults configuration
+|POST
+
+|<<assaultspost,/chaosmonkey/assaults/runtime/attack>>
+|Execute configured runtime Assault
 |POST
 |===
 
@@ -162,6 +166,9 @@ Watcher config has changed
 "memoryMillisecondsWaitNextIncrease": 1000,
 "memoryFillIncrementFraction": 0.15,
 "memoryFillTargetFraction": 0.25,
+"cpuActive": false,
+"cpuMillisecondsHoldLoad": 90000,
+"cpuLoadTargetFraction": 0.9,
 "runtimeAssaultCronExpression": "OFF",
 "watchedCustomServices": null
 }
@@ -229,6 +236,14 @@ Assault config has changed
 Assault config has changed
 ----
 
+==== POST Assault Attack
+[[assaultsattack]]
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults/runtime/attack - Response 200 OK
+----
+Started runtime assaults
+----
+
 === JMX Endpoint
 
 Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
@@ -279,6 +294,10 @@ component=false
 
 |toggleMemoryAssault
 |Toggle Memory Assault status
+|New value (true/false)
+
+|toggleCpuAssault
+|Toggle CPU Assault status
 |New value (true/false)
 
 |isChaosMonkeyActive

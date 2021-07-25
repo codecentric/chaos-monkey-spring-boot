@@ -34,6 +34,7 @@ A detailed explanation of when and why you should use the Chaos Monkey for Sprin
 
 include::getting-started.adoc[]
 include::endpoints.adoc[]
+include::toggles.adoc[]
 include::configuration.adoc[]
 include::watcher.adoc[]
 include::assaults.adoc[]

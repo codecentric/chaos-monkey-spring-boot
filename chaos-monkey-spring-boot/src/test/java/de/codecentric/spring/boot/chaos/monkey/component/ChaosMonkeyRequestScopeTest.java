@@ -28,6 +28,8 @@ import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,14 +66,16 @@ class ChaosMonkeyRequestScopeTest {
             chaosMonkeySettings,
             Arrays.asList(latencyAssault, exceptionAssault),
             Collections.emptyList(),
-            metricEventPublisherMock);
+            metricEventPublisherMock,
+            new DefaultChaosToggles(),
+            new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
   }
 
   @Test
   void givenChaosMonkeyExecutionIsDisabledExpectNoInteractions() {
     given(chaosMonkeyProperties.isEnabled()).willReturn(false);
 
-    chaosMonkeyRequestScope.callChaosMonkey(null);
+    chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
     verify(latencyAssault, never()).attack();
     verify(exceptionAssault, never()).attack();
@@ -94,7 +98,7 @@ class ChaosMonkeyRequestScopeTest {
       given(latencyAssault.isActive()).willReturn(true);
       given(assaultProperties.chooseAssault(2)).willReturn(0);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(latencyAssault, times(1)).attack();
     }
@@ -105,7 +109,7 @@ class ChaosMonkeyRequestScopeTest {
       given(latencyAssault.isActive()).willReturn(true);
       given(assaultProperties.chooseAssault(2)).willReturn(1);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(exceptionAssault, times(1)).attack();
     }
@@ -115,7 +119,7 @@ class ChaosMonkeyRequestScopeTest {
       given(latencyAssault.isActive()).willReturn(true);
       given(exceptionAssault.isActive()).willReturn(false);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(latencyAssault, times(1)).attack();
     }
@@ -125,7 +129,7 @@ class ChaosMonkeyRequestScopeTest {
       given(exceptionAssault.isActive()).willReturn(true);
       given(latencyAssault.isActive()).willReturn(false);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(exceptionAssault, times(1)).attack();
     }
@@ -136,7 +140,7 @@ class ChaosMonkeyRequestScopeTest {
       given(latencyAssault.isActive()).willReturn(true);
       given(assaultProperties.chooseAssault(2)).willReturn(1);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(exceptionAssault, times(1)).attack();
     }
@@ -148,7 +152,7 @@ class ChaosMonkeyRequestScopeTest {
       given(latencyAssault.isActive()).willReturn(true);
       given(assaultProperties.chooseAssault(2)).willReturn(0);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(latencyAssault, times(1)).attack();
     }
@@ -158,7 +162,7 @@ class ChaosMonkeyRequestScopeTest {
       given(exceptionAssault.isActive()).willReturn(true);
       given(latencyAssault.isActive()).willReturn(false);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(exceptionAssault, times(1)).attack();
     }
@@ -168,14 +172,14 @@ class ChaosMonkeyRequestScopeTest {
       given(exceptionAssault.isActive()).willReturn(false);
       given(latencyAssault.isActive()).willReturn(true);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(latencyAssault, times(1)).attack();
     }
 
     @Test
     void givenNoAssaultsActiveExpectNoAttack() {
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(latencyAssault, never()).attack();
       verify(exceptionAssault, never()).attack();
@@ -186,7 +190,7 @@ class ChaosMonkeyRequestScopeTest {
       given(assaultProperties.getLevel()).willReturn(1000);
       given(assaultProperties.getTroubleRandom()).willReturn(9);
 
-      chaosMonkeyRequestScope.callChaosMonkey(null);
+      chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
       verify(latencyAssault, never()).attack();
       verify(exceptionAssault, never()).attack();
@@ -201,7 +205,7 @@ class ChaosMonkeyRequestScopeTest {
       given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive())
           .willReturn(true);
 
-      chaosMonkeyRequestScope.callChaosMonkey("notInListService");
+      chaosMonkeyRequestScope.callChaosMonkey(null, "notInListService");
 
       verify(latencyAssault, never()).attack();
       verify(exceptionAssault, never()).attack();
@@ -219,7 +223,7 @@ class ChaosMonkeyRequestScopeTest {
       given(latencyAssault.isActive()).willReturn(true);
       given(assaultProperties.chooseAssault(2)).willReturn(0);
 
-      chaosMonkeyRequestScope.callChaosMonkey(customService);
+      chaosMonkeyRequestScope.callChaosMonkey(null, customService);
 
       verify(latencyAssault, times(1)).attack();
       verify(exceptionAssault, never()).attack();
@@ -235,9 +239,11 @@ class ChaosMonkeyRequestScopeTest {
               chaosMonkeySettings,
               Collections.emptyList(),
               Collections.singletonList(customAssault),
-              metricEventPublisherMock);
+              metricEventPublisherMock,
+              new DefaultChaosToggles(),
+              new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
 
-      customScope.callChaosMonkey("foo");
+      customScope.callChaosMonkey(null, "foo");
       verify(customAssault).attack();
     }
   }
