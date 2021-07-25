@@ -27,7 +27,8 @@ public class ChaosMonkeyCondition implements Condition {
   @Override
   public boolean matches(
       ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
+
     return conditionContext.getEnvironment().acceptsProfiles(Profiles.of("chaos-monkey"))
-        || "enabled".equals(System.getProperty("CHAOS_MONKEY"));
+        || Boolean.parseBoolean(System.getProperty("LOAD_CHAOS_MONKEY"));
   }
 }
