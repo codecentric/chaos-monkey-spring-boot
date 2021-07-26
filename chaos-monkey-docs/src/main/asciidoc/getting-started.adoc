@@ -23,7 +23,11 @@ There are two ways to integrate the Chaos Monkey for Spring Boot into your exist
 [source,txt,subs="verbatim,attributes"]
 .command-line
 ----
+# spring profile
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
+
+# system property
+java -jar your-app.jar -DLOAD_CHAOS_MONKEY=true
 ----
 === External dependency JAR file
 You can extend your existing application with the CM4SB and add it as an external dependency at startup. For this it is necessary to use the PropertiesLauncher of Spring Boot.

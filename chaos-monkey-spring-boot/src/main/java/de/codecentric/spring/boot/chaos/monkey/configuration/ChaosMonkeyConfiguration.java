@@ -48,7 +48,7 @@ import org.springframework.util.StreamUtils;
 
 /** @author Benjamin Wilms */
 @Configuration
-@Profile("chaos-monkey")
+@Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({
   ChaosMonkeyProperties.class,
   AssaultProperties.class,
