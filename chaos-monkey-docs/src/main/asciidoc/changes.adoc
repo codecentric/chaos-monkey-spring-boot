@@ -4,6 +4,7 @@
 Built with Spring Boot {spring-boot-version}
 
 === Bug Fixes
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/252[#252] Update Maven Wrapper from 0.5.5 to 0.5.6.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/251[#251] Fix missing AssaultPropertiesUpdate validation.
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
