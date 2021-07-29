@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import java.time.Clock;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
@@ -78,13 +79,15 @@ public class ChaosMonkeyJmxEndpoint {
   @WriteOperation
   public String enableChaosMonkey() {
     this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return "Chaos Monkey is enabled";
+    return "Chaos Monkey is enabled\nActivatedAt:"
+        + Clock.systemDefaultZone().instant().atZone(Clock.systemDefaultZone().getZone());
   }
 
   @WriteOperation
   public String disableChaosMonkey() {
     this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return "Chaos Monkey is disabled";
+    return "Chaos Monkey is disabled\nDeactivatedAt:"
+        + Clock.systemDefaultZone().instant().atZone(Clock.systemDefaultZone().getZone());
   }
 
   @ReadOperation

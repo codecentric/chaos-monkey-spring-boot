@@ -18,6 +18,7 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +31,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import java.util.Objects;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -273,7 +275,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
         testRestTemplate.postForEntity(baseUrl + "/enable", null, String.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertEquals("Chaos Monkey is enabled", result.getBody());
+    assertTrue(Objects.requireNonNull(result.getBody()).startsWith("Chaos Monkey is enabled"));
   }
 
   // DISABLE CHAOS MONKEY
@@ -284,7 +286,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
         testRestTemplate.postForEntity(baseUrl + "/disable", null, String.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertEquals("Chaos Monkey is disabled", result.getBody());
+    assertTrue(Objects.requireNonNull(result.getBody()).startsWith("Chaos Monkey is disabled"));
   }
 
   private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {

@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
@@ -103,13 +104,13 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @Test
   void enableChaosMonkey() {
-    assertThat(chaosMonkeyJmxEndpoint.enableChaosMonkey(), is("Chaos Monkey is enabled"));
+    assertThat(chaosMonkeyJmxEndpoint.enableChaosMonkey(), startsWith("Chaos Monkey is enabled"));
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
   }
 
   @Test
   void disableChaosMonkey() {
-    assertThat(chaosMonkeyJmxEndpoint.disableChaosMonkey(), is("Chaos Monkey is disabled"));
+    assertThat(chaosMonkeyJmxEndpoint.disableChaosMonkey(), startsWith("Chaos Monkey is disabled"));
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
   }
 
