@@ -110,6 +110,9 @@ management:
     "memoryMillisecondsWaitNextIncrease": 1000,
     "memoryFillIncrementFraction": 0.15,
     "memoryFillTargetFraction": 0.25,
+    "cpuActive": true,
+    "cpuMillisecondsHoldLoad": 90000,
+    "cpuLoadTargetFraction": 0.9,
     "runtimeAssaultCronExpression": "OFF"
   },
   "watcherProperties": {
@@ -175,11 +178,14 @@ Chaos Monkey is disabled
 ./chaosmonkey/watchers - Request
 ----
 {
-"controller": true,
-"restController": true,
-"service": true,
-"repository": true,
-"component": true
+  "controller": true,
+  "restController": true,
+  "service": true,
+  "repository": true,
+  "component": false,
+  "restTemplate": false,
+  "webClient": false,
+  "actuatorHealth": false
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -208,6 +214,9 @@ Watcher config has changed
   "memoryMillisecondsWaitNextIncrease": 1000,
   "memoryFillIncrementFraction": 0.15,
   "memoryFillTargetFraction": 0.25,
+  "cpuActive": true,
+  "cpuMillisecondsHoldLoad": 90000,
+  "cpuLoadTargetFraction": 0.9,
   "runtimeAssaultCronExpression": "OFF"
 }
 ----
@@ -218,12 +227,12 @@ Watcher config has changed
 ./chaosmonkey/assaults - Request
 ----
 {
-"level": 5,
-"latencyRangeStart": 2000,
-"latencyRangeEnd": 5000,
-"latencyActive": true,
-"exceptionsActive": true,
-"killApplicationActive": false
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -236,13 +245,16 @@ Assault config has changed
 ./chaosmonkey/assaults - Request
 ----
 {
-"level": 5,
-"latencyRangeStart": 2000,
-"latencyRangeEnd": 5000,
-"latencyActive": true,
-"exceptionsActive": true,
-"killApplicationActive": false,
-"watchedCustomServices": [ "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello","com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"]
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false,
+  "watchedCustomServices": [
+    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
+    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"
+  ]
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -255,17 +267,21 @@ Assault config has changed
 ./chaosmonkey/assaults - Request
 ----
 {
-"level": 5,
-"latencyRangeStart": 2000,
-"latencyRangeEnd": 5000,
-"latencyActive": true,
-"exceptionsActive": true,
-"killApplicationActive": false,
-"exception": {
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false,
+  "exception": {
     "type": "java.lang.IllegalArgumentException",
-    "arguments": [{
-      "className": "java.lang.String",
-      "value": "custom illegal argument exception"}] },
+    "arguments": [
+      {
+        "className": "java.lang.String",
+        "value": "custom illegal argument exception"
+      }
+    ]
+  }
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -286,7 +302,7 @@ Started runtime assaults
 
 Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
 
-image::jconsoleChaosMonkey.png[JMX Console]
+image::images/jconsoleChaosMonkey.png[JMX Console]
 
 |===
 |Operation |Description |Response example

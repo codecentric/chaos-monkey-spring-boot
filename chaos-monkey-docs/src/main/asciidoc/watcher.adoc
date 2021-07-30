@@ -37,31 +37,49 @@ You can customize the behavior of all watchers using the property *watchedCustom
 should be attacked. If no signatures are stored, all classes and public methods, recognized by the watchers are attacked by default.
 
 You can either maintain the list in your application properties or adjust it at runtime using the Spring Boot Actuator Endpoint.
+
+See following examples:
 [source,json,subs="verbatim,attributes"]
-.Example Chaos Monkey Spring Boot Actuator Endpoint
+.Chaos Monkey Spring Boot Actuator Endpoint (/actuator/chaosmonkey/assaults)
 ----
 {
-"level": 3,
-"latencyRangeStart": 1000,
-"latencyRangeEnd": 3000,
-"latencyActive": true,
-"exceptionsActive": false,
-"killApplicationActive": false,
- "watchedCustomServices": [ "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello","com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"]
+  "level": 3,
+  "latencyActive": true,
+  "latencyRangeStart": 1000,
+  "latencyRangeEnd": 3000,
+  "watchedCustomServices": [
+    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
+    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"
+  ]
 }
 ----
 
 
-
-[source,txt,subs="verbatim,attributes"]
-.Example application.properties:
+[source,txt,subs="verbatim,attributes",role="primary"]
+.application.properties:
 ----
-...
+chaos.monkey.enabled=true
 chaos.monkey.watcher.controller=true
 chaos.monkey.assaults.level=1
-
-chaos.monkey.assaults.watchedCustomServices=com.example.chaosdemo.HelloController.sayHello,com.example.chaosdemo.HelloController.sayGoodbye
-
-...
+chaos.monkey.assaults.latency-active=true
+chaos.monkey.assaults.watchedCustomServices=com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello,com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye
 ----
+
+[source,yaml,subs="verbatim,attributes",role="secondary"]
+.application.yml:
+----
+chaos:
+  monkey:
+    enabled: true
+    watcher:
+      controller: true
+    assaults:
+      level: 1
+      latency-active: true
+      watched-custom-services:
+        - com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello
+        - com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye
+----
+
+
 NOTE: The listed classes and their methods must have been found by one of the watchers. Only the behaviour of the watchers that are activated can be influenced.
