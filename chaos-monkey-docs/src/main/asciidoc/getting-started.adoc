@@ -18,6 +18,8 @@ There are two ways to integrate the Chaos Monkey for Spring Boot into your exist
 </dependency>
 ----
 
+NOTE: If you want to use the latest snapshot version, add the sonatype staging repository `https://oss.sonatype.org/content/repositories/snapshots/`
+
 2.) Start your Spring Boot App Command-Line example:
 
 [source,txt,subs="verbatim,attributes"]

@@ -1,5 +1,4 @@
 = Chaos Monkey for Spring Boot Reference Guide =
-Benjamin Wilms <https://twitter.com/mrbwilms[@MrBWilms]>
 :revnumber: {project-version}
 :revdate: {commit-time}
 :toc: left
@@ -12,25 +11,6 @@ Benjamin Wilms <https://twitter.com/mrbwilms[@MrBWilms]>
 :hide-uri-scheme:
 :last-update-label!:
 :tabsize: 2
-
-== What is the goal of Chaos Monkey? ==
-
-Inspired by http://principlesofchaos.org/[PRINCIPLES OF CHAOS ENGINEERING] and by my work in distributed system, with a focus on http://projects.spring.io/spring-boot/[Spring Boot], I wanted to test the resulting applications better and especially during operation.
-
-After writing many unit and integration tests, a code coverage from 70% to 80%, this unpleasant feeling remains, how our baby behaves in production?
-
-Many questions remain unanswered:
-
-- Will our fallbacks work?
-- How does the application behave with network latency?
-- What if one of our services breaks down?
-- Service Discovery works, but is our Client-Side-Load-Balancing also working?
-
-As you can see, there are many more questions and open topics you have to deal with.
-
-That was my start to take a deep dive into Chaos Engineering and I started this little project to share my thoughts and experience.
-
-A detailed explanation of when and why you should use the Chaos Monkey for Spring Boot https://codecentric.github.io/chaos-monkey-spring-boot/[can be found here].
 
 include::getting-started.adoc[]
 include::endpoints.adoc[]
