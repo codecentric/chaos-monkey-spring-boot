@@ -25,7 +25,11 @@ NOTE: If you want to use the latest snapshot version, add the sonatype staging r
 [source,txt,subs="verbatim,attributes"]
 .command-line
 ----
+# spring profile
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
+
+# system property
+java -jar your-app.jar -DLOAD_CHAOS_MONKEY=true
 ----
 === External dependency JAR file
 You can extend your existing application with the CM4SB and add it as an external dependency at startup. For this it is necessary to use the PropertiesLauncher of Spring Boot.
