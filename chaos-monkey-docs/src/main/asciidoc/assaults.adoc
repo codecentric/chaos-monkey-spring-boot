@@ -18,6 +18,7 @@ You can determine at runtime whether an exception should occur when the method i
 
 Thanks to the great community, the Chaos Monkey for Spring Boot can throw any kind of RuntimeException. You can configure the required exception at runtime via the Actuator Endpoint.
 
+[[runtime-assaults]]
 === Runtime Assaults ===
 
 These assaults attack your whole application.

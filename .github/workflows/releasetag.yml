@@ -26,18 +26,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Run Maven deploy
-        run: ./mvnw deploy -DperformRelease=true --settings .settings.xml
+        run: ./mvnw deploy -DperformRelease=true --settings .settings.xml -pl chaos-monkey-spring-boot
         env:
           SONATYPE_USERTOKEN: ${{ secrets.SONATYPE_USERTOKEN }}
           SONATYPE_USERTOKENPASSWORD: ${{ secrets.SONATYPE_USERTOKENPASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Gather docs
+        run: |
+          mkdir ./docs/latest
+          cp -R ./chaos-monkey-docs/target/generated-docs ./docs/latest/
+          cp README.md ./docs/
+          sed -i 's/docs\/images/images/g' ./docs/README.md
       - name: Publish gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           enable_jekyll: true
-          publish_dir: ./chaos-monkey-docs/target/generated-docs
-          destination_dir: latest
+          publish_dir: ./docs
           commit_message: ${{ github.event.head_commit.message }}
 
   create_github_release:
@@ -62,15 +67,20 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Convert changelog to docbook
-        run: ./mvnw asciidoctor:process-asciidoc@output-docbook -pl chaos-monkey-docs
+      - name: Generate documentation (docbook, html, zip)
+        run: ./mvnw asciidoctor:process-asciidoc@output-docbook generate-resources -pl chaos-monkey-docs
       - name: Convert changelog from docbook to markdown
         uses: docker://pandoc/core:2.14
         with:
           args: "-f docbook -t gfm -o changes.md chaos-monkey-docs/target/generated-docbook/changes.xml --wrap=none"
+      - name: Generate jar with dependencies
+        run: ./mvnw package -pl chaos-monkey-spring-boot
       - name: Create Github Release
         uses: softprops/action-gh-release@v1
         with:
           body_path: changes.md
+          files: |
+            ./chaos-monkey-docs/target/chaos-monkey-docs-*.zip
+            ./chaos-monkey-spring-boot/target/chaos-monkey-spring-boot-*-jar-with-dependencies.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
