@@ -1,0 +1,9 @@
+theme: jekyll-theme-cayman
+title: Chaos Monkey for Spring Boot
+author: Codecentric
+description: This project provides a Chaos Monkey for Spring Boot and will try to attack your running Spring Boot App.
+social:
+  name: Codecentric
+  links:
+    - https://www.codecentric.de/
+    - https://github.com/codecentric

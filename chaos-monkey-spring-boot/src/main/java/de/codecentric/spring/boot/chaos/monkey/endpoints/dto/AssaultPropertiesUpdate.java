@@ -1,9 +1,10 @@
-package de.codecentric.spring.boot.chaos.monkey.endpoints;
+package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultExceptionConstraint;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultExceptionConstraint;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultPropertiesUpdateLatencyRangeConstraint;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.validation.constraints.DecimalMax;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 @NoArgsConstructor
 @Validated
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@AssaultPropertiesUpdateLatencyRangeConstraint
 public class AssaultPropertiesUpdate {
   @Nullable
   @Min(value = 1)
@@ -69,6 +71,18 @@ public class AssaultPropertiesUpdate {
   @DecimalMin("0.05")
   private Double memoryFillTargetFraction;
 
+  @Nullable private Boolean cpuActive;
+
+  @Nullable
+  @Min(value = 1500)
+  @Max(value = Integer.MAX_VALUE)
+  private Integer cpuMillisecondsHoldLoad;
+
+  @Nullable
+  @DecimalMax("1.0")
+  @DecimalMin("0.1")
+  private Double cpuLoadTargetFraction;
+
   @Nullable private String runtimeAssaultCronExpression;
 
   @Nullable private List<String> watchedCustomServices;
@@ -95,6 +109,11 @@ public class AssaultPropertiesUpdate {
     applyTo(memoryMillisecondsWaitNextIncrease, t::setMemoryMillisecondsWaitNextIncrease);
     applyTo(memoryFillIncrementFraction, t::setMemoryFillIncrementFraction);
     applyTo(memoryFillTargetFraction, t::setMemoryFillTargetFraction);
+
+    applyTo(cpuActive, t::setCpuActive);
+    applyTo(cpuMillisecondsHoldLoad, t::setCpuMillisecondsHoldLoad);
+    applyTo(cpuLoadTargetFraction, t::setCpuLoadTargetFraction);
+
     applyTo(runtimeAssaultCronExpression, t::setRuntimeAssaultCronExpression);
     applyTo(watchedCustomServices, t::setWatchedCustomServices);
   }

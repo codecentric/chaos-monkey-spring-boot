@@ -12,29 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeySettingsDto;
-import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Profiles;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 
-/** @author Benjamin Wilms */
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-public class ChaosMonkeySettings {
+/** @author Daekwon Kang */
+public class ChaosMonkeyCondition implements Condition {
+  @Override
+  public boolean matches(
+      ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
 
-  @NotNull private ChaosMonkeyProperties chaosMonkeyProperties;
-
-  @NotNull private AssaultProperties assaultProperties;
-
-  @NotNull private WatcherProperties watcherProperties;
-
-  public ChaosMonkeySettingsDto toDto() {
-    return new ChaosMonkeySettingsDto(chaosMonkeyProperties, assaultProperties, watcherProperties);
+    return conditionContext.getEnvironment().acceptsProfiles(Profiles.of("chaos-monkey"))
+        || Boolean.parseBoolean(System.getProperty("LOAD_CHAOS_MONKEY"));
   }
 }

@@ -76,6 +76,10 @@ management:
 |<<assaultspost,/chaosmonkey/assaults>>
 |Change Assaults configuration
 |POST
+
+|<<assaultspost,/chaosmonkey/assaults/runtime/attack>>
+|Execute configured runtime Assault
+|POST
 |===
 
 
@@ -270,6 +274,14 @@ Assault config has changed
 Assault config has changed
 ----
 
+==== POST Assault Attack
+[[assaultsattack]]
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults/runtime/attack - Response 200 OK
+----
+Started runtime assaults
+----
+
 === JMX Endpoint
 
 Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
@@ -320,6 +332,10 @@ component=false
 
 |toggleMemoryAssault
 |Toggle Memory Assault status
+|New value (true/false)
+
+|toggleCpuAssault
+|Toggle CPU Assault status
 |New value (true/false)
 
 |isChaosMonkeyActive

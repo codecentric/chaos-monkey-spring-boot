@@ -1,4 +1,4 @@
-[[watcher]]
+[[watchers]]
 == Watcher ==
 A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.
 

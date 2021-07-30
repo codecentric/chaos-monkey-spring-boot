@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
@@ -59,6 +60,14 @@ public class ChaosMonkeyJmxEndpoint {
         .getAssaultProperties()
         .setKillApplicationActive(!this.getAssaultProperties().getKillApplicationActive());
     return String.valueOf(this.getAssaultProperties().getKillApplicationActive());
+  }
+
+  @WriteOperation
+  public String toggleCpuAssault() {
+    this.chaosMonkeySettings
+        .getAssaultProperties()
+        .setCpuActive(!this.getAssaultProperties().getCpuActive());
+    return String.valueOf(this.getAssaultProperties().getCpuActive());
   }
 
   @ReadOperation()
