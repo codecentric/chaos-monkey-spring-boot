@@ -13,7 +13,7 @@
 
 This project provides a Chaos Monkey for Spring Boot applications and will try to attack your running Spring Boot App.
 
->Everything from getting started to advanced usage is explained on [Chaos Monkey for Spring Boot](https://codecentric.github.io/chaos-monkey-spring-boot/latest/)
+>Everything from getting started to advanced usage is explained in the [Documentation for Chaos Monkey for Spring Boot](https://codecentric.github.io/chaos-monkey-spring-boot/latest/) 
 
 ## Introduction
 If you're not familiar with the principles of chaos engineering yet, check out this blog post and enter the world of chaos engineering.
@@ -49,7 +49,7 @@ If Spring Boot Chaos Monkey is on your classpath and activated with profile name
 Now you can activate [watchers](https://codecentric.github.io/chaos-monkey-spring-boot/latest/#watchers), which look for classes to [assault](https://codecentric.github.io/chaos-monkey-spring-boot/latest/#assaults). There are also [runtime assaults](https://codecentric.github.io/chaos-monkey-spring-boot/latest/#runtime-assaults), which attack your whole application.
 
 <p align="center">
-  <img class="imgborder s1" width="90%" src="images/sb-chaos-monkey-architecture.png">
+  <img class="imgborder s1" width="90%" src="docs/images/sb-chaos-monkey-architecture.png">
 </p>
 
 ## Be social and communicative!

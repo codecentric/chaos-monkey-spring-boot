@@ -44,6 +44,7 @@
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
+                            <goal>zip</goal>
                         </goals>
                         <configuration>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
