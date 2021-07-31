@@ -29,8 +29,11 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperti
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
@@ -270,23 +273,23 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postToEnableChaosMonkey() {
-
-    ResponseEntity<String> result =
-        testRestTemplate.postForEntity(baseUrl + "/enable", null, String.class);
+    ZonedDateTime enabledAt = ZonedDateTime.now();
+    ResponseEntity<ChaosMonkeyEnabledDto> result =
+        testRestTemplate.postForEntity(baseUrl + "/enable", null, ChaosMonkeyEnabledDto.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).startsWith("Chaos Monkey is enabled"));
+    assertTrue(Objects.requireNonNull(result.getBody()).getEnabledAt().isAfter(enabledAt));
   }
 
   // DISABLE CHAOS MONKEY
   @Test
   void postToDisableChaosMonkey() {
-
-    ResponseEntity<String> result =
-        testRestTemplate.postForEntity(baseUrl + "/disable", null, String.class);
+    ZonedDateTime disabledAt = ZonedDateTime.now();
+    ResponseEntity<ChaosMonkeyDisabledDto> result =
+        testRestTemplate.postForEntity(baseUrl + "/disable", null, ChaosMonkeyDisabledDto.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertTrue(Objects.requireNonNull(result.getBody()).startsWith("Chaos Monkey is disabled"));
+    assertTrue(Objects.requireNonNull(result.getBody()).getDisabledAt().isAfter(disabledAt));
   }
 
   private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {
