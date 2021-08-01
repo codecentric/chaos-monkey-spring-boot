@@ -16,15 +16,17 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,16 +108,18 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
   @Test
   void enableChaosMonkey() {
     ZonedDateTime enabledAt = ZonedDateTime.now();
-    ZonedDateTime timeReturned = chaosMonkeyJmxEndpoint.enableChaosMonkey().getEnabledAt();
-    assertTrue(timeReturned.isAfter(enabledAt) || timeReturned.isEqual(enabledAt));
+    ChaosMonkeyEnabledDto enabledDto = chaosMonkeyJmxEndpoint.enableChaosMonkey();
+    assertThat(enabledDto.getStatus()).isEqualTo("Chaos Monkey is enabled");
+    assertThat(enabledDto.getEnabledAt()).isAfterOrEqualTo(enabledAt);
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
   }
 
   @Test
   void disableChaosMonkey() {
     ZonedDateTime disabledAt = ZonedDateTime.now();
-    ZonedDateTime timeReturned = chaosMonkeyJmxEndpoint.disableChaosMonkey().getDisabledAt();
-    assertTrue(timeReturned.isAfter(disabledAt) || timeReturned.isEqual(disabledAt));
+    ChaosMonkeyDisabledDto disabledDto = chaosMonkeyJmxEndpoint.disableChaosMonkey();
+    assertThat(disabledDto.getStatus()).isEqualTo("Chaos Monkey is disabled");
+    assertThat(disabledDto.getDisabledAt()).isAfterOrEqualTo(disabledAt);
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
   }
 
