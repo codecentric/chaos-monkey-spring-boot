@@ -9,6 +9,7 @@ Built with Spring Boot {spring-boot-version}
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Improvements
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/254[#254] Added timestamps to chaos monkey enable/disable endpoint.
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
@@ -18,7 +19,7 @@ Built with Spring Boot {spring-boot-version}
 
 === Contributors
 This release was only possible because of these great humans:
-
+ - https://github.com/MatthewBerk[@MatthewBerk]
 // - https://github.com/octocat[@octocat]
 
 Thank you for your support!
