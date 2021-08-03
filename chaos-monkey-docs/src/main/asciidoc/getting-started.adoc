@@ -1,6 +1,6 @@
 [[getting-started]]
 == Getting started ==
-There are two ways to activate Chaos Monkey for Spring Boot (CM4SB) into your existing Spring Boot app. Either it is an integral part of your project and is added to your regular dependencies (eg. `pom.xml/build.gradle(.kts)`) or you can include it as an external dependency when starting your Spring Boot App.
+There are two ways to activate Chaos Monkey for Spring Boot (CM4SB) in your existing Spring Boot app. Either it is an integral part of your project and is added to your regular dependencies (eg. `pom.xml/build.gradle(.kts)`) or you can include it as an external dependency when starting your Spring Boot App.
 
 === Adding Chaos Monkey for Spring Boot ===
 [#_as_dependency]
