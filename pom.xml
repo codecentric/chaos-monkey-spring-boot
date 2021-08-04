@@ -57,6 +57,7 @@
     <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <git-commit-id-plugin.version>4.0.5</git-commit-id-plugin.version>
     <asciidoctor-maven-plugin.version>2.2.0</asciidoctor-maven-plugin.version>
+    <asciidoctor-extensions-spring-boot>0.6.0</asciidoctor-extensions-spring-boot>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>

@@ -14,6 +14,14 @@
     <name>chaos-monkey-docs</name>
     <description>Documentation of Chaos Monkey for Spring Boot</description>
 
+    <!-- Used for spring-asciidoctor-extensions-block-switch -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-repo</id>
+            <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -84,6 +92,13 @@
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.spring.asciidoctor</groupId>
+                        <artifactId>spring-asciidoctor-extensions-block-switch</artifactId>
+                        <version>${asciidoctor-extensions-spring-boot}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

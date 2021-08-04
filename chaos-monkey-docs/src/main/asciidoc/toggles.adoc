@@ -53,8 +53,8 @@ public interface ChaosToggleNameMapper {
 
 The supplied name to the interface is the class name and method being assaulted.
 
-[source,java,subs="verbatim,attributes"]
-.MyVeryDetailedToggleNameMapper implementation:
+[source,java,subs="verbatim,attributes",role="primary"]
+.Java
 ----
 public class MyVeryDetailedToggleNameMapper extends DefaultChaosToggleNameMapper {
   public MyAppToggleMapper(String prefix) {
@@ -65,6 +65,16 @@ public class MyVeryDetailedToggleNameMapper extends DefaultChaosToggleNameMapper
   public String mapName(ChaosTarget type, String name) {
     return togglePrefix + "." + type.getName() + "." + name;
   }
+}
+----
+
+[source,kotlin,subs="verbatim,attributes",role="secondary"]
+.Kotlin
+----
+class MyVeryDetailedToggleNameMapper(prefix: String) : DefaultChaosToggleNameMapper(prefix) {
+    override fun mapName(type: ChaosTarget, name: String): String {
+        return togglePrefix + "." + type.getName() + "." + name
+    }
 }
 ----
 
@@ -85,8 +95,8 @@ public interface ChaosToggles {
 
 To add you own logic to control which toggles are enabled, you can provide a bean that implements the `ChaosToggles` interface.
 
-[source,java,subs="verbatim,attributes"]
-.MyHeaderChaosToggles implementation:
+[source,java,subs="verbatim,attributes",role="primary"]
+.Java
 ----
 public class MyParamChaosToggles implements ChaosToggles {
   @Override
@@ -97,6 +107,18 @@ public class MyParamChaosToggles implements ChaosToggles {
     String chaosParam =  curRequest.getParameter("chaos");
     return chaosParam != null && toggleName.startsWith(chaosParam);
   }
+}
+----
+
+[source,kotlin,subs="verbatim,attributes",role="secondary"]
+.Kotlin
+----
+class MyParamChaosToggles : ChaosToggles {
+    override fun isEnabled(toggleName: String): Boolean {
+        val curRequest = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
+        val chaosParam = curRequest.getParameter("chaos")
+        return chaosParam != null && toggleName.startsWith(chaosParam)
+    }
 }
 ----
 

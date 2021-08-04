@@ -18,8 +18,12 @@ Built with Spring Boot {spring-boot-version}
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors
-This release was only possible because of these great humans:
- - https://github.com/MatthewBerk[@MatthewBerk]
+This release was only possible because of these great humans ❤️:
+
 // - https://github.com/octocat[@octocat]
+- https://github.com/F43nd1r[@F43nd1r]
+- https://github.com/ncrash[@ncrash]
+- https://github.com/MatthewBerk[@MatthewBerk]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!
