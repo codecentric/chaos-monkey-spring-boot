@@ -19,14 +19,13 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import java.util.concurrent.TimeUnit;
 
 /** @author Thorsten Deelmann */
 public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationContextAware {
