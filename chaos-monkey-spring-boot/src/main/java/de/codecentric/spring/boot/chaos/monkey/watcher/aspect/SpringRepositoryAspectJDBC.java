@@ -45,7 +45,7 @@ public class SpringRepositoryAspectJDBC extends ChaosMonkeyBaseAspect {
   public void classAnnotatedWithRepositoryPointcut() {}
 
   @Around(
-      "classAnnotatedWithRepositoryPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+      "classAnnotatedWithRepositoryPointcut() && allPublicMethodPointcut() && !isBlackListedPointcut()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 
     if (watcherProperties.isRepository()) {

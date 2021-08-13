@@ -45,7 +45,7 @@ public class SpringServiceAspect extends ChaosMonkeyBaseAspect {
   public void classAnnotatedWithServicePointcut() {}
 
   @Around(
-      "classAnnotatedWithServicePointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()"
+      "classAnnotatedWithServicePointcut() && allPublicMethodPointcut() && !isBlackListedPointcut()"
           + "&& !springHooksPointcut()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
 

@@ -24,7 +24,7 @@ public class SpringBootHealthIndicatorAspect extends ChaosMonkeyBaseAspect {
   @Pointcut("execution(* org.springframework.boot.actuate.health.HealthIndicator.getHealth(..))")
   public void getHealthPointCut() {}
 
-  @Around("getHealthPointCut() && !classInChaosMonkeyPackage()")
+  @Around("getHealthPointCut() && !isBlackListedPointcut()")
   public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
     Health health = (Health) pjp.proceed();
     if (watcherProperties.isActuatorHealth()) {

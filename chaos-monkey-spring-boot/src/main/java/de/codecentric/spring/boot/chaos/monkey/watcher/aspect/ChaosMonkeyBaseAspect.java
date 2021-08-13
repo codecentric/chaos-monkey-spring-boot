@@ -29,11 +29,11 @@ abstract class ChaosMonkeyBaseAspect {
   public void nonFinalOrJdkProxiedClassPointcut() {}
 
   // GenericFilterBean cannot be proxied due to final init method.
-  @Pointcut("this(org.springframework.web.filter.GenericFilterBean)")
+  @Pointcut(
+      "classInChaosMonkeyPackage() || target(org.springframework.web.filter.GenericFilterBean)")
   public void isBlackListedPointcut() {}
 
-  @Pointcut(
-      "!isBlackListedPointcut() && nonFinalOrJdkProxiedClassPointcut() && execution(* *.*(..))")
+  @Pointcut("nonFinalOrJdkProxiedClassPointcut() && execution(* *.*(..))")
   public void allPublicMethodPointcut() {}
 
   @Pointcut(
