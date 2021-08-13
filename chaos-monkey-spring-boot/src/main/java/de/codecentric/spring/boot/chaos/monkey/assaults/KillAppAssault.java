@@ -26,6 +26,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.concurrent.TimeUnit;
+
 /** @author Thorsten Deelmann */
 public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationContextAware {
 
@@ -57,7 +59,17 @@ public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationCon
       }
 
       int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
-      Thread.sleep(5000); // wait before kill to deliver some metrics
+
+      long remaining = 5000;
+      long end = System.currentTimeMillis() + remaining;
+      while (true) {
+        try {
+          TimeUnit.MILLISECONDS.sleep(remaining); // wait before kill to deliver some metrics
+          break;
+        } catch (InterruptedException ignored) {
+          remaining = end - System.currentTimeMillis();
+        }
+      }
 
       System.exit(exit);
     } catch (Exception e) {
