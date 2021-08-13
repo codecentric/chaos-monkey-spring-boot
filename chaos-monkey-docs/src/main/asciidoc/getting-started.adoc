@@ -101,7 +101,7 @@ It is your decision how you want to integrate and use the CM4SB. There is no dif
 
 === Preparing your application
 
-If you want chaos monkey to attack your classes they need to be open (=non-final). If you're using java, this is the default. Just don't mark your classes or methods as final. If you're using kotlin, we recommend using the kotlin spring plugin:
+If you want chaos monkey to attack your classes they need to be open (=non-final). If you're using Java, this is the default. Just don't mark your classes or methods as final. If you're using Kotlin, we recommend using the https://kotlinlang.org/docs/all-open-plugin.html#spring-support[Kotlin Spring plugin], which automatically opens Spring annotated classes for you:
 
 [source,xml,subs="verbatim,attributes",role="primary"]
 .Maven
