@@ -75,6 +75,10 @@ Of course, you can start in production, but keep in mind...
 ## Documentation
 [Documentation](https://codecentric.github.io/chaos-monkey-spring-boot/latest/)
 
+## Help
+
+We are using GitHub issues to track bugs, improvements and new features (for more information see [Contributions](#contributions)). If you have a general question on how to use Chaos Monkey for Spring Boot, please ask on Stack Overflow using the tag [`#spring-boot-chaos-monkey`](https://stackoverflow.com/questions/tagged/spring-boot-chaos-monkey).
+
 ## Contributions 
 Chaos Monkey is open source and welcomes contributions from everyone. The [contribution guideline](https://github.com/codecentric/chaos-monkey-spring-boot/blob/main/CONTRIBUTING.adoc) is where you should begin in order to best understand how to contribute to this project. 
 
