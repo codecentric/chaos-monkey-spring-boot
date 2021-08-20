@@ -1,111 +1,83 @@
 package de.codecentric.spring.boot.chaos.monkey.component;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-/** @author Maxime Bouchenoire */
+/**
+ * @author Maxime Bouchenoire
+ * @author Lukas Morawietz
+ */
 public class ChaosMonkeyScheduler {
 
   private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
 
-  @Nullable private final ScheduledTaskRegistrar scheduler;
+  private final ScheduledTaskRegistrar scheduler;
 
   private final AssaultProperties config;
+  private final List<ChaosMonkeyRuntimeAssault> assaults;
 
-  private final KillAppAssault killAppAssault;
-
-  private final MemoryAssault memoryAssault;
-
-  private List<ScheduledTask> currentTasks = new ArrayList<>(2);
+  private final Map<ChaosMonkeyRuntimeAssault, ScheduledTask> currentTasks = new HashMap<>();
 
   public ChaosMonkeyScheduler(
       ScheduledTaskRegistrar scheduler,
       AssaultProperties config,
-      KillAppAssault killAppAssault,
-      MemoryAssault memoryAssault) {
+      List<ChaosMonkeyRuntimeAssault> assaults) {
     this.scheduler = scheduler;
     this.config = config;
-    this.killAppAssault = killAppAssault;
-    this.memoryAssault = memoryAssault;
+    this.assaults = assaults;
 
     reloadConfig();
   }
 
   public void reloadConfig() {
+    Map<ChaosMonkeyRuntimeAssault, String> cronExpressions = new LinkedHashMap<>();
+    for (ChaosMonkeyRuntimeAssault assault : assaults) {
+      cronExpressions.put(assault, assault.getCronExpression(config));
+    }
     if (!currentTasks.isEmpty()) {
-      Logger.info("Cancelling previous tasks");
-      currentTasks.forEach(ScheduledTask::cancel);
-      currentTasks = new ArrayList<>(2);
+      for (Iterator<Map.Entry<ChaosMonkeyRuntimeAssault, String>> iterator =
+              cronExpressions.entrySet().iterator();
+          iterator.hasNext(); ) {
+        Map.Entry<ChaosMonkeyRuntimeAssault, String> entry = iterator.next();
+        ScheduledTask task = currentTasks.get(entry.getKey());
+        if (task != null) {
+          if (Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue())) {
+            // no need to reschedule
+            iterator.remove();
+          } else {
+            // cancel and reschedule below
+            Logger.info(
+                "Cancelling previous task for " + entry.getKey().getClass().getSimpleName());
+            task.cancel();
+          }
+        }
+      }
     }
 
-    final CronExpression globalCronExpression =
-        new CronExpression(config.getRuntimeAssaultCronExpression());
-
-    new CronExpression(config.getKillApplicationCronExpression())
-        .fallbackOn(globalCronExpression)
-        .ifActive(killAppCron -> scheduleRuntimeAssault(scheduler, killAppAssault, killAppCron));
-
-    new CronExpression(config.getMemoryCronExpression())
-        .fallbackOn(globalCronExpression)
-        .ifActive(memoryCron -> scheduleRuntimeAssault(scheduler, memoryAssault, memoryCron));
+    cronExpressions.forEach(
+        (assault, expression) -> {
+          if (!"OFF".equals(expression) && expression != null)
+            scheduleRuntimeAssault(scheduler, assault, expression);
+        });
   }
 
   private void scheduleRuntimeAssault(
       ScheduledTaskRegistrar scheduler, ChaosMonkeyRuntimeAssault assault, String cron) {
 
-    if (scheduler == null) {
-      // We might consider an exception here, since the user intent could
-      // clearly not be serviced
-      Logger.error(
-          "No scheduler available in application context, will not process schedule of {}",
-          assault.getClass().getSimpleName());
-    } else {
-      final CronTask cronTask = new CronTask(() -> {
-        if (assault.isActive()) {
-          assault.attack();
-        }
-      }, cron);
+    final CronTask cronTask =
+        new CronTask(
+            () -> {
+              if (assault.isActive()) assault.attack();
+            },
+            cron);
 
-      final ScheduledTask scheduledTask = scheduler.scheduleCronTask(cronTask);
-      currentTasks.add(scheduledTask);
-    }
-  }
-
-  private static class CronExpression {
-
-    private final String expression;
-
-    private CronExpression(String expression) {
-      this.expression = expression;
-    }
-
-    boolean isActive() {
-      return !"OFF".equals(expression) && expression != null;
-    }
-
-    CronExpression fallbackOn(CronExpression other) {
-      if (this.isActive() || !other.isActive()) {
-        return this;
-      }
-
-      return other;
-    }
-
-    public void ifActive(Consumer<String> cronConsumer) {
-      if (isActive()) {
-        cronConsumer.accept(expression);
-      }
-    }
+    final ScheduledTask scheduledTask = scheduler.scheduleCronTask(cronTask);
+    currentTasks.put(assault, scheduledTask);
   }
 }

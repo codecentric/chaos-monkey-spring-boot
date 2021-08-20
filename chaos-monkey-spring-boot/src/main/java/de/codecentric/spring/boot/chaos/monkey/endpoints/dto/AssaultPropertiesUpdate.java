@@ -87,7 +87,7 @@ public class AssaultPropertiesUpdate {
   @DecimalMin("0.1")
   private Double cpuLoadTargetFraction;
 
-  @Nullable private String runtimeAssaultCronExpression;
+  @Nullable private String cpuCronExpression;
 
   @Nullable private List<String> watchedCustomServices;
 
@@ -119,8 +119,8 @@ public class AssaultPropertiesUpdate {
     applyTo(cpuActive, t::setCpuActive);
     applyTo(cpuMillisecondsHoldLoad, t::setCpuMillisecondsHoldLoad);
     applyTo(cpuLoadTargetFraction, t::setCpuLoadTargetFraction);
+    applyTo(cpuCronExpression, t::setCpuCronExpression);
 
-    applyTo(runtimeAssaultCronExpression, t::setRuntimeAssaultCronExpression);
     applyTo(watchedCustomServices, t::setWatchedCustomServices);
   }
 }

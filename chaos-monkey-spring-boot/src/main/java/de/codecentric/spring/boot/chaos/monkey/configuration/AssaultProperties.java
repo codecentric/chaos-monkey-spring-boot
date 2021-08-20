@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
 
@@ -69,7 +68,7 @@ public class AssaultProperties {
 
   private double cpuLoadTargetFraction = 0.9;
 
-  private String runtimeAssaultCronExpression;
+  private String cpuCronExpression;
 
   private List<String> watchedCustomServices;
 

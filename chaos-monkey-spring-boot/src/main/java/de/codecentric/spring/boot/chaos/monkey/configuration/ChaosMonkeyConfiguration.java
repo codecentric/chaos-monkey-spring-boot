@@ -165,14 +165,10 @@ public class ChaosMonkeyConfiguration {
   @Bean
   public ChaosMonkeyScheduler scheduler(
       @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
-      KillAppAssault killAppAssault,
-      MemoryAssault memoryAssault) {
-    ScheduledTaskRegistrar registrar = null;
-    if (scheduler != null) {
-      registrar = new ScheduledTaskRegistrar();
-      registrar.setTaskScheduler(scheduler);
-    }
-    return new ChaosMonkeyScheduler(registrar, assaultProperties, killAppAssault, memoryAssault);
+      List<ChaosMonkeyRuntimeAssault> assaults) {
+    ScheduledTaskRegistrar registrar = new ScheduledTaskRegistrar();
+    registrar.setTaskScheduler(scheduler);
+    return new ChaosMonkeyScheduler(registrar, assaultProperties, assaults);
   }
 
   @Bean(name = CHAOS_MONKEY_TASK_SCHEDULER)

@@ -3,6 +3,7 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import com.sun.management.OperatingSystemMXBean;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,11 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
     } else {
       Logger.warn("Chaos Monkey - cpu information not available, assault not executed");
     }
+  }
+
+  @Override
+  public String getCronExpression(AssaultProperties assaultProperties) {
+    return assaultProperties.getCpuCronExpression();
   }
 
   private static class ThreadManager {

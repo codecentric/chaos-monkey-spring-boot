@@ -2,15 +2,14 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import de.codecentric.spring.boot.chaos.monkey.assaults.CpuAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
@@ -32,21 +31,19 @@ class ChaosMonkeySchedulerTest {
 
   @Mock private MemoryAssault memoryAssault;
 
-  @Test
-  void shouldTolerateMissingRegistry() {
-    when(config.getRuntimeAssaultCronExpression()).thenReturn("*/5 * * * * ?");
-    new ChaosMonkeyScheduler(null, config, killAppAssault, memoryAssault);
-    // no exception despite null injection
-  }
+  @Mock private CpuAssault cpuAssault;
 
   @Test
   void shouldRespectTheOffSetting() {
-    when(config.getRuntimeAssaultCronExpression()).thenReturn("OFF");
-    when(config.getKillApplicationCronExpression()).thenReturn("OFF");
+    when(memoryAssault.getCronExpression(any())).thenReturn("OFF");
+    when(killAppAssault.getCronExpression(any())).thenReturn("OFF");
+    when(cpuAssault.getCronExpression(any())).thenReturn("OFF");
 
-    new ChaosMonkeyScheduler(registrar, config, killAppAssault, memoryAssault);
+    new ChaosMonkeyScheduler(
+        registrar, config, Arrays.asList(memoryAssault, killAppAssault, cpuAssault));
     verify(killAppAssault, never()).attack();
     verify(memoryAssault, never()).attack();
+    verify(cpuAssault, never()).attack();
     verify(registrar, never()).scheduleCronTask(any());
   }
 
@@ -54,36 +51,37 @@ class ChaosMonkeySchedulerTest {
   void shouldScheduleATask() {
     String schedule = "*/1 * * * * ?";
     ScheduledTask scheduledTask = mock(ScheduledTask.class);
-    when(config.getRuntimeAssaultCronExpression()).thenReturn(schedule);
+    when(memoryAssault.getCronExpression(any())).thenReturn(schedule);
     when(registrar.scheduleCronTask(any())).thenReturn(scheduledTask);
 
-    new ChaosMonkeyScheduler(registrar, config, killAppAssault, memoryAssault);
+    new ChaosMonkeyScheduler(registrar, config, Collections.singletonList(memoryAssault));
 
-    verify(registrar, times(2)).scheduleCronTask(argThat(hasScheduleLike(schedule)));
+    verify(registrar).scheduleCronTask(argThat(hasScheduleLike(schedule)));
   }
 
   @Test
-  void shouldScheduleANewTaskAfterAnUpdate() {
+  void shouldNotScheduleNewTasksAfterUnrelatedUpdate() {
     String schedule = "*/1 * * * * ?";
-    ScheduledTask oldTask = mock(ScheduledTask.class);
-    ScheduledTask newTask = mock(ScheduledTask.class);
-    when(config.getRuntimeAssaultCronExpression()).thenReturn(schedule);
-    when(registrar.scheduleCronTask(any())).thenReturn(oldTask, newTask);
+    ScheduledTask oldTask = mockScheduledTask(schedule);
+    when(memoryAssault.getCronExpression(any())).thenReturn(schedule);
+    when(registrar.scheduleCronTask(any())).thenReturn(oldTask);
 
-    ChaosMonkeyScheduler cms = new ChaosMonkeyScheduler(
-        registrar, config, killAppAssault, memoryAssault);
+    ChaosMonkeyScheduler cms =
+        new ChaosMonkeyScheduler(registrar, config, Collections.singletonList(memoryAssault));
+    verify(registrar, times(1)).scheduleCronTask(argThat(hasScheduleLike(schedule)));
+
+    reset(registrar);
+
     cms.reloadConfig();
 
-    verify(registrar, times(4)).scheduleCronTask(argThat(hasScheduleLike(schedule)));
-    verify(oldTask).cancel();
+    verify(registrar, never()).scheduleCronTask(argThat(hasScheduleLike(schedule)));
   }
 
   @Test
   void shouldTriggerRuntimeScopeRunAttack() {
     String schedule = "*/1 * * * * ?";
-    when(killAppAssault.isActive()).thenReturn(true);
     when(memoryAssault.isActive()).thenReturn(true);
-    when(config.getRuntimeAssaultCronExpression()).thenReturn(schedule);
+    when(memoryAssault.getCronExpression(any())).thenReturn(schedule);
     when(registrar.scheduleCronTask(any()))
         .thenAnswer(
             iom -> {
@@ -91,27 +89,43 @@ class ChaosMonkeySchedulerTest {
               return null;
             });
 
-    new ChaosMonkeyScheduler(registrar, config, killAppAssault, memoryAssault);
-    verify(killAppAssault).attack();
+    new ChaosMonkeyScheduler(registrar, config, Collections.singletonList(memoryAssault));
     verify(memoryAssault).attack();
   }
 
   @Test
-  void shouldPrioritizeSpecificOverGlobalAttackCron() {
-    String globalSchedule = "*/1 * * * * ?";
-    String specificSchedule = "*/2 * * * * ?";
-    when(config.getRuntimeAssaultCronExpression()).thenReturn(globalSchedule);
-    when(config.getKillApplicationCronExpression()).thenReturn(specificSchedule);
-    when(config.getMemoryCronExpression()).thenReturn("OFF"); // this will fallback on global cron
+  void shouldRescheduleOnlyChangedTasks() {
+    String schedule = "*/1 * * * * ?";
+    ScheduledTask memoryTask = mockScheduledTask(schedule);
+    ScheduledTask oldTask = mockScheduledTask(schedule);
+    ScheduledTask newTask = mock(ScheduledTask.class);
+    when(memoryAssault.getCronExpression(any())).thenReturn(schedule);
+    when(killAppAssault.getCronExpression(any())).thenReturn(schedule);
+    when(registrar.scheduleCronTask(any())).thenReturn(memoryTask, oldTask, newTask);
 
-    new ChaosMonkeyScheduler(registrar, config, killAppAssault, memoryAssault);
-    verify(registrar, times(1))
-        .scheduleCronTask(argThat(cronTask -> cronTask.getExpression().equals(globalSchedule)));
-    verify(registrar, times(1))
-        .scheduleCronTask(argThat(cronTask -> cronTask.getExpression().equals(specificSchedule)));
+    ChaosMonkeyScheduler cms =
+        new ChaosMonkeyScheduler(registrar, config, Arrays.asList(memoryAssault, killAppAssault));
+    verify(registrar, times(2)).scheduleCronTask(argThat(hasScheduleLike(schedule)));
+
+    reset(registrar);
+    String schedule2 = "*/2 * * * * ?";
+    when(killAppAssault.getCronExpression(any())).thenReturn(schedule2);
+
+    cms.reloadConfig();
+    verify(registrar, times(1)).scheduleCronTask(argThat(hasScheduleLike(schedule2)));
+    verify(memoryTask, never()).cancel();
+    verify(oldTask).cancel();
   }
 
   private ArgumentMatcher<CronTask> hasScheduleLike(String schedule) {
     return cronTask -> cronTask.getExpression().equals(schedule);
+  }
+
+  private static ScheduledTask mockScheduledTask(String schedule) {
+    CronTask cronTask = mock(CronTask.class);
+    when(cronTask.getExpression()).thenReturn(schedule);
+    ScheduledTask scheduledTask = mock(ScheduledTask.class);
+    when(scheduledTask.getTask()).thenReturn(cronTask);
+    return scheduledTask;
   }
 }
