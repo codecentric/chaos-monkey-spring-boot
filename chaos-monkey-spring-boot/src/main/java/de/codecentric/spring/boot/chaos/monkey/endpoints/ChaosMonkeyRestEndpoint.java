@@ -20,6 +20,11 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeySettingsDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,15 +71,15 @@ public class ChaosMonkeyRestEndpoint {
   }
 
   @PostMapping("/enable")
-  public ResponseEntity<String> enableChaosMonkey() {
+  public ResponseEntity<ChaosMonkeyEnabledDto> enableChaosMonkey() {
     this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return ResponseEntity.ok().body("Chaos Monkey is enabled");
+    return ResponseEntity.ok().body(new ChaosMonkeyEnabledDto());
   }
 
   @PostMapping("/disable")
-  public ResponseEntity<String> disableChaosMonkey() {
+  public ResponseEntity<ChaosMonkeyDisabledDto> disableChaosMonkey() {
     this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return ResponseEntity.ok().body("Chaos Monkey is disabled");
+    return ResponseEntity.ok().body(new ChaosMonkeyDisabledDto());
   }
 
   @GetMapping

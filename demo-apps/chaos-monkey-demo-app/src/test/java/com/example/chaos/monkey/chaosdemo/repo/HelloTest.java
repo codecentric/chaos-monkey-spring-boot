@@ -1,9 +1,9 @@
 package com.example.chaos.monkey.chaosdemo.repo;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** @author Benjamin Wilms */
 public class HelloTest {

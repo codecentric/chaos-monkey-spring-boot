@@ -18,20 +18,14 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Benjamin Wilms
@@ -40,69 +34,43 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
-@Validated
-@EqualsAndHashCode
-@AssaultPropertiesLatencyRangeConstraint
 public class AssaultProperties {
-  @Value("${level : 1}")
-  @Min(value = 1)
-  @Max(value = 10000)
-  private int level;
+  private int level = 1;
 
-  @Value("${latencyRangeStart : 1000}")
-  @Min(value = 1)
-  @Max(value = Integer.MAX_VALUE)
-  private int latencyRangeStart;
+  private int latencyRangeStart = 1000;
 
-  @Value("${latencyRangeEnd : 3000}")
-  @Min(value = 1)
-  @Max(value = Integer.MAX_VALUE)
-  private int latencyRangeEnd;
+  private int latencyRangeEnd = 3000;
 
-  @Value("${latencyActive : false}")
-  private boolean latencyActive;
+  private boolean latencyActive = false;
 
-  @Value("${exceptionsActive : false}")
-  private boolean exceptionsActive;
+  private boolean exceptionsActive = false;
 
-  @AssaultExceptionConstraint private AssaultException exception;
+  private AssaultException exception;
 
-  @Value("${killApplicationActive : false}")
-  private boolean killApplicationActive;
+  private boolean killApplicationActive = false;
 
-  @Value("${killApplication.cron.expression:OFF}")
   private String killApplicationCronExpression;
 
-  @Value("${memoryActive : false}")
-  private volatile boolean memoryActive;
+  private volatile boolean memoryActive = false;
 
-  @Value("${memoryMillisecondsHoldFilledMemory : 90000}")
-  @Min(value = 1500)
-  @Max(value = Integer.MAX_VALUE)
-  private int memoryMillisecondsHoldFilledMemory;
+  private int memoryMillisecondsHoldFilledMemory = 90000;
 
-  @Value("${memoryMillisecondsWaitNextIncrease : 1000}")
-  @Min(value = 100)
-  @Max(value = 30000)
-  private int memoryMillisecondsWaitNextIncrease;
+  private int memoryMillisecondsWaitNextIncrease = 1000;
 
-  @Value("${memoryFillIncrementFraction : 0.15}")
-  @DecimalMax("1.0")
-  @DecimalMin("0.01")
-  private double memoryFillIncrementFraction;
+  private double memoryFillIncrementFraction = 0.15;
 
-  @Value("${memoryFillTargetFraction : 0.25}")
-  @DecimalMax("1.0")
-  @DecimalMin("0.01")
-  private double memoryFillTargetFraction;
+  private double memoryFillTargetFraction = 0.25;
 
-  @Value("${memory.cron.expression:OFF}")
   private String memoryCronExpression;
 
-  @Value("${runtime.scope.assault.cron.expression:OFF}")
+  private volatile boolean cpuActive = false;
+
+  private int cpuMillisecondsHoldLoad = 90000;
+
+  private double cpuLoadTargetFraction = 0.9;
+
   private String runtimeAssaultCronExpression;
 
-  @Value("${watchedCustomServices:#{null}}")
   private List<String> watchedCustomServices;
 
   public AssaultException getException() {

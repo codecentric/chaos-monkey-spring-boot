@@ -17,10 +17,10 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -33,9 +33,8 @@ import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
 class DefaultProfileIntegration {
 
@@ -46,7 +45,6 @@ class DefaultProfileIntegration {
 
   @Test
   void contextLoads() {
-
     assertNull(chaosMonkeyRequestScope);
   }
 
@@ -67,7 +65,6 @@ class DefaultProfileIntegration {
 
   @Test
   void checkEnvCustomServiceWatcherList() {
-
     List<String> stringList =
         env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
     assertThat(stringList, hasSize(2));

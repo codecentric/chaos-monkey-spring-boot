@@ -18,6 +18,9 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
@@ -61,21 +64,29 @@ public class ChaosMonkeyJmxEndpoint {
     return String.valueOf(this.getAssaultProperties().getKillApplicationActive());
   }
 
+  @WriteOperation
+  public String toggleCpuAssault() {
+    this.chaosMonkeySettings
+        .getAssaultProperties()
+        .setCpuActive(!this.getAssaultProperties().getCpuActive());
+    return String.valueOf(this.getAssaultProperties().getCpuActive());
+  }
+
   @ReadOperation()
   public String isChaosMonkeyActive() {
     return String.valueOf(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
   }
 
   @WriteOperation
-  public String enableChaosMonkey() {
+  public ChaosMonkeyEnabledDto enableChaosMonkey() {
     this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return "Chaos Monkey is enabled";
+    return new ChaosMonkeyEnabledDto();
   }
 
   @WriteOperation
-  public String disableChaosMonkey() {
+  public ChaosMonkeyDisabledDto disableChaosMonkey() {
     this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return "Chaos Monkey is disabled";
+    return new ChaosMonkeyDisabledDto();
   }
 
   @ReadOperation

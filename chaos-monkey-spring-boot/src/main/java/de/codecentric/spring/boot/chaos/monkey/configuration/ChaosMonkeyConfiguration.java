@@ -17,43 +17,32 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
-import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
-import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
-import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
+import com.sun.management.OperatingSystemMXBean;
+import de.codecentric.spring.boot.chaos.monkey.assaults.*;
+import de.codecentric.spring.boot.chaos.monkey.component.*;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringComponentAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJDBC;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRepositoryAspectJPA;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringRestControllerAspect;
-import de.codecentric.spring.boot.chaos.monkey.watcher.SpringServiceAspect;
+import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.*;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.lang.Nullable;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
@@ -62,16 +51,23 @@ import org.springframework.util.StreamUtils;
  * @author Maxime Bouchenoire
  */
 @Configuration
-@Profile("chaos-monkey")
+@Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({
   ChaosMonkeyProperties.class,
   AssaultProperties.class,
   WatcherProperties.class
 })
+@Import({
+  UnleashChaosConfiguration.class,
+  ChaosMonkeyWebClientConfiguration.class,
+  ChaosMonkeyRestTemplateConfiguration.class
+})
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
 
   private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
+
+  private static final String CHAOS_MONKEY_TASK_SCHEDULER = "chaosMonkeyTaskScheduler";
 
   private final ChaosMonkeyProperties chaosMonkeyProperties;
 
@@ -134,14 +130,41 @@ public class ChaosMonkeyConfiguration {
   }
 
   @Bean
+  public CpuAssault cpuAssault() {
+    return new CpuAssault(
+        ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings(), publisher());
+  }
+
+  @Bean
   public ChaosMonkeyRequestScope chaosMonkeyRequestScope(
-      List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults) {
-    return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher());
+      List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults,
+      List<ChaosMonkeyAssault> allAssaults,
+      ChaosToggles chaosToggles,
+      ChaosToggleNameMapper chaosToggleNameMapper) {
+    return new ChaosMonkeyRequestScope(
+        settings(),
+        chaosMonkeyAssaults,
+        allAssaults,
+        publisher(),
+        chaosToggles,
+        chaosToggleNameMapper);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ChaosToggleNameMapper.class)
+  public ChaosToggleNameMapper chaosToggleNameMapper(ChaosMonkeyProperties chaosMonkeyProperties) {
+    return new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix());
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ChaosToggles.class)
+  public ChaosToggles chaosToggles() {
+    return new DefaultChaosToggles();
   }
 
   @Bean
   public ChaosMonkeyScheduler scheduler(
-      @Nullable TaskScheduler scheduler,
+      @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
       KillAppAssault killAppAssault,
       MemoryAssault memoryAssault) {
     ScheduledTaskRegistrar registrar = null;
@@ -150,6 +173,11 @@ public class ChaosMonkeyConfiguration {
       registrar.setTaskScheduler(scheduler);
     }
     return new ChaosMonkeyScheduler(registrar, assaultProperties, killAppAssault, memoryAssault);
+  }
+
+  @Bean(name = CHAOS_MONKEY_TASK_SCHEDULER)
+  public TaskScheduler chaosMonkeyTaskScheduler() {
+    return new ThreadPoolTaskScheduler();
   }
 
   @Bean
@@ -201,8 +229,16 @@ public class ChaosMonkeyConfiguration {
   }
 
   @Bean
+  @DependsOn("chaosMonkeyRequestScope")
+  @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
+  public SpringBootHealthIndicatorAspect springBootHealthIndicatorAspect(
+      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+    return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope, watcherProperties);
+  }
+
+  @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnEnabledEndpoint
+  @ConditionalOnAvailableEndpoint
   public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(
       ChaosMonkeyRuntimeScope runtimeScope, ChaosMonkeyScheduler scheduler) {
     return new ChaosMonkeyRestEndpoint(settings(), runtimeScope, scheduler);
@@ -210,7 +246,7 @@ public class ChaosMonkeyConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  @ConditionalOnEnabledEndpoint
+  @ConditionalOnAvailableEndpoint
   public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
     return new ChaosMonkeyJmxEndpoint(settings());
   }

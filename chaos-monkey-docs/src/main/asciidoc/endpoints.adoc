@@ -1,21 +1,43 @@
 [[endpoints]]
 == Spring Boot Actuator Endpoints ==
-Chaos Monkey for Spring Boot offers you some build in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html[JMX or HTTP]. This allows you to change configuration at runtime.
+Chaos Monkey for Spring Boot offers you some built in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints[JMX or HTTP]. This allows you to change configuration at runtime.
 
 '''
 
 === Enable chaosmonkey endpoint
-[source,txt,subs="verbatim,attributes"]
+[source,txt,subs="verbatim,attributes",role="primary"]
 .application.properties:
 ----
 management.endpoint.chaosmonkey.enabled=true
 management.endpoint.chaosmonkeyjmx.enabled=true
 
-# inlcude all endpoints
+# include all endpoints
 management.endpoints.web.exposure.include=*
 
 # include specific endpoints
 management.endpoints.web.exposure.include=health,info,chaosmonkey
+----
+
+[source,yaml,subs="verbatim,attributes",role="secondary"]
+.application.yml:
+----
+management:
+  endpoint:
+    chaosmonkey:
+      enabled: true
+    chaosmonkeyjmx:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        # include all endpoints
+        include: "*"
+        # include specific endpoints
+        include:
+          - health
+          - info
+          - chaosmonkey
 ----
 
 === HTTP Endpoint
@@ -54,6 +76,10 @@ management.endpoints.web.exposure.include=health,info,chaosmonkey
 |<<assaultspost,/chaosmonkey/assaults>>
 |Change Assaults configuration
 |POST
+
+|<<assaultspost,/chaosmonkey/assaults/runtime/attack>>
+|Execute configured runtime Assault
+|POST
 |===
 
 
@@ -64,25 +90,41 @@ management.endpoints.web.exposure.include=health,info,chaosmonkey
 ./chaosmonkey - Response 200 OK
 ----
 {
-"chaosMonkeyProperties":{
-"enabled": true
-},
-"assaultProperties":{
-"level": 3,
-"latencyRangeStart": 1000,
-"latencyRangeEnd": 3000,
-"latencyActive": true,
-"exceptionsActive": false,
-"killApplicationActive": false,
-"watchedCustomServices": []
-},
-"watcherProperties":{
-"controller": true,
-"restController": false,
-"service": true,
-"repository": false,
-"component": false
-}
+  "chaosMonkeyProperties": {
+    "enabled": true,
+    "togglePrefix": "chaos.monkey"
+  },
+  "assaultProperties": {
+    "level": 3,
+    "latencyRangeStart": 1000,
+    "latencyRangeEnd": 3000,
+    "latencyActive": true,
+    "exceptionsActive": false,
+    "exception": {
+      "type": null,
+      "arguments": null
+    },
+    "killApplicationActive": false,
+    "memoryActive": false,
+    "memoryMillisecondsHoldFilledMemory": 90000,
+    "memoryMillisecondsWaitNextIncrease": 1000,
+    "memoryFillIncrementFraction": 0.15,
+    "memoryFillTargetFraction": 0.25,
+    "cpuActive": true,
+    "cpuMillisecondsHoldLoad": 90000,
+    "cpuLoadTargetFraction": 0.9,
+    "runtimeAssaultCronExpression": "OFF"
+  },
+  "watcherProperties": {
+    "controller": false,
+    "restController": true,
+    "service": false,
+    "repository": false,
+    "component": false,
+    "restTemplate": false,
+    "webClient": false,
+    "actuatorHealth": false
+  }
 }
 ----
 ===== GET Chaos Monkey Status
@@ -119,11 +161,14 @@ Chaos Monkey is disabled
 ./chaosmonkey/watchers - Response 200 OK
 ----
 {
-"controller": true,
-"restController": false,
-"service": true,
-"repository": false,
-"component": false
+  "controller": false,
+  "restController": true,
+  "service": false,
+  "repository": false,
+  "component": false,
+  "restTemplate": false,
+  "webClient": false,
+  "actuatorHealth": false
 }
 ----
 ===== POST Watchers
@@ -133,11 +178,14 @@ Chaos Monkey is disabled
 ./chaosmonkey/watchers - Request
 ----
 {
-"controller": true,
-"restController": true,
-"service": true,
-"repository": true,
-"component": true
+  "controller": true,
+  "restController": true,
+  "service": true,
+  "repository": true,
+  "component": false,
+  "restTemplate": false,
+  "webClient": false,
+  "actuatorHealth": false
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -151,21 +199,27 @@ Watcher config has changed
 ./chaosmonkey/assaults - Response 200 OK
 ----
 {
-"level": 3,
-"latencyRangeStart": 1000,
-"latencyRangeEnd": 3000,
-"latencyActive": true,
-"exceptionsActive": false,
-"killApplicationActive": false,
-"killApplicationCronExpression": "OFF",
-"memoryActive": false,
-"memoryMillisecondsHoldFilledMemory": 90000,
-"memoryMillisecondsWaitNextIncrease": 1000,
-"memoryFillIncrementFraction": 0.15,
-"memoryFillTargetFraction": 0.25,
-"memoryCronExpression": "OFF",
-"runtimeAssaultCronExpression": "OFF",
-"watchedCustomServices": null
+  "level": 3,
+  "latencyRangeStart": 1000,
+  "latencyRangeEnd": 3000,
+  "latencyActive": true,
+  "exceptionsActive": false,
+  "exception": {
+    "type": null,
+    "arguments": null
+  },
+  "killApplicationActive": false,
+  "killApplicationCronExpression": "OFF",
+  "memoryActive": false,
+  "memoryMillisecondsHoldFilledMemory": 90000,
+  "memoryMillisecondsWaitNextIncrease": 1000,
+  "memoryFillIncrementFraction": 0.15,
+  "memoryFillTargetFraction": 0.25,
+  "memoryCronExpression": "OFF",
+  "cpuActive": true,
+  "cpuMillisecondsHoldLoad": 90000,
+  "cpuLoadTargetFraction": 0.9,
+  "runtimeAssaultCronExpression": "OFF"
 }
 ----
 ===== POST Assaults
@@ -175,12 +229,12 @@ Watcher config has changed
 ./chaosmonkey/assaults - Request
 ----
 {
-"level": 5,
-"latencyRangeStart": 2000,
-"latencyRangeEnd": 5000,
-"latencyActive": true,
-"exceptionsActive": true,
-"killApplicationActive": false
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -193,13 +247,16 @@ Assault config has changed
 ./chaosmonkey/assaults - Request
 ----
 {
-"level": 5,
-"latencyRangeStart": 2000,
-"latencyRangeEnd": 5000,
-"latencyActive": true,
-"exceptionsActive": true,
-"killApplicationActive": false,
-"watchedCustomServices": [ "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello","com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"]
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false,
+  "watchedCustomServices": [
+    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
+    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"
+  ]
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -212,17 +269,21 @@ Assault config has changed
 ./chaosmonkey/assaults - Request
 ----
 {
-"level": 5,
-"latencyRangeStart": 2000,
-"latencyRangeEnd": 5000,
-"latencyActive": true,
-"exceptionsActive": true,
-"killApplicationActive": false,
-"exception": {
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false,
+  "exception": {
     "type": "java.lang.IllegalArgumentException",
-    "arguments": [{
-      "className": "java.lang.String",
-      "value": "custom illegal argument exception"}] },
+    "arguments": [
+      {
+        "className": "java.lang.String",
+        "value": "custom illegal argument exception"
+      }
+    ]
+  }
 }
 ----
 [source,txt,subs="verbatim,attributes"]
@@ -231,11 +292,19 @@ Assault config has changed
 Assault config has changed
 ----
 
+==== POST Assault Attack
+[[assaultsattack]]
+[source,txt,subs="verbatim,attributes"]
+./chaosmonkey/assaults/runtime/attack - Response 200 OK
+----
+Started runtime assaults
+----
+
 === JMX Endpoint
 
 Some settings can also be made via JMX, but detailed changes to the assaults are not possible.
 
-image::jconsoleChaosMonkey.png[JMX Console]
+image::images/jconsoleChaosMonkey.png[JMX Console]
 
 |===
 |Operation |Description |Response example
@@ -281,6 +350,10 @@ component=false
 
 |toggleMemoryAssault
 |Toggle Memory Assault status
+|New value (true/false)
+
+|toggleCpuAssault
+|Toggle CPU Assault status
 |New value (true/false)
 
 |isChaosMonkeyActive

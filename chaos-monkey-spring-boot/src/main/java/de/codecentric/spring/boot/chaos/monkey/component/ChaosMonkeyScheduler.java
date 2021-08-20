@@ -39,11 +39,6 @@ public class ChaosMonkeyScheduler {
     this.killAppAssault = killAppAssault;
     this.memoryAssault = memoryAssault;
 
-    if (scheduler == null) {
-      Logger.warn(
-          "No ScheduledTaskRegistrar available in application context, scheduler is not functional");
-    }
-
     reloadConfig();
   }
 

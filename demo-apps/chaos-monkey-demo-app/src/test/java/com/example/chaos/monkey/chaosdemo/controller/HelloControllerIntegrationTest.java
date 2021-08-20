@@ -17,36 +17,33 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.web.server.LocalManagementPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /** @author Benjamin Wilms */
-@RunWith(SpringRunner.class)
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 public class HelloControllerIntegrationTest {
-
-  @LocalServerPort private int serverPort;
 
   @Autowired private TestRestTemplate testRestTemplate;
 
   @Autowired private HelloController helloController;
+
+  @LocalManagementPort private int managementPort;
 
   @Test
   public void contextLoads() {
@@ -55,21 +52,33 @@ public class HelloControllerIntegrationTest {
 
   @Test
   public void checkHelloEndpoint() {
-
-    ResponseEntity<String> response =
-        testRestTemplate.getForEntity(
-            "http://localhost:" + this.serverPort + "/hello", String.class);
+    ResponseEntity<String> response = testRestTemplate.getForEntity("/hello", String.class);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("Hello!", response.getBody());
   }
 
   @Test
   public void checkGoodbyeEndpoint() {
-
-    ResponseEntity<String> response =
-        testRestTemplate.getForEntity(
-            "http://localhost:" + this.serverPort + "/goodbye", String.class);
+    ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("Goodbye!", response.getBody());
+  }
+
+  @Test
+  public void whenExceptionAssaultIsActivatedExpectExceptionIsThrown() {
+    AssaultPropertiesUpdate assault = new AssaultPropertiesUpdate();
+    assault.setLevel(1);
+    assault.setExceptionsActive(true);
+    assault.setLatencyActive(false);
+
+    ResponseEntity<String> assaultResponse =
+        testRestTemplate.postForEntity(
+            "http://localhost:" + managementPort + "/actuator/chaosmonkey/assaults",
+            assault,
+            String.class);
+    assertEquals(HttpStatus.OK, assaultResponse.getStatusCode());
+
+    ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
   }
 }

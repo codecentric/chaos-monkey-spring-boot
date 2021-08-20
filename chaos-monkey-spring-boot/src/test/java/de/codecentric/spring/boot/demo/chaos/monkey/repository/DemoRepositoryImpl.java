@@ -50,6 +50,9 @@ public class DemoRepositoryImpl implements DemoRepository {
   public void delete(Hello hello) {}
 
   @Override
+  public void deleteAllById(Iterable<? extends Long> iterable) {}
+
+  @Override
   public void deleteAll(Iterable<? extends Hello> iterable) {}
 
   @Override

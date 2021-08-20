@@ -17,15 +17,24 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
+import java.time.ZonedDateTime;
+import java.util.Objects;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,9 +50,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(
-  classes = ChaosDemoApplication.class,
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+    classes = ChaosDemoApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
 class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
@@ -53,11 +61,14 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
   private String baseUrl;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
   }
 
   @Test
@@ -66,9 +77,9 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
     chaosMonkeyProperties.setEnabled(false);
     chaosMonkeySettings.setChaosMonkeyProperties(chaosMonkeyProperties);
 
-    then(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode())
-        .isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
-
+    assertEquals(
+        postChaosMonkeySettings(chaosMonkeySettings).getStatusCode(),
+        HttpStatus.METHOD_NOT_ALLOWED);
     assertEquals(false, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
   }
 
@@ -133,21 +144,22 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   // Assault Tests
   @Test
-  void getAssaultConfiguration() {
-    ResponseEntity<AssaultProperties> result =
-        testRestTemplate.getForEntity(baseUrl + "/assaults", AssaultProperties.class);
+  void getAssaultConfiguration() throws JsonProcessingException {
+    ResponseEntity<AssaultPropertiesUpdate> result =
+        testRestTemplate.getForEntity(baseUrl + "/assaults", AssaultPropertiesUpdate.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
     assertEquals(
-        chaosMonkeySettings.getAssaultProperties().toString(), result.getBody().toString());
+        objectMapper.writeValueAsString(chaosMonkeySettings.getAssaultProperties()),
+        objectMapper.writeValueAsString(result.getBody()));
   }
 
   @Test
   void postAssaultConfigurationGoodCase() {
     AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(10);
-    assaultProperties.setLatencyRangeEnd(100);
-    assaultProperties.setLatencyRangeStart(200);
+    assaultProperties.setLatencyRangeStart(100);
+    assaultProperties.setLatencyRangeEnd(200);
     assaultProperties.setLatencyActive(true);
     assaultProperties.setExceptionsActive(false);
     assaultProperties.setException(new AssaultException());
@@ -178,7 +190,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postAssaultConfigurationBadCaseLevelEmpty() {
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLatencyRangeEnd(100);
     assaultProperties.setLatencyRangeStart(200);
     assaultProperties.setLatencyActive(true);
@@ -191,7 +203,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postAssaultConfigurationBadCaseLatencyRangeEndEmpty() {
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(1000);
     assaultProperties.setLatencyRangeStart(200);
     assaultProperties.setLatencyActive(true);
@@ -204,7 +216,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postAssaultConfigurationBadCaseLatencyRangeStartEmpty() {
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(1000);
     assaultProperties.setLatencyRangeEnd(200);
     assaultProperties.setLatencyActive(true);
@@ -220,7 +232,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
     AssaultException exception = new AssaultException();
     exception.setType("SomeInvalidException");
 
-    AssaultProperties assaultProperties = new AssaultProperties();
+    AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
     assaultProperties.setLevel(10);
     assaultProperties.setLatencyRangeEnd(100);
     assaultProperties.setLatencyRangeStart(200);
@@ -261,23 +273,28 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
 
   @Test
   void postToEnableChaosMonkey() {
-
-    ResponseEntity<String> result =
-        testRestTemplate.postForEntity(baseUrl + "/enable", null, String.class);
+    ZonedDateTime enabledAt = ZonedDateTime.now();
+    ResponseEntity<ChaosMonkeyEnabledDto> result =
+        testRestTemplate.postForEntity(baseUrl + "/enable", null, ChaosMonkeyEnabledDto.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertEquals("Chaos Monkey is enabled", result.getBody());
+    assertThat(Objects.requireNonNull(result.getBody()).getStatus())
+        .isEqualTo("Chaos Monkey is enabled");
+    assertThat(Objects.requireNonNull(result.getBody()).getEnabledAt()).isAfterOrEqualTo(enabledAt);
   }
 
   // DISABLE CHAOS MONKEY
   @Test
   void postToDisableChaosMonkey() {
-
-    ResponseEntity<String> result =
-        testRestTemplate.postForEntity(baseUrl + "/disable", null, String.class);
+    ZonedDateTime disabledAt = ZonedDateTime.now();
+    ResponseEntity<ChaosMonkeyDisabledDto> result =
+        testRestTemplate.postForEntity(baseUrl + "/disable", null, ChaosMonkeyDisabledDto.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertEquals("Chaos Monkey is disabled", result.getBody());
+    assertThat(Objects.requireNonNull(result.getBody()).getStatus())
+        .isEqualTo("Chaos Monkey is disabled");
+    assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt())
+        .isAfterOrEqualTo(disabledAt);
   }
 
   private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {

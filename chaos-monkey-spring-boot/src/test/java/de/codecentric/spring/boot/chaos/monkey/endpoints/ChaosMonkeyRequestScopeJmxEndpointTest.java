@@ -16,14 +16,18 @@
 
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
+import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +40,6 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @BeforeEach
   void setUp() {
-
     AssaultProperties assaultProperties = new AssaultProperties();
     assaultProperties.setLevel(1);
     assaultProperties.setLatencyRangeStart(100);
@@ -52,7 +55,6 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @Test
   void getAssaultProperties() {
-
     assertThat(
         chaosMonkeyJmxEndpoint.getAssaultProperties(),
         is(chaosMonkeySettings.getAssaultProperties().toDto()));
@@ -89,6 +91,14 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
   }
 
   @Test
+  void toggleCpuAssault() {
+    boolean cpuActive = chaosMonkeySettings.getAssaultProperties().isCpuActive();
+    chaosMonkeyJmxEndpoint.toggleCpuAssault();
+
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getCpuActive(), not(cpuActive));
+  }
+
+  @Test
   void isChaosMonkeyActive() {
     assertThat(
         chaosMonkeyJmxEndpoint.isChaosMonkeyActive(),
@@ -97,13 +107,19 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @Test
   void enableChaosMonkey() {
-    assertThat(chaosMonkeyJmxEndpoint.enableChaosMonkey(), is("Chaos Monkey is enabled"));
+    ZonedDateTime enabledAt = ZonedDateTime.now();
+    ChaosMonkeyEnabledDto enabledDto = chaosMonkeyJmxEndpoint.enableChaosMonkey();
+    assertThat(enabledDto.getStatus()).isEqualTo("Chaos Monkey is enabled");
+    assertThat(enabledDto.getEnabledAt()).isAfterOrEqualTo(enabledAt);
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
   }
 
   @Test
   void disableChaosMonkey() {
-    assertThat(chaosMonkeyJmxEndpoint.disableChaosMonkey(), is("Chaos Monkey is disabled"));
+    ZonedDateTime disabledAt = ZonedDateTime.now();
+    ChaosMonkeyDisabledDto disabledDto = chaosMonkeyJmxEndpoint.disableChaosMonkey();
+    assertThat(disabledDto.getStatus()).isEqualTo("Chaos Monkey is disabled");
+    assertThat(disabledDto.getDisabledAt()).isAfterOrEqualTo(disabledAt);
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
   }
 

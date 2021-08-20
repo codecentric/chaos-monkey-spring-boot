@@ -14,6 +14,14 @@
     <name>chaos-monkey-docs</name>
     <description>Documentation of Chaos Monkey for Spring Boot</description>
 
+    <!-- Used for spring-asciidoctor-extensions-block-switch -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-repo</id>
+            <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -44,11 +52,11 @@
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
+                            <goal>zip</goal>
                         </goals>
                         <configuration>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
                             <backend>html5</backend>
-                            <sourceHighlighter>coderay</sourceHighlighter>
                             <resources>
                                 <resource>
                                     <directory>src/main/asciidoc</directory>
@@ -61,51 +69,37 @@
                                 <project-version>${project.version}</project-version>
                                 <commit-id>${git.commit.id.abbrev}</commit-id>
                                 <commit-time>${git.commit.time}</commit-time>
+                                <source-highlighter>coderay</source-highlighter>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>output-docbook</id>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>src/main/asciidoc</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-docbook</outputDirectory>
+                            <backend>docbook</backend>
+                            <doctype>book</doctype>
+                            <attributes>
+                                <project-version>${project.version}</project-version>
+                                <spring-boot-version>${spring-boot.version}</spring-boot-version>
+                                <commit-id>${git.commit.id.abbrev}</commit-id>
+                                <commit-time>${git.commit.time}</commit-time>
                             </attributes>
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.spring.asciidoctor</groupId>
+                        <artifactId>spring-asciidoctor-extensions-block-switch</artifactId>
+                        <version>${asciidoctor-extensions-spring-boot}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.github</groupId>
-                        <artifactId>site-maven-plugin</artifactId>
-                        <version>${site-maven-plugin.version}</version>
-                        <configuration>
-                            <message>Creating Reference Guide for ${project.version}</message>
-                            <path>${project.version}</path>
-                            <merge>true</merge>
-                            <dryRun>false</dryRun>
-                            <outputDirectory>target/generated-docs</outputDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>site</goal>
-                                </goals>
-                                <phase>site</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>${maven-project-info-reports-plugin.version}</version>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
