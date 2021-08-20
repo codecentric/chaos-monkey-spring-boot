@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ExitCodeGenerator;
@@ -57,7 +58,17 @@ public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationCon
       }
 
       int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
-      Thread.sleep(5000); // wait before kill to deliver some metrics
+
+      long remaining = 5000;
+      long end = System.currentTimeMillis() + remaining;
+      while (true) {
+        try {
+          TimeUnit.MILLISECONDS.sleep(remaining); // wait before kill to deliver some metrics
+          break;
+        } catch (InterruptedException ignored) {
+          remaining = end - System.currentTimeMillis();
+        }
+      }
 
       System.exit(exit);
     } catch (Exception e) {
