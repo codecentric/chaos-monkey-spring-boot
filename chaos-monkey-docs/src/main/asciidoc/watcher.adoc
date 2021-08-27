@@ -34,7 +34,7 @@ _RestTemplates_ and _WebClients_ which are created not as a bean via _new RestTe
 
 === Customize Watcher
 You can customize the behavior of all watchers using the property *watchedCustomServices* and decide which classes and public methods
-should be attacked. You can set the property to reference public methods or classes.
+should be attacked. You can set the property to reference public methods, classes or packages.
 
 If `watchedCustomServices` is not set, all classes and public methods recognized by the enabled watchers are attacked.
 

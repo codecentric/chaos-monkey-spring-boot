@@ -249,6 +249,25 @@ class ChaosMonkeyRequestScopeTest {
     }
 
     @Test
+    void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsPackageReference() {
+      String packageName = "org.springframework.data.repository";
+
+      given(exceptionAssault.isActive()).willReturn(true);
+      given(assaultProperties.getWatchedCustomServices())
+          .willReturn(Collections.singletonList(packageName));
+      given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive())
+          .willReturn(true);
+      given(latencyAssault.isActive()).willReturn(true);
+      given(assaultProperties.chooseAssault(2)).willReturn(0);
+
+      String simpleName = packageName + "CrudRepository.findAll";
+      chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
+
+      verify(latencyAssault, times(1)).attack();
+      verify(exceptionAssault, never()).attack();
+    }
+
+    @Test
     void shouldMakeUncategorizedCustomAssaultsRequestScopeByDefault() {
       // create an assault that is neither runtime nor request
       ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
