@@ -11,6 +11,7 @@ Built with Spring Boot {spring-boot-version}
 
 === Improvements
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/254[#254] Added timestamps to chaos monkey enable/disable endpoint.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/268[#268] Allow any `Throwable` in ExceptionAssault instead of only `Exception`.
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
