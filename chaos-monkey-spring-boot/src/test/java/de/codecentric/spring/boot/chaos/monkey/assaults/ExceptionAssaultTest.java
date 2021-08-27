@@ -105,8 +105,8 @@ class ExceptionAssaultTest {
   void throwsError() {
     ChaosMonkeySettings settings = getChaosMonkeySettings();
     settings
-            .getAssaultProperties()
-            .setException(getAssaultException("java.lang.OutOfMemoryError", null, null));
+        .getAssaultProperties()
+        .setException(getAssaultException("java.lang.OutOfMemoryError", null, null));
 
     ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
     assertThrows(OutOfMemoryError.class, exceptionAssault::attack);
