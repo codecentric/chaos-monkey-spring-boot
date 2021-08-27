@@ -19,7 +19,7 @@ public class AssaultExceptionValidator
     }
 
     try {
-      Class<? extends Exception> exceptionClass = exception.getExceptionClass();
+      Class<? extends Throwable> exceptionClass = exception.getExceptionClass();
       if (exception.getArguments() == null) {
         exceptionClass.getConstructor();
       } else {
