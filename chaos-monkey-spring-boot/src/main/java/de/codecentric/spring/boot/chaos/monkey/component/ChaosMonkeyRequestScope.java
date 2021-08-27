@@ -22,6 +22,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
@@ -77,11 +78,9 @@ public class ChaosMonkeyRequestScope {
 
       // Custom watched services can be defined at runtime, if there are any, only
       // these will be attacked!
-      if (chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()) {
-        if (chaosMonkeySettings
-            .getAssaultProperties()
-            .getWatchedCustomServices()
-            .contains(simpleName)) {
+      AssaultProperties assaultProps = chaosMonkeySettings.getAssaultProperties();
+      if (assaultProps.isWatchedCustomServicesActive()) {
+        if (assaultProps.getWatchedCustomServices().stream().anyMatch(simpleName::startsWith)) {
           // only all listed custom methods will be attacked
           chooseAndRunAttack();
         }
