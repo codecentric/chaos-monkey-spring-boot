@@ -20,6 +20,11 @@ You can decide which attacks you want to run and which parts of your application
 |1-10000
 |1
 
+|chaos.monkey.assaults.deterministic
+|Whether the level should be used as a deterministic value (attack every x requests) or a chance (on average, 1 in x requests will be attacked)
+|TRUE or FALSE
+|FALSE
+
 |chaos.monkey.assaults.latencyRangeStart
 |Minimum latency in ms added to the request
 |Integer.MIN_VALUE, Integer.MAX_VALUE

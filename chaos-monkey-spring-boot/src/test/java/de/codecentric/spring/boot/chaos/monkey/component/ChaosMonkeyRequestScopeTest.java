@@ -285,4 +285,31 @@ class ChaosMonkeyRequestScopeTest {
       verify(customAssault).attack();
     }
   }
+
+  @Test
+  void assaultShouldBeDeterministicIfConfigured() {
+    ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
+    given(customAssault.isActive()).willReturn(true);
+    given(chaosMonkeyProperties.isEnabled()).willReturn(true);
+    given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
+
+    given(assaultProperties.isDeterministic()).willReturn(true);
+    given(assaultProperties.getLevel()).willReturn(3);
+
+    ChaosMonkeyRequestScope customScope =
+        new ChaosMonkeyRequestScope(
+            chaosMonkeySettings,
+            Collections.emptyList(),
+            Collections.singletonList(customAssault),
+            metricEventPublisherMock,
+            new DefaultChaosToggles(),
+            new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+
+    customScope.callChaosMonkey(null, "foo");
+    verify(customAssault, never()).attack();
+    customScope.callChaosMonkey(null, "foo");
+    verify(customAssault, never()).attack();
+    customScope.callChaosMonkey(null, "foo");
+    verify(customAssault, times(1)).attack();
+  }
 }

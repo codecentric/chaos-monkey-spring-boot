@@ -10,6 +10,7 @@ Built with Spring Boot {spring-boot-version}
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/274[#274] Added deterministic configuration, which toggles from "on average, 1 in x requests will be attacked" to "attack every x requests"
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors

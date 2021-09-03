@@ -28,6 +28,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggle
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,8 @@ public class ChaosMonkeyRequestScope {
   private final ChaosToggleNameMapper chaosToggleNameMapper;
 
   private MetricEventPublisher metricEventPublisher;
+
+  private final AtomicInteger assaultCounter;
 
   public ChaosMonkeyRequestScope(
       ChaosMonkeySettings chaosMonkeySettings,
@@ -67,6 +70,7 @@ public class ChaosMonkeyRequestScope {
     this.metricEventPublisher = metricEventPublisher;
     this.chaosToggles = chaosToggles;
     this.chaosToggleNameMapper = chaosToggleNameMapper;
+    this.assaultCounter = new AtomicInteger(0);
   }
 
   public void callChaosMonkey(ChaosTarget type, String simpleName) {
@@ -112,8 +116,14 @@ public class ChaosMonkeyRequestScope {
   }
 
   private boolean isTrouble() {
-    return chaosMonkeySettings.getAssaultProperties().getTroubleRandom()
-        >= chaosMonkeySettings.getAssaultProperties().getLevel();
+    if (chaosMonkeySettings.getAssaultProperties().isDeterministic()) {
+      return assaultCounter.incrementAndGet()
+              % chaosMonkeySettings.getAssaultProperties().getLevel()
+          == 0;
+    } else {
+      return chaosMonkeySettings.getAssaultProperties().getTroubleRandom()
+          >= chaosMonkeySettings.getAssaultProperties().getLevel();
+    }
   }
 
   private boolean isEnabled(ChaosTarget type, String name) {
