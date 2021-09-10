@@ -31,6 +31,8 @@ jobs:
           SONATYPE_USERTOKEN: ${{ secrets.SONATYPE_USERTOKEN }}
           SONATYPE_USERTOKENPASSWORD: ${{ secrets.SONATYPE_USERTOKENPASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Generate docs
+        run: ./mvnw generate-resources -pl chaos-monkey-docs
       - name: Gather docs
         run: |
           mkdir ./docs/latest
