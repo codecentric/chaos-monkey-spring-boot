@@ -26,10 +26,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
 
-/**
- * @author Benjamin Wilms
- * @author Maxime Bouchenoire
- */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
@@ -73,6 +69,10 @@ public class AssaultProperties {
   // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
   private String cpuCronExpression = null;
 
+  /**
+   * @deprecated please use {@link #killApplicationCronExpression}, {@link #memoryCronExpression} or
+   *     {@link #cpuCronExpression} instead
+   */
   @Deprecated private String runtimeAssaultCronExpression = "OFF";
 
   private List<String> watchedCustomServices;
