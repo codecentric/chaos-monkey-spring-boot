@@ -61,7 +61,7 @@ class ChaosMonkeySchedulerTest {
   @Test
   void shouldNotScheduleNewTasksAfterUnrelatedUpdate() {
     String schedule = "*/1 * * * * ?";
-    ScheduledTask oldTask = mockScheduledTask(schedule);
+    ScheduledTask oldTask = mockScheduledTask("memory", schedule);
     when(memoryAssault.getCronExpression(any())).thenReturn(schedule);
     when(registrar.scheduleCronTask(any())).thenReturn(oldTask);
 
@@ -94,34 +94,37 @@ class ChaosMonkeySchedulerTest {
 
   @Test
   void shouldRescheduleOnlyChangedTasks() {
-    String schedule = "*/1 * * * * ?";
-    ScheduledTask memoryTask = mockScheduledTask(schedule);
-    ScheduledTask oldTask = mockScheduledTask(schedule);
+    String memorySchedule = "*/1 * * * * ?";
+    String killAppSchedule = "*/2 * * * * ?";
+    ScheduledTask memoryTask = mockScheduledTask("memory", memorySchedule);
+    ScheduledTask oldTask = mockScheduledTask("killApp", killAppSchedule);
     ScheduledTask newTask = mock(ScheduledTask.class);
-    when(memoryAssault.getCronExpression(any())).thenReturn(schedule);
-    when(killAppAssault.getCronExpression(any())).thenReturn(schedule);
-    when(registrar.scheduleCronTask(any())).thenReturn(memoryTask, oldTask, newTask);
+    when(memoryAssault.getCronExpression(any())).thenReturn(memorySchedule);
+    when(killAppAssault.getCronExpression(any())).thenReturn(killAppSchedule);
+    when(registrar.scheduleCronTask(argThat(hasScheduleLike(memorySchedule)))).thenReturn(memoryTask);
+    when(registrar.scheduleCronTask(argThat(hasScheduleLike(killAppSchedule)))).thenReturn(oldTask, newTask);
 
     ChaosMonkeyScheduler cms =
         new ChaosMonkeyScheduler(registrar, config, Arrays.asList(memoryAssault, killAppAssault));
-    verify(registrar, times(2)).scheduleCronTask(argThat(hasScheduleLike(schedule)));
+    verify(registrar).scheduleCronTask(argThat(hasScheduleLike(memorySchedule)));
+    verify(registrar).scheduleCronTask(argThat(hasScheduleLike(killAppSchedule)));
 
     reset(registrar);
-    String schedule2 = "*/2 * * * * ?";
-    when(killAppAssault.getCronExpression(any())).thenReturn(schedule2);
+    String killAppSchedule2 = "*/3 * * * * ?";
+    when(killAppAssault.getCronExpression(any())).thenReturn(killAppSchedule2);
 
     cms.reloadConfig();
-    verify(registrar, times(1)).scheduleCronTask(argThat(hasScheduleLike(schedule2)));
+    verify(registrar).scheduleCronTask(argThat(hasScheduleLike(killAppSchedule2)));
     verify(memoryTask, never()).cancel();
     verify(oldTask).cancel();
   }
 
   private ArgumentMatcher<CronTask> hasScheduleLike(String schedule) {
-    return cronTask -> cronTask.getExpression().equals(schedule);
+    return cronTask -> cronTask != null && cronTask.getExpression().equals(schedule);
   }
 
-  private static ScheduledTask mockScheduledTask(String schedule) {
-    ScheduledTask scheduledTask = mock(ScheduledTask.class);
+  private static ScheduledTask mockScheduledTask(String name, String schedule) {
+    ScheduledTask scheduledTask = mock(ScheduledTask.class, name);
     when(scheduledTask.getTask()).thenReturn(new CronTask(() -> {}, schedule));
     return scheduledTask;
   }
