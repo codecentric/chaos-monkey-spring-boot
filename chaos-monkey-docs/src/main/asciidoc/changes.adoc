@@ -19,6 +19,7 @@ Built with Spring Boot {spring-boot-version}
 === New Features
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/241[#239] Added CPU Assault
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/196[#196] Added bootstrapping method through the system property(`LOAD_CHAOS_MONKEY`).
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/183[#183] Added dedicated cron for each runtime assault
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors

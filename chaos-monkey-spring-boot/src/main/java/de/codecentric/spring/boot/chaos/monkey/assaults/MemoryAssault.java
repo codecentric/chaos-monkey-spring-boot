@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -169,5 +170,12 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         break;
       }
     }
+  }
+
+  @Override
+  public String getCronExpression(AssaultProperties assaultProperties) {
+    return assaultProperties.getMemoryCronExpression() != null
+        ? assaultProperties.getMemoryCronExpression()
+        : assaultProperties.getRuntimeAssaultCronExpression();
   }
 }

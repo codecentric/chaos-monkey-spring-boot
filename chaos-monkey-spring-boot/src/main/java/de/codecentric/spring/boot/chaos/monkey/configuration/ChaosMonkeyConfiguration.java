@@ -46,7 +46,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
-/** @author Benjamin Wilms */
 @Configuration
 @Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({
@@ -162,10 +161,10 @@ public class ChaosMonkeyConfiguration {
   @Bean
   public ChaosMonkeyScheduler scheduler(
       @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
-      ChaosMonkeyRuntimeScope runtimeScope) {
+      List<ChaosMonkeyRuntimeAssault> assaults) {
     ScheduledTaskRegistrar registrar = new ScheduledTaskRegistrar();
     registrar.setTaskScheduler(scheduler);
-    return new ChaosMonkeyScheduler(registrar, assaultProperties, runtimeScope);
+    return new ChaosMonkeyScheduler(registrar, assaultProperties, assaults);
   }
 
   @Bean(name = CHAOS_MONKEY_TASK_SCHEDULER)

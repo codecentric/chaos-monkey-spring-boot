@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -79,5 +80,12 @@ public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationCon
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) {
     this.context = applicationContext;
+  }
+
+  @Override
+  public String getCronExpression(AssaultProperties assaultProperties) {
+    return assaultProperties.getKillApplicationCronExpression() != null
+        ? assaultProperties.getKillApplicationCronExpression()
+        : assaultProperties.getRuntimeAssaultCronExpression();
   }
 }

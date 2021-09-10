@@ -23,11 +23,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.CollectionUtils;
 
-/** @author Benjamin Wilms */
 @Data
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "chaos.monkey.assaults")
@@ -46,6 +44,9 @@ public class AssaultProperties {
 
   private boolean killApplicationActive = false;
 
+  // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
+  private String killApplicationCronExpression = null;
+
   private volatile boolean memoryActive = false;
 
   private int memoryMillisecondsHoldFilledMemory = 90000;
@@ -56,14 +57,23 @@ public class AssaultProperties {
 
   private double memoryFillTargetFraction = 0.25;
 
+  // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
+  private String memoryCronExpression = null;
+
   private volatile boolean cpuActive = false;
 
   private int cpuMillisecondsHoldLoad = 90000;
 
   private double cpuLoadTargetFraction = 0.9;
 
-  @Value("${chaos.monkey.assaults.runtime.scope.assault.cron.expression:OFF}")
-  private String runtimeAssaultCronExpression;
+  // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
+  private String cpuCronExpression = null;
+
+  /**
+   * @deprecated please use {@link #killApplicationCronExpression}, {@link #memoryCronExpression} or
+   *     {@link #cpuCronExpression} instead
+   */
+  @Deprecated private String runtimeAssaultCronExpression = "OFF";
 
   private List<String> watchedCustomServices;
 
