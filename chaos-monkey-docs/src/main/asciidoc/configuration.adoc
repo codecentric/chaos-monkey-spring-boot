@@ -54,7 +54,6 @@ You can decide which attacks you want to run and which parts of your application
 |Cron expression like `*/1 * * * * ?` can be set to enable chaos monkey AppKiller assault on a schedule
 |Any valid cron expression (or OFF)
 |OFF
-|===
 
 |chaos.monkey.watcher.controller
 |Controller watcher active
