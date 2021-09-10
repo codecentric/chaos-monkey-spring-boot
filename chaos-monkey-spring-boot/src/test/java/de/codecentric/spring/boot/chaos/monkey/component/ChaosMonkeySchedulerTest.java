@@ -101,8 +101,10 @@ class ChaosMonkeySchedulerTest {
     ScheduledTask newTask = mock(ScheduledTask.class);
     when(memoryAssault.getCronExpression(any())).thenReturn(memorySchedule);
     when(killAppAssault.getCronExpression(any())).thenReturn(killAppSchedule);
-    when(registrar.scheduleCronTask(argThat(hasScheduleLike(memorySchedule)))).thenReturn(memoryTask);
-    when(registrar.scheduleCronTask(argThat(hasScheduleLike(killAppSchedule)))).thenReturn(oldTask, newTask);
+    when(registrar.scheduleCronTask(argThat(hasScheduleLike(memorySchedule))))
+        .thenReturn(memoryTask);
+    when(registrar.scheduleCronTask(argThat(hasScheduleLike(killAppSchedule))))
+        .thenReturn(oldTask, newTask);
 
     ChaosMonkeyScheduler cms =
         new ChaosMonkeyScheduler(registrar, config, Arrays.asList(memoryAssault, killAppAssault));
