@@ -121,10 +121,8 @@ class ChaosMonkeySchedulerTest {
   }
 
   private static ScheduledTask mockScheduledTask(String schedule) {
-    CronTask cronTask = mock(CronTask.class);
-    when(cronTask.getExpression()).thenReturn(schedule);
     ScheduledTask scheduledTask = mock(ScheduledTask.class);
-    when(scheduledTask.getTask()).thenReturn(cronTask);
+    when(scheduledTask.getTask()).thenReturn(new CronTask(() -> {}, schedule));
     return scheduledTask;
   }
 }
