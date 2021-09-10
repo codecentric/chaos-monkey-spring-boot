@@ -3,16 +3,15 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-/**
- * @author Maxime Bouchenoire
- * @author Lukas Morawietz
- */
 public class ChaosMonkeyScheduler {
 
   private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
@@ -36,33 +35,41 @@ public class ChaosMonkeyScheduler {
   }
 
   public void reloadConfig() {
-    Map<ChaosMonkeyRuntimeAssault, String> cronExpressions = new LinkedHashMap<>();
-    for (ChaosMonkeyRuntimeAssault assault : assaults) {
-      cronExpressions.put(assault, assault.getCronExpression(config));
-    }
+    Map<ChaosMonkeyRuntimeAssault, String> cronExpressions = getCronExpressions();
     if (!currentTasks.isEmpty()) {
-      for (Iterator<Map.Entry<ChaosMonkeyRuntimeAssault, String>> iterator =
-              cronExpressions.entrySet().iterator();
-          iterator.hasNext(); ) {
-        Map.Entry<ChaosMonkeyRuntimeAssault, String> entry = iterator.next();
-        ScheduledTask task = currentTasks.get(entry.getKey());
-        if (task != null) {
-          if (Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue())) {
-            // no need to reschedule
-            iterator.remove();
-          } else {
-            // cancel and reschedule below
-            Logger.info(
-                "Cancelling previous task for " + entry.getKey().getClass().getSimpleName());
-            task.cancel();
-          }
+      removeUnchangedAndCancelOldTasks(cronExpressions);
+    }
+
+    scheduleNewTasks(cronExpressions);
+  }
+
+  private Map<ChaosMonkeyRuntimeAssault, String> getCronExpressions() {
+    return assaults.stream()
+        .collect(
+            Collectors.toMap(Function.identity(), assault -> assault.getCronExpression(config)));
+  }
+
+  private void removeUnchangedAndCancelOldTasks(
+      Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
+    val iterator = cronExpressions.entrySet().iterator();
+    while (iterator.hasNext()) {
+      val entry = iterator.next();
+      ScheduledTask task = currentTasks.get(entry.getKey());
+      if (task != null && task.getTask() instanceof CronTask) {
+        if (Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue())) {
+          iterator.remove();
+        } else {
+          Logger.info("Cancelling previous task for " + entry.getKey().getClass().getSimpleName());
+          task.cancel();
         }
       }
     }
+  }
 
+  private void scheduleNewTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
     cronExpressions.forEach(
         (assault, expression) -> {
-          if (!"OFF".equals(expression) && expression != null)
+          if (expression != null && !"OFF".equals(expression))
             scheduleRuntimeAssault(scheduler, assault, expression);
         });
   }

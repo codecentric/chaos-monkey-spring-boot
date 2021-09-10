@@ -48,7 +48,8 @@ public class AssaultProperties {
 
   private boolean killApplicationActive = false;
 
-  private String killApplicationCronExpression;
+  // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
+  private String killApplicationCronExpression = null;
 
   private volatile boolean memoryActive = false;
 
@@ -60,7 +61,8 @@ public class AssaultProperties {
 
   private double memoryFillTargetFraction = 0.25;
 
-  private String memoryCronExpression;
+  // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
+  private String memoryCronExpression = null;
 
   private volatile boolean cpuActive = false;
 
@@ -68,7 +70,10 @@ public class AssaultProperties {
 
   private double cpuLoadTargetFraction = 0.9;
 
-  private String cpuCronExpression;
+  // TODO change this to "OFF" when runtimeAssaultCronExpression is removed
+  private String cpuCronExpression = null;
+
+  @Deprecated private String runtimeAssaultCronExpression = "OFF";
 
   private List<String> watchedCustomServices;
 

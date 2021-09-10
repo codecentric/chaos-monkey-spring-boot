@@ -219,6 +219,7 @@ Watcher config has changed
   "cpuActive": true,
   "cpuMillisecondsHoldLoad": 90000,
   "cpuLoadTargetFraction": 0.9,
+  "cpuCronExpression": "OFF",
   "runtimeAssaultCronExpression": "OFF"
 }
 ----

@@ -84,6 +84,8 @@ public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationCon
 
   @Override
   public String getCronExpression(AssaultProperties assaultProperties) {
-    return assaultProperties.getKillApplicationCronExpression();
+    return assaultProperties.getKillApplicationCronExpression() != null
+        ? assaultProperties.getKillApplicationCronExpression()
+        : assaultProperties.getRuntimeAssaultCronExpression();
   }
 }

@@ -64,7 +64,9 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
 
   @Override
   public String getCronExpression(AssaultProperties assaultProperties) {
-    return assaultProperties.getCpuCronExpression();
+    return assaultProperties.getCpuCronExpression() != null
+        ? assaultProperties.getCpuCronExpression()
+        : assaultProperties.getRuntimeAssaultCronExpression();
   }
 
   private static class ThreadManager {

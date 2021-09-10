@@ -89,6 +89,8 @@ public class AssaultPropertiesUpdate {
 
   @Nullable private String cpuCronExpression;
 
+  @Deprecated @Nullable private String runtimeAssaultCronExpression;
+
   @Nullable private List<String> watchedCustomServices;
 
   private <T> void applyTo(T value, Consumer<T> setter) {
@@ -121,6 +123,7 @@ public class AssaultPropertiesUpdate {
     applyTo(cpuLoadTargetFraction, t::setCpuLoadTargetFraction);
     applyTo(cpuCronExpression, t::setCpuCronExpression);
 
+    applyTo(runtimeAssaultCronExpression, t::setRuntimeAssaultCronExpression);
     applyTo(watchedCustomServices, t::setWatchedCustomServices);
   }
 }
