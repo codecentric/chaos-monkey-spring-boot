@@ -36,14 +36,14 @@ public class AssaultException {
   @JsonIgnore
   @SneakyThrows
   public void throwExceptionInstance() {
-    Exception instance;
+    Throwable instance;
     try {
-      Class<? extends Exception> exceptionClass = getExceptionClass();
+      Class<? extends Throwable> exceptionClass = getExceptionClass();
       if (arguments == null) {
-        Constructor<? extends Exception> constructor = exceptionClass.getConstructor();
+        Constructor<? extends Throwable> constructor = exceptionClass.getConstructor();
         instance = constructor.newInstance();
       } else {
-        Constructor<? extends Exception> constructor =
+        Constructor<? extends Throwable> constructor =
             exceptionClass.getConstructor(this.getExceptionArgumentTypes().toArray(new Class[0]));
         instance =
             constructor.newInstance(this.getExceptionArgumentValues().toArray(new Object[0]));
@@ -59,7 +59,7 @@ public class AssaultException {
   }
 
   @JsonIgnore
-  public Class<? extends Exception> getExceptionClass() throws ClassNotFoundException {
+  public Class<? extends Throwable> getExceptionClass() throws ClassNotFoundException {
     if (type == null) {
       // use Chaos Monkey default Runtime Exception
       type = "java.lang.RuntimeException";
@@ -68,7 +68,7 @@ public class AssaultException {
       exceptionArgument.setValue("Chaos Monkey - RuntimeException");
       arguments = Collections.singletonList(exceptionArgument);
     }
-    return Class.forName(type).asSubclass(Exception.class);
+    return Class.forName(type).asSubclass(Throwable.class);
   }
 
   @JsonIgnore

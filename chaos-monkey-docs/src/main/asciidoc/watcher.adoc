@@ -34,7 +34,9 @@ _RestTemplates_ and _WebClients_ which are created not as a bean via _new RestTe
 
 === Customize Watcher
 You can customize the behavior of all watchers using the property *watchedCustomServices* and decide which classes and public methods
-should be attacked. If no signatures are stored, all classes and public methods, recognized by the watchers are attacked by default.
+should be attacked. You can set the property to reference public methods, classes or packages.
+
+If `watchedCustomServices` is not set, all classes and public methods recognized by the enabled watchers are attacked.
 
 You can either maintain the list in your application properties or adjust it at runtime using the Spring Boot Actuator Endpoint.
 
@@ -49,7 +51,7 @@ See following examples:
   "latencyRangeEnd": 3000,
   "watchedCustomServices": [
     "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
-    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"
+    "com.example.chaos.monkey.chaosdemo.service.HelloService"
   ]
 }
 ----
@@ -62,7 +64,7 @@ chaos.monkey.enabled=true
 chaos.monkey.watcher.controller=true
 chaos.monkey.assaults.level=1
 chaos.monkey.assaults.latency-active=true
-chaos.monkey.assaults.watchedCustomServices=com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello,com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye
+chaos.monkey.assaults.watchedCustomServices=com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello,com.example.chaos.monkey.chaosdemo.service.HelloService
 ----
 
 [source,yaml,subs="verbatim,attributes",role="secondary"]
@@ -78,7 +80,7 @@ chaos:
       latency-active: true
       watched-custom-services:
         - com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello
-        - com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye
+        - com.example.chaos.monkey.chaosdemo.service.HelloService
 ----
 
 

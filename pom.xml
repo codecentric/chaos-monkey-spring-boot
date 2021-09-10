@@ -35,17 +35,21 @@
     <github.global.server>github</github.global.server>
 
     <!-- spring versions -->
-    <spring-boot.version>2.5.2</spring-boot.version>
+    <spring-boot.version>2.5.4</spring-boot.version>
     <spring-cloud.version>2020.0.3</spring-cloud.version>
-    <spring.version>5.3.8</spring.version>
+    <spring.version>5.3.9</spring.version>
 
-    <!-- dependency versions -->
+    <!-- spring managed dependency versions,
+    see https://docs.spring.io/spring-boot/docs/${spring-boot.version}/reference/html/dependency-versions.html
+    -->
     <junit.jupiter.version>5.7.2</junit.jupiter.version>
     <mockito.version>3.9.0</mockito.version>
     <lombok.version>1.18.20</lombok.version>
-    <aspectj-weaver.version>1.9.6</aspectj-weaver.version>
-    <jcl-over-slf4j.version>1.7.31</jcl-over-slf4j.version>
-    <reactor-netty.version>1.0.8</reactor-netty.version>
+    <aspectj-weaver.version>1.9.7</aspectj-weaver.version>
+    <jcl-over-slf4j.version>1.7.32</jcl-over-slf4j.version>
+    <reactor-netty.version>1.0.10</reactor-netty.version>
+
+    <!-- dependency versions -->
     <unleash.version>4.4.0</unleash.version>
 
     <!-- demo dependencies -->

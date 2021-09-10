@@ -212,7 +212,7 @@ class ChaosMonkeyRequestScopeTest {
     }
 
     @Test
-    void chaosMonkeyIsCalledWhenServiceNotWatched() {
+    void chaosMonkeyIsCalledWhenServiceIsWatched() {
       String customService = "CustomService";
 
       given(exceptionAssault.isActive()).willReturn(true);
@@ -224,6 +224,44 @@ class ChaosMonkeyRequestScopeTest {
       given(assaultProperties.chooseAssault(2)).willReturn(0);
 
       chaosMonkeyRequestScope.callChaosMonkey(null, customService);
+
+      verify(latencyAssault, times(1)).attack();
+      verify(exceptionAssault, never()).attack();
+    }
+
+    @Test
+    void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsMethodReference() {
+      String customRepository = "org.springframework.data.repository.CrudRepository";
+
+      given(exceptionAssault.isActive()).willReturn(true);
+      given(assaultProperties.getWatchedCustomServices())
+          .willReturn(Collections.singletonList(customRepository));
+      given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive())
+          .willReturn(true);
+      given(latencyAssault.isActive()).willReturn(true);
+      given(assaultProperties.chooseAssault(2)).willReturn(0);
+
+      String simpleName = customRepository + ".findAll";
+      chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
+
+      verify(latencyAssault, times(1)).attack();
+      verify(exceptionAssault, never()).attack();
+    }
+
+    @Test
+    void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsPackageReference() {
+      String packageName = "org.springframework.data.repository";
+
+      given(exceptionAssault.isActive()).willReturn(true);
+      given(assaultProperties.getWatchedCustomServices())
+          .willReturn(Collections.singletonList(packageName));
+      given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive())
+          .willReturn(true);
+      given(latencyAssault.isActive()).willReturn(true);
+      given(assaultProperties.chooseAssault(2)).willReturn(0);
+
+      String simpleName = packageName + "CrudRepository.findAll";
+      chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
 
       verify(latencyAssault, times(1)).attack();
       verify(exceptionAssault, never()).attack();
