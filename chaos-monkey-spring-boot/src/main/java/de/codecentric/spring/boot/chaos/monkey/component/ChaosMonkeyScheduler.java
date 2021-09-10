@@ -5,7 +5,6 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.config.CronTask;
@@ -37,7 +36,8 @@ public class ChaosMonkeyScheduler {
   public void reloadConfig() {
     Map<ChaosMonkeyRuntimeAssault, String> cronExpressions = getCronExpressions();
     if (!currentTasks.isEmpty()) {
-      removeUnchangedAndCancelOldTasks(cronExpressions);
+      removeUnchangedExpressions(cronExpressions);
+      cancelOldTasks(cronExpressions);
     }
 
     scheduleNewTasks(cronExpressions);
@@ -49,21 +49,24 @@ public class ChaosMonkeyScheduler {
             Collectors.toMap(Function.identity(), assault -> assault.getCronExpression(config)));
   }
 
-  private void removeUnchangedAndCancelOldTasks(
-      Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
-    val iterator = cronExpressions.entrySet().iterator();
-    while (iterator.hasNext()) {
-      val entry = iterator.next();
-      ScheduledTask task = currentTasks.get(entry.getKey());
-      if (task != null && task.getTask() instanceof CronTask) {
-        if (Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue())) {
-          iterator.remove();
-        } else {
-          Logger.info("Cancelling previous task for " + entry.getKey().getClass().getSimpleName());
-          task.cancel();
-        }
-      }
-    }
+  private void removeUnchangedExpressions(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
+    cronExpressions
+        .entrySet()
+        .removeIf(
+            entry -> {
+              ScheduledTask task = currentTasks.get(entry.getKey());
+              return task != null
+                  && task.getTask() instanceof CronTask
+                  && Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue());
+            });
+  }
+
+  private void cancelOldTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
+    cronExpressions.forEach(
+        (assault, expression) -> {
+          ScheduledTask task = currentTasks.remove(assault);
+          if (task != null) task.cancel();
+        });
   }
 
   private void scheduleNewTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
