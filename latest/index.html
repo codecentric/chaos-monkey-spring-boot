@@ -730,6 +730,47 @@ window.onload = function() {
 <li><a href="#_properties">4.1. Properties</a></li>
 </ul>
 </li>
+<li><a href="#watchers">5. Watcher</a>
+<ul class="sectlevel2">
+<li><a href="#_customize_watcher">5.1. Customize Watcher</a></li>
+</ul>
+</li>
+<li><a href="#assaults">6. Assaults</a>
+<ul class="sectlevel2">
+<li><a href="#_request_assaults">6.1. Request Assaults</a>
+<ul class="sectlevel3">
+<li><a href="#_latency_assault">6.1.1. Latency Assault</a></li>
+<li><a href="#_exception_assault">6.1.2. Exception Assault</a></li>
+</ul>
+</li>
+<li><a href="#runtime-assaults">6.2. Runtime Assaults</a>
+<ul class="sectlevel3">
+<li><a href="#_appkiller_assault">6.2.1. AppKiller Assault</a></li>
+<li><a href="#_memory_assault">6.2.2. Memory Assault</a></li>
+<li><a href="#_cpu_assault">6.2.3. CPU Assault</a></li>
+</ul>
+</li>
+<li><a href="#_chaos_monkey_assault_scheduler">6.3. Chaos Monkey Assault Scheduler</a></li>
+</ul>
+</li>
+<li><a href="#metrics">7. Metrics</a>
+<ul class="sectlevel2">
+<li><a href="#_cm4sb_metrics">7.1. CM4SB Metrics</a>
+<ul class="sectlevel3">
+<li><a href="#_chaos_monkey_application_metrics">7.1.1. Chaos Monkey Application Metrics</a></li>
+<li><a href="#_watcher_metrics">7.1.2. Watcher Metrics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#changes">8. Changes in 2.5.3</a>
+<ul class="sectlevel2">
+<li><a href="#_bug_fixes">8.1. Bug Fixes</a></li>
+<li><a href="#_improvements">8.2. Improvements</a></li>
+<li><a href="#_new_features">8.3. New Features</a></li>
+<li><a href="#_contributors">8.4. Contributors</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1698,305 +1739,578 @@ You can decide which attacks you want to run and which parts of your application
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
 </tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>|chaos.monkey.watcher.controller
-|Controller watcher active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.watcher.restController
-|RestController watcher active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.watcher.service
-|Service watcher active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.watcher.repository
-|Repository watcher active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.watcher.component
-|Component watcher active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.memoryActive
-|Memory assault active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory
-|Duration to assault memory when requested fill amount is reached in ms.
-|min=1500, max=Integer.MAX_VALUE
-|90000</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease
-|Time in ms between increases of memory usage.
-|min=100, max=30000
-|1000</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.memoryFillIncrementFraction
-|Fraction of one individual memory increase iteration. <code>1.0</code> equals 100 %.
-|min=0.01, max=1.0
-|0.15</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.memoryFillTargetFraction
-|Final fraction of used memory by assault. <code>0.95</code> equals 95 %.
-|min=0.01, max=0.95
-|0.25</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.memory.cron.expression
-|Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey memory assault on a schedule
-|Any valid cron expression (or OFF)
-|OFF</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.cpuActive
-|CPU assault active
-|TRUE or FALSE
-|FALSE</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.cpuMillisecondsHoldLoad
-|Duration to assault cpu when requested load is reached in ms.
-|min=1500, max=Integer.MAX_VALUE
-|90000</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.cpuLoadTargetFraction
-|Final fraction of used cpu by assault. <code>0.95</code> equals 95 %.
-|min=0.1, max=1.0
-|0.9</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.cpu.cron.expression
-|Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey cpu assault on a schedule
-|Any valid cron expression (or OFF)
-|OFF</p>
-</div>
-<div class="paragraph">
-<p>|chaos.monkey.assaults.runtime.scope.assault.cron.expression
-|Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey runtime assaults on a schedule
-|Any valid cron expression (or OFF)
-|OFF</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 100%;">
-</colgroup>
-<tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="watchers"></a>
-== Watcher ==
-A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.</p>
-<p class="tableblock">Following Spring annotation are supported:</p>
-<p class="tableblock">- @Controller
-- @RestController
-- @Service
-- @Repository
-- @Component</p>
-<p class="tableblock">With the help of <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api">Spring AOP</a>, Chaos Monkey recognizes the
-execution of a <em>public</em> method and will either not execute any action or start one of its assaults. You can customize the behave by
-<a href="#configuration">configuration</a>.</p>
-<p class="tableblock">Next to the <em>Spring</em> stereotype <em>AOP</em> watchers, Chaos Monkey can also watch the</p>
-<p class="tableblock">* <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.health.auto-configured-health-indicators">Spring Boot HealthIndicators</a></p>
-<p class="tableblock">and assault the health checks with exceptions and latency. Exceptions will let the <em>HealthIndicators</em> go into status <em>DOWN</em> and the latency assault postpone the response.</p>
-<p class="tableblock">Besides the <em>AOP</em> based watchers, Chaos Monkey for Spring Boot also provides watchers for:</p>
-<p class="tableblock">- RestTemplate
-- WebClient</p>
-<p class="tableblock">The watchers will inject exception and latency based assaults for all <em>RestTemplate</em> and <em>WebClient</em> beans in the Spring Context based on the given assault configuration.</p>
-<p class="tableblock">[IMPORTANT]
-====
-<em>RestTemplates</em> and <em>WebClients</em> which are created not as a bean via <em>new RestTemplate()</em> and <em>WebClient.create()</em> are not getting instrumented.
-====</p>
-<p class="tableblock">=== Customize Watcher
-You can customize the behavior of all watchers using the property <strong>watchedCustomServices</strong> and decide which classes and public methods
-should be attacked. You can set the property to reference public methods, classes or packages.</p>
-<p class="tableblock">If <code>watchedCustomServices</code> is not set, all classes and public methods recognized by the enabled watchers are attacked.</p>
-<p class="tableblock">You can either maintain the list in your application properties or adjust it at runtime using the Spring Boot Actuator Endpoint.</p>
-<p class="tableblock">See following examples:
-[source,json,subs="verbatim,attributes"]
-.Chaos Monkey Spring Boot Actuator Endpoint (/actuator/chaosmonkey/assaults)
-----
-{
-  "level": 3,
-  "latencyActive": true,
-  "latencyRangeStart": 1000,
-  "latencyRangeEnd": 3000,
-  "watchedCustomServices": [
-    "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
-    "com.example.chaos.monkey.chaosdemo.service.HelloService"
-  ]
-}
-----</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes",role="primary"]
-.application.properties:
-----
-chaos.monkey.enabled=true
-chaos.monkey.watcher.controller=true
-chaos.monkey.assaults.level=1
-chaos.monkey.assaults.latency-active=true
-chaos.monkey.assaults.watchedCustomServices=com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello,com.example.chaos.monkey.chaosdemo.service.HelloService
-----</p>
-<p class="tableblock">[source,yaml,subs="verbatim,attributes",role="secondary"]
-.application.yml:
-----
-chaos:
-  monkey:
-    enabled: true
-    watcher:
-      controller: true
-    assaults:
-      level: 1
-      latency-active: true
-      watched-custom-services:
-        - com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello
-        - com.example.chaos.monkey.chaosdemo.service.HelloService
-----</p>
-<p class="tableblock">NOTE: The listed classes and their methods must have been found by one of the watchers. Only the behaviour of the watchers that are activated can be influenced.
-<a id="assaults"></a>
-== Assaults ==</p>
-<p class="tableblock">Assaults are the heart of Monkey&#8217;s Chaos and he makes use of them based on your configuration.
-The following assaults are provided:</p>
-<p class="tableblock">=== Request Assaults ===</p>
-<p class="tableblock">These assaults attack some point of your application and are triggered by a <a href="#watcher">/chaosmonkey/watchers - Response 200 OK</a>, for example when a method of your component is called.</p>
-<p class="tableblock">==== Latency Assault ====</p>
-<p class="tableblock">If Latency Assault is enabled, latency is added to a request. You control the number of requests where this should occur via the level.</p>
-<p class="tableblock">==== Exception Assault ====</p>
-<p class="tableblock">You can determine at runtime whether an exception should occur when the method is used.</p>
-<p class="tableblock">Thanks to the great community, the Chaos Monkey for Spring Boot can throw any kind of RuntimeException. You can configure the required exception at runtime via the Actuator Endpoint.</p>
-<p class="tableblock"><a id="runtime-assaults"></a>
-=== Runtime Assaults ===</p>
-<p class="tableblock">These assaults attack your whole application.</p>
-<p class="tableblock">NOTE: You need to trigger these Assaults yourself either using <a href="#chaos_monkey_assault_scheduler">Assault Scheduling</a> or the <a href="#assaultsattack">Chaos Monkey Endpoint</a>.</p>
-<p class="tableblock">==== AppKiller Assault ====</p>
-<p class="tableblock">When the configured methods are called in the application, the Chaos Monkey will shut down the application.</p>
-<p class="tableblock">==== Memory Assault ====</p>
-<p class="tableblock">Memory Assaults attack the memory of the Java Virtual Machine.</p>
-<p class="tableblock">IMPORTANT: The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!</p>
-<p class="tableblock">==== CPU Assault ====</p>
-<p class="tableblock">CPU Assaults attack the CPU of the Java Virtual Machine.</p>
-<p class="tableblock">=== Chaos Monkey Assault Scheduler ===
-<a id="chaos_monkey_assault_scheduler"></a></p>
-<p class="tableblock">You can schedule Chaos Monkey Runtime Assaults (Memory, CPU, AppKiller) using cron expressions. See also <a href="#configuration">Configuration</a>
-<a id="metrics"></a>
-== Metrics ==
-Since version 2.0.1 of Chaos Monkey for Spring Boot, there are some metrics available. Thanks to <a href="http://micrometer.io">micrometer</a>, we are now able to
-deliver
-some insights about all calls and attacks recognized by the CM4SB.</p>
-<p class="tableblock"><a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring Boot&#8217;s application metrics</a> facade supports
-numerous monitoring systems, including:</p>
-<p class="tableblock">- Atlas
-- Datadog
-- Ganglia
-- Graphite
-- Influx
-- JMX
-- New Relic
-- Prometheus
-- SignalFx
-- Simple (in-memory)
-- StatsD
-- Wavefront</p>
-<p class="tableblock">=== CM4SB Metrics
-If you have micrometer.io on your classpath and enabled, you are able to view and export these kind of insights.
-Take a look at <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring Docs</a> to see how it works.</p>
-<p class="tableblock">Metrics are available via Spring Boot Actuator endpoint, if you are exposing them in simple mode.</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes"]
-.endpoint example:
-----
-/actuator/metrics
-----
-Beside all other metrics, deliverd by default, you will find some CM4SB metrics. They will always start with "chaos.monkey.*".</p>
-<p class="tableblock">==== Chaos Monkey Application Metrics
-===== Request count
-- total = all requests recognized
-- assaulted = all attacked requests</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes"]
-.chaos monkey metric request count:
-----
-chaos_monkey_application_request_count_total
-chaos_monkey_application_request_count_assaulted
-----</p>
-<p class="tableblock">==== Watcher Metrics
-For all types of CM4SB Watchers, you will find a metric.</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes"]
-.chaos monkey metric request count:
-----
-chaos_monkey_assault_component_watcher_total
-chaos_monkey_assault_controller_watcher_total
-chaos_monkey_assault_repository_watcher_total
-chaos_monkey_assault_restController_watcher_total
-chaos_monkey_assault_service_watcher_total
-----</p>
-<p class="tableblock">===== Assault Latency</p>
-<p class="tableblock">- *_latency_count_gauge = indicates the current average (gauge) level of all latency attacks
-- *_latency_count_total = number of latency attacks</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes"]
-.chaos monkey metric latency count in ms:
-----
-chaos_monkey_assault_latency_count_gauge
-chaos_monkey_assault_latency_count_total
-----
-===== Assault Exception</p>
-<p class="tableblock">Number of thrown exception attacks</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes"]
-.chaos monkey metric exception:
-----
-chaos_monkey_assault_exception_count
-----
-===== Assault KillApp</p>
-<p class="tableblock">Number of Application kills, there is a delay before the app is killed (5s) and the produce of this metric. So, be sure this metric is collected by
- your favorite system.
-Otherwise it is
-lost.</p>
-<p class="tableblock">[source,txt,subs="verbatim,attributes"]
-.chaos monkey metric:
-----
-chaos_monkey_assault_killapp_count
-----</p>
-<p class="tableblock"><a id="changes"></a>
-== Changes in 2.5.3</p>
-<p class="tableblock">Built with Spring Boot 2.5.4</p>
-<p class="tableblock">=== Bug Fixes
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/252">#252</a> Update Maven Wrapper from 0.5.5 to 0.5.6.
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/251">#251</a> Fix missing AssaultPropertiesUpdate validation.
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/260">#260</a> Fix exception in KillAppAssault when using netty.</p>
-<p class="tableblock">=== Improvements
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/254">#254</a> Added timestamps to chaos monkey enable/disable endpoint.
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/268">#268</a> Allow any <code>Throwable</code> in ExceptionAssault instead of only <code>Exception</code>.
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/271">#271</a> Allow referencing classes in <code>watchedCustomService</code> to attack all public methods of a certain class.
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/272">#272</a> Upgrade to Spring Boot 2.5.4.</p>
-<p class="tableblock">=== New Features
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/241">#239</a> Added CPU Assault.
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/196">#196</a> Added bootstrapping method through the system property(<code>LOAD_CHAOS_MONKEY</code>).
-- <a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/183">#183</a> Added dedicated cron for each runtime assault. Deprecate <code>runtimeAssaultCronExpression</code>.</p>
-<p class="tableblock">=== Contributors
-This release was only possible because of these great humans ❤️:</p>
-<p class="tableblock">- <a href="https://github.com/F43nd1r">@F43nd1r</a>
-- <a href="https://github.com/ncrash">@ncrash</a>
-- <a href="https://github.com/MatthewBerk">@MatthewBerk</a>
-- <a href="https://github.com/WtfJoke">@WtfJoke</a></p>
-<p class="tableblock">Thank you for your support!</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.controller</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controller watcher active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.restController</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RestController watcher active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service watcher active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository watcher active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Component watcher active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memoryActive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory assault active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration to assault memory when requested fill amount is reached in ms.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=1500, max=Integer.MAX_VALUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in ms between increases of memory usage.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=100, max=30000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memoryFillIncrementFraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fraction of one individual memory increase iteration. <code>1.0</code> equals 100 %.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=0.01, max=1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.15</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memoryFillTargetFraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Final fraction of used memory by assault. <code>0.95</code> equals 95 %.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=0.01, max=0.95</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memory.cron.expression</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey memory assault on a schedule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.cpuActive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU assault active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.cpuMillisecondsHoldLoad</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration to assault cpu when requested load is reached in ms.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=1500, max=Integer.MAX_VALUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.cpuLoadTargetFraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Final fraction of used cpu by assault. <code>0.95</code> equals 95 %.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">min=0.1, max=1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.9</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.cpu.cron.expression</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey cpu assault on a schedule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.runtime.scope.assault.cron.expression</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey runtime assaults on a schedule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="watchers"><a class="anchor" href="#watchers"></a><a class="link" href="#watchers">5. Watcher</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.</p>
+</div>
+<div class="paragraph">
+<p>Following Spring annotation are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>@Controller</p>
+</li>
+<li>
+<p>@RestController</p>
+</li>
+<li>
+<p>@Service</p>
+</li>
+<li>
+<p>@Repository</p>
+</li>
+<li>
+<p>@Component</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>With the help of <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api">Spring AOP</a>, Chaos Monkey recognizes the
+execution of a <em>public</em> method and will either not execute any action or start one of its assaults. You can customize the behave by
+<a href="#configuration">configuration</a>.</p>
+</div>
+<div class="paragraph">
+<p>Next to the <em>Spring</em> stereotype <em>AOP</em> watchers, Chaos Monkey can also watch the</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.health.auto-configured-health-indicators">Spring Boot HealthIndicators</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>and assault the health checks with exceptions and latency. Exceptions will let the <em>HealthIndicators</em> go into status <em>DOWN</em> and the latency assault postpone the response.</p>
+</div>
+<div class="paragraph">
+<p>Besides the <em>AOP</em> based watchers, Chaos Monkey for Spring Boot also provides watchers for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>RestTemplate</p>
+</li>
+<li>
+<p>WebClient</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The watchers will inject exception and latency based assaults for all <em>RestTemplate</em> and <em>WebClient</em> beans in the Spring Context based on the given assault configuration.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><em>RestTemplates</em> and <em>WebClients</em> which are created not as a bean via <em>new RestTemplate()</em> and <em>WebClient.create()</em> are not getting instrumented.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_customize_watcher"><a class="anchor" href="#_customize_watcher"></a><a class="link" href="#_customize_watcher">5.1. Customize Watcher</a></h3>
+<div class="paragraph">
+<p>You can customize the behavior of all watchers using the property <strong>watchedCustomServices</strong> and decide which classes and public methods
+should be attacked. You can set the property to reference public methods, classes or packages.</p>
+</div>
+<div class="paragraph">
+<p>If <code>watchedCustomServices</code> is not set, all classes and public methods recognized by the enabled watchers are attacked.</p>
+</div>
+<div class="paragraph">
+<p>You can either maintain the list in your application properties or adjust it at runtime using the Spring Boot Actuator Endpoint.</p>
+</div>
+<div class="paragraph">
+<p>See following examples:</p>
+</div>
+<div class="listingblock">
+<div class="title">Chaos Monkey Spring Boot Actuator Endpoint (/actuator/chaosmonkey/assaults)</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">level</span><span class="delimiter">&quot;</span></span>: <span class="integer">3</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">latencyActive</span><span class="delimiter">&quot;</span></span>: <span class="value">true</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">latencyRangeStart</span><span class="delimiter">&quot;</span></span>: <span class="integer">1000</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">latencyRangeEnd</span><span class="delimiter">&quot;</span></span>: <span class="integer">3000</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">watchedCustomServices</span><span class="delimiter">&quot;</span></span>: [
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">com.example.chaos.monkey.chaosdemo.service.HelloService</span><span class="delimiter">&quot;</span></span>
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock primary">
+<div class="title">application.properties:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">chaos.monkey.enabled=true
+chaos.monkey.watcher.controller=true
+chaos.monkey.assaults.level=1
+chaos.monkey.assaults.latency-active=true
+chaos.monkey.assaults.watchedCustomServices=com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello,com.example.chaos.monkey.chaosdemo.service.HelloService</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">application.yml:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">chaos</span>:
+  <span class="key">monkey</span>:
+    <span class="key">enabled</span>: <span class="string"><span class="content">true</span></span>
+    <span class="key">watcher</span>:
+      <span class="key">controller</span>: <span class="string"><span class="content">true</span></span>
+    <span class="key">assaults</span>:
+      <span class="key">level</span>: <span class="string"><span class="content">1</span></span>
+      <span class="key">latency-active</span>: <span class="string"><span class="content">true</span></span>
+      <span class="key">watched-custom-services</span>:
+        - <span class="string"><span class="content">com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello</span></span>
+        - <span class="string"><span class="content">com.example.chaos.monkey.chaosdemo.service.HelloService</span></span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The listed classes and their methods must have been found by one of the watchers. Only the behaviour of the watchers that are activated can be influenced.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="assaults"><a class="anchor" href="#assaults"></a><a class="link" href="#assaults">6. Assaults</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Assaults are the heart of Monkey&#8217;s Chaos and he makes use of them based on your configuration.
+The following assaults are provided:</p>
+</div>
+<div class="sect2">
+<h3 id="_request_assaults"><a class="anchor" href="#_request_assaults"></a><a class="link" href="#_request_assaults">6.1. Request Assaults</a></h3>
+<div class="paragraph">
+<p>These assaults attack some point of your application and are triggered by a <a href="#watcher">/chaosmonkey/watchers - Response 200 OK</a>, for example when a method of your component is called.</p>
+</div>
+<div class="sect3">
+<h4 id="_latency_assault"><a class="anchor" href="#_latency_assault"></a><a class="link" href="#_latency_assault">6.1.1. Latency Assault</a></h4>
+<div class="paragraph">
+<p>If Latency Assault is enabled, latency is added to a request. You control the number of requests where this should occur via the level.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exception_assault"><a class="anchor" href="#_exception_assault"></a><a class="link" href="#_exception_assault">6.1.2. Exception Assault</a></h4>
+<div class="paragraph">
+<p>You can determine at runtime whether an exception should occur when the method is used.</p>
+</div>
+<div class="paragraph">
+<p>Thanks to the great community, the Chaos Monkey for Spring Boot can throw any kind of RuntimeException. You can configure the required exception at runtime via the Actuator Endpoint.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="runtime-assaults"><a class="anchor" href="#runtime-assaults"></a><a class="link" href="#runtime-assaults">6.2. Runtime Assaults</a></h3>
+<div class="paragraph">
+<p>These assaults attack your whole application.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You need to trigger these Assaults yourself either using <a href="#chaos_monkey_assault_scheduler">Assault Scheduling</a> or the <a href="#assaultsattack">Chaos Monkey Endpoint</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_appkiller_assault"><a class="anchor" href="#_appkiller_assault"></a><a class="link" href="#_appkiller_assault">6.2.1. AppKiller Assault</a></h4>
+<div class="paragraph">
+<p>When the configured methods are called in the application, the Chaos Monkey will shut down the application.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_memory_assault"><a class="anchor" href="#_memory_assault"></a><a class="link" href="#_memory_assault">6.2.2. Memory Assault</a></h4>
+<div class="paragraph">
+<p>Memory Assaults attack the memory of the Java Virtual Machine.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The Memory assault is heavily depending on the Java version you are using. We are testing with the default garbage collectors of each Java version. On Java 8 the fill rate is limited to 256 MB per slice!
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cpu_assault"><a class="anchor" href="#_cpu_assault"></a><a class="link" href="#_cpu_assault">6.2.3. CPU Assault</a></h4>
+<div class="paragraph">
+<p>CPU Assaults attack the CPU of the Java Virtual Machine.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_chaos_monkey_assault_scheduler"><a class="anchor" href="#_chaos_monkey_assault_scheduler"></a><a class="link" href="#_chaos_monkey_assault_scheduler">6.3. Chaos Monkey Assault Scheduler</a></h3>
+<div id="chaos_monkey_assault_scheduler" class="paragraph">
+<p>You can schedule Chaos Monkey Runtime Assaults (Memory, CPU, AppKiller) using cron expressions. See also <a href="#configuration">Configuration</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="metrics"><a class="anchor" href="#metrics"></a><a class="link" href="#metrics">7. Metrics</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since version 2.0.1 of Chaos Monkey for Spring Boot, there are some metrics available. Thanks to <a href="http://micrometer.io">micrometer</a>, we are now able to
+deliver
+some insights about all calls and attacks recognized by the CM4SB.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring Boot&#8217;s application metrics</a> facade supports
+numerous monitoring systems, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Atlas</p>
+</li>
+<li>
+<p>Datadog</p>
+</li>
+<li>
+<p>Ganglia</p>
+</li>
+<li>
+<p>Graphite</p>
+</li>
+<li>
+<p>Influx</p>
+</li>
+<li>
+<p>JMX</p>
+</li>
+<li>
+<p>New Relic</p>
+</li>
+<li>
+<p>Prometheus</p>
+</li>
+<li>
+<p>SignalFx</p>
+</li>
+<li>
+<p>Simple (in-memory)</p>
+</li>
+<li>
+<p>StatsD</p>
+</li>
+<li>
+<p>Wavefront</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_cm4sb_metrics"><a class="anchor" href="#_cm4sb_metrics"></a><a class="link" href="#_cm4sb_metrics">7.1. CM4SB Metrics</a></h3>
+<div class="paragraph">
+<p>If you have micrometer.io on your classpath and enabled, you are able to view and export these kind of insights.
+Take a look at <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics">Spring Docs</a> to see how it works.</p>
+</div>
+<div class="paragraph">
+<p>Metrics are available via Spring Boot Actuator endpoint, if you are exposing them in simple mode.</p>
+</div>
+<div class="listingblock">
+<div class="title">endpoint example:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">/actuator/metrics</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Beside all other metrics, deliverd by default, you will find some CM4SB metrics. They will always start with "chaos.monkey.*".</p>
+</div>
+<div class="sect3">
+<h4 id="_chaos_monkey_application_metrics"><a class="anchor" href="#_chaos_monkey_application_metrics"></a><a class="link" href="#_chaos_monkey_application_metrics">7.1.1. Chaos Monkey Application Metrics</a></h4>
+<div class="sect4">
+<h5 id="_request_count"><a class="anchor" href="#_request_count"></a><a class="link" href="#_request_count">Request count</a></h5>
+<div class="ulist">
+<ul>
+<li>
+<p>total = all requests recognized</p>
+</li>
+<li>
+<p>assaulted = all attacked requests</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">chaos monkey metric request count:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">chaos_monkey_application_request_count_total
+chaos_monkey_application_request_count_assaulted</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_watcher_metrics"><a class="anchor" href="#_watcher_metrics"></a><a class="link" href="#_watcher_metrics">7.1.2. Watcher Metrics</a></h4>
+<div class="paragraph">
+<p>For all types of CM4SB Watchers, you will find a metric.</p>
+</div>
+<div class="listingblock">
+<div class="title">chaos monkey metric request count:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">chaos_monkey_assault_component_watcher_total
+chaos_monkey_assault_controller_watcher_total
+chaos_monkey_assault_repository_watcher_total
+chaos_monkey_assault_restController_watcher_total
+chaos_monkey_assault_service_watcher_total</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_assault_latency"><a class="anchor" href="#_assault_latency"></a><a class="link" href="#_assault_latency">Assault Latency</a></h5>
+<div class="ulist">
+<ul>
+<li>
+<p>*_latency_count_gauge = indicates the current average (gauge) level of all latency attacks</p>
+</li>
+<li>
+<p>*_latency_count_total = number of latency attacks</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">chaos monkey metric latency count in ms:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">chaos_monkey_assault_latency_count_gauge
+chaos_monkey_assault_latency_count_total</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_assault_exception"><a class="anchor" href="#_assault_exception"></a><a class="link" href="#_assault_exception">Assault Exception</a></h5>
+<div class="paragraph">
+<p>Number of thrown exception attacks</p>
+</div>
+<div class="listingblock">
+<div class="title">chaos monkey metric exception:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">chaos_monkey_assault_exception_count</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_assault_killapp"><a class="anchor" href="#_assault_killapp"></a><a class="link" href="#_assault_killapp">Assault KillApp</a></h5>
+<div class="paragraph">
+<p>Number of Application kills, there is a delay before the app is killed (5s) and the produce of this metric. So, be sure this metric is collected by
+ your favorite system.
+Otherwise it is
+lost.</p>
+</div>
+<div class="listingblock">
+<div class="title">chaos monkey metric:</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="txt">chaos_monkey_assault_killapp_count</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.5.3</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Built with Spring Boot 2.5.4</p>
+</div>
+<div class="sect2">
+<h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">8.1. Bug Fixes</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/252">#252</a> Update Maven Wrapper from 0.5.5 to 0.5.6.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/251">#251</a> Fix missing AssaultPropertiesUpdate validation.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/260">#260</a> Fix exception in KillAppAssault when using netty.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_improvements"><a class="anchor" href="#_improvements"></a><a class="link" href="#_improvements">8.2. Improvements</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/254">#254</a> Added timestamps to chaos monkey enable/disable endpoint.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/268">#268</a> Allow any <code>Throwable</code> in ExceptionAssault instead of only <code>Exception</code>.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/271">#271</a> Allow referencing classes in <code>watchedCustomService</code> to attack all public methods of a certain class.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/272">#272</a> Upgrade to Spring Boot 2.5.4.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">8.3. New Features</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/241">#239</a> Added CPU Assault.</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/196">#196</a> Added bootstrapping method through the system property(<code>LOAD_CHAOS_MONKEY</code>).</p>
+</li>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/183">#183</a> Added dedicated cron for each runtime assault. Deprecate <code>runtimeAssaultCronExpression</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">8.4. Contributors</a></h3>
+<div class="paragraph">
+<p>This release was only possible because of these great humans ❤️:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/F43nd1r">@F43nd1r</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ncrash">@ncrash</a></p>
+</li>
+<li>
+<p><a href="https://github.com/MatthewBerk">@MatthewBerk</a></p>
+</li>
+<li>
+<p><a href="https://github.com/WtfJoke">@WtfJoke</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Thank you for your support!</p>
+</div>
 </div>
 </div>
 </div>
