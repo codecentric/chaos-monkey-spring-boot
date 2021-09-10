@@ -46,10 +46,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.StreamUtils;
 
-/**
- * @author Benjamin Wilms
- * @author Maxime Bouchenoire
- */
 @Configuration
 @Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({

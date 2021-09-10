@@ -19,7 +19,6 @@ import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-/** @author Maxime Bouchenoire */
 @ExtendWith(MockitoExtension.class)
 class ChaosMonkeySchedulerTest {
 
