@@ -22,7 +22,7 @@
 
   <properties>
     <!-- project version -->
-    <revision>2.5.2-SNAPSHOT</revision>
+    <revision>2.5.2</revision>
     <!-- default settings -->
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
