@@ -1,0 +1,57 @@
+[[faq]]
+== FAQ
+
+=== I'm using kotlin and my classes are not attacked
+
+If you want chaos monkey to attack your classes they need to be open (=non-final). We recommend using the https://kotlinlang.org/docs/all-open-plugin.html#spring-support[Kotlin Spring plugin], which automatically opens Spring annotated classes for you:
+
+[source,xml,subs="verbatim,attributes",role="primary"]
+.Maven
+----
+<plugin>
+    <artifactId>kotlin-maven-plugin</artifactId>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <version>${kotlin.version}</version>
+
+    <configuration>
+        <compilerPlugins>
+            <plugin>spring</plugin>
+        </compilerPlugins>
+    </configuration>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-allopen</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+    </dependencies>
+</plugin>
+----
+
+[source,groovy,indent=0,subs="verbatim,attributes",role="secondary"]
+.Gradle
+----
+plugins {
+  id "org.jetbrains.kotlin.plugin.spring" version "<kotlin version>"
+}
+----
+
+[source,kotlin,indent=0,subs="verbatim,attributes",role="secondary"]
+.Gradle Kotlin
+----
+plugins {
+  kotlin("plugin.spring") version "<kotlin version>"
+}
+----
+
+=== When I add chaos monkey I get a `NullpointerException` on startup
+
+Some classes cannot be proxied correctly by spring. The most common case for this are filters extending `GenericFilterBean`.
+To prevent these classes from being proxied, you can either:
+
+ - mark them as final
+ - don't mark them as spring `@Component` (or `@Service`, `@Controller`, ...). Instead, register them as `@Bean` inside a configuration.
+
+
+

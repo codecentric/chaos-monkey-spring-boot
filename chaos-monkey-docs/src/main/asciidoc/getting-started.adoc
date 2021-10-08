@@ -99,50 +99,6 @@ CAUTION: Each Chaos Monkey version is built for a specific Spring Boot version, 
 
 It is your decision how you want to integrate and use the CM4SB. There is no difference between the two possibilities. However, it's easier to add it as a dependency (see <<_as_dependency>>), so you don't need to adjust the starting of your application.
 
-=== Preparing your application
-
-If you want chaos monkey to attack your classes they need to be open (=non-final). If you're using Java, this is the default (as long as you don't mark them final). If you're using Kotlin, we recommend using the https://kotlinlang.org/docs/all-open-plugin.html#spring-support[Kotlin Spring plugin], which automatically opens Spring annotated classes for you:
-
-[source,xml,subs="verbatim,attributes",role="primary"]
-.Maven
-----
-<plugin>
-    <artifactId>kotlin-maven-plugin</artifactId>
-    <groupId>org.jetbrains.kotlin</groupId>
-    <version>${kotlin.version}</version>
-
-    <configuration>
-        <compilerPlugins>
-            <plugin>spring</plugin>
-        </compilerPlugins>
-    </configuration>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-    </dependencies>
-</plugin>
-----
-
-[source,groovy,indent=0,subs="verbatim,attributes",role="secondary"]
-.Gradle
-----
-plugins {
-  id "org.jetbrains.kotlin.plugin.spring" version "<kotlin version>"
-}
-----
-
-[source,kotlin,indent=0,subs="verbatim,attributes",role="secondary"]
-.Gradle Kotlin
-----
-plugins {
-  kotlin("plugin.spring") version "<kotlin version>"
-}
-----
-
 [#_minimal_cm4sb_configuration_via_property_file]
 === Minimal CM4SB configuration via property file
 In this example, we want to make latency attacks on our `*@Service*` annotated classes.
