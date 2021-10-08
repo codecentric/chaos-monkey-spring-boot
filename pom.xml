@@ -35,9 +35,9 @@
     <github.global.server>github</github.global.server>
 
     <!-- spring versions -->
-    <spring-boot.version>2.5.4</spring-boot.version>
-    <spring-cloud.version>2020.0.3</spring-cloud.version>
-    <spring.version>5.3.9</spring.version>
+    <spring-boot.version>2.5.5</spring-boot.version>
+    <spring-cloud.version>2020.0.4</spring-cloud.version>
+    <spring.version>5.3.10</spring.version>
 
     <!-- spring managed dependency versions,
     see https://docs.spring.io/spring-boot/docs/${spring-boot.version}/reference/html/dependency-versions.html
