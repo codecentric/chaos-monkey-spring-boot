@@ -84,4 +84,4 @@ chaos:
 ----
 
 
-NOTE: The listed classes and their methods must have been found by one of the watchers. Only the behaviour of the watchers that are activated can be influenced.
+NOTE: This list only **restricts** the attacked classes found by watchers. If a class or method wasn't attacked when this list was unset, it won't be attacked if it is added to the list.
