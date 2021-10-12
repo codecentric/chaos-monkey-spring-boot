@@ -292,6 +292,31 @@ Assault config has changed
 ----
 Assault config has changed
 ----
+====== Define custom Exceptions Without Constructors
+This is an example of configuration an exception which doesn't use a constructor, but instead uses a static factory method for creation.
+[source,json,subs="verbatim,attributes"]
+./chasomonkey/assaults - Request
+----
+{
+  "level": 5,
+  "latencyRangeStart": 2000,
+  "latencyRangeEnd": 5000,
+  "latencyActive": true,
+  "exceptionsActive": true,
+  "killApplicationActive": false,
+  "exception": {
+    "type": "com.foo.SomeCustomException",
+    "arguments": [
+      {
+        "useFactoryMethod": true,
+        "factoryMethodName": "fromStatusCode",
+        "className": "int",
+        "value": "2"
+      }
+    ]
+  }
+}
+----
 
 ==== POST Assault Attack
 [[assaultsattack]]

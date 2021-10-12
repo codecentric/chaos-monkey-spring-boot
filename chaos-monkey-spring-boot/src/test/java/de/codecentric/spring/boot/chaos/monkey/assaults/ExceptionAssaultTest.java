@@ -20,9 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException.ExceptionArgument;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -110,6 +112,28 @@ class ExceptionAssaultTest {
 
     ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
     assertThrows(OutOfMemoryError.class, exceptionAssault::attack);
+  }
+
+  @Test
+  void throwsExceptionWithPrivateConstructorValueObjects() {
+    ChaosMonkeySettings settings = getChaosMonkeySettings();
+
+    AssaultException assaultException = new AssaultException();
+    assaultException.setType(
+        "de.codecentric.spring.boot.chaos.monkey.assaults.StatusExampleException");
+
+    ExceptionArgument argument = new ExceptionArgument();
+    argument.setClassName("de.codecentric.spring.boot.chaos.monkey.assaults.Status");
+    argument.setUseFactoryMethod(true);
+    argument.setFactoryMethodName("fromCodeValue");
+    argument.setValueClassName("int");
+    argument.setValue("2");
+
+    assaultException.setArguments(Arrays.asList(argument));
+
+    settings.getAssaultProperties().setException(assaultException);
+    ExceptionAssault exceptionAssault = new ExceptionAssault(settings, metricsMock);
+    assertThrows(StatusExampleException.class, exceptionAssault::attack);
   }
 
   private ChaosMonkeySettings getChaosMonkeySettings() {

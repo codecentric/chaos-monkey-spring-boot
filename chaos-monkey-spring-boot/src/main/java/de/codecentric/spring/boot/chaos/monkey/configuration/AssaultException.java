@@ -2,6 +2,8 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,10 +90,82 @@ public class AssaultException {
 
     @NotNull private String value;
 
+    private boolean useFactoryMethod;
+    @NotNull private String factoryMethodName;
+    @NotNull private String valueClassName;
+
+    public Object getValue() {
+      if (useFactoryMethod) {
+        try {
+          Class argumentClass = Class.forName(className);
+          Method factoryMethod =
+              argumentClass.getMethod(factoryMethodName, getClassType(valueClassName));
+          return factoryMethod.invoke(null, unboxValue(valueClassName, value));
+        } catch (ClassNotFoundException
+            | NoSuchMethodException
+            | IllegalAccessException
+            | InvocationTargetException exception) {
+          throw new RuntimeException(exception);
+        }
+      }
+      return value;
+    }
+
+    private Object unboxValue(String className, String value) {
+      switch (className) {
+        case "boolean":
+          return Boolean.valueOf(value);
+        case "byte":
+          return Byte.valueOf(value);
+        case "short":
+          return Short.valueOf(value);
+        case "int":
+          return Integer.valueOf(value);
+        case "long":
+          return Long.valueOf(value);
+        case "float":
+          return Float.valueOf(value);
+        case "double":
+          return Double.valueOf(value);
+        case "char":
+          return Character.valueOf(value.charAt(0));
+        default:
+          Class unBoxedClass = getClassType(className);
+          return unboxValue(unBoxedClass, value);
+      }
+    }
+
+    private <T> T unboxValue(Class<T> type, String value) {
+      return type.cast(value);
+    }
+
     @JsonIgnore
     public Class<?> getClassType() {
+      return getClassType(className);
+    }
+
+    private Class<?> getClassType(String className) {
       try {
-        return Class.forName(className);
+        switch (className) {
+          case "boolean":
+            return boolean.class;
+          case "byte":
+            return byte.class;
+          case "short":
+            return short.class;
+          case "int":
+            return int.class;
+          case "long":
+            return long.class;
+          case "float":
+            return float.class;
+          case "double":
+            return double.class;
+          case "char":
+            return char.class;
+          default:
+            return Class.forName(className);
+        }
       } catch (ClassNotFoundException e) {
         throw new RuntimeException("Class not found for class name: " + className);
       }
