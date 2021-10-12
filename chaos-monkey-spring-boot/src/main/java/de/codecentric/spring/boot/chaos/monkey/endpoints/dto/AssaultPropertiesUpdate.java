@@ -31,6 +31,8 @@ public class AssaultPropertiesUpdate {
   @Max(value = 10000)
   private Integer level;
 
+  @Nullable private Boolean deterministic;
+
   @Nullable
   @Min(value = 1)
   @Max(value = Integer.MAX_VALUE)
@@ -105,6 +107,7 @@ public class AssaultPropertiesUpdate {
 
   public void applyTo(AssaultProperties t) {
     applyTo(level, t::setLevel);
+    applyTo(deterministic, t::setDeterministic);
     applyTo(latencyActive, t::setLatencyActive);
     applyTo(latencyRangeStart, t::setLatencyRangeStart);
     applyTo(latencyRangeEnd, t::setLatencyRangeEnd);
