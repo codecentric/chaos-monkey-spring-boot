@@ -85,6 +85,11 @@ You can decide which attacks you want to run and which parts of your application
 |TRUE or FALSE
 |FALSE
 
+|chaos.monkey.watcher.beans
+|Bean watcher active for given beans
+|List of bean names
+|Empty list
+
 |chaos.monkey.assaults.memoryActive
 |Memory assault active
 |TRUE or FALSE

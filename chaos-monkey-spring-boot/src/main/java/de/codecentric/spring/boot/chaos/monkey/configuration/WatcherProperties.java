@@ -16,6 +16,8 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import java.util.Collections;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -41,4 +43,6 @@ public class WatcherProperties {
   private boolean webClient = false;
 
   private boolean actuatorHealth = false;
+
+  private List<String> beans = Collections.emptyList();
 }
