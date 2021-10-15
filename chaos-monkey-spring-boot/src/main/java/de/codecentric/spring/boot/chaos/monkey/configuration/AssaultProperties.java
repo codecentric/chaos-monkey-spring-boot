@@ -32,6 +32,8 @@ import org.springframework.util.CollectionUtils;
 public class AssaultProperties {
   private int level = 1;
 
+  private boolean deterministic = false;
+
   private int latencyRangeStart = 1000;
 
   private int latencyRangeEnd = 3000;
