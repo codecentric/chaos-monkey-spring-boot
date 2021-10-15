@@ -6,6 +6,8 @@ Built with Spring Boot {spring-boot-version}
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
+https://github.com/codecentric/chaos-monkey-spring-boot/pull/279[#277]
+
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
@@ -14,8 +16,11 @@ Built with Spring Boot {spring-boot-version}
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors
+
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
+
+https://github.com/tuxdevelop[@tuxdevelop]
 
 Thank you for your support!
