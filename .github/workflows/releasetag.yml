@@ -36,7 +36,7 @@ jobs:
       - name: Gather docs
         run: |
           mkdir ./docs/latest
-          cp -R ./chaos-monkey-docs/target/generated-docs/ ./docs/latest/
+          cp -R ./chaos-monkey-docs/target/generated-docs/. ./docs/latest/
           cp README.md ./docs/
           sed -i 's/docs\/images/images/g' ./docs/README.md
       - name: Publish gh-pages
