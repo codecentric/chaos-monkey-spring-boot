@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.chaos.monkey.chaosdemo.bean.HelloConfiguration;
 import com.example.chaos.monkey.chaosdemo.component.HelloComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 /** @author Benjamin Wilms */
-@WebMvcTest({GreetingController.class, HelloComponent.class})
+@WebMvcTest({GreetingController.class, HelloComponent.class, HelloConfiguration.class})
 public class GreetingControllerTest {
 
   @Autowired private MockMvc mockMvc;
@@ -33,5 +34,14 @@ public class GreetingControllerTest {
         .perform(get("/hellocomponent"))
         .andExpect(status().isOk())
         .andExpect(content().string(is("Hello from Component")));
+  }
+
+  @Test
+  public void shouldReturnHelloFromBean() throws Exception {
+
+    this.mockMvc
+        .perform(get("/hellobean"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is("Hello from Bean")));
   }
 }

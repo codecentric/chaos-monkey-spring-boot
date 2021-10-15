@@ -6,13 +6,14 @@ Built with Spring Boot {spring-boot-version}
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
-https://github.com/codecentric/chaos-monkey-spring-boot/pull/279[#277]
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/279[#277] Added missing watcher properties for rest endpoint
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/274[#274] Added deterministic configuration, which toggles from "on average, 1 in x requests will be attacked" to "attack every x requests"
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/280[#280] Add bean watcher
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors
@@ -21,6 +22,7 @@ This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
 
-https://github.com/tuxdevelop[@tuxdevelop]
+ - https://github.com/tuxdevelop[@tuxdevelop]
+ - https://github.com/F43nd1r[@F43nd1r]
 
 Thank you for your support!

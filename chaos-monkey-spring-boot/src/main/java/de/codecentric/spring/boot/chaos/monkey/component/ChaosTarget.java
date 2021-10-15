@@ -8,7 +8,8 @@ public enum ChaosTarget {
   SERVICE("service"),
   REST_TEMPLATE("restTemplate"),
   WEB_CLIENT("webClient"),
-  ACTUATOR_HEALTH("actuatorHealth");
+  ACTUATOR_HEALTH("actuatorHealth"),
+  BEAN("bean");
 
   private final String name;
 

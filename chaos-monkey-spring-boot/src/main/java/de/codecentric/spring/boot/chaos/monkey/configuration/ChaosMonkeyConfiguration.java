@@ -229,6 +229,14 @@ public class ChaosMonkeyConfiguration {
   }
 
   @Bean
+  @DependsOn("chaosMonkeyRequestScope")
+  public ChaosMonkeyBeanPostProcessor chaosMonkeyBeanPostProcessor(
+      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
+    return new ChaosMonkeyBeanPostProcessor(
+        watcherProperties, chaosMonkeyRequestScope, publisher());
+  }
+
+  @Bean
   @ConditionalOnMissingBean
   @ConditionalOnAvailableEndpoint
   public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(

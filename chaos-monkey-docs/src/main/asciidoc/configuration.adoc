@@ -47,7 +47,8 @@ You can decide which attacks you want to run and which parts of your application
 
 |chaos.monkey.assaults.exception
 |Custom RuntimeException or default RuntimeException
-|de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException
+|de.codecentric.spring.boot.chaos.
+monkey.configuration.AssaultException
 |java.lang.RuntimeException("Chaos Monkey - RuntimeException"")
 
 |chaos.monkey.assaults.killApplicationActive
@@ -84,6 +85,11 @@ You can decide which attacks you want to run and which parts of your application
 |Component watcher active
 |TRUE or FALSE
 |FALSE
+
+|chaos.monkey.watcher.beans
+|Bean watcher for given beans
+|List of bean names
+|Empty list
 
 |chaos.monkey.assaults.memoryActive
 |Memory assault active
@@ -139,4 +145,9 @@ You can decide which attacks you want to run and which parts of your application
 |Cron expression like `*/1 * * * * ?` can be set to enable chaos monkey runtime assaults on a schedule
 |Any valid cron expression (or OFF)
 |OFF
+
+|chaos.monkey.assaults.watchedCustomServices
+|Limits watched packages/classes/methods
+|List of fully qualified packages, class and/or method names
+|Empty list
 |===

@@ -7,6 +7,7 @@ public enum MetricType {
   REPOSITORY("repository", true, false),
   COMPONENT("component", true, false),
   SERVICE("service", true, false),
+  BEAN("bean", true, false),
   LATENCY_ASSAULT("assault.latency.count", false, false),
   EXCEPTION_ASSAULT("assault.exception.count", false, false),
   KILLAPP_ASSAULT("assault.killapp.count", false, true),

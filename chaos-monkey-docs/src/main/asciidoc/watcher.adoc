@@ -1,8 +1,16 @@
 [[watchers]]
 == Watcher ==
-A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.
+A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for beans based on one of the conditions described in <<watcher_types, Watcher Types>>.
 
-Following Spring annotation are supported:
+With the help of https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api[Spring AOP], Chaos Monkey recognizes the
+execution of a _public_ method in a watched bean and will either not execute any action or start one of its assaults. You can customize the behaviour by
+<<configuration,configuration>>.
+
+[[watcher_types]]
+=== Watcher Types
+==== Annotation Watchers
+
+These watchers find your beans based on the following annotations:
 
 - @Controller
 - @RestController
@@ -10,27 +18,29 @@ Following Spring annotation are supported:
 - @Repository
 - @Component
 
-With the help of https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api[Spring AOP], Chaos Monkey recognizes the
-execution of a _public_ method and will either not execute any action or start one of its assaults. You can customize the behave by
-<<configuration,configuration>>.
-
-Next to the _Spring_ stereotype _AOP_ watchers, Chaos Monkey can also watch the
+==== Actuator Watchers
+Chaos Monkey can also watch the
 
 * https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.health.auto-configured-health-indicators[Spring Boot HealthIndicators]
 
 and assault the health checks with exceptions and latency. Exceptions will let the _HealthIndicators_ go into status _DOWN_ and the latency assault postpone the response.
 
-Besides the _AOP_ based watchers, Chaos Monkey for Spring Boot also provides watchers for:
+==== Outgoing Request Watchers
+Chaos Monkey also provides watchers for:
 
 - RestTemplate
 - WebClient
 
-The watchers will inject exception and latency based assaults for all _RestTemplate_ and _WebClient_ beans in the Spring Context based on the given assault configuration.
+The watchers will inject assaults for all _RestTemplate_ and _WebClient_ beans in the Spring Context based on the given assault configuration.
 
-[IMPORTANT]
-====
-_RestTemplates_ and _WebClients_ which are created not as a bean via _new RestTemplate()_ and _WebClient.create()_ are not getting instrumented.
-====
+IMPORTANT: _RestTemplates_ and _WebClients_ which are created not as a bean via _new RestTemplate()_ and _WebClient.create()_ are not getting instrumented.
+
+NOTE: These watchers don't use AOP. Instead, they inject respective customizers.
+
+==== Alternative Bean Watcher
+Chaos Monkey can watch any Bean in your application by name.
+
+CAUTION: The chaos monkey profile must be active and bean names must be configured when the beans are **created**. Adding bean names to the configuration after the beans have been created will **not** enable them to be watched.
 
 === Customize Watcher
 You can customize the behavior of all watchers using the property *watchedCustomServices* and decide which classes and public methods
