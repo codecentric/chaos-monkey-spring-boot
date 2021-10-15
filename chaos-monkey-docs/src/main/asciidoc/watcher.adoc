@@ -37,7 +37,7 @@ IMPORTANT: _RestTemplates_ and _WebClients_ which are created not as a bean via 
 
 NOTE: These watchers don't use AOP. Instead, they inject respective customizers.
 
-==== Generic Bean Watchers
+==== Alternative Bean Watcher
 Chaos Monkey can watch any Bean in your application by name.
 
 CAUTION: The chaos monkey profile must be active and bean names must be configured when the beans are **created**. Adding bean names to the configuration after the beans have been created will **not** enable them to be watched.
