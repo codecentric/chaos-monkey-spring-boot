@@ -35,4 +35,13 @@ public class GreetingControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().string(is("Hello from Component")));
   }
+
+  @Test
+  public void shouldReturnHelloFromBean() throws Exception {
+
+    this.mockMvc
+        .perform(get("/hellobean"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(is("Hello from Bean")));
+  }
 }
