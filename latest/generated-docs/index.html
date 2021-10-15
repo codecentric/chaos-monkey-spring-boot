@@ -678,8 +678,8 @@ window.onload = function() {
 <div id="header">
 <h1>Chaos Monkey for Spring Boot Reference Guide</h1>
 <div class="details">
-<span id="revnumber">version 2.5.3,</span>
-<span id="revdate">10.09.2021</span>
+<span id="revnumber">version 2.5.4,</span>
+<span id="revdate">15.10.2021</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -692,8 +692,7 @@ window.onload = function() {
 <li><a href="#_using_external_dependency_jar_file">1.1.2. Using external dependency jar file</a></li>
 </ul>
 </li>
-<li><a href="#_preparing_your_application">1.2. Preparing your application</a></li>
-<li><a href="#_minimal_cm4sb_configuration_via_property_file">1.3. Minimal CM4SB configuration via property file</a></li>
+<li><a href="#_minimal_cm4sb_configuration_via_property_file">1.2. Minimal CM4SB configuration via property file</a></li>
 </ul>
 </li>
 <li><a href="#endpoints">2. Spring Boot Actuator Endpoints</a>
@@ -732,7 +731,15 @@ window.onload = function() {
 </li>
 <li><a href="#watchers">5. Watcher</a>
 <ul class="sectlevel2">
-<li><a href="#_customize_watcher">5.1. Customize Watcher</a></li>
+<li><a href="#watcher_types">5.1. Watcher Types</a>
+<ul class="sectlevel3">
+<li><a href="#_annotation_watchers">5.1.1. Annotation Watchers</a></li>
+<li><a href="#_actuator_watchers">5.1.2. Actuator Watchers</a></li>
+<li><a href="#_outgoing_request_watchers">5.1.3. Outgoing Request Watchers</a></li>
+<li><a href="#_alternative_bean_watcher">5.1.4. Alternative Bean Watcher</a></li>
+</ul>
+</li>
+<li><a href="#_customize_watcher">5.2. Customize Watcher</a></li>
 </ul>
 </li>
 <li><a href="#assaults">6. Assaults</a>
@@ -763,12 +770,18 @@ window.onload = function() {
 </li>
 </ul>
 </li>
-<li><a href="#changes">8. Changes in 2.5.3</a>
+<li><a href="#faq">8. FAQ</a>
 <ul class="sectlevel2">
-<li><a href="#_bug_fixes">8.1. Bug Fixes</a></li>
-<li><a href="#_improvements">8.2. Improvements</a></li>
-<li><a href="#_new_features">8.3. New Features</a></li>
-<li><a href="#_contributors">8.4. Contributors</a></li>
+<li><a href="#_im_using_kotlin_and_my_classes_are_not_attacked">8.1. I&#8217;m using kotlin and my classes are not attacked</a></li>
+<li><a href="#_when_i_add_chaos_monkey_i_get_a_nullpointerexception_on_startup">8.2. When I add chaos monkey I get a <code>NullpointerException</code> on startup</a></li>
+</ul>
+</li>
+<li><a href="#changes">9. Changes in 2.5.4</a>
+<ul class="sectlevel2">
+<li><a href="#_bug_fixes">9.1. Bug Fixes</a></li>
+<li><a href="#_improvements">9.2. Improvements</a></li>
+<li><a href="#_new_features">9.3. New Features</a></li>
+<li><a href="#_contributors">9.4. Contributors</a></li>
 </ul>
 </li>
 </ul>
@@ -794,20 +807,20 @@ window.onload = function() {
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.5.3<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.5.4<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:2.5.3</span><span class="delimiter">'</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:2.5.4</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:2.5.3&quot;)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:2.5.4&quot;)</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -868,20 +881,20 @@ If you want to use the latest snapshot version, add the sonatype staging reposit
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.5.3<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.5.4<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:2.5.3:jar-with-dependencies</span><span class="delimiter">'</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:2.5.4:jar-with-dependencies</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:2.5.3:jar-with-dependencies&quot;)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:2.5.4:jar-with-dependencies&quot;)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -891,7 +904,7 @@ If you want to use the latest snapshot version, add the sonatype staging reposit
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.5.3-jar-with-dependencies.jar
+    -Dloader.path=chaos-monkey-spring-boot-2.5.4-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -915,53 +928,7 @@ Each Chaos Monkey version is built for a specific Spring Boot version, which can
 </div>
 </div>
 <div class="sect2">
-<h3 id="_preparing_your_application"><a class="anchor" href="#_preparing_your_application"></a><a class="link" href="#_preparing_your_application">1.2. Preparing your application</a></h3>
-<div class="paragraph">
-<p>If you want chaos monkey to attack your classes they need to be open (=non-final). If you&#8217;re using Java, this is the default (as long as you don&#8217;t mark them final). If you&#8217;re using Kotlin, we recommend using the <a href="https://kotlinlang.org/docs/all-open-plugin.html#spring-support">Kotlin Spring plugin</a>, which automatically opens Spring annotated classes for you:</p>
-</div>
-<div class="listingblock primary">
-<div class="title">Maven</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;plugin&gt;</span>
-    <span class="tag">&lt;artifactId&gt;</span>kotlin-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;groupId&gt;</span>org.jetbrains.kotlin<span class="tag">&lt;/groupId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>${kotlin.version}<span class="tag">&lt;/version&gt;</span>
-
-    <span class="tag">&lt;configuration&gt;</span>
-        <span class="tag">&lt;compilerPlugins&gt;</span>
-            <span class="tag">&lt;plugin&gt;</span>spring<span class="tag">&lt;/plugin&gt;</span>
-        <span class="tag">&lt;/compilerPlugins&gt;</span>
-    <span class="tag">&lt;/configuration&gt;</span>
-
-    <span class="tag">&lt;dependencies&gt;</span>
-        <span class="tag">&lt;dependency&gt;</span>
-            <span class="tag">&lt;groupId&gt;</span>org.jetbrains.kotlin<span class="tag">&lt;/groupId&gt;</span>
-            <span class="tag">&lt;artifactId&gt;</span>kotlin-maven-allopen<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>${kotlin.version}<span class="tag">&lt;/version&gt;</span>
-        <span class="tag">&lt;/dependency&gt;</span>
-    <span class="tag">&lt;/dependencies&gt;</span>
-<span class="tag">&lt;/plugin&gt;</span></code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">Gradle</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">plugins {
-  id <span class="string"><span class="delimiter">&quot;</span><span class="content">org.jetbrains.kotlin.plugin.spring</span><span class="delimiter">&quot;</span></span> version <span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;kotlin version&gt;</span><span class="delimiter">&quot;</span></span>
-}</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">Gradle Kotlin</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">plugins {
-  kotlin(&quot;plugin.spring&quot;) version &quot;&lt;kotlin version&gt;&quot;
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_minimal_cm4sb_configuration_via_property_file"><a class="anchor" href="#_minimal_cm4sb_configuration_via_property_file"></a><a class="link" href="#_minimal_cm4sb_configuration_via_property_file">1.3. Minimal CM4SB configuration via property file</a></h3>
+<h3 id="_minimal_cm4sb_configuration_via_property_file"><a class="anchor" href="#_minimal_cm4sb_configuration_via_property_file"></a><a class="link" href="#_minimal_cm4sb_configuration_via_property_file">1.2. Minimal CM4SB configuration via property file</a></h3>
 <div class="paragraph">
 <p>In this example, we want to make latency attacks on our <code><strong>@Service</strong></code> annotated classes.</p>
 </div>
@@ -1698,6 +1665,12 @@ You can decide which attacks you want to run and which parts of your application
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.deterministic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the level should be used as a deterministic value (attack every x requests) or a chance (on average, 1 in x requests will be attacked)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.latencyRangeStart</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Minimum latency in ms added to the request</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer.MIN_VALUE, Integer.MAX_VALUE</p></td>
@@ -1724,7 +1697,8 @@ You can decide which attacks you want to run and which parts of your application
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.exception</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom RuntimeException or default RuntimeException</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">de.codecentric.spring.boot.chaos.
+monkey.configuration.AssaultException</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.RuntimeException("Chaos Monkey - RuntimeException"")</p></td>
 </tr>
 <tr>
@@ -1768,6 +1742,12 @@ You can decide which attacks you want to run and which parts of your application
 <td class="tableblock halign-left valign-top"><p class="tableblock">Component watcher active</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TRUE or FALSE</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.beans</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bean watcher for given beans</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of bean names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty list</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.memoryActive</p></td>
@@ -1835,6 +1815,12 @@ You can decide which attacks you want to run and which parts of your application
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.watchedCustomServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limits watched packages/classes/methods</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of fully qualified packages, class and/or method names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty list</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1844,10 +1830,19 @@ You can decide which attacks you want to run and which parts of your application
 <h2 id="watchers"><a class="anchor" href="#watchers"></a><a class="link" href="#watchers">5. Watcher</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for a specific type of annotation.</p>
+<p>A watcher is a Chaos Monkey for Spring Boot component, that will scan your app for beans based on one of the conditions described in <a href="#watcher_types">Watcher Types</a>.</p>
 </div>
 <div class="paragraph">
-<p>Following Spring annotation are supported:</p>
+<p>With the help of <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api">Spring AOP</a>, Chaos Monkey recognizes the
+execution of a <em>public</em> method in a watched bean and will either not execute any action or start one of its assaults. You can customize the behaviour by
+<a href="#configuration">configuration</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="watcher_types"><a class="anchor" href="#watcher_types"></a><a class="link" href="#watcher_types">5.1. Watcher Types</a></h3>
+<div class="sect3">
+<h4 id="_annotation_watchers"><a class="anchor" href="#_annotation_watchers"></a><a class="link" href="#_annotation_watchers">5.1.1. Annotation Watchers</a></h4>
+<div class="paragraph">
+<p>These watchers find your beans based on the following annotations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1868,13 +1863,11 @@ You can decide which attacks you want to run and which parts of your application
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>With the help of <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop-api">Spring AOP</a>, Chaos Monkey recognizes the
-execution of a <em>public</em> method and will either not execute any action or start one of its assaults. You can customize the behave by
-<a href="#configuration">configuration</a>.</p>
 </div>
+<div class="sect3">
+<h4 id="_actuator_watchers"><a class="anchor" href="#_actuator_watchers"></a><a class="link" href="#_actuator_watchers">5.1.2. Actuator Watchers</a></h4>
 <div class="paragraph">
-<p>Next to the <em>Spring</em> stereotype <em>AOP</em> watchers, Chaos Monkey can also watch the</p>
+<p>Chaos Monkey can also watch the</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1886,8 +1879,11 @@ execution of a <em>public</em> method and will either not execute any action or 
 <div class="paragraph">
 <p>and assault the health checks with exceptions and latency. Exceptions will let the <em>HealthIndicators</em> go into status <em>DOWN</em> and the latency assault postpone the response.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_outgoing_request_watchers"><a class="anchor" href="#_outgoing_request_watchers"></a><a class="link" href="#_outgoing_request_watchers">5.1.3. Outgoing Request Watchers</a></h4>
 <div class="paragraph">
-<p>Besides the <em>AOP</em> based watchers, Chaos Monkey for Spring Boot also provides watchers for:</p>
+<p>Chaos Monkey also provides watchers for:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1900,7 +1896,7 @@ execution of a <em>public</em> method and will either not execute any action or 
 </ul>
 </div>
 <div class="paragraph">
-<p>The watchers will inject exception and latency based assaults for all <em>RestTemplate</em> and <em>WebClient</em> beans in the Spring Context based on the given assault configuration.</p>
+<p>The watchers will inject assaults for all <em>RestTemplate</em> and <em>WebClient</em> beans in the Spring Context based on the given assault configuration.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1909,15 +1905,45 @@ execution of a <em>public</em> method and will either not execute any action or 
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p><em>RestTemplates</em> and <em>WebClients</em> which are created not as a bean via <em>new RestTemplate()</em> and <em>WebClient.create()</em> are not getting instrumented.</p>
-</div>
+<em>RestTemplates</em> and <em>WebClients</em> which are created not as a bean via <em>new RestTemplate()</em> and <em>WebClient.create()</em> are not getting instrumented.
 </td>
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+These watchers don&#8217;t use AOP. Instead, they inject respective customizers.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_alternative_bean_watcher"><a class="anchor" href="#_alternative_bean_watcher"></a><a class="link" href="#_alternative_bean_watcher">5.1.4. Alternative Bean Watcher</a></h4>
+<div class="paragraph">
+<p>Chaos Monkey can watch any Bean in your application by name.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The chaos monkey profile must be active and bean names must be configured when the beans are <strong>created</strong>. Adding bean names to the configuration after the beans have been created will <strong>not</strong> enable them to be watched.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 <div class="sect2">
-<h3 id="_customize_watcher"><a class="anchor" href="#_customize_watcher"></a><a class="link" href="#_customize_watcher">5.1. Customize Watcher</a></h3>
+<h3 id="_customize_watcher"><a class="anchor" href="#_customize_watcher"></a><a class="link" href="#_customize_watcher">5.2. Customize Watcher</a></h3>
 <div class="paragraph">
 <p>You can customize the behavior of all watchers using the property <strong>watchedCustomServices</strong> and decide which classes and public methods
 should be attacked. You can set the property to reference public methods, classes or packages.</p>
@@ -1979,7 +2005,7 @@ chaos.monkey.assaults.watchedCustomServices=com.example.chaos.monkey.chaosdemo.c
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The listed classes and their methods must have been found by one of the watchers. Only the behaviour of the watchers that are activated can be influenced.
+This list only <strong>restricts</strong> the attacked classes found by watchers. If a class or method wasn&#8217;t attacked when this list was unset, it won&#8217;t be attacked if it is added to the list.
 </td>
 </tr>
 </table>
@@ -2231,80 +2257,118 @@ lost.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">8. Changes in 2.5.3</a></h2>
+<h2 id="faq"><a class="anchor" href="#faq"></a><a class="link" href="#faq">8. FAQ</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_im_using_kotlin_and_my_classes_are_not_attacked"><a class="anchor" href="#_im_using_kotlin_and_my_classes_are_not_attacked"></a><a class="link" href="#_im_using_kotlin_and_my_classes_are_not_attacked">8.1. I&#8217;m using kotlin and my classes are not attacked</a></h3>
+<div class="paragraph">
+<p>If you want chaos monkey to attack your classes they need to be open (=non-final). We recommend using the <a href="https://kotlinlang.org/docs/all-open-plugin.html#spring-support">Kotlin Spring plugin</a>, which automatically opens Spring annotated classes for you:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Maven</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;plugin&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>kotlin-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.jetbrains.kotlin<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>${kotlin.version}<span class="tag">&lt;/version&gt;</span>
+
+    <span class="tag">&lt;configuration&gt;</span>
+        <span class="tag">&lt;compilerPlugins&gt;</span>
+            <span class="tag">&lt;plugin&gt;</span>spring<span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;/compilerPlugins&gt;</span>
+    <span class="tag">&lt;/configuration&gt;</span>
+
+    <span class="tag">&lt;dependencies&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.jetbrains.kotlin<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>kotlin-maven-allopen<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>${kotlin.version}<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="tag">&lt;/plugin&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">plugins {
+  id <span class="string"><span class="delimiter">&quot;</span><span class="content">org.jetbrains.kotlin.plugin.spring</span><span class="delimiter">&quot;</span></span> version <span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;kotlin version&gt;</span><span class="delimiter">&quot;</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Gradle Kotlin</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="kotlin">plugins {
+  kotlin(&quot;plugin.spring&quot;) version &quot;&lt;kotlin version&gt;&quot;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_when_i_add_chaos_monkey_i_get_a_nullpointerexception_on_startup"><a class="anchor" href="#_when_i_add_chaos_monkey_i_get_a_nullpointerexception_on_startup"></a><a class="link" href="#_when_i_add_chaos_monkey_i_get_a_nullpointerexception_on_startup">8.2. When I add chaos monkey I get a <code>NullpointerException</code> on startup</a></h3>
+<div class="paragraph">
+<p>Some classes cannot be proxied correctly by spring. The most common case for this are filters extending <code>GenericFilterBean</code>.
+To prevent these classes from being proxied, you can either:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>mark them as final</p>
+</li>
+<li>
+<p>don&#8217;t mark them as spring <code>@Component</code> (or <code>@Service</code>, <code>@Controller</code>, &#8230;&#8203;). Instead, register them as <code>@Bean</code> inside a configuration.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 2.5.4</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Built with Spring Boot 2.5.4</p>
+<p>Built with Spring Boot 2.5.5</p>
 </div>
 <div class="sect2">
-<h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">8.1. Bug Fixes</a></h3>
+<h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">9.1. Bug Fixes</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/252">#252</a> Update Maven Wrapper from 0.5.5 to 0.5.6.</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/251">#251</a> Fix missing AssaultPropertiesUpdate validation.</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/260">#260</a> Fix exception in KillAppAssault when using netty.</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/279">#277</a> Added missing watcher properties for rest endpoint</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_improvements"><a class="anchor" href="#_improvements"></a><a class="link" href="#_improvements">8.2. Improvements</a></h3>
+<h3 id="_improvements"><a class="anchor" href="#_improvements"></a><a class="link" href="#_improvements">9.2. Improvements</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">9.3. New Features</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/254">#254</a> Added timestamps to chaos monkey enable/disable endpoint.</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/274">#274</a> Added deterministic configuration, which toggles from "on average, 1 in x requests will be attacked" to "attack every x requests"</p>
 </li>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/268">#268</a> Allow any <code>Throwable</code> in ExceptionAssault instead of only <code>Exception</code>.</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/271">#271</a> Allow referencing classes in <code>watchedCustomService</code> to attack all public methods of a certain class.</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/272">#272</a> Upgrade to Spring Boot 2.5.4.</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/280">#280</a> Add bean watcher</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">8.3. New Features</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/241">#239</a> Added CPU Assault.</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/196">#196</a> Added bootstrapping method through the system property(<code>LOAD_CHAOS_MONKEY</code>).</p>
-</li>
-<li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/183">#183</a> Added dedicated cron for each runtime assault. Deprecate <code>runtimeAssaultCronExpression</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">8.4. Contributors</a></h3>
+<h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">9.4. Contributors</a></h3>
 <div class="paragraph">
 <p>This release was only possible because of these great humans ❤️:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="https://github.com/tuxdevelop">@tuxdevelop</a></p>
+</li>
+<li>
 <p><a href="https://github.com/F43nd1r">@F43nd1r</a></p>
-</li>
-<li>
-<p><a href="https://github.com/ncrash">@ncrash</a></p>
-</li>
-<li>
-<p><a href="https://github.com/MatthewBerk">@MatthewBerk</a></p>
-</li>
-<li>
-<p><a href="https://github.com/WtfJoke">@WtfJoke</a></p>
 </li>
 </ul>
 </div>
@@ -2317,7 +2381,7 @@ lost.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.5.3<br>
+Version 2.5.4<br>
 </div>
 </div>
 </body>
