@@ -48,13 +48,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer.version}</version>
         </dependency>
         <dependency>
             <groupId>no.finn.unleash</groupId>
@@ -69,7 +67,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
-            <version>${spring-security.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -80,7 +77,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
 
