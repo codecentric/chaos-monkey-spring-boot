@@ -281,6 +281,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
     assertThat(Objects.requireNonNull(result.getBody()).getStatus())
         .isEqualTo("Chaos Monkey is enabled");
     assertThat(Objects.requireNonNull(result.getBody()).getEnabledAt()).isAfterOrEqualTo(enabledAt);
+    assertThat(Objects.requireNonNull(result.getBody()).getTimeActive().getSeconds()).isZero();
   }
 
   // DISABLE CHAOS MONKEY
@@ -295,6 +296,8 @@ class ChaosMonkeyRequestScopeRestEndpointIntegration {
         .isEqualTo("Chaos Monkey is disabled");
     assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt())
         .isAfterOrEqualTo(disabledAt);
+    assertThat(Objects.requireNonNull(result.getBody()).getTimeActive()).isZero();
+    assertThat(Objects.requireNonNull(result.getBody()).getTimeInActive().getSeconds()).isZero();
   }
 
   private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {

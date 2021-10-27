@@ -111,6 +111,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     ChaosMonkeyEnabledDto enabledDto = chaosMonkeyJmxEndpoint.enableChaosMonkey();
     assertThat(enabledDto.getStatus()).isEqualTo("Chaos Monkey is enabled");
     assertThat(enabledDto.getEnabledAt()).isAfterOrEqualTo(enabledAt);
+    assertThat(enabledDto.getTimeActive().getSeconds()).isZero();
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
   }
 
@@ -120,6 +121,8 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     ChaosMonkeyDisabledDto disabledDto = chaosMonkeyJmxEndpoint.disableChaosMonkey();
     assertThat(disabledDto.getStatus()).isEqualTo("Chaos Monkey is disabled");
     assertThat(disabledDto.getDisabledAt()).isAfterOrEqualTo(disabledAt);
+    assertThat(disabledDto.getTimeActive()).isZero();
+    assertThat(disabledDto.getTimeInActive().getSeconds()).isZero();
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
   }
 

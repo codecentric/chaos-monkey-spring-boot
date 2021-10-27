@@ -42,6 +42,10 @@ public class ChaosMonkeyRestEndpoint {
 
   private final ChaosMonkeyScheduler scheduler;
 
+  private ChaosMonkeyEnabledDto chaosMonkeyEnabledDto;
+
+  private ChaosMonkeyDisabledDto chaosMonkeyDisabledDto;
+
   public ChaosMonkeyRestEndpoint(
       ChaosMonkeySettings chaosMonkeySettings,
       ChaosMonkeyRuntimeScope runtimeScope,
@@ -72,14 +76,26 @@ public class ChaosMonkeyRestEndpoint {
 
   @PostMapping("/enable")
   public ResponseEntity<ChaosMonkeyEnabledDto> enableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return ResponseEntity.ok().body(new ChaosMonkeyEnabledDto());
+    if (!this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()
+        || chaosMonkeyEnabledDto == null) {
+      chaosMonkeyEnabledDto = new ChaosMonkeyEnabledDto();
+      this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
+    }
+    return ResponseEntity.ok().body(chaosMonkeyEnabledDto);
   }
 
   @PostMapping("/disable")
   public ResponseEntity<ChaosMonkeyDisabledDto> disableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return ResponseEntity.ok().body(new ChaosMonkeyDisabledDto());
+    if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()
+        || chaosMonkeyDisabledDto == null) {
+      if (chaosMonkeyEnabledDto == null) {
+        chaosMonkeyDisabledDto = new ChaosMonkeyDisabledDto();
+      } else {
+        chaosMonkeyDisabledDto = new ChaosMonkeyDisabledDto(chaosMonkeyEnabledDto);
+      }
+      this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
+    }
+    return ResponseEntity.ok().body(chaosMonkeyDisabledDto);
   }
 
   @GetMapping

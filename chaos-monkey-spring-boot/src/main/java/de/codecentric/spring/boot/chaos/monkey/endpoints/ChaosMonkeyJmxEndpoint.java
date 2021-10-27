@@ -31,6 +31,10 @@ public class ChaosMonkeyJmxEndpoint {
 
   private final ChaosMonkeySettings chaosMonkeySettings;
 
+  private ChaosMonkeyEnabledDto chaosMonkeyEnabledDto;
+
+  private ChaosMonkeyDisabledDto chaosMonkeyDisabledDto;
+
   public ChaosMonkeyJmxEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
     this.chaosMonkeySettings = chaosMonkeySettings;
   }
@@ -79,14 +83,26 @@ public class ChaosMonkeyJmxEndpoint {
 
   @WriteOperation
   public ChaosMonkeyEnabledDto enableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return new ChaosMonkeyEnabledDto();
+    if (!this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()
+        || chaosMonkeyEnabledDto == null) {
+      chaosMonkeyEnabledDto = new ChaosMonkeyEnabledDto();
+      this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
+    }
+    return chaosMonkeyEnabledDto;
   }
 
   @WriteOperation
   public ChaosMonkeyDisabledDto disableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return new ChaosMonkeyDisabledDto();
+    if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()
+        || chaosMonkeyDisabledDto == null) {
+      if (chaosMonkeyEnabledDto == null) {
+        chaosMonkeyDisabledDto = new ChaosMonkeyDisabledDto();
+      } else {
+        chaosMonkeyDisabledDto = new ChaosMonkeyDisabledDto(chaosMonkeyEnabledDto);
+      }
+      this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
+    }
+    return chaosMonkeyDisabledDto;
   }
 
   @ReadOperation
