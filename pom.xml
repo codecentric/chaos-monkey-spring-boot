@@ -37,35 +37,18 @@
     <!-- spring versions -->
     <spring-boot.version>2.5.5</spring-boot.version>
     <spring-cloud.version>2020.0.4</spring-cloud.version>
-    <spring.version>5.3.10</spring.version>
-
-    <!-- spring managed dependency versions,
-    see https://docs.spring.io/spring-boot/docs/${spring-boot.version}/reference/html/dependency-versions.html
-    -->
-    <junit.jupiter.version>5.7.2</junit.jupiter.version>
-    <mockito.version>3.9.0</mockito.version>
-    <lombok.version>1.18.20</lombok.version>
-    <aspectj-weaver.version>1.9.7</aspectj-weaver.version>
-    <jcl-over-slf4j.version>1.7.32</jcl-over-slf4j.version>
-    <reactor-netty.version>1.0.10</reactor-netty.version>
 
     <!-- dependency versions -->
     <unleash.version>4.4.0</unleash.version>
 
-    <!-- demo dependencies -->
-    <micrometer.version>1.7.1</micrometer.version>
-    <spring-security.version>5.5.1</spring-security.version>
-
     <!-- plugin versions-->
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
-    <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
     <git-commit-id-plugin.version>4.0.5</git-commit-id-plugin.version>
     <asciidoctor-maven-plugin.version>2.2.0</asciidoctor-maven-plugin.version>
     <asciidoctor-extensions-spring-boot>0.6.0</asciidoctor-extensions-spring-boot>
     <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
-    <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
