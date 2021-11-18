@@ -80,6 +80,4 @@ public final class Status {
   public static final Status OK = Code.OK.toStatus();
   public static final Status UNKNOWN = Code.UNKNOWN.toStatus();
   public static final Status NOT_FOUND = Code.NOT_FOUND.toStatus();
-
-
 }
