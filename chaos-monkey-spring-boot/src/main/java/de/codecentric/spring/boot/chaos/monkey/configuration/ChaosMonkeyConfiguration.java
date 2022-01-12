@@ -159,7 +159,7 @@ public class ChaosMonkeyConfiguration {
   }
 
   @Bean
-  public ChaosMonkeyScheduler scheduler(
+  public ChaosMonkeyScheduler chaosMonkeyScheduler(
       @Qualifier(CHAOS_MONKEY_TASK_SCHEDULER) TaskScheduler scheduler,
       List<ChaosMonkeyRuntimeAssault> assaults) {
     ScheduledTaskRegistrar registrar = new ScheduledTaskRegistrar();
