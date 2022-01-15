@@ -51,7 +51,7 @@ import org.springframework.boot.test.context.SpringBootTest;
       "chaos.monkey.assaults.killApplicationActive=true",
       "spring.profiles.active=chaos-monkey"
     })
-class ChaosMonkeyRequestScopeProfileIntegration {
+class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
   @Autowired private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 

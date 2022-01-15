@@ -36,7 +36,7 @@ import org.springframework.test.context.TestPropertySource;
     classes = ChaosDemoApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
-class DefaultProfileIntegration {
+class ChaosDemoApplicationDefaultProfileTest {
 
   @Autowired(required = false)
   private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
