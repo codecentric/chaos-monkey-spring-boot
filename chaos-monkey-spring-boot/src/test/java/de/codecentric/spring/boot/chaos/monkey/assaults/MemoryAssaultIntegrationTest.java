@@ -51,7 +51,7 @@ import org.springframework.http.ResponseEntity;
       "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000",
       "spring.profiles.active=chaos-monkey"
     })
-class MemoryAssaultIntegration {
+class MemoryAssaultIntegrationTest {
 
   @LocalServerPort private int serverPort;
 
