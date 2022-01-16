@@ -53,7 +53,7 @@ import org.springframework.test.context.TestPropertySource;
     classes = ChaosDemoApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
-class ChaosMonkeyRequestScopeRestEndpointIntTest {
+class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
 
   @LocalServerPort private int serverPort;
 

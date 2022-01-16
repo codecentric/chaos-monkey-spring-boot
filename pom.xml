@@ -163,10 +163,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <includes>
-            <include>**/*Test*.java</include>
-            <include>**/*Integration*.java</include>
-          </includes>
           <rerunFailingTestsCount>1</rerunFailingTestsCount>
         </configuration>
       </plugin>
