@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.CollectionUtils;
 
 @Data
@@ -42,7 +43,7 @@ public class AssaultProperties {
 
   private boolean exceptionsActive = false;
 
-  private AssaultException exception;
+  @NestedConfigurationProperty private AssaultException exception;
 
   private boolean killApplicationActive = false;
 
