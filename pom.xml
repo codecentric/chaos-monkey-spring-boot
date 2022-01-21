@@ -35,8 +35,8 @@
     <github.global.server>github</github.global.server>
 
     <!-- spring versions -->
-    <spring-boot.version>2.5.5</spring-boot.version>
-    <spring-cloud.version>2020.0.4</spring-cloud.version>
+    <spring-boot.version>2.6.3</spring-boot.version>
+    <spring-cloud.version>2021.0.0</spring-cloud.version>
 
     <!-- dependency versions -->
     <unleash.version>4.4.0</unleash.version>
