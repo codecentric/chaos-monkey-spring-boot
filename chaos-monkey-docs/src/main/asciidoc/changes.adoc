@@ -9,6 +9,7 @@ Built with Spring Boot {spring-boot-version}
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/296[#296] Renamed Integration to IntegrationTest
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/298[#298] Upgraded dependencies (spring boot, spring cloud, unleash, maven plugins)
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -18,5 +19,6 @@ This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
 - https://github.com/anurag-rajawat[@anurag-rajawat]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!

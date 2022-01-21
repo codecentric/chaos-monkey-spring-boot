@@ -1,12 +1,12 @@
 package com.example.chaos.monkey.toggledemo;
 
+import io.getunleash.FakeUnleash;
+import io.getunleash.MoreOperations;
+import io.getunleash.Unleash;
+import io.getunleash.UnleashContext;
+import io.getunleash.UnleashContextProvider;
+import io.getunleash.Variant;
 import java.util.List;
-import no.finn.unleash.FakeUnleash;
-import no.finn.unleash.MoreOperations;
-import no.finn.unleash.Unleash;
-import no.finn.unleash.UnleashContext;
-import no.finn.unleash.UnleashContextProvider;
-import no.finn.unleash.Variant;
 
 /**
  * Note implementing your own Unleash isn't typically needed. But for the purpose of this demo I am
