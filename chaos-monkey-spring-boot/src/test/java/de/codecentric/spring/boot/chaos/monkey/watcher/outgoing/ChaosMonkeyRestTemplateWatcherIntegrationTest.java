@@ -55,7 +55,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
     @Test
     public void testRestTemplateExceptionAssault() {
       assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate())
-          .hasMessage(500 + " " + ERROR_TEXT + ": [" + ERROR_BODY + "]");
+          .hasMessage(500 + " " + ERROR_TEXT + ": \"" + ERROR_BODY + '"');
     }
   }
 
