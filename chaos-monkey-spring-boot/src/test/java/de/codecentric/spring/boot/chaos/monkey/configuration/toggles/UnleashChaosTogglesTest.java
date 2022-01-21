@@ -2,7 +2,7 @@ package de.codecentric.spring.boot.chaos.monkey.configuration.toggles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import no.finn.unleash.FakeUnleash;
+import io.getunleash.FakeUnleash;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

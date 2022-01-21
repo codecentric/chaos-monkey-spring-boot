@@ -18,9 +18,9 @@ package com.example.chaos.monkey.toggledemo;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
-import no.finn.unleash.Unleash;
-import no.finn.unleash.UnleashContext;
-import no.finn.unleash.UnleashContextProvider;
+import io.getunleash.Unleash;
+import io.getunleash.UnleashContext;
+import io.getunleash.UnleashContextProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

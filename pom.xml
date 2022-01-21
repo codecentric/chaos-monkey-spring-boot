@@ -39,7 +39,7 @@
     <spring-cloud.version>2021.0.0</spring-cloud.version>
 
     <!-- dependency versions -->
-    <unleash.version>4.4.0</unleash.version>
+    <unleash.version>5.0.3</unleash.version>
 
     <!-- plugin versions-->
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>

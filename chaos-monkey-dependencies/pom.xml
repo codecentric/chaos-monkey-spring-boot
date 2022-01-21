@@ -49,7 +49,7 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>no.finn.unleash</groupId>
+                <groupId>io.getunleash</groupId>
                 <artifactId>unleash-client-java</artifactId>
                 <version>${unleash.version}</version>
                 <optional>true</optional>

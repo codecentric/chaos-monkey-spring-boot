@@ -2,7 +2,7 @@ package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.UnleashChaosToggles;
-import no.finn.unleash.Unleash;
+import io.getunleash.Unleash;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

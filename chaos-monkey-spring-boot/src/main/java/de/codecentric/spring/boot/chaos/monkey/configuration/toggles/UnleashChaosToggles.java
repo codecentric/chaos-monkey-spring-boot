@@ -1,6 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration.toggles;
 
-import no.finn.unleash.Unleash;
+import io.getunleash.Unleash;
 
 public class UnleashChaosToggles implements ChaosToggles {
   private final Unleash unleash;
