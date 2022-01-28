@@ -1,10 +1,6 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -18,7 +14,7 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.hamcrest.Matcher;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,7 +32,7 @@ class LatencyAssaultRangeTest {
   void fixedLatencyIsPossible() {
     final int fixedLatency = 1000;
 
-    checkLatencyConfiguration(fixedLatency, fixedLatency, is(fixedLatency));
+    assertThatLatencyConfiguration(fixedLatency, fixedLatency).isEqualTo(fixedLatency);
   }
 
   @Test
@@ -44,14 +40,12 @@ class LatencyAssaultRangeTest {
     final int latencyRangeStart = 1000;
     final int latencyRangeEnd = 5000;
 
-    checkLatencyConfiguration(
-        latencyRangeStart,
-        latencyRangeEnd,
-        is(both(greaterThan(latencyRangeStart)).and(lessThan(latencyRangeEnd))));
+    assertThatLatencyConfiguration(latencyRangeStart, latencyRangeEnd)
+        .isBetween(latencyRangeStart, latencyRangeEnd);
   }
 
-  private void checkLatencyConfiguration(
-      int latencyRangeStart, int latencyRangeEnd, Matcher<Integer> expectedResult) {
+  private AbstractIntegerAssert<?> assertThatLatencyConfiguration(
+      int latencyRangeStart, int latencyRangeEnd) {
     final AssaultProperties assaultProperties = new AssaultProperties();
     assaultProperties.setLatencyRangeStart(latencyRangeStart);
     assaultProperties.setLatencyRangeEnd(latencyRangeEnd);
@@ -71,6 +65,6 @@ class LatencyAssaultRangeTest {
 
     verify(metricEventPublisher)
         .publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
-    assertThat(captorTimeoutValue.getValue().get(), expectedResult);
+    return assertThat(captorTimeoutValue.getValue().get());
   }
 }

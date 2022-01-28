@@ -17,9 +17,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
@@ -38,33 +36,33 @@ class DefaultSettingsIntegrationTest {
 
   @Test
   void masterSwitchShouldDefaultToOff() {
-    assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
+    assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled()).isFalse();
   }
 
   @Test
   void watchersShouldBeDisabledByDefault() {
-    assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices(), is(nullValue()));
-    assertThat(monkeySettings.getWatcherProperties().isController(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isRestController(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isRepository(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isService(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isComponent(), is(false));
+    assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices()).isNull();
+    assertThat(monkeySettings.getWatcherProperties().isController()).isFalse();
+    assertThat(monkeySettings.getWatcherProperties().isRestController()).isFalse();
+    assertThat(monkeySettings.getWatcherProperties().isRepository()).isFalse();
+    assertThat(monkeySettings.getWatcherProperties().isService()).isFalse();
+    assertThat(monkeySettings.getWatcherProperties().isComponent()).isFalse();
   }
 
   @Test
   void assaultsShouldBeDisabledByDefault() {
-    assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(false));
-    assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));
+    assertThat(monkeySettings.getAssaultProperties().isLatencyActive()).isFalse();
+    assertThat(monkeySettings.getAssaultProperties().isExceptionsActive()).isFalse();
   }
 
   @Test
   void levelShouldDefaultToOne() {
-    assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));
+    assertThat(monkeySettings.getAssaultProperties().getLevel()).isEqualTo(1);
   }
 
   @Test
   void latencyDefaultsShouldBeSensible() {
-    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(1000));
-    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(3000));
+    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart()).isEqualTo(1000);
+    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd()).isEqualTo(3000);
   }
 }
