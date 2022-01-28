@@ -95,14 +95,14 @@ class ChaosMonkeyRequestScopeSettingsTest {
     assertThat(settings.getChaosMonkeyProperties()).isEqualTo(chaosMonkeyProperties);
     assertThat(settings.getAssaultProperties()).isEqualTo(assaultProperties);
     assertThat(settings.getWatcherProperties()).isEqualTo(watcherProperties);
-    assertThat(settings.getChaosMonkeyProperties().isEnabled()).isEqualTo(true);
-    assertThat(settings.getWatcherProperties().isController()).isEqualTo(true);
-    assertThat(settings.getWatcherProperties().isRepository()).isEqualTo(true);
-    assertThat(settings.getWatcherProperties().isService()).isEqualTo(true);
-    assertThat(settings.getWatcherProperties().isRestController()).isEqualTo(true);
-    assertThat(settings.getAssaultProperties().isKillApplicationActive()).isEqualTo(true);
-    assertThat(settings.getAssaultProperties().isExceptionsActive()).isEqualTo(true);
-    assertThat(settings.getAssaultProperties().isLatencyActive()).isEqualTo(true);
+    assertThat(settings.getChaosMonkeyProperties().isEnabled()).isTrue();
+    assertThat(settings.getWatcherProperties().isController()).isTrue();
+    assertThat(settings.getWatcherProperties().isRepository()).isTrue();
+    assertThat(settings.getWatcherProperties().isService()).isTrue();
+    assertThat(settings.getWatcherProperties().isRestController()).isTrue();
+    assertThat(settings.getAssaultProperties().isKillApplicationActive()).isTrue();
+    assertThat(settings.getAssaultProperties().isExceptionsActive()).isTrue();
+    assertThat(settings.getAssaultProperties().isLatencyActive()).isTrue();
     assertThat(settings.getAssaultProperties().getLevel()).isEqualTo(assaultProperties.getLevel());
     assertThat(settings.getAssaultProperties().getLatencyRangeEnd())
         .isEqualTo(assaultProperties.getLatencyRangeEnd());
