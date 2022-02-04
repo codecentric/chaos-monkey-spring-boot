@@ -146,14 +146,20 @@ You switched me off!
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/enable - Response 200 OK
 ----
-Chaos Monkey is enabled
+{
+  "status": "Chaos Monkey is enabled",
+  "enabledAt": "2022-02-04T13:12:28.119+01:00"
+}
 ----
 ===== POST Chaos Monkey disable
 [[chaosmonkeydisable]]
 [source,txt,subs="verbatim,attributes"]
 ./chaosmonkey/disable - Response 200 OK
 ----
-Chaos Monkey is disabled
+{
+  "status": "Chaos Monkey is disabled",
+  "disabledAt": "2022-02-04T13:13:22.781+01:00"
+}
 ----
 ===== GET Watchers
 [[watcher]]
