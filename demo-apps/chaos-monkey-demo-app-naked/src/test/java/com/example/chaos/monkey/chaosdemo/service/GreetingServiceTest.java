@@ -1,7 +1,6 @@
 package com.example.chaos.monkey.chaosdemo.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,7 +45,7 @@ public class GreetingServiceTest {
 
   @Test
   public void greet() {
-    assertThat(greetingService.greet(), is("Greetings from the server side!"));
+    assertThat(greetingService.greet()).isEqualTo("Greetings from the server side!");
   }
 
   @Test
@@ -55,7 +54,7 @@ public class GreetingServiceTest {
     Hello saveObject = new Hello(0, message);
     when(helloRepoMock.save(any(Hello.class))).thenReturn(saveObject);
 
-    assertThat(greetingService.greetFromRepo(), is(message));
+    assertThat(greetingService.greetFromRepo()).isEqualTo(message);
 
     verify(helloRepoMock, times(1)).save(any(Hello.class));
     verifyNoMoreInteractions(
@@ -70,7 +69,7 @@ public class GreetingServiceTest {
     when(helloRepoSearchAndSortingMock.findById(saveObject.getId()))
         .thenReturn(Optional.of(saveObject));
 
-    assertThat(greetingService.greetFromRepoPagingSorting(), is(message));
+    assertThat(greetingService.greetFromRepoPagingSorting()).isEqualTo(message);
 
     verify(helloRepoSearchAndSortingMock, times(1)).save(any(Hello.class));
     verify(helloRepoSearchAndSortingMock, times(1)).findById(saveObject.getId());
@@ -85,7 +84,7 @@ public class GreetingServiceTest {
     when(helloRepoJpaMock.save(any(Hello.class))).thenReturn(saveObject);
     when(helloRepoJpaMock.findById(saveObject.getId())).thenReturn(Optional.of(saveObject));
 
-    assertThat(greetingService.greetFromRepoJpa(), is(message));
+    assertThat(greetingService.greetFromRepoJpa()).isEqualTo(message);
     verify(helloRepoJpaMock, times(1)).save(any(Hello.class));
     verify(helloRepoJpaMock, times(1)).findById(saveObject.getId());
     verifyNoMoreInteractions(
@@ -99,7 +98,7 @@ public class GreetingServiceTest {
     when(helloRepoAnnotationMock.save(any(Hello.class))).thenReturn(saveObject);
     when(helloRepoAnnotationMock.findById(saveObject.getId())).thenReturn(Optional.of(saveObject));
 
-    assertThat(greetingService.greetFromRepoAnnotation(), is(message));
+    assertThat(greetingService.greetFromRepoAnnotation()).isEqualTo(message);
     verify(helloRepoAnnotationMock, times(1)).save(any(Hello.class));
     verify(helloRepoAnnotationMock, times(1)).findById(saveObject.getId());
     verifyNoMoreInteractions(

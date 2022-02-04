@@ -17,9 +17,6 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
@@ -55,9 +52,8 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @Test
   void getAssaultProperties() {
-    assertThat(
-        chaosMonkeyJmxEndpoint.getAssaultProperties(),
-        is(chaosMonkeySettings.getAssaultProperties().toDto()));
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties())
+        .isEqualTo(chaosMonkeySettings.getAssaultProperties().toDto());
   }
 
   @Test
@@ -66,8 +62,8 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
     chaosMonkeyJmxEndpoint.toggleLatencyAssault();
 
-    assertThat(
-        chaosMonkeyJmxEndpoint.getAssaultProperties().getLatencyActive(), not(latencyActive));
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getLatencyActive())
+        .isNotEqualTo(latencyActive);
   }
 
   @Test
@@ -75,8 +71,8 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     boolean exceptionsActive = chaosMonkeySettings.getAssaultProperties().isExceptionsActive();
     chaosMonkeyJmxEndpoint.toggleExceptionAssault();
 
-    assertThat(
-        chaosMonkeyJmxEndpoint.getAssaultProperties().getExceptionsActive(), not(exceptionsActive));
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getExceptionsActive())
+        .isNotEqualTo(exceptionsActive);
   }
 
   @Test
@@ -85,9 +81,8 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
         chaosMonkeySettings.getAssaultProperties().isKillApplicationActive();
     chaosMonkeyJmxEndpoint.toggleKillApplicationAssault();
 
-    assertThat(
-        chaosMonkeyJmxEndpoint.getAssaultProperties().getKillApplicationActive(),
-        not(killApplicationActive));
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getKillApplicationActive())
+        .isNotEqualTo(killApplicationActive);
   }
 
   @Test
@@ -95,14 +90,14 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     boolean cpuActive = chaosMonkeySettings.getAssaultProperties().isCpuActive();
     chaosMonkeyJmxEndpoint.toggleCpuAssault();
 
-    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getCpuActive(), not(cpuActive));
+    assertThat(chaosMonkeyJmxEndpoint.getAssaultProperties().getCpuActive())
+        .isNotEqualTo(cpuActive);
   }
 
   @Test
   void isChaosMonkeyActive() {
-    assertThat(
-        chaosMonkeyJmxEndpoint.isChaosMonkeyActive(),
-        is(String.valueOf(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled())));
+    assertThat(chaosMonkeyJmxEndpoint.isChaosMonkeyActive())
+        .isEqualTo(String.valueOf(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()));
   }
 
   @Test
@@ -111,7 +106,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     ChaosMonkeyEnabledDto enabledDto = chaosMonkeyJmxEndpoint.enableChaosMonkey();
     assertThat(enabledDto.getStatus()).isEqualTo("Chaos Monkey is enabled");
     assertThat(enabledDto.getEnabledAt()).isAfterOrEqualTo(enabledAt);
-    assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(true));
+    assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()).isTrue();
   }
 
   @Test
@@ -120,13 +115,12 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     ChaosMonkeyDisabledDto disabledDto = chaosMonkeyJmxEndpoint.disableChaosMonkey();
     assertThat(disabledDto.getStatus()).isEqualTo("Chaos Monkey is disabled");
     assertThat(disabledDto.getDisabledAt()).isAfterOrEqualTo(disabledAt);
-    assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
+    assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()).isFalse();
   }
 
   @Test
   void getWatcherProperties() {
-    assertThat(
-        chaosMonkeyJmxEndpoint.getWatcherProperties(),
-        is(chaosMonkeySettings.getWatcherProperties()));
+    assertThat(chaosMonkeyJmxEndpoint.getWatcherProperties())
+        .isEqualTo(chaosMonkeySettings.getWatcherProperties());
   }
 }

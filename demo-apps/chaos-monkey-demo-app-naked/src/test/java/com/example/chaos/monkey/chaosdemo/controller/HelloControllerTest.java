@@ -16,7 +16,6 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
-import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -56,7 +55,7 @@ public class HelloControllerTest {
     this.mockMvc
         .perform(get("/hello"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is("Hello!")));
+        .andExpect(content().string("Hello!"));
   }
 
   @Test
@@ -65,7 +64,7 @@ public class HelloControllerTest {
     this.mockMvc
         .perform(get("/greet"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is(responseService)));
+        .andExpect(content().string(responseService));
   }
 
   @Test
@@ -74,13 +73,13 @@ public class HelloControllerTest {
     this.mockMvc
         .perform(get("/dbgreet"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is(responseRepo)));
+        .andExpect(content().string(responseRepo));
   }
 
   public void shouldReturnGoodbye() throws Exception {
     this.mockMvc
         .perform(get("/goodbye"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is("Goodbye!")));
+        .andExpect(content().string("Goodbye!"));
   }
 }

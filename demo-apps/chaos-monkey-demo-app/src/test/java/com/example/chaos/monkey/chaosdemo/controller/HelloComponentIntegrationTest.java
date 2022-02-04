@@ -17,8 +17,7 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
@@ -42,11 +41,11 @@ public class HelloComponentIntegrationTest {
 
   @Test
   public void contextLoads() {
-    assertThat(helloComponent, notNullValue());
+    assertThat(helloComponent).isNotNull();
   }
 
   @Test
-  public void callingPublicMethodonComponent() {
+  public void callingPublicMethodOnComponent() {
     assertTrue(chaosMonkeyConfiguration.settings().getWatcherProperties().isComponent());
 
     helloComponent.sayHello();

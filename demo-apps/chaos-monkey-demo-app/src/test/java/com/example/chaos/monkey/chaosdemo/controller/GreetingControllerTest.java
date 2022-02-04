@@ -1,6 +1,5 @@
 package com.example.chaos.monkey.chaosdemo.controller;
 
-import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +23,7 @@ public class GreetingControllerTest {
     this.mockMvc
         .perform(get("/helloagain"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is("Again hello!")));
+        .andExpect(content().string("Again hello!"));
   }
 
   @Test
@@ -33,7 +32,7 @@ public class GreetingControllerTest {
     this.mockMvc
         .perform(get("/hellocomponent"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is("Hello from Component")));
+        .andExpect(content().string("Hello from Component"));
   }
 
   @Test
@@ -42,6 +41,6 @@ public class GreetingControllerTest {
     this.mockMvc
         .perform(get("/hellobean"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is("Hello from Bean")));
+        .andExpect(content().string("Hello from Bean"));
   }
 }

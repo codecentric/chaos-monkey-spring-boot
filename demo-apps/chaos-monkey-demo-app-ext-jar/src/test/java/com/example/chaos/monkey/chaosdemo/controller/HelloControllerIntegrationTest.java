@@ -17,8 +17,7 @@
 
 package com.example.chaos.monkey.chaosdemo.controller;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
@@ -46,7 +45,7 @@ public class HelloControllerIntegrationTest {
 
   @Test
   public void contextLoads() {
-    assertThat(helloController, notNullValue());
+    assertThat(helloController).isNotNull();
   }
 
   @Test

@@ -52,6 +52,8 @@
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+    <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+    <skuzzle-imports-enforcer.version>2.0.0</skuzzle-imports-enforcer.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
     <spotless.plugin.version>2.20.0</spotless.plugin.version>
@@ -208,6 +210,33 @@
             <goals>
               <goal>check</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>de.skuzzle.enforcer</groupId>
+            <artifactId>restrict-imports-enforcer-rule</artifactId>
+            <version>${skuzzle-imports-enforcer.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <RestrictImports>
+                  <reason>Use AssertJ for assertions</reason>
+                  <bannedImport>org.hamcrest.**</bannedImport>
+                </RestrictImports>
+              </rules>
+            </configuration>
           </execution>
         </executions>
       </plugin>

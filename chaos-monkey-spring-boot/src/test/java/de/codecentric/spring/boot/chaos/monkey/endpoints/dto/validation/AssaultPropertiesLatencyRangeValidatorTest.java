@@ -1,9 +1,8 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 class AssaultPropertiesUpdateLatencyRangeValidatorTest {
@@ -48,6 +47,6 @@ class AssaultPropertiesUpdateLatencyRangeValidatorTest {
     assaultProperties.setLatencyRangeEnd(rangeEnd);
 
     final boolean valid = assaultPropertiesValidator.isValid(assaultProperties, null);
-    assertThat(valid, CoreMatchers.is(expectedValidationResult));
+    assertThat(valid).isEqualTo(expectedValidationResult);
   }
 }

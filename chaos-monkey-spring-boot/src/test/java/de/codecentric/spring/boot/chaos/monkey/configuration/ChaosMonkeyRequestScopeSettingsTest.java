@@ -16,10 +16,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -59,9 +56,9 @@ class ChaosMonkeyRequestScopeSettingsTest {
     WatcherProperties watcherProperties = getWatcherProperties();
     settings = new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
 
-    assertThat(settings.getChaosMonkeyProperties(), notNullValue());
-    assertThat(settings.getAssaultProperties(), notNullValue());
-    assertThat(settings.getWatcherProperties(), notNullValue());
+    assertThat(settings.getChaosMonkeyProperties()).isNotNull();
+    assertThat(settings.getAssaultProperties()).isNotNull();
+    assertThat(settings.getWatcherProperties()).isNotNull();
   }
 
   @Test
@@ -77,47 +74,45 @@ class ChaosMonkeyRequestScopeSettingsTest {
     AssaultProperties assaultProperties = getAssaultProperties();
     settings.setAssaultProperties(assaultProperties);
 
-    assertThat(settings.getChaosMonkeyProperties(), notNullValue());
-    assertThat(settings.getAssaultProperties(), notNullValue());
-    assertThat(settings.getWatcherProperties(), notNullValue());
+    assertThat(settings.getChaosMonkeyProperties()).isNotNull();
+    assertThat(settings.getAssaultProperties()).isNotNull();
+    assertThat(settings.getWatcherProperties()).isNotNull();
   }
 
   @Test
   void lombokDataNullTest() {
     settings = new ChaosMonkeySettings(null, null, null);
 
-    assertThat(settings.getChaosMonkeyProperties(), nullValue());
-    assertThat(settings.getAssaultProperties(), nullValue());
-    assertThat(settings.getWatcherProperties(), nullValue());
+    assertThat(settings.getChaosMonkeyProperties()).isNull();
+    assertThat(settings.getAssaultProperties()).isNull();
+    assertThat(settings.getWatcherProperties()).isNull();
   }
 
   private void validate(
       ChaosMonkeyProperties chaosMonkeyProperties,
       AssaultProperties assaultProperties,
       WatcherProperties watcherProperties) {
-    assertThat(settings.getChaosMonkeyProperties(), is(chaosMonkeyProperties));
-    assertThat(settings.getAssaultProperties(), is(assaultProperties));
-    assertThat(settings.getWatcherProperties(), is(watcherProperties));
-    assertThat(settings.getChaosMonkeyProperties().isEnabled(), is(true));
-    assertThat(settings.getWatcherProperties().isController(), is(true));
-    assertThat(settings.getWatcherProperties().isRepository(), is(true));
-    assertThat(settings.getWatcherProperties().isService(), is(true));
-    assertThat(settings.getWatcherProperties().isRestController(), is(true));
-    assertThat(settings.getAssaultProperties().isKillApplicationActive(), is(true));
-    assertThat(settings.getAssaultProperties().isExceptionsActive(), is(true));
-    assertThat(settings.getAssaultProperties().isLatencyActive(), is(true));
-    assertThat(settings.getAssaultProperties().getLevel(), is(assaultProperties.getLevel()));
-    assertThat(
-        settings.getAssaultProperties().getLatencyRangeEnd(),
-        is(assaultProperties.getLatencyRangeEnd()));
-    assertThat(
-        settings.getAssaultProperties().getLatencyRangeStart(),
-        is(assaultProperties.getLatencyRangeStart()));
+    assertThat(settings.getChaosMonkeyProperties()).isEqualTo(chaosMonkeyProperties);
+    assertThat(settings.getAssaultProperties()).isEqualTo(assaultProperties);
+    assertThat(settings.getWatcherProperties()).isEqualTo(watcherProperties);
+    assertThat(settings.getChaosMonkeyProperties().isEnabled()).isTrue();
+    assertThat(settings.getWatcherProperties().isController()).isTrue();
+    assertThat(settings.getWatcherProperties().isRepository()).isTrue();
+    assertThat(settings.getWatcherProperties().isService()).isTrue();
+    assertThat(settings.getWatcherProperties().isRestController()).isTrue();
+    assertThat(settings.getAssaultProperties().isKillApplicationActive()).isTrue();
+    assertThat(settings.getAssaultProperties().isExceptionsActive()).isTrue();
+    assertThat(settings.getAssaultProperties().isLatencyActive()).isTrue();
+    assertThat(settings.getAssaultProperties().getLevel()).isEqualTo(assaultProperties.getLevel());
+    assertThat(settings.getAssaultProperties().getLatencyRangeEnd())
+        .isEqualTo(assaultProperties.getLatencyRangeEnd());
+    assertThat(settings.getAssaultProperties().getLatencyRangeStart())
+        .isEqualTo(assaultProperties.getLatencyRangeStart());
 
     int troubleRandom = settings.getAssaultProperties().getTroubleRandom();
     assertTrue(troubleRandom < 1001, "Trouble random is to high!");
 
-    assertThat(settings.getAssaultProperties().getLevel(), is(assaultProperties.getLevel()));
+    assertThat(settings.getAssaultProperties().getLevel()).isEqualTo(assaultProperties.getLevel());
   }
 
   private ChaosMonkeyProperties getChaosMonkeyProperties() {
