@@ -21,22 +21,18 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeySettingsDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @RestControllerEndpoint(enableByDefault = false, id = "chaosmonkey")
-public class ChaosMonkeyRestEndpoint {
-
-  private final ChaosMonkeySettings chaosMonkeySettings;
+public class ChaosMonkeyRestEndpoint extends BaseChaosMonkeyEndpoint {
 
   private final ChaosMonkeyRuntimeScope runtimeScope;
 
@@ -46,40 +42,43 @@ public class ChaosMonkeyRestEndpoint {
       ChaosMonkeySettings chaosMonkeySettings,
       ChaosMonkeyRuntimeScope runtimeScope,
       ChaosMonkeyScheduler scheduler) {
-    this.chaosMonkeySettings = chaosMonkeySettings;
+    super(chaosMonkeySettings);
     this.runtimeScope = runtimeScope;
     this.scheduler = scheduler;
   }
 
   @PostMapping("/assaults")
-  public ResponseEntity<String> updateAssaultProperties(
+  @ResponseBody
+  public String updateAssaultProperties(
       @RequestBody @Validated AssaultPropertiesUpdate assaultProperties) {
     assaultProperties.applyTo(chaosMonkeySettings.getAssaultProperties());
     scheduler.reloadConfig();
-    return ResponseEntity.ok().body("Assault config has changed");
+    return "Assault config has changed";
   }
 
   @PostMapping("/assaults/runtime/attack")
-  public ResponseEntity<String> attack() {
+  @ResponseBody
+  public String attack() {
     runtimeScope.callChaosMonkey();
-    return ResponseEntity.ok("Started runtime assaults");
+    return "Started runtime assaults";
   }
 
   @GetMapping("/assaults")
-  public AssaultPropertiesUpdate getAssaultSettings() {
-    return this.chaosMonkeySettings.getAssaultProperties().toDto();
+  @Override
+  public AssaultPropertiesUpdate getAssaultProperties() {
+    return super.getAssaultProperties();
   }
 
   @PostMapping("/enable")
-  public ResponseEntity<ChaosMonkeyEnabledDto> enableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return ResponseEntity.ok().body(new ChaosMonkeyEnabledDto());
+  @Override
+  public ChaosMonkeyStatusResponseDto enableChaosMonkey() {
+    return super.enableChaosMonkey();
   }
 
   @PostMapping("/disable")
-  public ResponseEntity<ChaosMonkeyDisabledDto> disableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return ResponseEntity.ok().body(new ChaosMonkeyDisabledDto());
+  @Override
+  public ChaosMonkeyStatusResponseDto disableChaosMonkey() {
+    return super.disableChaosMonkey();
   }
 
   @GetMapping
@@ -88,25 +87,24 @@ public class ChaosMonkeyRestEndpoint {
   }
 
   @GetMapping("/status")
-  public ResponseEntity<String> getStatus() {
-    if (this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()) {
-      return ResponseEntity.status(HttpStatus.OK).body("Ready to be evil!");
-    } else {
-      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("You switched me off!");
-    }
+  @Override
+  public ChaosMonkeyStatusResponseDto getStatus() {
+    return super.getStatus();
   }
 
   @PostMapping("/watchers")
-  public ResponseEntity<String> updateWatcherProperties(
+  @ResponseBody
+  public String updateWatcherProperties(
       @RequestBody @Validated WatcherPropertiesUpdate watcherProperties) {
     watcherProperties.applyTo(chaosMonkeySettings.getWatcherProperties());
     scheduler.reloadConfig();
 
-    return ResponseEntity.ok().body("Watcher config has changed");
+    return "Watcher config has changed";
   }
 
   @GetMapping("/watchers")
-  public WatcherProperties getWatcherSettings() {
-    return this.chaosMonkeySettings.getWatcherProperties();
+  @Override
+  public WatcherProperties getWatcherProperties() {
+    return super.getWatcherProperties();
   }
 }

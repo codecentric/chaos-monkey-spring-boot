@@ -19,25 +19,23 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
 
 /** @author Benjamin Wilms */
 @JmxEndpoint(enableByDefault = false, id = "chaosmonkeyjmx")
-public class ChaosMonkeyJmxEndpoint {
-
-  private final ChaosMonkeySettings chaosMonkeySettings;
+public class ChaosMonkeyJmxEndpoint extends BaseChaosMonkeyEndpoint {
 
   public ChaosMonkeyJmxEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
-    this.chaosMonkeySettings = chaosMonkeySettings;
+    super(chaosMonkeySettings);
   }
 
   @ReadOperation
+  @Override
   public AssaultPropertiesUpdate getAssaultProperties() {
-    return chaosMonkeySettings.getAssaultProperties().toDto();
+    return super.getAssaultProperties();
   }
 
   @WriteOperation
@@ -78,19 +76,26 @@ public class ChaosMonkeyJmxEndpoint {
   }
 
   @WriteOperation
-  public ChaosMonkeyEnabledDto enableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
-    return new ChaosMonkeyEnabledDto();
+  @Override
+  public ChaosMonkeyStatusResponseDto enableChaosMonkey() {
+    return super.enableChaosMonkey();
   }
 
   @WriteOperation
-  public ChaosMonkeyDisabledDto disableChaosMonkey() {
-    this.chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
-    return new ChaosMonkeyDisabledDto();
+  @Override
+  public ChaosMonkeyStatusResponseDto disableChaosMonkey() {
+    return super.disableChaosMonkey();
   }
 
   @ReadOperation
+  @Override
+  public ChaosMonkeyStatusResponseDto getStatus() {
+    return super.getStatus();
+  }
+
+  @ReadOperation
+  @Override
   public WatcherProperties getWatcherProperties() {
-    return this.chaosMonkeySettings.getWatcherProperties();
+    return super.getWatcherProperties();
   }
 }

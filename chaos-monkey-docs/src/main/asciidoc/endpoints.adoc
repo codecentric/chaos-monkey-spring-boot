@@ -136,35 +136,48 @@ management:
 ===== GET Chaos Monkey Status
 [[chaosmonkeystatus]]
 Case: Chaos Monkey is running.
-[source,txt,subs="verbatim,attributes"]
+[source,json,subs="verbatim,attributes"]
 ./chaosmonkey/status - Response 200 OK
 ----
-Ready to be evil!
+{
+  "enabledAt": "2022-03-18T10:01:54.465+01:00",
+  "enabledFor": {
+    "raw": "PT45.221S",
+    "formatted": "45 seconds"
+  },
+  "enabled": true
+}
 ----
 Case: Chaos Monkey is activated, but will not launch any attacks.
-[source,txt,subs="verbatim,attributes"]
-./chaosmonkey/status - Response 503 Service Unavailable
+[source,json,subs="verbatim,attributes"]
+./chaosmonkey/status - Response 200 OK
 ----
-You switched me off!
+{
+  "enabled": false
+}
 ----
 ===== POST Chaos Monkey enable
 [[chaosmonkeyenable]]
-[source,txt,subs="verbatim,attributes"]
+[source,json,subs="verbatim,attributes"]
 ./chaosmonkey/enable - Response 200 OK
 ----
 {
-  "status": "Chaos Monkey is enabled",
-  "enabledAt": "2022-02-04T13:12:28.119+01:00"
+  "enabledAt": "2022-03-18T10:06:22.094+01:00",
+  "enabled": true
 }
 ----
 ===== POST Chaos Monkey disable
 [[chaosmonkeydisable]]
-[source,txt,subs="verbatim,attributes"]
+[source,json,subs="verbatim,attributes"]
 ./chaosmonkey/disable - Response 200 OK
 ----
 {
-  "status": "Chaos Monkey is disabled",
-  "disabledAt": "2022-02-04T13:13:22.781+01:00"
+  "disabledAt": "2022-03-18T10:06:57.185+01:00",
+  "enabledFor": {
+    "raw": "PT35.091S",
+    "formatted": "35 seconds"
+  },
+  "enabled": false
 }
 ----
 ===== GET Watchers
@@ -331,11 +344,14 @@ image::images/jconsoleChaosMonkey.png[JMX Console]
 
 |enableChaosMonkey
 |Enable Chaos Monkey
-|Chaos Monkey is enabled
+|
+enabledAt=2022-03-18T10:19:51.108+01:00
+enabled=true
 
 |disableChaosMonkey
 |Disable Chaos Monkey
-|Chaos Monkey is disabled
+|
+enabled=false
 
 |getAssaultProperties
 |Running Assault configuration
