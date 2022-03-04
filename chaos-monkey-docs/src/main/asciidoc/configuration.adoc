@@ -51,11 +51,25 @@ You can decide which attacks you want to run and which parts of your application
 |TRUE or FALSE
 |FALSE
 
-|chaos.monkey.assaults.exception
-|Custom RuntimeException or default RuntimeException
-|de.codecentric.spring.boot.chaos.
-monkey.configuration.AssaultException
-|java.lang.RuntimeException("Chaos Monkey - RuntimeException"")
+|chaos.monkey.assaults.exception.type
+|Exception to be thrown
+|Class name
+|java.lang.RuntimeException
+
+|chaos.monkey.assaults.exception.method
+|Exception constructor or static creator method
+|<init> for constructor or method name
+|<init>
+
+|chaos.monkey.assaults.exception.arguments[0].type
+|Exception argument types (repeatable)
+|Class name
+|java.lang.String
+
+|chaos.monkey.assaults.exception.arguments[0].value
+|Exception argument types (repeatable)
+|primitive or json value matching the respective type
+|"Chaos Monkey - RuntimeException"
 
 |chaos.monkey.assaults.killApplicationActive
 |AppKiller assault active

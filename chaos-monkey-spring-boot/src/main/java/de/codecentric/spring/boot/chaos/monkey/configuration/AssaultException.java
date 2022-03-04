@@ -22,9 +22,15 @@ public class AssaultException {
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
+  /**
+   * special value used to represent constructors. "<init>" was chosen because it is used as jvm
+   * internal name for constructors, which means no method could be named like this.
+   */
+  private static final String CONSTRUCTOR = "<init>";
+
   @NotNull private String type = "java.lang.RuntimeException";
 
-  @NotNull private String method = "<init>";
+  @NotNull private String method = CONSTRUCTOR;
 
   @NotNull @NestedConfigurationProperty
   private List<ExceptionArgument> arguments =
@@ -54,7 +60,7 @@ public class AssaultException {
   public ThrowableCreator getCreator() throws ReflectiveOperationException {
     Class<?> exceptionClass = getExceptionClass();
     Class<?>[] argumentTypes = getExceptionArgumentTypes().toArray(new Class[0]);
-    if ("<init>".equals(method)) {
+    if (CONSTRUCTOR.equals(method)) {
       return new ThrowableConstructor(
           exceptionClass.asSubclass(Throwable.class).getConstructor(argumentTypes));
     } else {
@@ -67,42 +73,42 @@ public class AssaultException {
     return Class.forName(type);
   }
 
-  @JsonIgnore
-  public List<Class<?>> getExceptionArgumentTypes() throws ClassNotFoundException {
-    List<Class<?>> list = new ArrayList<>();
+  private List<Class<?>> getExceptionArgumentTypes() throws ClassNotFoundException {
+    List<Class<?>> exceptionArgumentTypes = new ArrayList<>();
     for (ExceptionArgument argument : arguments) {
-      list.add(argument.getClassType());
+      exceptionArgumentTypes.add(argument.getClassType());
     }
-    return list;
+    return exceptionArgumentTypes;
   }
 
-  @JsonIgnore
   private List<Object> getExceptionArgumentValues()
       throws ClassNotFoundException, JsonProcessingException {
-    List<Object> list = new ArrayList<>();
+    List<Object> exceptionArgumentValues = new ArrayList<>();
     for (ExceptionArgument argument : arguments) {
       Class<?> classType = argument.getClassType();
       String value = argument.getValue();
       try {
-        list.add(objectMapper.convertValue(value, classType));
+        // this mostly works for primitive values and strings
+        exceptionArgumentValues.add(objectMapper.convertValue(value, classType));
       } catch (IllegalArgumentException e) {
-        list.add(objectMapper.readValue(value, classType));
+        // treat value as json encoded otherwise
+        exceptionArgumentValues.add(objectMapper.readValue(value, classType));
       }
     }
-    return list;
+    return exceptionArgumentValues;
   }
 
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
   public static class ExceptionArgument {
-    @NotNull private String className;
+    @NotNull private String type;
 
     @NotNull private String value;
 
     @JsonIgnore
     public Class<?> getClassType() throws ClassNotFoundException {
-      return ClassUtils.forName(className, null);
+      return ClassUtils.forName(type, null);
     }
   }
 

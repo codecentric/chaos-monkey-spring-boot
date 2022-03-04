@@ -142,7 +142,7 @@ class ExceptionAssaultTest {
 
     if (argumentClass != null) {
       AssaultException.ExceptionArgument argument = new AssaultException.ExceptionArgument();
-      argument.setClassName(argumentClass);
+      argument.setType(argumentClass);
       argument.setValue(argumentValue);
       assaultException.setArguments(Collections.singletonList(argument));
     }
