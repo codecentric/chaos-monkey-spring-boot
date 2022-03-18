@@ -101,8 +101,14 @@ management:
     "latencyActive": true,
     "exceptionsActive": false,
     "exception": {
-      "type": null,
-      "arguments": null
+      "type": "java.lang.RuntimeException",
+      "method": "<init>",
+      "arguments": [
+        {
+          "className": "java.lang.String",
+          "value": "Chaos Monkey - RuntimeException"
+        }
+      ]
     },
     "killApplicationActive": false,
     "memoryActive": false,
@@ -211,9 +217,15 @@ Watcher config has changed
   "latencyActive": true,
   "exceptionsActive": false,
   "exception": {
-    "type": null,
-    "arguments": null
-  },
+      "type": "java.lang.RuntimeException",
+      "method": "<init>",
+      "arguments": [
+        {
+          "className": "java.lang.String",
+          "value": "Chaos Monkey - RuntimeException"
+        }
+      ]
+    },
   "killApplicationActive": false,
   "killApplicationCronExpression": "OFF",
   "memoryActive": false,
@@ -284,6 +296,7 @@ Assault config has changed
   "killApplicationActive": false,
   "exception": {
     "type": "java.lang.IllegalArgumentException",
+    "method": "<init>", 
     "arguments": [
       {
         "className": "java.lang.String",

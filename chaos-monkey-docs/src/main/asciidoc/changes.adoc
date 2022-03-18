@@ -13,6 +13,7 @@ Built with Spring Boot {spring-boot-version}
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/299[#299] Custom exception configuration supports static factory methods
 
 === Contributors
 This release was only possible because of these great humans ❤️:
@@ -20,5 +21,6 @@ This release was only possible because of these great humans ❤️:
 // - https://github.com/octocat[@octocat]
 - https://github.com/anurag-rajawat[@anurag-rajawat]
 - https://github.com/WtfJoke[@WtfJoke]
+- https://github.com/F43nd1r[@F43nd1r]
 
 Thank you for your support!

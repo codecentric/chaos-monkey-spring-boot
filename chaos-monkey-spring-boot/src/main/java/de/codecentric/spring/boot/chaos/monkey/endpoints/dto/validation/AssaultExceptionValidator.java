@@ -19,15 +19,11 @@ public class AssaultExceptionValidator
     }
 
     try {
-      Class<? extends Throwable> exceptionClass = exception.getExceptionClass();
-      if (exception.getArguments() == null) {
-        exceptionClass.getConstructor();
-      } else {
-        exceptionClass.getConstructor(exception.getExceptionArgumentTypes().toArray(new Class[0]));
-      }
+      exception.getCreator();
       return true;
     } catch (ReflectiveOperationException e) {
-      Logger.warn("Invalid combination of type ({}) and arguments provided", exception.getType());
+      Logger.warn(
+          "Invalid combination of type ({}), method and arguments provided", exception.getType());
     }
     return false;
   }
