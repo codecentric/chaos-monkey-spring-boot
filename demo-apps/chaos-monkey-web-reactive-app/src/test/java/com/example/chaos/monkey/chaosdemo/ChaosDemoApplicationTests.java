@@ -16,9 +16,7 @@
 
 package com.example.chaos.monkey.chaosdemo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,6 @@ public class ChaosDemoApplicationTests {
 
   @Test
   public void checkMetricsBean() {
-    assertThat(ctx.getBean("metrics"), is(notNullValue()));
+    assertThat(ctx.getBean("metrics")).isNotNull();
   }
 }

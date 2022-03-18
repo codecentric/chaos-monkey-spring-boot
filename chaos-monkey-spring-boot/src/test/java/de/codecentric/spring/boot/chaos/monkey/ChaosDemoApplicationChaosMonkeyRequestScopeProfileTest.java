@@ -17,9 +17,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
@@ -90,17 +88,17 @@ class ChaosDemoApplicationChaosMonkeyRequestScopeProfileTest {
 
   @Test
   void checkChaosSettingsValues() {
-    assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled(), is(false));
-    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd(), is(50));
-    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart(), is(10));
-    assertThat(monkeySettings.getAssaultProperties().getLevel(), is(1));
-    assertThat(monkeySettings.getAssaultProperties().isLatencyActive(), is(false));
-    assertThat(monkeySettings.getAssaultProperties().isExceptionsActive(), is(false));
-    assertThat(monkeySettings.getAssaultProperties().isKillApplicationActive(), is(true));
-    assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices(), is(nullValue()));
-    assertThat(monkeySettings.getWatcherProperties().isController(), is(true));
-    assertThat(monkeySettings.getWatcherProperties().isRepository(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isRestController(), is(false));
-    assertThat(monkeySettings.getWatcherProperties().isService(), is(false));
+    assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled()).isFalse();
+    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd()).isEqualTo(50);
+    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart()).isEqualTo(10);
+    assertThat(monkeySettings.getAssaultProperties().getLevel()).isEqualTo(1);
+    assertThat(monkeySettings.getAssaultProperties().isLatencyActive()).isFalse();
+    assertThat(monkeySettings.getAssaultProperties().isExceptionsActive()).isFalse();
+    assertThat(monkeySettings.getAssaultProperties().isKillApplicationActive()).isTrue();
+    assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices()).isNull();
+    assertThat(monkeySettings.getWatcherProperties().isController()).isTrue();
+    assertThat(monkeySettings.getWatcherProperties().isRepository()).isFalse();
+    assertThat(monkeySettings.getWatcherProperties().isRestController()).isFalse();
+    assertThat(monkeySettings.getWatcherProperties().isService()).isFalse();
   }
 }

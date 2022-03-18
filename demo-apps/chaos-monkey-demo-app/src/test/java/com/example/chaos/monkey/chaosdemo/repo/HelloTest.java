@@ -1,7 +1,6 @@
 package com.example.chaos.monkey.chaosdemo.repo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +13,8 @@ public class HelloTest {
     long id = 0;
     Hello helloToTest = new Hello(id, expectedValueMessage);
 
-    assertThat(helloToTest.getMessage(), is(expectedValueMessage));
-    assertThat(helloToTest.getId(), is(id));
+    assertThat(helloToTest.getMessage()).isEqualTo(expectedValueMessage);
+    assertThat(helloToTest.getId()).isEqualTo(id);
   }
 
   @Test
@@ -26,7 +25,7 @@ public class HelloTest {
     helloToTest.setId(id);
     helloToTest.setMessage(expectedValueMessage);
 
-    assertThat(helloToTest.getMessage(), is(expectedValueMessage));
-    assertThat(helloToTest.getId(), is(id));
+    assertThat(helloToTest.getMessage()).isEqualTo(expectedValueMessage);
+    assertThat(helloToTest.getId()).isEqualTo(id);
   }
 }

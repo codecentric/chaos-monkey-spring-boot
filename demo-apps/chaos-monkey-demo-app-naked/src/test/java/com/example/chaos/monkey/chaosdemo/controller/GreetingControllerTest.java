@@ -1,6 +1,5 @@
 package com.example.chaos.monkey.chaosdemo.controller;
 
-import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +21,6 @@ public class GreetingControllerTest {
     this.mockMvc
         .perform(get("/helloagain"))
         .andExpect(status().isOk())
-        .andExpect(content().string(is("Again hello!")));
+        .andExpect(content().string("Again hello!"));
   }
 }

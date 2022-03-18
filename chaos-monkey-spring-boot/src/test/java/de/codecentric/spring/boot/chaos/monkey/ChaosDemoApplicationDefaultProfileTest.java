@@ -17,9 +17,7 @@
 
 package de.codecentric.spring.boot.chaos.monkey;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
@@ -50,29 +48,27 @@ class ChaosDemoApplicationDefaultProfileTest {
 
   @Test
   void checkEnvWatcherController() {
-    assertThat(env.getProperty("chaos.monkey.watcher.controller"), is("true"));
+    assertThat(env.getProperty("chaos.monkey.watcher.controller")).isEqualTo("true");
   }
 
   @Test
   void checkEnvAssaultLatencyRangeStart() {
-    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start"), is("100"));
+    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start")).isEqualTo("100");
   }
 
   @Test
   void checkEnvAssaultLatencyRangeEnd() {
-    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end"), is("200"));
+    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end")).isEqualTo("200");
   }
 
   @Test
   void checkEnvCustomServiceWatcherList() {
     List<String> stringList =
         env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
-    assertThat(stringList, hasSize(2));
-    assertThat(
-        stringList.get(0),
-        is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello"));
-    assertThat(
-        stringList.get(1),
-        is("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"));
+    assertThat(stringList).hasSize(2);
+    assertThat(stringList.get(0))
+        .isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello");
+    assertThat(stringList.get(1))
+        .isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye");
   }
 }

@@ -19,7 +19,7 @@ jobs:
         run: sudo apt-get install -y node-semver
       - name: Validate is valid version
         run: semver $VERSION
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_TOKEN_CHAOS_BOT }}
       - name: Set up JDK 11
