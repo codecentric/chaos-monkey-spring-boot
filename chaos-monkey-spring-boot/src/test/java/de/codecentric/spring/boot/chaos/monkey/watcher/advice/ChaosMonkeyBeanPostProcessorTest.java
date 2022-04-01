@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import static org.mockito.Mockito.*;
 
@@ -18,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class ChaosMonkeyBeanPostProcessorTest {
 
-  private DemoBean target = new DemoBean();
+  private final DemoBean target = new DemoBean();
 
-  private WatcherProperties watcherProperties = new WatcherProperties();
+  private final WatcherProperties watcherProperties = new WatcherProperties();
 
   @Mock private ChaosMonkeyRequestScope requestScope;
 
@@ -28,9 +28,10 @@ public class ChaosMonkeyBeanPostProcessorTest {
 
   private ChaosMonkeyBeanPostProcessor postProcessor;
 
-  private String pointcutName = "execution.DemoBean.sayHello";
+  private final String pointcutName = "execution.DemoBean.sayHello";
 
-  private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean.sayHello";
+  private final String simpleName =
+      "de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean.sayHello";
 
   @BeforeEach
   void setup() {

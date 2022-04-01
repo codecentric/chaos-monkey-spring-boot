@@ -1,4 +1,4 @@
-package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +12,7 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-class SpringBootHealthIndicatorAspectIntegrationTest {
+class SpringBootHealthIndicatorAdviceIntegrationTest {
 
   @SpringBootTest(
       properties = {
@@ -51,7 +51,7 @@ class SpringBootHealthIndicatorAspectIntegrationTest {
     @Autowired private List<HealthIndicator> healthIndicators;
 
     @Test
-    public void testIndicatorsAreDown() {
+    public void testIndicatorsAreUp() {
       this.healthIndicators.forEach(
           healthIndicator -> {
             assertThat(healthIndicator.getHealth(Boolean.TRUE).getStatus())

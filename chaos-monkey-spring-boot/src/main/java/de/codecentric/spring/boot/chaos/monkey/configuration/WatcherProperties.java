@@ -45,4 +45,6 @@ public class WatcherProperties {
   private boolean actuatorHealth = false;
 
   private List<String> beans = Collections.emptyList();
+
+  private List<Class<?>> excludeClasses = Collections.emptyList();
 }

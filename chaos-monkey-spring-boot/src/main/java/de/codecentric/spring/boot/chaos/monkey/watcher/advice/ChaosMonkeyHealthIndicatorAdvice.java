@@ -1,31 +1,23 @@
-package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.boot.actuate.health.Health;
 
-@Aspect
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
-public class SpringBootHealthIndicatorAspect extends ChaosMonkeyBaseAspect {
+public class ChaosMonkeyHealthIndicatorAdvice extends AbstractChaosMonkeyAdvice {
 
   private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
-
   private final WatcherProperties watcherProperties;
 
-  @Pointcut("execution(* org.springframework.boot.actuate.health.HealthIndicator.getHealth(..))")
-  public void getHealthPointCut() {}
-
-  @Around("getHealthPointCut() && !classInChaosMonkeyPackage()")
-  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+  @Override
+  public Object invoke(ProceedingJoinPoint pjp) throws Throwable {
     Health health = (Health) pjp.proceed();
     if (watcherProperties.isActuatorHealth()) {
       MethodSignature signature = (MethodSignature) pjp.getSignature();

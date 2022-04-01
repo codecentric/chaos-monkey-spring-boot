@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -25,6 +25,10 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonkeyAnnotationPointcutAdvisor;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonkeyPointcutAdvisor;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.ChaosMonkeyBaseClassFilter;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.SpringHookMethodsFilter;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
@@ -37,10 +41,11 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.stereotype.Component;
 
 /** @author Kevin Sapper */
 @SpringBootTest
-class SpringComponentAspectIntegrationTest {
+class SpringComponentAdvisorIntegrationTest {
 
   private static final String demoComponentPointcutName = "execution.DemoComponent.sayHello";
   private static final String finalDemoComponentPointcutName =
@@ -140,11 +145,18 @@ class SpringComponentAspectIntegrationTest {
     }
 
     @Bean
-    SpringComponentAspect aspect() {
+    ChaosMonkeyPointcutAdvisor advisor() {
       WatcherProperties watcherProperties = new WatcherProperties();
       watcherProperties.setComponent(true);
-      return new SpringComponentAspect(
-          chaosMonkeyRequestScopeMock(), metricsMock(), watcherProperties);
+      return new ChaosMonkeyAnnotationPointcutAdvisor(
+          new ChaosMonkeyBaseClassFilter(watcherProperties),
+          new ChaosMonkeyDefaultAdvice(
+              chaosMonkeyRequestScopeMock(),
+              metricsMock(),
+              watcherProperties,
+              ChaosTarget.COMPONENT),
+          Component.class,
+          SpringHookMethodsFilter.INSTANCE);
     }
 
     @Bean

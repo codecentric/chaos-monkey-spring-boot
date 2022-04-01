@@ -18,33 +18,66 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.sun.management.OperatingSystemMXBean;
-import de.codecentric.spring.boot.chaos.monkey.assaults.*;
-import de.codecentric.spring.boot.chaos.monkey.component.*;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.CpuAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.MemoryAssault;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRuntimeScope;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyScheduler;
+import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
+import de.codecentric.spring.boot.chaos.monkey.component.Metrics;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import de.codecentric.spring.boot.chaos.monkey.watcher.aspect.*;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.ChaosMonkeyBeanPostProcessor;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.ChaosMonkeyDefaultAdvice;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.ChaosMonkeyHealthIndicatorAdvice;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonkeyAnnotationPointcutAdvisor;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonkeyPointcutAdvisor;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.ChaosMonkeyBaseClassFilter;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.MethodNameFilter;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.SpringHookMethodsFilter;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.List;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.ClassFilters;
+import org.springframework.aop.support.RootClassFilter;
+import org.springframework.aop.support.annotation.AnnotationClassFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.RestController;
 
 @Configuration
 @Conditional(ChaosMonkeyCondition.class)
@@ -179,53 +212,106 @@ public class ChaosMonkeyConfiguration {
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  public SpringControllerAspect controllerAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringControllerAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  public ChaosMonkeyBaseClassFilter chaosMonkeyBaseClassFilter() {
+    return new ChaosMonkeyBaseClassFilter(watcherProperties);
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  public SpringRestControllerAspect restControllerAspect(
-      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringRestControllerAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  public ChaosMonkeyPointcutAdvisor controllerPointcutAdvisor(
+      ChaosMonkeyBaseClassFilter baseClassFilter,
+      ChaosMonkeyRequestScope requestScope,
+      MetricEventPublisher eventPublisher) {
+    return new ChaosMonkeyAnnotationPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyDefaultAdvice(
+            requestScope, eventPublisher, watcherProperties, ChaosTarget.CONTROLLER),
+        Controller.class);
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  public SpringServiceAspect serviceAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringServiceAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  public ChaosMonkeyPointcutAdvisor restControllerPointcutAdvisor(
+      ChaosMonkeyBaseClassFilter baseClassFilter,
+      ChaosMonkeyRequestScope requestScope,
+      MetricEventPublisher eventPublisher) {
+    return new ChaosMonkeyAnnotationPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyDefaultAdvice(
+            requestScope, eventPublisher, watcherProperties, ChaosTarget.REST_CONTROLLER),
+        RestController.class);
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  public SpringComponentAspect componentAspect(ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringComponentAspect(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  public ChaosMonkeyPointcutAdvisor servicePointcutAdvisor(
+      ChaosMonkeyBaseClassFilter baseClassFilter,
+      ChaosMonkeyRequestScope requestScope,
+      MetricEventPublisher eventPublisher) {
+    return new ChaosMonkeyAnnotationPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyDefaultAdvice(
+            requestScope, eventPublisher, watcherProperties, ChaosTarget.SERVICE),
+        Service.class,
+        SpringHookMethodsFilter.INSTANCE);
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
+  public ChaosMonkeyPointcutAdvisor componentPointcutAdvisor(
+      ChaosMonkeyBaseClassFilter baseClassFilter,
+      ChaosMonkeyRequestScope requestScope,
+      MetricEventPublisher eventPublisher) {
+    return new ChaosMonkeyAnnotationPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyDefaultAdvice(
+            requestScope, eventPublisher, watcherProperties, ChaosTarget.COMPONENT),
+        Component.class,
+        SpringHookMethodsFilter.INSTANCE);
+  }
+
+  @Bean
   @ConditionalOnClass(name = "org.springframework.data.repository.Repository")
-  // Creates aspects that match interfaces annotated with @Repository
-  public SpringRepositoryAspectJPA repositoryAspectJpa(
-      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringRepositoryAspectJPA(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  public ChaosMonkeyPointcutAdvisor jpaRepositoryPointcutAdvisor(
+      ChaosMonkeyBaseClassFilter baseClassFilter,
+      ChaosMonkeyRequestScope requestScope,
+      MetricEventPublisher eventPublisher)
+      throws ClassNotFoundException {
+    @SuppressWarnings("unchecked")
+    val repositoryDefinition =
+        (Class<? extends Annotation>)
+            Class.forName("org.springframework.data.repository.RepositoryDefinition");
+    Class<?> repository = Class.forName("org.springframework.data.repository.Repository");
+    return new ChaosMonkeyPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyDefaultAdvice(
+            requestScope, eventPublisher, watcherProperties, ChaosTarget.REPOSITORY),
+        ClassFilters.union(
+            new AnnotationClassFilter(repositoryDefinition, false),
+            new RootClassFilter(repository)),
+        SpringHookMethodsFilter.INSTANCE);
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  // creates aspects that match simple classes annotated with @repository
-  public SpringRepositoryAspectJDBC repositoryAspectJdbc(
-      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringRepositoryAspectJDBC(chaosMonkeyRequestScope, publisher(), watcherProperties);
+  public ChaosMonkeyPointcutAdvisor jdbcRepositoryPointcutAdvisor(
+      ChaosMonkeyBaseClassFilter baseClassFilter,
+      ChaosMonkeyRequestScope requestScope,
+      MetricEventPublisher eventPublisher) {
+    return new ChaosMonkeyAnnotationPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyDefaultAdvice(
+            requestScope, eventPublisher, watcherProperties, ChaosTarget.REPOSITORY),
+        Repository.class);
   }
 
   @Bean
-  @DependsOn("chaosMonkeyRequestScope")
   @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
-  public SpringBootHealthIndicatorAspect springBootHealthIndicatorAspect(
-      ChaosMonkeyRequestScope chaosMonkeyRequestScope) {
-    return new SpringBootHealthIndicatorAspect(chaosMonkeyRequestScope, watcherProperties);
+  public ChaosMonkeyPointcutAdvisor healthIndicatorAdviceProvider(
+      ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope)
+      throws ClassNotFoundException {
+    Class<?> healthIndicatorClass =
+        Class.forName("org.springframework.boot.actuate.health.HealthIndicator");
+    return new ChaosMonkeyPointcutAdvisor(
+        baseClassFilter,
+        new ChaosMonkeyHealthIndicatorAdvice(requestScope, watcherProperties),
+        new RootClassFilter(healthIndicatorClass),
+        new MethodNameFilter("getHealth"));
   }
 
   @Bean
