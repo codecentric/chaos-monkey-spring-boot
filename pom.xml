@@ -34,9 +34,10 @@
     <!-- GitHub Server settings.xml -->
     <github.global.server>github</github.global.server>
 
+    <!-- Dependency versions - use ./mvnw versions:update-properties to update-->
     <!-- spring versions -->
-    <spring-boot.version>2.6.3</spring-boot.version>
-    <spring-cloud.version>2021.0.0</spring-cloud.version>
+    <spring-boot.version>2.6.6</spring-boot.version>
+    <spring-cloud.version>2021.0.1</spring-cloud.version>
 
     <!-- dependency versions -->
     <unleash.version>5.0.3</unleash.version>
@@ -56,8 +57,9 @@
     <skuzzle-imports-enforcer.version>2.0.0</skuzzle-imports-enforcer.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
-    <spotless.plugin.version>2.20.0</spotless.plugin.version>
+    <spotless-plugin.version>2.13.0</spotless-plugin.version>
     <google-java-format.version>1.7</google-java-format.version>
+    <versions-plugin.version>2.10.0</versions-plugin.version>
   </properties>
 
   <scm>
@@ -194,7 +196,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless.plugin.version}</version>
+        <version>${spotless-plugin.version}</version>
         <configuration>
           <java>
             <googleJavaFormat>
@@ -239,6 +241,11 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>${versions-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
