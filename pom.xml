@@ -27,6 +27,7 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.version>3.8.5</maven.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -34,30 +35,32 @@
     <!-- GitHub Server settings.xml -->
     <github.global.server>github</github.global.server>
 
+    <!-- Dependency versions - use ./mvnw versions:update-properties to update-->
     <!-- spring versions -->
-    <spring-boot.version>2.6.3</spring-boot.version>
-    <spring-cloud.version>2021.0.0</spring-cloud.version>
+    <spring-boot.version>2.6.6</spring-boot.version>
+    <spring-cloud.version>2021.0.1</spring-cloud.version>
 
     <!-- dependency versions -->
-    <unleash.version>5.0.3</unleash.version>
+    <unleash.version>5.1.0</unleash.version>
 
     <!-- plugin versions-->
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
-    <git-commit-id-plugin.version>4.0.5</git-commit-id-plugin.version>
+    <git-commit-id-plugin.version>4.9.9</git-commit-id-plugin.version>
     <asciidoctor-maven-plugin.version>2.2.1</asciidoctor-maven-plugin.version>
     <asciidoctor-extensions-spring-boot>0.6.0</asciidoctor-extensions-spring-boot>
     <maven-deploy-plugin.version>3.0.0-M2</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-    <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
     <skuzzle-imports-enforcer.version>2.0.0</skuzzle-imports-enforcer.version>
-    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+    <nexus-staging-maven-plugin.version>1.6.12</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
-    <spotless.plugin.version>2.20.0</spotless.plugin.version>
+    <spotless-plugin.version>2.21.0</spotless-plugin.version>
     <google-java-format.version>1.7</google-java-format.version>
+    <versions-plugin.version>2.10.0</versions-plugin.version>
   </properties>
 
   <scm>
@@ -194,7 +197,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless.plugin.version}</version>
+        <version>${spotless-plugin.version}</version>
         <configuration>
           <java>
             <googleJavaFormat>
@@ -226,6 +229,20 @@
         </dependencies>
         <executions>
           <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${maven.version}</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-assertj</id>
             <goals>
               <goal>enforce</goal>
             </goals>
@@ -239,6 +256,11 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>${versions-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
