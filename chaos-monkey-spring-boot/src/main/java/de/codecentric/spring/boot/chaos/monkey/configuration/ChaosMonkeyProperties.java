@@ -16,9 +16,12 @@
 
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.lang.Nullable;
 
 @Data
 @NoArgsConstructor
@@ -27,5 +30,17 @@ public class ChaosMonkeyProperties {
 
   private boolean enabled = false;
 
+  @Nullable
+  @Setter(AccessLevel.NONE)
+  private Long lastEnabledToggleTimestamp = null;
+
   private String togglePrefix = "chaos.monkey";
+
+  @Nullable
+  public void setEnabled(boolean enabled) {
+    if (this.enabled != enabled) {
+      lastEnabledToggleTimestamp = System.currentTimeMillis();
+      this.enabled = enabled;
+    }
+  }
 }

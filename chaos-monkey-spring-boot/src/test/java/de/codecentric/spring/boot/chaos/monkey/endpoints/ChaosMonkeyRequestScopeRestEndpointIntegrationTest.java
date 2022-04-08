@@ -19,6 +19,7 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,11 +30,10 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperti
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +80,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
     assertEquals(
         postChaosMonkeySettings(chaosMonkeySettings).getStatusCode(),
         HttpStatus.METHOD_NOT_ALLOWED);
-    assertEquals(false, this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
+    assertFalse(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
   }
 
   @Test
@@ -251,48 +251,61 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
   void getStatusIsEnabled() {
     chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
 
-    ResponseEntity<String> result =
-        testRestTemplate.getForEntity(baseUrl + "/status", String.class);
+    ResponseEntity<ChaosMonkeyStatusResponseDto> result =
+        testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
-    assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertEquals("Ready to be evil!", result.getBody());
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(result.getBody().isEnabled()).isTrue();
   }
 
   @Test
   void getStatusIsDisabled() {
     chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(false);
 
-    ResponseEntity<String> result =
-        testRestTemplate.getForEntity(baseUrl + "/status", String.class);
+    ResponseEntity<ChaosMonkeyStatusResponseDto> result =
+        testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
-    assertEquals(HttpStatus.SERVICE_UNAVAILABLE, result.getStatusCode());
-    assertEquals("You switched me off!", result.getBody());
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(result.getBody().isEnabled()).isFalse();
   }
 
   // ENABLE CHAOS MONKEY
 
   @Test
   void postToEnableChaosMonkey() {
-    ZonedDateTime enabledAt = ZonedDateTime.now();
-    ResponseEntity<ChaosMonkeyEnabledDto> result =
-        testRestTemplate.postForEntity(baseUrl + "/enable", null, ChaosMonkeyEnabledDto.class);
+    OffsetDateTime enabledAt = OffsetDateTime.now().withNano(0);
+    ResponseEntity<ChaosMonkeyStatusResponseDto> result =
+        testRestTemplate.postForEntity(
+            baseUrl + "/enable", null, ChaosMonkeyStatusResponseDto.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertThat(Objects.requireNonNull(result.getBody()).getStatus())
-        .isEqualTo("Chaos Monkey is enabled");
+    assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isTrue();
     assertThat(Objects.requireNonNull(result.getBody()).getEnabledAt()).isAfterOrEqualTo(enabledAt);
   }
 
   // DISABLE CHAOS MONKEY
   @Test
   void postToDisableChaosMonkey() {
-    ZonedDateTime disabledAt = ZonedDateTime.now();
-    ResponseEntity<ChaosMonkeyDisabledDto> result =
-        testRestTemplate.postForEntity(baseUrl + "/disable", null, ChaosMonkeyDisabledDto.class);
+    ResponseEntity<ChaosMonkeyStatusResponseDto> result =
+        testRestTemplate.postForEntity(
+            baseUrl + "/disable", null, ChaosMonkeyStatusResponseDto.class);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertThat(Objects.requireNonNull(result.getBody()).getStatus())
-        .isEqualTo("Chaos Monkey is disabled");
+    assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
+    assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt()).isNull();
+  }
+
+  @Test
+  void postToDisableAfterEnableChaosMonkey() {
+    testRestTemplate.postForEntity(baseUrl + "/enable", null, ChaosMonkeyStatusResponseDto.class);
+
+    OffsetDateTime disabledAt = OffsetDateTime.now().withNano(0);
+    ResponseEntity<ChaosMonkeyStatusResponseDto> result =
+        testRestTemplate.postForEntity(
+            baseUrl + "/disable", null, ChaosMonkeyStatusResponseDto.class);
+
+    assertEquals(HttpStatus.OK, result.getStatusCode());
+    assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
     assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt())
         .isAfterOrEqualTo(disabledAt);
   }
@@ -302,7 +315,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
     return this.testRestTemplate.postForEntity(baseUrl, chaosMonkeySettings, String.class);
   }
 
-  private ResponseEntity<String> postHttpEntity(HttpEntity value) {
+  private ResponseEntity<String> postHttpEntity(HttpEntity<?> value) {
 
     return this.testRestTemplate.postForEntity(baseUrl, value, String.class);
   }

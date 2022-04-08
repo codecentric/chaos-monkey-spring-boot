@@ -22,9 +22,8 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyDisabledDto;
-import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyEnabledDto;
-import java.time.ZonedDateTime;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
+import java.time.OffsetDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -102,18 +101,18 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
 
   @Test
   void enableChaosMonkey() {
-    ZonedDateTime enabledAt = ZonedDateTime.now();
-    ChaosMonkeyEnabledDto enabledDto = chaosMonkeyJmxEndpoint.enableChaosMonkey();
-    assertThat(enabledDto.getStatus()).isEqualTo("Chaos Monkey is enabled");
+    OffsetDateTime enabledAt = OffsetDateTime.now().withNano(0);
+    ChaosMonkeyStatusResponseDto enabledDto = chaosMonkeyJmxEndpoint.enableChaosMonkey();
+    assertThat(enabledDto.isEnabled()).isEqualTo(true);
     assertThat(enabledDto.getEnabledAt()).isAfterOrEqualTo(enabledAt);
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()).isTrue();
   }
 
   @Test
   void disableChaosMonkey() {
-    ZonedDateTime disabledAt = ZonedDateTime.now();
-    ChaosMonkeyDisabledDto disabledDto = chaosMonkeyJmxEndpoint.disableChaosMonkey();
-    assertThat(disabledDto.getStatus()).isEqualTo("Chaos Monkey is disabled");
+    OffsetDateTime disabledAt = OffsetDateTime.now().withNano(0);
+    ChaosMonkeyStatusResponseDto disabledDto = chaosMonkeyJmxEndpoint.disableChaosMonkey();
+    assertThat(disabledDto.isEnabled()).isEqualTo(false);
     assertThat(disabledDto.getDisabledAt()).isAfterOrEqualTo(disabledAt);
     assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()).isFalse();
   }
