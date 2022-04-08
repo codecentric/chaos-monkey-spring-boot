@@ -176,4 +176,9 @@ You can decide which attacks you want to run and which parts of your application
 |Bean watcher for given beans
 |List of bean names
 |Empty list
+
+|chaos.monkey.watcher.exclude
+|Exclude classes from proxying. Use if proxying a class breaks it.
+|List of class names
+|Empty list
 |===
