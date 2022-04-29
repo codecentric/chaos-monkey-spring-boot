@@ -27,74 +27,66 @@ import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
 @JmxEndpoint(enableByDefault = false, id = "chaosmonkeyjmx")
 public class ChaosMonkeyJmxEndpoint extends BaseChaosMonkeyEndpoint {
 
-  public ChaosMonkeyJmxEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
-    super(chaosMonkeySettings);
-  }
+    public ChaosMonkeyJmxEndpoint(ChaosMonkeySettings chaosMonkeySettings) {
+        super(chaosMonkeySettings);
+    }
 
-  @ReadOperation
-  @Override
-  public AssaultPropertiesUpdate getAssaultProperties() {
-    return super.getAssaultProperties();
-  }
+    @ReadOperation
+    @Override
+    public AssaultPropertiesUpdate getAssaultProperties() {
+        return super.getAssaultProperties();
+    }
 
-  @WriteOperation
-  public String toggleLatencyAssault() {
-    this.chaosMonkeySettings
-        .getAssaultProperties()
-        .setLatencyActive(!this.getAssaultProperties().getLatencyActive());
-    return String.valueOf(this.getAssaultProperties().getLatencyActive());
-  }
+    @WriteOperation
+    public String toggleLatencyAssault() {
+        this.chaosMonkeySettings.getAssaultProperties().setLatencyActive(!this.getAssaultProperties().getLatencyActive());
+        return String.valueOf(this.getAssaultProperties().getLatencyActive());
+    }
 
-  @WriteOperation
-  public String toggleExceptionAssault() {
-    this.chaosMonkeySettings
-        .getAssaultProperties()
-        .setExceptionsActive(!this.getAssaultProperties().getExceptionsActive());
-    return String.valueOf(this.getAssaultProperties().getExceptionsActive());
-  }
+    @WriteOperation
+    public String toggleExceptionAssault() {
+        this.chaosMonkeySettings.getAssaultProperties().setExceptionsActive(!this.getAssaultProperties().getExceptionsActive());
+        return String.valueOf(this.getAssaultProperties().getExceptionsActive());
+    }
 
-  @WriteOperation
-  public String toggleKillApplicationAssault() {
-    this.chaosMonkeySettings
-        .getAssaultProperties()
-        .setKillApplicationActive(!this.getAssaultProperties().getKillApplicationActive());
-    return String.valueOf(this.getAssaultProperties().getKillApplicationActive());
-  }
+    @WriteOperation
+    public String toggleKillApplicationAssault() {
+        this.chaosMonkeySettings.getAssaultProperties().setKillApplicationActive(!this.getAssaultProperties().getKillApplicationActive());
+        return String.valueOf(this.getAssaultProperties().getKillApplicationActive());
+    }
 
-  @WriteOperation
-  public String toggleCpuAssault() {
-    this.chaosMonkeySettings
-        .getAssaultProperties()
-        .setCpuActive(!this.getAssaultProperties().getCpuActive());
-    return String.valueOf(this.getAssaultProperties().getCpuActive());
-  }
+    @WriteOperation
+    public String toggleCpuAssault() {
+        this.chaosMonkeySettings.getAssaultProperties().setCpuActive(!this.getAssaultProperties().getCpuActive());
+        return String.valueOf(this.getAssaultProperties().getCpuActive());
+    }
 
-  @ReadOperation()
-  public String isChaosMonkeyActive() {
-    return String.valueOf(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
-  }
+    @ReadOperation()
+    public String isChaosMonkeyActive() {
+        return String.valueOf(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
+    }
 
-  @WriteOperation
-  @Override
-  public ChaosMonkeyStatusResponseDto enableChaosMonkey() {
-    return super.enableChaosMonkey();
-  }
+    @WriteOperation
+    @Override
+    public ChaosMonkeyStatusResponseDto enableChaosMonkey() {
+        return super.enableChaosMonkey();
+    }
 
-  @WriteOperation
-  @Override
-  public ChaosMonkeyStatusResponseDto disableChaosMonkey() {
-    return super.disableChaosMonkey();
-  }
+    @WriteOperation
+    @Override
+    public ChaosMonkeyStatusResponseDto disableChaosMonkey() {
+        return super.disableChaosMonkey();
+    }
 
-  @ReadOperation
-  @Override
-  public ChaosMonkeyStatusResponseDto getStatus() {
-    return super.getStatus();
-  }
+    @ReadOperation
+    @Override
+    public ChaosMonkeyStatusResponseDto getStatus() {
+        return super.getStatus();
+    }
 
-  @ReadOperation
-  @Override
-  public WatcherProperties getWatcherProperties() {
-    return super.getWatcherProperties();
-  }
+    @ReadOperation
+    @Override
+    public WatcherProperties getWatcherProperties() {
+        return super.getWatcherProperties();
+    }
 }
