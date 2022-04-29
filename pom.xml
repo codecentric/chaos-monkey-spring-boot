@@ -199,12 +199,14 @@
         <artifactId>spotless-maven-plugin</artifactId>
         <version>${spotless-plugin.version}</version>
         <configuration>
+          <ratchetFrom>origin/main</ratchetFrom>
           <java>
             <eclipse>
               <file>code-style.xml</file>
             </eclipse>
-            <!-- TODO: Add a <licenseHeader> configuration to make all license headers in source
-                 files consistent -->
+            <licenseHeader>
+              <file>license.template.txt</file>
+            </licenseHeader>
           </java>
         </configuration>
         <executions>
