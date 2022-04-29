@@ -26,16 +26,14 @@ import lombok.Getter;
 @Getter
 public class ChaosMonkeySettingsDto {
 
-  ChaosMonkeyProperties chaosMonkeyProperties;
-  AssaultPropertiesUpdate assaultProperties;
-  WatcherProperties watcherProperties;
+    ChaosMonkeyProperties chaosMonkeyProperties;
+    AssaultPropertiesUpdate assaultProperties;
+    WatcherProperties watcherProperties;
 
-  public ChaosMonkeySettingsDto(
-      @NotNull ChaosMonkeyProperties chaosMonkeyProperties,
-      @NotNull AssaultProperties assaultProperties,
-      @NotNull WatcherProperties watcherProperties) {
-    this.chaosMonkeyProperties = chaosMonkeyProperties;
-    this.assaultProperties = assaultProperties.toDto();
-    this.watcherProperties = watcherProperties;
-  }
+    public ChaosMonkeySettingsDto(@NotNull ChaosMonkeyProperties chaosMonkeyProperties, @NotNull AssaultProperties assaultProperties,
+            @NotNull WatcherProperties watcherProperties) {
+        this.chaosMonkeyProperties = chaosMonkeyProperties;
+        this.assaultProperties = assaultProperties.toDto();
+        this.watcherProperties = watcherProperties;
+    }
 }

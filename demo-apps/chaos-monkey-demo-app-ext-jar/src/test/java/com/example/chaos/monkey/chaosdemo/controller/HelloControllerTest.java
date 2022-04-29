@@ -29,21 +29,16 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(HelloController.class)
 public class HelloControllerTest {
 
-  @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  public void shouldReturnHello() throws Exception {
+    @Test
+    public void shouldReturnHello() throws Exception {
 
-    this.mockMvc
-        .perform(get("/hello"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Hello!"));
-  }
+        this.mockMvc.perform(get("/hello")).andExpect(status().isOk()).andExpect(content().string("Hello!"));
+    }
 
-  public void shouldReturnGoodbye() throws Exception {
-    this.mockMvc
-        .perform(get("/goodbye"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Goodbye!"));
-  }
+    public void shouldReturnGoodbye() throws Exception {
+        this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk()).andExpect(content().string("Goodbye!"));
+    }
 }

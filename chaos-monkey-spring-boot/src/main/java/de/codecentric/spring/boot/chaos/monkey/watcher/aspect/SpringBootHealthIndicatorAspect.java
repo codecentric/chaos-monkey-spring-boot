@@ -17,26 +17,26 @@ import org.springframework.boot.actuate.health.Health;
 @Slf4j
 public class SpringBootHealthIndicatorAspect extends ChaosMonkeyBaseAspect {
 
-  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-  private final WatcherProperties watcherProperties;
+    private final WatcherProperties watcherProperties;
 
-  @Pointcut("execution(* org.springframework.boot.actuate.health.HealthIndicator.getHealth(..))")
-  public void getHealthPointCut() {}
-
-  @Around("getHealthPointCut() && !classInChaosMonkeyPackage()")
-  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-    Health health = (Health) pjp.proceed();
-    if (watcherProperties.isActuatorHealth()) {
-      MethodSignature signature = (MethodSignature) pjp.getSignature();
-      try {
-        this.chaosMonkeyRequestScope.callChaosMonkey(
-            ChaosTarget.ACTUATOR_HEALTH, createSignature(signature));
-      } catch (final Exception e) {
-        log.error("Exception occurred", e);
-        health = Health.down(e).build();
-      }
+    @Pointcut("execution(* org.springframework.boot.actuate.health.HealthIndicator.getHealth(..))")
+    public void getHealthPointCut() {
     }
-    return health;
-  }
+
+    @Around("getHealthPointCut() && !classInChaosMonkeyPackage()")
+    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+        Health health = (Health) pjp.proceed();
+        if (watcherProperties.isActuatorHealth()) {
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
+            try {
+                this.chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.ACTUATOR_HEALTH, createSignature(signature));
+            } catch (final Exception e) {
+                log.error("Exception occurred", e);
+                health = Health.down(e).build();
+            }
+        }
+        return health;
+    }
 }

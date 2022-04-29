@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class HelloComponent {
 
-  public String sayHello() {
+    public String sayHello() {
 
-    return "Hello from Component";
-  }
+        return "Hello from Component";
+    }
 }

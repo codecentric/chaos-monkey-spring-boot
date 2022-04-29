@@ -7,19 +7,17 @@ import org.springframework.web.client.RestTemplate;
 /** @author Marcel Becker */
 public class ChaosMonkeyRestTemplatePostProcessor implements BeanPostProcessor {
 
-  private final ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer;
+    private final ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer;
 
-  public ChaosMonkeyRestTemplatePostProcessor(
-      ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer) {
-    this.restTemplateCustomizer = restTemplateCustomizer;
-  }
-
-  @Override
-  public Object postProcessBeforeInitialization(final Object bean, final String beanName)
-      throws BeansException {
-    if (bean instanceof RestTemplate) {
-      this.restTemplateCustomizer.customize((RestTemplate) bean);
+    public ChaosMonkeyRestTemplatePostProcessor(ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer) {
+        this.restTemplateCustomizer = restTemplateCustomizer;
     }
-    return bean;
-  }
+
+    @Override
+    public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+        if (bean instanceof RestTemplate) {
+            this.restTemplateCustomizer.customize((RestTemplate) bean);
+        }
+        return bean;
+    }
 }

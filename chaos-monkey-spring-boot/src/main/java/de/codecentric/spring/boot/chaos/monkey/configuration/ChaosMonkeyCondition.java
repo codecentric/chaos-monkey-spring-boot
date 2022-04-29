@@ -24,11 +24,10 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /** @author Daekwon Kang */
 public class ChaosMonkeyCondition implements Condition {
-  @Override
-  public boolean matches(
-      ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
+    @Override
+    public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
 
-    return conditionContext.getEnvironment().acceptsProfiles(Profiles.of("chaos-monkey"))
-        || Boolean.parseBoolean(System.getProperty("LOAD_CHAOS_MONKEY"));
-  }
+        return conditionContext.getEnvironment().acceptsProfiles(Profiles.of("chaos-monkey"))
+                || Boolean.parseBoolean(System.getProperty("LOAD_CHAOS_MONKEY"));
+    }
 }

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DemoComponent {
 
-  public String sayHello() {
-    return "Hello!";
-  }
+    public String sayHello() {
+        return "Hello!";
+    }
 }

@@ -12,10 +12,9 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AssaultPropertiesUpdateLatencyRangeConstraint {
 
-  String message() default
-      "Invalid range parameters. Value of latencyRangeStart must not be greater than value of latencyRangeEnd!";
+    String message() default "Invalid range parameters. Value of latencyRangeStart must not be greater than value of latencyRangeEnd!";
 
-  Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-  Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

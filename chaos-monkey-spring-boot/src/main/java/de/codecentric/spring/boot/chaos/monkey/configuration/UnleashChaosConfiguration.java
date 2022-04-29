@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(value = "chaos.monkey.toggle.unleash.enabled")
 public class UnleashChaosConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean
-  @ConditionalOnBean(Unleash.class)
-  public ChaosToggles unleashChaosToggles(Unleash unleash) {
-    return new UnleashChaosToggles(unleash);
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(Unleash.class)
+    public ChaosToggles unleashChaosToggles(Unleash unleash) {
+        return new UnleashChaosToggles(unleash);
+    }
 }

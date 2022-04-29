@@ -26,33 +26,33 @@ import org.slf4j.LoggerFactory;
 /** @author Thorsten Deelmann */
 public class ExceptionAssault implements ChaosMonkeyRequestAssault {
 
-  private static final Logger Logger = LoggerFactory.getLogger(ExceptionAssault.class);
+    private static final Logger Logger = LoggerFactory.getLogger(ExceptionAssault.class);
 
-  private final ChaosMonkeySettings settings;
+    private final ChaosMonkeySettings settings;
 
-  private MetricEventPublisher metricEventPublisher;
+    private MetricEventPublisher metricEventPublisher;
 
-  public ExceptionAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
-    this.settings = settings;
-    this.metricEventPublisher = metricEventPublisher;
-  }
-
-  @Override
-  public boolean isActive() {
-    return settings.getAssaultProperties().isExceptionsActive();
-  }
-
-  @Override
-  public void attack() {
-    Logger.info("Chaos Monkey - exception");
-
-    AssaultException assaultException = this.settings.getAssaultProperties().getException();
-
-    // metrics
-    if (metricEventPublisher != null) {
-      metricEventPublisher.publishMetricEvent(MetricType.EXCEPTION_ASSAULT);
+    public ExceptionAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
+        this.settings = settings;
+        this.metricEventPublisher = metricEventPublisher;
     }
 
-    assaultException.throwExceptionInstance();
-  }
+    @Override
+    public boolean isActive() {
+        return settings.getAssaultProperties().isExceptionsActive();
+    }
+
+    @Override
+    public void attack() {
+        Logger.info("Chaos Monkey - exception");
+
+        AssaultException assaultException = this.settings.getAssaultProperties().getException();
+
+        // metrics
+        if (metricEventPublisher != null) {
+            metricEventPublisher.publishMetricEvent(MetricType.EXCEPTION_ASSAULT);
+        }
+
+        assaultException.throwExceptionInstance();
+    }
 }

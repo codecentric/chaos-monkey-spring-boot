@@ -14,49 +14,37 @@ import org.springframework.test.context.ActiveProfiles;
 
 class SpringBootHealthIndicatorAspectIntegrationTest {
 
-  @SpringBootTest(
-      properties = {
-        "chaos.monkey.enabled=true",
-        "chaos.monkey.watcher.actuator-health=true",
-        "chaos.monkey.assaults.exceptions-active=true"
-      },
-      classes = {ChaosDemoApplication.class})
-  @ActiveProfiles("chaos-monkey")
-  @Nested
-  class HealthIndicatorEnabledIntegrationTest {
+    @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.actuator-health=true",
+            "chaos.monkey.assaults.exceptions-active=true"}, classes = {ChaosDemoApplication.class})
+    @ActiveProfiles("chaos-monkey")
+    @Nested
+    class HealthIndicatorEnabledIntegrationTest {
 
-    @Autowired private List<HealthIndicator> healthIndicators;
+        @Autowired
+        private List<HealthIndicator> healthIndicators;
 
-    @Test
-    public void testIndicatorsAreDown() {
-      this.healthIndicators.forEach(
-          healthIndicator -> {
-            assertThat(healthIndicator.getHealth(Boolean.TRUE).getStatus())
-                .isEqualTo(Health.down().build().getStatus());
-          });
+        @Test
+        public void testIndicatorsAreDown() {
+            this.healthIndicators.forEach(healthIndicator -> {
+                assertThat(healthIndicator.getHealth(Boolean.TRUE).getStatus()).isEqualTo(Health.down().build().getStatus());
+            });
+        }
     }
-  }
 
-  @SpringBootTest(
-      properties = {
-        "chaos.monkey.enabled=true",
-        "chaos.monkey.watcher.actuator-health=false",
-        "chaos.monkey.assaults.exceptions-active=true"
-      },
-      classes = {ChaosDemoApplication.class})
-  @ActiveProfiles("chaos-monkey")
-  @Nested
-  class HealthIndicatorDisabledIntegrationTest {
+    @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.actuator-health=false",
+            "chaos.monkey.assaults.exceptions-active=true"}, classes = {ChaosDemoApplication.class})
+    @ActiveProfiles("chaos-monkey")
+    @Nested
+    class HealthIndicatorDisabledIntegrationTest {
 
-    @Autowired private List<HealthIndicator> healthIndicators;
+        @Autowired
+        private List<HealthIndicator> healthIndicators;
 
-    @Test
-    public void testIndicatorsAreDown() {
-      this.healthIndicators.forEach(
-          healthIndicator -> {
-            assertThat(healthIndicator.getHealth(Boolean.TRUE).getStatus())
-                .isEqualTo(Health.up().build().getStatus());
-          });
+        @Test
+        public void testIndicatorsAreDown() {
+            this.healthIndicators.forEach(healthIndicator -> {
+                assertThat(healthIndicator.getHealth(Boolean.TRUE).getStatus()).isEqualTo(Health.up().build().getStatus());
+            });
+        }
     }
-  }
 }

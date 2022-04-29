@@ -12,32 +12,24 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@ConditionalOnProperty(
-    prefix = "chaos.monkey.watcher",
-    value = "rest-template",
-    havingValue = "true")
+@ConditionalOnProperty(prefix = "chaos.monkey.watcher", value = "rest-template", havingValue = "true")
 @ConditionalOnClass(value = RestTemplate.class)
 class ChaosMonkeyRestTemplateConfiguration {
 
-  @Bean
-  public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(
-      final ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer) {
-    return new ChaosMonkeyRestTemplatePostProcessor(restTemplateCustomizer);
-  }
+    @Bean
+    public ChaosMonkeyRestTemplatePostProcessor chaosMonkeyRestTemplatePostProcessor(final ChaosMonkeyRestTemplateCustomizer restTemplateCustomizer) {
+        return new ChaosMonkeyRestTemplatePostProcessor(restTemplateCustomizer);
+    }
 
-  @Bean
-  public ChaosMonkeyRestTemplateCustomizer chaosMonkeyRestTemplateCustomizer(
-      final ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateWatcher) {
-    return new ChaosMonkeyRestTemplateCustomizer(chaosMonkeyRestTemplateWatcher);
-  }
+    @Bean
+    public ChaosMonkeyRestTemplateCustomizer chaosMonkeyRestTemplateCustomizer(final ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateWatcher) {
+        return new ChaosMonkeyRestTemplateCustomizer(chaosMonkeyRestTemplateWatcher);
+    }
 
-  @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(
-      final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-      final WatcherProperties watcherProperties,
-      final AssaultProperties assaultProperties) {
-    return new ChaosMonkeyRestTemplateWatcher(
-        chaosMonkeyRequestScope, watcherProperties, assaultProperties);
-  }
+    @Bean
+    @DependsOn("chaosMonkeyRequestScope")
+    public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
+            final WatcherProperties watcherProperties, final AssaultProperties assaultProperties) {
+        return new ChaosMonkeyRestTemplateWatcher(chaosMonkeyRequestScope, watcherProperties, assaultProperties);
+    }
 }

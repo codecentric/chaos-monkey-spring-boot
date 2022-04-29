@@ -13,81 +13,68 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 public class ChaosMonkeyScheduler {
 
-  private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
+    private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyScheduler.class);
 
-  private final ScheduledTaskRegistrar scheduler;
+    private final ScheduledTaskRegistrar scheduler;
 
-  private final AssaultProperties config;
-  private final List<ChaosMonkeyRuntimeAssault> assaults;
+    private final AssaultProperties config;
+    private final List<ChaosMonkeyRuntimeAssault> assaults;
 
-  private final Map<ChaosMonkeyRuntimeAssault, ScheduledTask> currentTasks = new HashMap<>();
+    private final Map<ChaosMonkeyRuntimeAssault, ScheduledTask> currentTasks = new HashMap<>();
 
-  public ChaosMonkeyScheduler(
-      ScheduledTaskRegistrar scheduler,
-      AssaultProperties config,
-      List<ChaosMonkeyRuntimeAssault> assaults) {
-    this.scheduler = scheduler;
-    this.config = config;
-    this.assaults = assaults;
+    public ChaosMonkeyScheduler(ScheduledTaskRegistrar scheduler, AssaultProperties config, List<ChaosMonkeyRuntimeAssault> assaults) {
+        this.scheduler = scheduler;
+        this.config = config;
+        this.assaults = assaults;
 
-    reloadConfig();
-  }
-
-  public void reloadConfig() {
-    Map<ChaosMonkeyRuntimeAssault, String> cronExpressions = getCronExpressions();
-    if (!currentTasks.isEmpty()) {
-      removeUnchangedExpressions(cronExpressions);
-      cancelOldTasks(cronExpressions);
+        reloadConfig();
     }
 
-    scheduleNewTasks(cronExpressions);
-  }
+    public void reloadConfig() {
+        Map<ChaosMonkeyRuntimeAssault, String> cronExpressions = getCronExpressions();
+        if (!currentTasks.isEmpty()) {
+            removeUnchangedExpressions(cronExpressions);
+            cancelOldTasks(cronExpressions);
+        }
 
-  private Map<ChaosMonkeyRuntimeAssault, String> getCronExpressions() {
-    return assaults.stream()
-        .collect(
-            Collectors.toMap(Function.identity(), assault -> assault.getCronExpression(config)));
-  }
+        scheduleNewTasks(cronExpressions);
+    }
 
-  private void removeUnchangedExpressions(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
-    cronExpressions
-        .entrySet()
-        .removeIf(
-            entry -> {
-              ScheduledTask task = currentTasks.get(entry.getKey());
-              return task != null
-                  && task.getTask() instanceof CronTask
-                  && Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue());
-            });
-  }
+    private Map<ChaosMonkeyRuntimeAssault, String> getCronExpressions() {
+        return assaults.stream().collect(Collectors.toMap(Function.identity(), assault -> assault.getCronExpression(config)));
+    }
 
-  private void cancelOldTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
-    cronExpressions.forEach(
-        (assault, expression) -> {
-          ScheduledTask task = currentTasks.remove(assault);
-          if (task != null) task.cancel();
+    private void removeUnchangedExpressions(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
+        cronExpressions.entrySet().removeIf(entry -> {
+            ScheduledTask task = currentTasks.get(entry.getKey());
+            return task != null && task.getTask() instanceof CronTask
+                    && Objects.equals(((CronTask) task.getTask()).getExpression(), entry.getValue());
         });
-  }
+    }
 
-  private void scheduleNewTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
-    cronExpressions.forEach(
-        (assault, expression) -> {
-          if (expression != null && !"OFF".equals(expression))
-            scheduleRuntimeAssault(scheduler, assault, expression);
+    private void cancelOldTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
+        cronExpressions.forEach((assault, expression) -> {
+            ScheduledTask task = currentTasks.remove(assault);
+            if (task != null)
+                task.cancel();
         });
-  }
+    }
 
-  private void scheduleRuntimeAssault(
-      ScheduledTaskRegistrar scheduler, ChaosMonkeyRuntimeAssault assault, String cron) {
+    private void scheduleNewTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
+        cronExpressions.forEach((assault, expression) -> {
+            if (expression != null && !"OFF".equals(expression))
+                scheduleRuntimeAssault(scheduler, assault, expression);
+        });
+    }
 
-    final CronTask cronTask =
-        new CronTask(
-            () -> {
-              if (assault.isActive()) assault.attack();
-            },
-            cron);
+    private void scheduleRuntimeAssault(ScheduledTaskRegistrar scheduler, ChaosMonkeyRuntimeAssault assault, String cron) {
 
-    final ScheduledTask scheduledTask = scheduler.scheduleCronTask(cronTask);
-    currentTasks.put(assault, scheduledTask);
-  }
+        final CronTask cronTask = new CronTask(() -> {
+            if (assault.isActive())
+                assault.attack();
+        }, cron);
+
+        final ScheduledTask scheduledTask = scheduler.scheduleCronTask(cronTask);
+        currentTasks.put(assault, scheduledTask);
+    }
 }

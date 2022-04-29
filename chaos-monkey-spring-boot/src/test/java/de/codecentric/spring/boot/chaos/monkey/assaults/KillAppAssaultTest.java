@@ -37,36 +37,33 @@ import org.slf4j.LoggerFactory;
 @ExtendWith(MockitoExtension.class)
 class KillAppAssaultTest {
 
-  @Mock private Appender mockAppender;
+    @Mock
+    private Appender mockAppender;
 
-  @Captor private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+    @Captor
+    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
-  @Mock private MetricEventPublisher metricsMock;
+    @Mock
+    private MetricEventPublisher metricsMock;
 
-  @BeforeEach
-  void setUp() {
-    ch.qos.logback.classic.Logger root =
-        (ch.qos.logback.classic.Logger)
-            LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-    root.addAppender(mockAppender);
+    @BeforeEach
+    void setUp() {
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+        root.addAppender(mockAppender);
 
-    captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
-  }
+        captorLoggingEvent = ArgumentCaptor.forClass(LoggingEvent.class);
+    }
 
-  @Test
-  void killsSpringBootApplication() {
-    KillAppAssault killAppAssault = new KillAppAssault(null, metricsMock);
-    killAppAssault.attack();
+    @Test
+    void killsSpringBootApplication() {
+        KillAppAssault killAppAssault = new KillAppAssault(null, metricsMock);
+        killAppAssault.attack();
 
-    verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
 
-    assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
-    assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
-    assertEquals(
-        "Chaos Monkey - I am killing your Application!",
-        captorLoggingEvent.getAllValues().get(0).getMessage());
-    assertEquals(
-        "Chaos Monkey - Unable to kill the App, I am not the BOSS!",
-        captorLoggingEvent.getAllValues().get(1).getMessage());
-  }
+        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(0).getLevel());
+        assertEquals(Level.INFO, captorLoggingEvent.getAllValues().get(1).getLevel());
+        assertEquals("Chaos Monkey - I am killing your Application!", captorLoggingEvent.getAllValues().get(0).getMessage());
+        assertEquals("Chaos Monkey - Unable to kill the App, I am not the BOSS!", captorLoggingEvent.getAllValues().get(1).getMessage());
+    }
 }

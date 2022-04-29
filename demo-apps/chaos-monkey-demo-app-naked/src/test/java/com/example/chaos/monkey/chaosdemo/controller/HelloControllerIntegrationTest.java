@@ -31,38 +31,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 public class HelloControllerIntegrationTest {
 
-  @LocalServerPort private int serverPort;
+    @LocalServerPort
+    private int serverPort;
 
-  @Autowired private TestRestTemplate testRestTemplate;
+    @Autowired
+    private TestRestTemplate testRestTemplate;
 
-  @Autowired private HelloController helloController;
+    @Autowired
+    private HelloController helloController;
 
-  @Test
-  public void contextLoads() {
-    assertThat(helloController).isNotNull();
-  }
+    @Test
+    public void contextLoads() {
+        assertThat(helloController).isNotNull();
+    }
 
-  @Test
-  public void checkHelloEndpoint() {
-    ResponseEntity<String> response =
-        testRestTemplate.getForEntity(
-            "http://localhost:" + this.serverPort + "/hello", String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals("Hello!", response.getBody());
-  }
+    @Test
+    public void checkHelloEndpoint() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + this.serverPort + "/hello", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Hello!", response.getBody());
+    }
 
-  @Test
-  public void checkGoodbyeEndpoint() {
-    ResponseEntity<String> response =
-        testRestTemplate.getForEntity(
-            "http://localhost:" + this.serverPort + "/goodbye", String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals("Goodbye!", response.getBody());
-  }
+    @Test
+    public void checkGoodbyeEndpoint() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + this.serverPort + "/goodbye", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Goodbye!", response.getBody());
+    }
 }

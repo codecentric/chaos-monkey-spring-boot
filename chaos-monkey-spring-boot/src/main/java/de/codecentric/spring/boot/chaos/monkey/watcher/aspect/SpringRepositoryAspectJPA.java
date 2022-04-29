@@ -35,31 +35,30 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Slf4j
 public class SpringRepositoryAspectJPA extends ChaosMonkeyBaseAspect {
 
-  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-  private MetricEventPublisher metricEventPublisher;
+    private MetricEventPublisher metricEventPublisher;
 
-  private WatcherProperties watcherProperties;
+    private WatcherProperties watcherProperties;
 
-  @Pointcut(
-      "this(org.springframework.data.repository.Repository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
-  public void implementsCrudRepository() {}
-
-  @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
-  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-
-    if (watcherProperties.isRepository()) {
-      log.debug("Watching public method on repository class: {}", pjp.getSignature());
-
-      if (metricEventPublisher != null) {
-        metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
-      }
-
-      MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.REPOSITORY, createSignature(signature));
+    @Pointcut("this(org.springframework.data.repository.Repository) || within(@org.springframework.data.repository.RepositoryDefinition *)")
+    public void implementsCrudRepository() {
     }
-    return pjp.proceed();
-  }
+
+    @Around("implementsCrudRepository() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+
+        if (watcherProperties.isRepository()) {
+            log.debug("Watching public method on repository class: {}", pjp.getSignature());
+
+            if (metricEventPublisher != null) {
+                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.REPOSITORY);
+            }
+
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+            chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.REPOSITORY, createSignature(signature));
+        }
+        return pjp.proceed();
+    }
 }

@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class GreetingService {
 
-  private final SimpleRepository simpleRepository;
+    private final SimpleRepository simpleRepository;
 
-  public GreetingService(SimpleRepository simpleRepository) {
-    this.simpleRepository = simpleRepository;
-  }
+    public GreetingService(SimpleRepository simpleRepository) {
+        this.simpleRepository = simpleRepository;
+    }
 
-  public String greet() {
-    return "Greetings from the server side!";
-  }
+    public String greet() {
+        return "Greetings from the server side!";
+    }
 
-  public String greetFromRepo() {
-    return simpleRepository.getGreeting();
-  }
+    public String greetFromRepo() {
+        return simpleRepository.getGreeting();
+    }
 }

@@ -17,17 +17,17 @@
 package de.codecentric.spring.boot.demo.chaos.monkey.component;
 
 public class Widget {
-  int widget;
+    int widget;
 
-  public Widget(int widget) {
-    this.widget = widget;
-  }
+    public Widget(int widget) {
+        this.widget = widget;
+    }
 
-  public int getModel() {
-    return widget;
-  }
+    public int getModel() {
+        return widget;
+    }
 
-  public void setModel(int widget) {
-    this.widget = widget;
-  }
+    public void setModel(int widget) {
+        this.widget = widget;
+    }
 }

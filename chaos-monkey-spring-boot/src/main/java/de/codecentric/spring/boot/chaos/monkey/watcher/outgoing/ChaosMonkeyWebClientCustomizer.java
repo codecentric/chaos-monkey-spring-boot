@@ -5,14 +5,14 @@ import org.springframework.web.reactive.function.client.WebClient.Builder;
 
 public class ChaosMonkeyWebClientCustomizer implements WebClientCustomizer {
 
-  private final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher;
+    private final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher;
 
-  public ChaosMonkeyWebClientCustomizer(ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
-    this.chaosMonkeyWebClientWatcher = chaosMonkeyWebClientWatcher;
-  }
+    public ChaosMonkeyWebClientCustomizer(ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
+        this.chaosMonkeyWebClientWatcher = chaosMonkeyWebClientWatcher;
+    }
 
-  @Override
-  public void customize(Builder webClientBuilder) {
-    webClientBuilder.filter(chaosMonkeyWebClientWatcher);
-  }
+    @Override
+    public void customize(Builder webClientBuilder) {
+        webClientBuilder.filter(chaosMonkeyWebClientWatcher);
+    }
 }

@@ -35,34 +35,34 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Slf4j
 public class SpringComponentAspect extends ChaosMonkeyBaseAspect {
 
-  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-  private MetricEventPublisher metricEventPublisher;
+    private MetricEventPublisher metricEventPublisher;
 
-  private WatcherProperties watcherProperties;
+    private WatcherProperties watcherProperties;
 
-  @Pointcut("within(@org.springframework.stereotype.Component *)")
-  public void classAnnotatedWithComponentPointcut() {}
-
-  @Pointcut("within(org.springframework.cloud.context..*)")
-  public void classInSpringCloudContextPackage() {}
-
-  @Around(
-      "classAnnotatedWithComponentPointcut() && !classInSpringCloudContextPackage() "
-          + "&& allPublicMethodPointcut() && !classInChaosMonkeyPackage() && !springHooksPointcut()")
-  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-    if (watcherProperties.isComponent()) {
-      log.debug("Watching public method on component class: {}", pjp.getSignature());
-
-      if (metricEventPublisher != null) {
-        metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.COMPONENT);
-      }
-
-      MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.COMPONENT, createSignature(signature));
+    @Pointcut("within(@org.springframework.stereotype.Component *)")
+    public void classAnnotatedWithComponentPointcut() {
     }
-    return pjp.proceed();
-  }
+
+    @Pointcut("within(org.springframework.cloud.context..*)")
+    public void classInSpringCloudContextPackage() {
+    }
+
+    @Around("classAnnotatedWithComponentPointcut() && !classInSpringCloudContextPackage() "
+            + "&& allPublicMethodPointcut() && !classInChaosMonkeyPackage() && !springHooksPointcut()")
+    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+        if (watcherProperties.isComponent()) {
+            log.debug("Watching public method on component class: {}", pjp.getSignature());
+
+            if (metricEventPublisher != null) {
+                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.COMPONENT);
+            }
+
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+            chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.COMPONENT, createSignature(signature));
+        }
+        return pjp.proceed();
+    }
 }

@@ -30,45 +30,41 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
 class ChaosDemoApplicationDefaultProfileTest {
 
-  @Autowired(required = false)
-  private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    @Autowired(required = false)
+    private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-  @Autowired private Environment env;
+    @Autowired
+    private Environment env;
 
-  @Test
-  void contextLoads() {
-    assertNull(chaosMonkeyRequestScope);
-  }
+    @Test
+    void contextLoads() {
+        assertNull(chaosMonkeyRequestScope);
+    }
 
-  @Test
-  void checkEnvWatcherController() {
-    assertThat(env.getProperty("chaos.monkey.watcher.controller")).isEqualTo("true");
-  }
+    @Test
+    void checkEnvWatcherController() {
+        assertThat(env.getProperty("chaos.monkey.watcher.controller")).isEqualTo("true");
+    }
 
-  @Test
-  void checkEnvAssaultLatencyRangeStart() {
-    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start")).isEqualTo("100");
-  }
+    @Test
+    void checkEnvAssaultLatencyRangeStart() {
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start")).isEqualTo("100");
+    }
 
-  @Test
-  void checkEnvAssaultLatencyRangeEnd() {
-    assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end")).isEqualTo("200");
-  }
+    @Test
+    void checkEnvAssaultLatencyRangeEnd() {
+        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end")).isEqualTo("200");
+    }
 
-  @Test
-  void checkEnvCustomServiceWatcherList() {
-    List<String> stringList =
-        env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
-    assertThat(stringList).hasSize(2);
-    assertThat(stringList.get(0))
-        .isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello");
-    assertThat(stringList.get(1))
-        .isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye");
-  }
+    @Test
+    void checkEnvCustomServiceWatcherList() {
+        List<String> stringList = env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
+        assertThat(stringList).hasSize(2);
+        assertThat(stringList.get(0)).isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello");
+        assertThat(stringList.get(1)).isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye");
+    }
 }

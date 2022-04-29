@@ -35,32 +35,30 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Slf4j
 public class SpringRestControllerAspect extends ChaosMonkeyBaseAspect {
 
-  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-  private MetricEventPublisher metricEventPublisher;
+    private MetricEventPublisher metricEventPublisher;
 
-  private WatcherProperties watcherProperties;
+    private WatcherProperties watcherProperties;
 
-  @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
-  public void classAnnotatedWithControllerPointcut() {}
-
-  @Around(
-      "classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
-  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-
-    if (watcherProperties.isRestController()) {
-      log.debug("Watching public method on rest controller class: {}", pjp.getSignature());
-
-      if (metricEventPublisher != null) {
-        metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.RESTCONTROLLER);
-      }
-
-      MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-      chaosMonkeyRequestScope.callChaosMonkey(
-          ChaosTarget.REST_CONTROLLER, createSignature(signature));
+    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+    public void classAnnotatedWithControllerPointcut() {
     }
-    return pjp.proceed();
-  }
+
+    @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+
+        if (watcherProperties.isRestController()) {
+            log.debug("Watching public method on rest controller class: {}", pjp.getSignature());
+
+            if (metricEventPublisher != null) {
+                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.RESTCONTROLLER);
+            }
+
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+            chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.REST_CONTROLLER, createSignature(signature));
+        }
+        return pjp.proceed();
+    }
 }

@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 /** @author Benjamin Wilms */
 @Repository
-public interface HelloRepoSearchAndSorting extends PagingAndSortingRepository<Hello, Long> {}
+public interface HelloRepoSearchAndSorting extends PagingAndSortingRepository<Hello, Long> {
+}

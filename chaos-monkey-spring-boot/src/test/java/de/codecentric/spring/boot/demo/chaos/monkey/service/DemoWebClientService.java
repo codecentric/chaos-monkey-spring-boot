@@ -9,18 +9,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class DemoWebClientService {
 
-  private final WebClient webClient;
+    private final WebClient webClient;
 
-  public DemoWebClientService(WebClient webClient) {
-    this.webClient = webClient;
-  }
+    public DemoWebClientService(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
-  public String callWithWebClient() {
-    return this.webClient
-        .method(HttpMethod.GET)
-        .uri("https://www.codecentric.de")
-        .retrieve()
-        .bodyToMono(String.class)
-        .block();
-  }
+    public String callWithWebClient() {
+        return this.webClient.method(HttpMethod.GET).uri("https://www.codecentric.de").retrieve().bodyToMono(String.class).block();
+    }
 }

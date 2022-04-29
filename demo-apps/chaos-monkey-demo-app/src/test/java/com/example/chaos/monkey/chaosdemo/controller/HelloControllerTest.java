@@ -33,53 +33,43 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(HelloController.class)
 public class HelloControllerTest {
 
-  @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @MockBean private GreetingService greetingServiceMock;
+    @MockBean
+    private GreetingService greetingServiceMock;
 
-  private String responseService;
+    private String responseService;
 
-  private String responseRepo;
+    private String responseRepo;
 
-  @BeforeEach
-  public void setup() {
-    responseService = "Hello from service!";
-    when(greetingServiceMock.greet()).thenReturn(responseService);
-    responseRepo = "Hello from repo!";
-    when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
-  }
+    @BeforeEach
+    public void setup() {
+        responseService = "Hello from service!";
+        when(greetingServiceMock.greet()).thenReturn(responseService);
+        responseRepo = "Hello from repo!";
+        when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
+    }
 
-  @Test
-  public void shouldReturnHello() throws Exception {
+    @Test
+    public void shouldReturnHello() throws Exception {
 
-    this.mockMvc
-        .perform(get("/hello"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Hello!"));
-  }
+        this.mockMvc.perform(get("/hello")).andExpect(status().isOk()).andExpect(content().string("Hello!"));
+    }
 
-  @Test
-  public void callMockServiceGreet() throws Exception {
+    @Test
+    public void callMockServiceGreet() throws Exception {
 
-    this.mockMvc
-        .perform(get("/greet"))
-        .andExpect(status().isOk())
-        .andExpect(content().string(responseService));
-  }
+        this.mockMvc.perform(get("/greet")).andExpect(status().isOk()).andExpect(content().string(responseService));
+    }
 
-  @Test
-  public void callMockServiceDbGreet() throws Exception {
+    @Test
+    public void callMockServiceDbGreet() throws Exception {
 
-    this.mockMvc
-        .perform(get("/dbgreet"))
-        .andExpect(status().isOk())
-        .andExpect(content().string(responseRepo));
-  }
+        this.mockMvc.perform(get("/dbgreet")).andExpect(status().isOk()).andExpect(content().string(responseRepo));
+    }
 
-  public void shouldReturnGoodbye() throws Exception {
-    this.mockMvc
-        .perform(get("/goodbye"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Goodbye!"));
-  }
+    public void shouldReturnGoodbye() throws Exception {
+        this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk()).andExpect(content().string("Goodbye!"));
+    }
 }

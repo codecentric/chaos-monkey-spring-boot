@@ -28,21 +28,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "chaos.monkey.watcher")
 public class WatcherProperties {
 
-  private boolean controller = false;
+    private boolean controller = false;
 
-  private boolean restController = false;
+    private boolean restController = false;
 
-  private boolean service = false;
+    private boolean service = false;
 
-  private boolean repository = false;
+    private boolean repository = false;
 
-  private boolean component = false;
+    private boolean component = false;
 
-  private boolean restTemplate = false;
+    private boolean restTemplate = false;
 
-  private boolean webClient = false;
+    private boolean webClient = false;
 
-  private boolean actuatorHealth = false;
+    private boolean actuatorHealth = false;
 
-  private List<String> beans = Collections.emptyList();
+    private List<String> beans = Collections.emptyList();
 }

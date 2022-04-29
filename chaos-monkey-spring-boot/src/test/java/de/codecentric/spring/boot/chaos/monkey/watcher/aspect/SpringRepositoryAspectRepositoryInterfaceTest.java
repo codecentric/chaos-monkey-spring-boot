@@ -24,21 +24,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(
-    properties = {
-      "chaos.monkey.watcher.repository=true",
-      "chaos.monkey.assaults.level=1",
-      "chaos.monkey.assaults.exceptions-active=true",
-      "chaos.monkey.enabled=true"
-    },
-    classes = {ChaosDemoApplication.class})
+@SpringBootTest(properties = {"chaos.monkey.watcher.repository=true", "chaos.monkey.assaults.level=1", "chaos.monkey.assaults.exceptions-active=true",
+        "chaos.monkey.enabled=true"}, classes = {ChaosDemoApplication.class})
 @ActiveProfiles("chaos-monkey")
 public class SpringRepositoryAspectRepositoryInterfaceTest {
 
-  @Autowired private CrudDemoRepository target;
+    @Autowired
+    private CrudDemoRepository target;
 
-  @Test
-  public void testRepoIsAttackedWhenRepoWatcherIsActive() {
-    assertThrows(Exception.class, () -> target.findAll());
-  }
+    @Test
+    public void testRepoIsAttackedWhenRepoWatcherIsActive() {
+        assertThrows(Exception.class, () -> target.findAll());
+    }
 }

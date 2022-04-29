@@ -15,32 +15,24 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest({GreetingController.class, HelloComponent.class, HelloConfiguration.class})
 public class GreetingControllerTest {
 
-  @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  public void shouldReturnHello() throws Exception {
+    @Test
+    public void shouldReturnHello() throws Exception {
 
-    this.mockMvc
-        .perform(get("/helloagain"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Again hello!"));
-  }
+        this.mockMvc.perform(get("/helloagain")).andExpect(status().isOk()).andExpect(content().string("Again hello!"));
+    }
 
-  @Test
-  public void shouldReturnHelloFromComponent() throws Exception {
+    @Test
+    public void shouldReturnHelloFromComponent() throws Exception {
 
-    this.mockMvc
-        .perform(get("/hellocomponent"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Hello from Component"));
-  }
+        this.mockMvc.perform(get("/hellocomponent")).andExpect(status().isOk()).andExpect(content().string("Hello from Component"));
+    }
 
-  @Test
-  public void shouldReturnHelloFromBean() throws Exception {
+    @Test
+    public void shouldReturnHelloFromBean() throws Exception {
 
-    this.mockMvc
-        .perform(get("/hellobean"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Hello from Bean"));
-  }
+        this.mockMvc.perform(get("/hellobean")).andExpect(status().isOk()).andExpect(content().string("Hello from Bean"));
+    }
 }

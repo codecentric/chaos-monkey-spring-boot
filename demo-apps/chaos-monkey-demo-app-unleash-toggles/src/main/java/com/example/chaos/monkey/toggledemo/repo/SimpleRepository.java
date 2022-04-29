@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SimpleRepository {
 
-  public String getGreeting() {
-    return "Hello";
-  }
+    public String getGreeting() {
+        return "Hello";
+    }
 }

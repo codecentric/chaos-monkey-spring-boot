@@ -25,33 +25,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HelloController {
 
-  private final GreetingService greetingService;
+    private final GreetingService greetingService;
 
-  public HelloController(GreetingService greetingService) {
-    this.greetingService = greetingService;
-  }
+    public HelloController(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
 
-  @GetMapping("/hello")
-  public ResponseEntity<String> sayHello() {
-    return ResponseEntity.ok(sayHelloPlease());
-  }
+    @GetMapping("/hello")
+    public ResponseEntity<String> sayHello() {
+        return ResponseEntity.ok(sayHelloPlease());
+    }
 
-  @GetMapping("/greet")
-  public ResponseEntity<String> greet() {
-    return ResponseEntity.ok(greetingService.greet());
-  }
+    @GetMapping("/greet")
+    public ResponseEntity<String> greet() {
+        return ResponseEntity.ok(greetingService.greet());
+    }
 
-  @GetMapping("/dbgreet")
-  public ResponseEntity<String> greetFromDb() {
-    return ResponseEntity.ok(greetingService.greetFromRepo());
-  }
+    @GetMapping("/dbgreet")
+    public ResponseEntity<String> greetFromDb() {
+        return ResponseEntity.ok(greetingService.greetFromRepo());
+    }
 
-  @GetMapping("/goodbye")
-  public ResponseEntity<String> sayGoodbye() {
-    return ResponseEntity.ok("Goodbye!");
-  }
+    @GetMapping("/goodbye")
+    public ResponseEntity<String> sayGoodbye() {
+        return ResponseEntity.ok("Goodbye!");
+    }
 
-  private String sayHelloPlease() {
-    return "Hello!";
-  }
+    private String sayHelloPlease() {
+        return "Hello!";
+    }
 }

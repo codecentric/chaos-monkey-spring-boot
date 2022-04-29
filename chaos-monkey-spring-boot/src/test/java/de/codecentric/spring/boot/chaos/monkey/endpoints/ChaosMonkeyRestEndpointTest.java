@@ -23,49 +23,45 @@ import org.springframework.test.context.ContextConfiguration;
 
 @ActiveProfiles("chaos-monkey")
 @ContextConfiguration(classes = {ChaosDemoApplication.class})
-@SpringBootTest(
-    webEnvironment = WebEnvironment.RANDOM_PORT,
-    properties = {
-      "management.endpoint.chaosmonkey.enabled=true",
-      "management.endpoints.web.exposure.include=chaosmonkey",
-      "management.endpoints.enabled-by-default=true"
-    })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {"management.endpoint.chaosmonkey.enabled=true",
+        "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.enabled-by-default=true"})
 public class ChaosMonkeyRestEndpointTest {
 
-  @Autowired private TestRestTemplate testRestTemplate;
-  @MockBean private ChaosMonkeySettings chaosMonkeySettings;
-  @MockBean private ChaosMonkeyScheduler chaosMonkeyScheduler;
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+    @MockBean
+    private ChaosMonkeySettings chaosMonkeySettings;
+    @MockBean
+    private ChaosMonkeyScheduler chaosMonkeyScheduler;
 
-  @Test
-  public void testWatcherPropertiesUpdateApplied() {
-    final WatcherPropertiesUpdate watcherPropertiesUpdate = new WatcherPropertiesUpdate();
-    watcherPropertiesUpdate.setController(Boolean.TRUE);
-    watcherPropertiesUpdate.setRestController(Boolean.TRUE);
-    watcherPropertiesUpdate.setComponent(Boolean.TRUE);
-    watcherPropertiesUpdate.setService(Boolean.TRUE);
-    watcherPropertiesUpdate.setRepository(Boolean.TRUE);
-    watcherPropertiesUpdate.setRestTemplate(Boolean.TRUE);
-    watcherPropertiesUpdate.setWebClient(Boolean.TRUE);
-    watcherPropertiesUpdate.setActuatorHealth(Boolean.TRUE);
+    @Test
+    public void testWatcherPropertiesUpdateApplied() {
+        final WatcherPropertiesUpdate watcherPropertiesUpdate = new WatcherPropertiesUpdate();
+        watcherPropertiesUpdate.setController(Boolean.TRUE);
+        watcherPropertiesUpdate.setRestController(Boolean.TRUE);
+        watcherPropertiesUpdate.setComponent(Boolean.TRUE);
+        watcherPropertiesUpdate.setService(Boolean.TRUE);
+        watcherPropertiesUpdate.setRepository(Boolean.TRUE);
+        watcherPropertiesUpdate.setRestTemplate(Boolean.TRUE);
+        watcherPropertiesUpdate.setWebClient(Boolean.TRUE);
+        watcherPropertiesUpdate.setActuatorHealth(Boolean.TRUE);
 
-    final WatcherProperties watcherProperties = new WatcherProperties();
+        final WatcherProperties watcherProperties = new WatcherProperties();
 
-    when(chaosMonkeySettings.getWatcherProperties()).thenReturn(watcherProperties);
+        when(chaosMonkeySettings.getWatcherProperties()).thenReturn(watcherProperties);
 
-    ResponseEntity<String> response =
-        testRestTemplate.postForEntity(
-            "/actuator/chaosmonkey/watchers", watcherPropertiesUpdate, String.class);
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/actuator/chaosmonkey/watchers", watcherPropertiesUpdate, String.class);
 
-    BDDAssertions.then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    BDDAssertions.then(watcherProperties.isController()).isTrue();
-    BDDAssertions.then(watcherProperties.isRestController()).isTrue();
-    BDDAssertions.then(watcherProperties.isComponent()).isTrue();
-    BDDAssertions.then(watcherProperties.isService()).isTrue();
-    BDDAssertions.then(watcherProperties.isRepository()).isTrue();
-    BDDAssertions.then(watcherProperties.isRestTemplate()).isTrue();
-    BDDAssertions.then(watcherProperties.isWebClient()).isTrue();
-    BDDAssertions.then(watcherProperties.isActuatorHealth()).isTrue();
+        BDDAssertions.then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        BDDAssertions.then(watcherProperties.isController()).isTrue();
+        BDDAssertions.then(watcherProperties.isRestController()).isTrue();
+        BDDAssertions.then(watcherProperties.isComponent()).isTrue();
+        BDDAssertions.then(watcherProperties.isService()).isTrue();
+        BDDAssertions.then(watcherProperties.isRepository()).isTrue();
+        BDDAssertions.then(watcherProperties.isRestTemplate()).isTrue();
+        BDDAssertions.then(watcherProperties.isWebClient()).isTrue();
+        BDDAssertions.then(watcherProperties.isActuatorHealth()).isTrue();
 
-    verify(chaosMonkeyScheduler, times(1)).reloadConfig();
-  }
+        verify(chaosMonkeyScheduler, times(1)).reloadConfig();
+    }
 }

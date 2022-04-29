@@ -13,14 +13,12 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(GreetingController.class)
 public class GreetingControllerTest {
 
-  @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  public void shouldReturnHello() throws Exception {
+    @Test
+    public void shouldReturnHello() throws Exception {
 
-    this.mockMvc
-        .perform(get("/helloagain"))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Again hello!"));
-  }
+        this.mockMvc.perform(get("/helloagain")).andExpect(status().isOk()).andExpect(content().string("Again hello!"));
+    }
 }

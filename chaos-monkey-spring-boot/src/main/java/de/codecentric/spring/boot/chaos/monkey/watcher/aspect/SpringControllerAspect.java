@@ -35,31 +35,30 @@ import org.aspectj.lang.reflect.MethodSignature;
 @Slf4j
 public class SpringControllerAspect extends ChaosMonkeyBaseAspect {
 
-  private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-  private MetricEventPublisher metricEventPublisher;
+    private MetricEventPublisher metricEventPublisher;
 
-  private WatcherProperties watcherProperties;
+    private WatcherProperties watcherProperties;
 
-  @Pointcut("within(@org.springframework.stereotype.Controller *)")
-  public void classAnnotatedWithControllerPointcut() {}
-
-  @Around(
-      "classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
-  public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-
-    if (watcherProperties.isController()) {
-      log.debug("Watching public method on controller class: {}", pjp.getSignature());
-
-      if (metricEventPublisher != null) {
-        metricEventPublisher.publishMetricEvent(
-            calculatePointcut(pjp.toShortString()), MetricType.CONTROLLER);
-      }
-
-      MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-      chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.CONTROLLER, createSignature(signature));
+    @Pointcut("within(@org.springframework.stereotype.Controller *)")
+    public void classAnnotatedWithControllerPointcut() {
     }
-    return pjp.proceed();
-  }
+
+    @Around("classAnnotatedWithControllerPointcut() && allPublicMethodPointcut() && !classInChaosMonkeyPackage()")
+    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+
+        if (watcherProperties.isController()) {
+            log.debug("Watching public method on controller class: {}", pjp.getSignature());
+
+            if (metricEventPublisher != null) {
+                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.CONTROLLER);
+            }
+
+            MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+            chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.CONTROLLER, createSignature(signature));
+        }
+        return pjp.proceed();
+    }
 }

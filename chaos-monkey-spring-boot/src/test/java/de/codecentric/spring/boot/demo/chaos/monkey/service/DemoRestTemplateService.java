@@ -7,13 +7,13 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class DemoRestTemplateService {
 
-  private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-  public DemoRestTemplateService(RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
-  }
+    public DemoRestTemplateService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-  public ResponseEntity<String> callWithRestTemplate() {
-    return this.restTemplate.getForEntity("https://www.codecentric.de", String.class);
-  }
+    public ResponseEntity<String> callWithRestTemplate() {
+        return this.restTemplate.getForEntity("https://www.codecentric.de", String.class);
+    }
 }

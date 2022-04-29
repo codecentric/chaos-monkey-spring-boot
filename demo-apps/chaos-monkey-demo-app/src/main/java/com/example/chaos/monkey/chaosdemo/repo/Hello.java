@@ -9,30 +9,30 @@ import javax.persistence.Id;
 @Entity
 public class Hello {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-  private String message;
+    private String message;
 
-  public Hello(long id, String message) {
-    this.id = id;
-    this.message = message;
-  }
+    public Hello(long id, String message) {
+        this.id = id;
+        this.message = message;
+    }
 
-  public long getId() {
-    return id;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public String getMessage() {
-    return message;
-  }
+    public String getMessage() {
+        return message;
+    }
 
-  public void setMessage(String message) {
-    this.message = message;
-  }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

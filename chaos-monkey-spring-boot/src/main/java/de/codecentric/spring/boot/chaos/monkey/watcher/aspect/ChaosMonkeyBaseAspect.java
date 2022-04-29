@@ -22,24 +22,27 @@ import org.aspectj.lang.reflect.MethodSignature;
 /** @author Benjamin Wilms */
 abstract class ChaosMonkeyBaseAspect {
 
-  @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
-  public void classInChaosMonkeyPackage() {}
+    @Pointcut("within(de.codecentric.spring.boot.chaos.monkey..*)")
+    public void classInChaosMonkeyPackage() {
+    }
 
-  @Pointcut("!within(is(FinalType)) || within(com.sun.proxy.*)")
-  public void nonFinalOrJdkProxiedClassPointcut() {}
+    @Pointcut("!within(is(FinalType)) || within(com.sun.proxy.*)")
+    public void nonFinalOrJdkProxiedClassPointcut() {
+    }
 
-  @Pointcut("nonFinalOrJdkProxiedClassPointcut() && execution(* *.*(..))")
-  public void allPublicMethodPointcut() {}
+    @Pointcut("nonFinalOrJdkProxiedClassPointcut() && execution(* *.*(..))")
+    public void allPublicMethodPointcut() {
+    }
 
-  @Pointcut(
-      "execution(* postProcess*Initialization(..)) || (execution(* onApplicationEvent(..)) && !execution(* onApplicationEvent(org.springframework.web.context.support.RequestHandledEvent))) || execution(* org.springframework.beans.factory.FactoryBean+.*(..))")
-  public void springHooksPointcut() {}
+    @Pointcut("execution(* postProcess*Initialization(..)) || (execution(* onApplicationEvent(..)) && !execution(* onApplicationEvent(org.springframework.web.context.support.RequestHandledEvent))) || execution(* org.springframework.beans.factory.FactoryBean+.*(..))")
+    public void springHooksPointcut() {
+    }
 
-  String calculatePointcut(String target) {
-    return target.replaceAll("\\(\\)", "").replaceAll("\\)", "").replaceAll("\\(", ".");
-  }
+    String calculatePointcut(String target) {
+        return target.replaceAll("\\(\\)", "").replaceAll("\\)", "").replaceAll("\\(", ".");
+    }
 
-  String createSignature(MethodSignature signature) {
-    return signature.getDeclaringTypeName() + "." + signature.getMethod().getName();
-  }
+    String createSignature(MethodSignature signature) {
+        return signature.getDeclaringTypeName() + "." + signature.getMethod().getName();
+    }
 }

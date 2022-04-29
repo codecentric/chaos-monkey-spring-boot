@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 /** @author Benjamin Wilms */
 @Repository
-public interface HelloRepoJpa extends JpaRepository<Hello, Long> {}
+public interface HelloRepoJpa extends JpaRepository<Hello, Long> {
+}

@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class ChaosDemoApplicationTests {
-  @Test
-  public void contextLoads() {}
+    @Test
+    public void contextLoads() {
+    }
 }

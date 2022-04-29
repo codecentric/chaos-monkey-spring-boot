@@ -29,25 +29,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-component-test.properties")
 public class HelloComponentIntegrationTest {
 
-  @Autowired private HelloComponent helloComponent;
+    @Autowired
+    private HelloComponent helloComponent;
 
-  @Autowired private ChaosMonkeyConfiguration chaosMonkeyConfiguration;
+    @Autowired
+    private ChaosMonkeyConfiguration chaosMonkeyConfiguration;
 
-  @Test
-  public void contextLoads() {
-    assertThat(helloComponent).isNotNull();
-  }
+    @Test
+    public void contextLoads() {
+        assertThat(helloComponent).isNotNull();
+    }
 
-  @Test
-  public void callingPublicMethodOnComponent() {
-    assertTrue(chaosMonkeyConfiguration.settings().getWatcherProperties().isComponent());
+    @Test
+    public void callingPublicMethodOnComponent() {
+        assertTrue(chaosMonkeyConfiguration.settings().getWatcherProperties().isComponent());
 
-    helloComponent.sayHello();
-  }
+        helloComponent.sayHello();
+    }
 }

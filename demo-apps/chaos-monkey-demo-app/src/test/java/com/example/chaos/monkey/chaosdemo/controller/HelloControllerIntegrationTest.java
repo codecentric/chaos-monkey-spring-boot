@@ -32,52 +32,50 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 public class HelloControllerIntegrationTest {
 
-  @Autowired private TestRestTemplate testRestTemplate;
+    @Autowired
+    private TestRestTemplate testRestTemplate;
 
-  @Autowired private HelloController helloController;
+    @Autowired
+    private HelloController helloController;
 
-  @LocalManagementPort private int managementPort;
+    @LocalManagementPort
+    private int managementPort;
 
-  @Test
-  public void contextLoads() {
-    assertThat(helloController).isNotNull();
-  }
+    @Test
+    public void contextLoads() {
+        assertThat(helloController).isNotNull();
+    }
 
-  @Test
-  public void checkHelloEndpoint() {
-    ResponseEntity<String> response = testRestTemplate.getForEntity("/hello", String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals("Hello!", response.getBody());
-  }
+    @Test
+    public void checkHelloEndpoint() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/hello", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Hello!", response.getBody());
+    }
 
-  @Test
-  public void checkGoodbyeEndpoint() {
-    ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals("Goodbye!", response.getBody());
-  }
+    @Test
+    public void checkGoodbyeEndpoint() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Goodbye!", response.getBody());
+    }
 
-  @Test
-  public void whenExceptionAssaultIsActivatedExpectExceptionIsThrown() {
-    AssaultPropertiesUpdate assault = new AssaultPropertiesUpdate();
-    assault.setLevel(1);
-    assault.setExceptionsActive(true);
-    assault.setLatencyActive(false);
+    @Test
+    public void whenExceptionAssaultIsActivatedExpectExceptionIsThrown() {
+        AssaultPropertiesUpdate assault = new AssaultPropertiesUpdate();
+        assault.setLevel(1);
+        assault.setExceptionsActive(true);
+        assault.setLatencyActive(false);
 
-    ResponseEntity<String> assaultResponse =
-        testRestTemplate.postForEntity(
-            "http://localhost:" + managementPort + "/actuator/chaosmonkey/assaults",
-            assault,
-            String.class);
-    assertEquals(HttpStatus.OK, assaultResponse.getStatusCode());
+        ResponseEntity<String> assaultResponse = testRestTemplate
+                .postForEntity("http://localhost:" + managementPort + "/actuator/chaosmonkey/assaults", assault, String.class);
+        assertEquals(HttpStatus.OK, assaultResponse.getStatusCode());
 
-    ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-  }
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
 }

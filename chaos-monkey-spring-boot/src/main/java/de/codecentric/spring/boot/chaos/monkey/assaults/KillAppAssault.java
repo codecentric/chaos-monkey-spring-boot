@@ -31,61 +31,61 @@ import org.springframework.context.ApplicationContextAware;
 /** @author Thorsten Deelmann */
 public class KillAppAssault implements ChaosMonkeyRuntimeAssault, ApplicationContextAware {
 
-  private static final Logger Logger = LoggerFactory.getLogger(KillAppAssault.class);
+    private static final Logger Logger = LoggerFactory.getLogger(KillAppAssault.class);
 
-  private final ChaosMonkeySettings settings;
+    private final ChaosMonkeySettings settings;
 
-  private ApplicationContext context;
+    private ApplicationContext context;
 
-  private MetricEventPublisher metricEventPublisher;
+    private MetricEventPublisher metricEventPublisher;
 
-  public KillAppAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
-    this.settings = settings;
-    this.metricEventPublisher = metricEventPublisher;
-  }
-
-  @Override
-  public boolean isActive() {
-    return settings.getAssaultProperties().isKillApplicationActive();
-  }
-
-  @Override
-  public void attack() {
-    try {
-      Logger.info("Chaos Monkey - I am killing your Application!");
-
-      if (metricEventPublisher != null) {
-        metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
-      }
-
-      int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
-
-      long remaining = 5000;
-      long end = System.currentTimeMillis() + remaining;
-      while (true) {
-        try {
-          TimeUnit.MILLISECONDS.sleep(remaining); // wait before kill to deliver some metrics
-          break;
-        } catch (InterruptedException ignored) {
-          remaining = end - System.currentTimeMillis();
-        }
-      }
-
-      System.exit(exit);
-    } catch (Exception e) {
-      Logger.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
+    public KillAppAssault(ChaosMonkeySettings settings, MetricEventPublisher metricEventPublisher) {
+        this.settings = settings;
+        this.metricEventPublisher = metricEventPublisher;
     }
-  }
 
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) {
-    this.context = applicationContext;
-  }
+    @Override
+    public boolean isActive() {
+        return settings.getAssaultProperties().isKillApplicationActive();
+    }
 
-  @Override
-  public String getCronExpression(AssaultProperties assaultProperties) {
-    return assaultProperties.getKillApplicationCronExpression() != null
-        ? assaultProperties.getKillApplicationCronExpression()
-        : assaultProperties.getRuntimeAssaultCronExpression();
-  }
+    @Override
+    public void attack() {
+        try {
+            Logger.info("Chaos Monkey - I am killing your Application!");
+
+            if (metricEventPublisher != null) {
+                metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
+            }
+
+            int exit = SpringApplication.exit(context, (ExitCodeGenerator) () -> 0);
+
+            long remaining = 5000;
+            long end = System.currentTimeMillis() + remaining;
+            while (true) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(remaining); // wait before kill to deliver some metrics
+                    break;
+                } catch (InterruptedException ignored) {
+                    remaining = end - System.currentTimeMillis();
+                }
+            }
+
+            System.exit(exit);
+        } catch (Exception e) {
+            Logger.info("Chaos Monkey - Unable to kill the App, I am not the BOSS!");
+        }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.context = applicationContext;
+    }
+
+    @Override
+    public String getCronExpression(AssaultProperties assaultProperties) {
+        return assaultProperties.getKillApplicationCronExpression() != null
+                ? assaultProperties.getKillApplicationCronExpression()
+                : assaultProperties.getRuntimeAssaultCronExpression();
+    }
 }

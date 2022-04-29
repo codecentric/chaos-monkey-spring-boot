@@ -26,43 +26,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("chaos-monkey")
 class DefaultSettingsIntegrationTest {
 
-  @Autowired private ChaosMonkeySettings monkeySettings;
+    @Autowired
+    private ChaosMonkeySettings monkeySettings;
 
-  @Test
-  void masterSwitchShouldDefaultToOff() {
-    assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled()).isFalse();
-  }
+    @Test
+    void masterSwitchShouldDefaultToOff() {
+        assertThat(monkeySettings.getChaosMonkeyProperties().isEnabled()).isFalse();
+    }
 
-  @Test
-  void watchersShouldBeDisabledByDefault() {
-    assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices()).isNull();
-    assertThat(monkeySettings.getWatcherProperties().isController()).isFalse();
-    assertThat(monkeySettings.getWatcherProperties().isRestController()).isFalse();
-    assertThat(monkeySettings.getWatcherProperties().isRepository()).isFalse();
-    assertThat(monkeySettings.getWatcherProperties().isService()).isFalse();
-    assertThat(monkeySettings.getWatcherProperties().isComponent()).isFalse();
-  }
+    @Test
+    void watchersShouldBeDisabledByDefault() {
+        assertThat(monkeySettings.getAssaultProperties().getWatchedCustomServices()).isNull();
+        assertThat(monkeySettings.getWatcherProperties().isController()).isFalse();
+        assertThat(monkeySettings.getWatcherProperties().isRestController()).isFalse();
+        assertThat(monkeySettings.getWatcherProperties().isRepository()).isFalse();
+        assertThat(monkeySettings.getWatcherProperties().isService()).isFalse();
+        assertThat(monkeySettings.getWatcherProperties().isComponent()).isFalse();
+    }
 
-  @Test
-  void assaultsShouldBeDisabledByDefault() {
-    assertThat(monkeySettings.getAssaultProperties().isLatencyActive()).isFalse();
-    assertThat(monkeySettings.getAssaultProperties().isExceptionsActive()).isFalse();
-  }
+    @Test
+    void assaultsShouldBeDisabledByDefault() {
+        assertThat(monkeySettings.getAssaultProperties().isLatencyActive()).isFalse();
+        assertThat(monkeySettings.getAssaultProperties().isExceptionsActive()).isFalse();
+    }
 
-  @Test
-  void levelShouldDefaultToOne() {
-    assertThat(monkeySettings.getAssaultProperties().getLevel()).isEqualTo(1);
-  }
+    @Test
+    void levelShouldDefaultToOne() {
+        assertThat(monkeySettings.getAssaultProperties().getLevel()).isEqualTo(1);
+    }
 
-  @Test
-  void latencyDefaultsShouldBeSensible() {
-    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart()).isEqualTo(1000);
-    assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd()).isEqualTo(3000);
-  }
+    @Test
+    void latencyDefaultsShouldBeSensible() {
+        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeStart()).isEqualTo(1000);
+        assertThat(monkeySettings.getAssaultProperties().getLatencyRangeEnd()).isEqualTo(3000);
+    }
 }

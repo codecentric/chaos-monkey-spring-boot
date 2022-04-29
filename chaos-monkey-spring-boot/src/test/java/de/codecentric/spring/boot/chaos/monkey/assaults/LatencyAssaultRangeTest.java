@@ -26,45 +26,42 @@ import org.springframework.context.ApplicationEventPublisher;
 @ExtendWith(MockitoExtension.class)
 class LatencyAssaultRangeTest {
 
-  @Captor private ArgumentCaptor<AtomicInteger> captorTimeoutValue;
+    @Captor
+    private ArgumentCaptor<AtomicInteger> captorTimeoutValue;
 
-  @Test
-  void fixedLatencyIsPossible() {
-    final int fixedLatency = 1000;
+    @Test
+    void fixedLatencyIsPossible() {
+        final int fixedLatency = 1000;
 
-    assertThatLatencyConfiguration(fixedLatency, fixedLatency).isEqualTo(fixedLatency);
-  }
+        assertThatLatencyConfiguration(fixedLatency, fixedLatency).isEqualTo(fixedLatency);
+    }
 
-  @Test
-  void latencyRangeIsPossible() {
-    final int latencyRangeStart = 1000;
-    final int latencyRangeEnd = 5000;
+    @Test
+    void latencyRangeIsPossible() {
+        final int latencyRangeStart = 1000;
+        final int latencyRangeEnd = 5000;
 
-    assertThatLatencyConfiguration(latencyRangeStart, latencyRangeEnd)
-        .isBetween(latencyRangeStart, latencyRangeEnd);
-  }
+        assertThatLatencyConfiguration(latencyRangeStart, latencyRangeEnd).isBetween(latencyRangeStart, latencyRangeEnd);
+    }
 
-  private AbstractIntegerAssert<?> assertThatLatencyConfiguration(
-      int latencyRangeStart, int latencyRangeEnd) {
-    final AssaultProperties assaultProperties = new AssaultProperties();
-    assaultProperties.setLatencyRangeStart(latencyRangeStart);
-    assaultProperties.setLatencyRangeEnd(latencyRangeEnd);
+    private AbstractIntegerAssert<?> assertThatLatencyConfiguration(int latencyRangeStart, int latencyRangeEnd) {
+        final AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLatencyRangeStart(latencyRangeStart);
+        assaultProperties.setLatencyRangeEnd(latencyRangeEnd);
 
-    final ChaosMonkeySettings chaosMonkeySettings = mock(ChaosMonkeySettings.class);
-    when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
+        final ChaosMonkeySettings chaosMonkeySettings = mock(ChaosMonkeySettings.class);
+        when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
 
-    final ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
-    doNothing().when(publisher).publishEvent(any(ApplicationEvent.class));
+        final ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
+        doNothing().when(publisher).publishEvent(any(ApplicationEvent.class));
 
-    final MetricEventPublisher metricEventPublisher = spy(new MetricEventPublisher());
-    metricEventPublisher.setApplicationEventPublisher(publisher);
+        final MetricEventPublisher metricEventPublisher = spy(new MetricEventPublisher());
+        metricEventPublisher.setApplicationEventPublisher(publisher);
 
-    final LatencyAssault latencyAssault =
-        new LatencyAssault(chaosMonkeySettings, metricEventPublisher);
-    latencyAssault.attack();
+        final LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricEventPublisher);
+        latencyAssault.attack();
 
-    verify(metricEventPublisher)
-        .publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
-    return assertThat(captorTimeoutValue.getValue().get());
-  }
+        verify(metricEventPublisher).publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
+        return assertThat(captorTimeoutValue.getValue().get());
+    }
 }

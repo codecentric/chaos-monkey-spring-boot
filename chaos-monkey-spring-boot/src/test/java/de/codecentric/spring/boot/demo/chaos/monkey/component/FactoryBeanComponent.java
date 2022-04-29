@@ -22,18 +22,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class FactoryBeanComponent implements FactoryBean<Widget> {
 
-  @Override
-  public Widget getObject() {
-    return new Widget(1);
-  }
+    @Override
+    public Widget getObject() {
+        return new Widget(1);
+    }
 
-  @Override
-  public Class<?> getObjectType() {
-    return Widget.class;
-  }
+    @Override
+    public Class<?> getObjectType() {
+        return Widget.class;
+    }
 
-  @Override
-  public boolean isSingleton() {
-    return true;
-  }
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
 }

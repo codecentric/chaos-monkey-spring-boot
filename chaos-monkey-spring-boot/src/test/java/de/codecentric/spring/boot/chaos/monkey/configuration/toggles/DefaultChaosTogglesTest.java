@@ -7,16 +7,16 @@ import org.junit.jupiter.api.Test;
 
 class DefaultChaosTogglesTest {
 
-  private DefaultChaosToggles sut;
+    private DefaultChaosToggles sut;
 
-  @BeforeEach
-  public void setup() {
-    sut = new DefaultChaosToggles();
-  }
+    @BeforeEach
+    public void setup() {
+        sut = new DefaultChaosToggles();
+    }
 
-  @Test
-  public void defaultToggleShouldBeEnabledAlways() {
-    assertTrue(sut.isEnabled("chaos.monkey.repository"));
-    assertTrue(sut.isEnabled(""));
-  }
+    @Test
+    public void defaultToggleShouldBeEnabledAlways() {
+        assertTrue(sut.isEnabled("chaos.monkey.repository"));
+        assertTrue(sut.isEnabled(""));
+    }
 }

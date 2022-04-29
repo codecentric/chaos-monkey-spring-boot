@@ -13,11 +13,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class RouterConfiguration {
 
-  @Bean
-  public RouterFunction<ServerResponse> route(HelloComponent greetingHandler) {
+    @Bean
+    public RouterFunction<ServerResponse> route(HelloComponent greetingHandler) {
 
-    return RouterFunctions.route(
-        RequestPredicates.GET("/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)),
-        greetingHandler::hello);
-  }
+        return RouterFunctions.route(RequestPredicates.GET("/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), greetingHandler::hello);
+    }
 }

@@ -5,17 +5,15 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class AssaultPropertiesUpdateLatencyRangeValidator
-    implements ConstraintValidator<
-        AssaultPropertiesUpdateLatencyRangeConstraint, AssaultPropertiesUpdate> {
+        implements
+            ConstraintValidator<AssaultPropertiesUpdateLatencyRangeConstraint, AssaultPropertiesUpdate> {
 
-  @Override
-  public boolean isValid(
-      final AssaultPropertiesUpdate properties,
-      final ConstraintValidatorContext constraintValidatorContext) {
-    Integer start = properties.getLatencyRangeStart();
-    Integer end = properties.getLatencyRangeEnd();
-    boolean isEmptyRange = start == null && end == null;
-    boolean isCompleteRange = start != null && end != null;
-    return isEmptyRange || (isCompleteRange && start <= end);
-  }
+    @Override
+    public boolean isValid(final AssaultPropertiesUpdate properties, final ConstraintValidatorContext constraintValidatorContext) {
+        Integer start = properties.getLatencyRangeStart();
+        Integer end = properties.getLatencyRangeEnd();
+        boolean isEmptyRange = start == null && end == null;
+        boolean isCompleteRange = start != null && end != null;
+        return isEmptyRange || (isCompleteRange && start <= end);
+    }
 }

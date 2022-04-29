@@ -16,25 +16,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 @ConditionalOnClass(value = WebClient.class)
 class ChaosMonkeyWebClientConfiguration {
 
-  @Bean
-  public ChaosMonkeyWebClientPostProcessor chaosMonkeyWebClientPostProcessor(
-      final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
-    return new ChaosMonkeyWebClientPostProcessor(chaosMonkeyWebClientWatcher);
-  }
+    @Bean
+    public ChaosMonkeyWebClientPostProcessor chaosMonkeyWebClientPostProcessor(final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
+        return new ChaosMonkeyWebClientPostProcessor(chaosMonkeyWebClientWatcher);
+    }
 
-  @Bean
-  public ChaosMonkeyWebClientCustomizer chaosMonkeyWebClientCustomizer(
-      final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
-    return new ChaosMonkeyWebClientCustomizer(chaosMonkeyWebClientWatcher);
-  }
+    @Bean
+    public ChaosMonkeyWebClientCustomizer chaosMonkeyWebClientCustomizer(final ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher) {
+        return new ChaosMonkeyWebClientCustomizer(chaosMonkeyWebClientWatcher);
+    }
 
-  @Bean
-  @DependsOn("chaosMonkeyRequestScope")
-  public ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher(
-      final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-      final WatcherProperties watcherProperties,
-      final AssaultProperties assaultProperties) {
-    return new ChaosMonkeyWebClientWatcher(
-        chaosMonkeyRequestScope, watcherProperties, assaultProperties);
-  }
+    @Bean
+    @DependsOn("chaosMonkeyRequestScope")
+    public ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher(final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
+            final WatcherProperties watcherProperties, final AssaultProperties assaultProperties) {
+        return new ChaosMonkeyWebClientWatcher(chaosMonkeyRequestScope, watcherProperties, assaultProperties);
+    }
 }

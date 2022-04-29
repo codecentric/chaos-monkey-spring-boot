@@ -23,5 +23,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DemoRepository extends CrudRepository<Hello, Long> {
 
-  void dummyPublicSaveMethod();
+    void dummyPublicSaveMethod();
 }

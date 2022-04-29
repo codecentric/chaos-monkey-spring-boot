@@ -8,22 +8,20 @@ import org.junit.jupiter.api.Test;
 
 class DefaultChaosToggleNameMapperTest {
 
-  private DefaultChaosToggleNameMapper sut;
+    private DefaultChaosToggleNameMapper sut;
 
-  @BeforeEach
-  public void setup() {
-    sut = new DefaultChaosToggleNameMapper("toggle.prefix");
-  }
+    @BeforeEach
+    public void setup() {
+        sut = new DefaultChaosToggleNameMapper("toggle.prefix");
+    }
 
-  @Test
-  public void chaosTypeCanBeNull() {
-    assertEquals(sut.mapName(null, "com.example.MyController.hello"), "toggle.prefix.unknown");
-  }
+    @Test
+    public void chaosTypeCanBeNull() {
+        assertEquals(sut.mapName(null, "com.example.MyController.hello"), "toggle.prefix.unknown");
+    }
 
-  @Test
-  public void chaosTypeNameIsUsedAsSuffix() {
-    assertEquals(
-        sut.mapName(ChaosTarget.REPOSITORY, "com.example.MyController.hello"),
-        "toggle.prefix.repository");
-  }
+    @Test
+    public void chaosTypeNameIsUsedAsSuffix() {
+        assertEquals(sut.mapName(ChaosTarget.REPOSITORY, "com.example.MyController.hello"), "toggle.prefix.repository");
+    }
 }

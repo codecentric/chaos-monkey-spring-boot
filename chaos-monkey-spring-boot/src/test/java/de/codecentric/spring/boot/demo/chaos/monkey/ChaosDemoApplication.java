@@ -37,30 +37,25 @@ import reactor.netty.http.client.HttpClient;
 @EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class})
 public class ChaosDemoApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(ChaosDemoApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ChaosDemoApplication.class, args);
+    }
 
-  @Bean
-  public RestTemplate restTemplateWithTimeout(
-      final TestOutgoingConfigurationProperties properties,
-      final RestTemplateBuilder restTemplateBuilder) {
-    return restTemplateBuilder
-        .setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS))
-        .build();
-  }
+    @Bean
+    public RestTemplate restTemplateWithTimeout(final TestOutgoingConfigurationProperties properties, final RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS)).build();
+    }
 
-  @Bean
-  public WebClient webClient(
-      final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
-    HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
-    return webClientBuilder.clientConnector(new ReactorClientHttpConnector(client)).build();
-  }
+    @Bean
+    public WebClient webClient(final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
+        HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
+        return webClientBuilder.clientConnector(new ReactorClientHttpConnector(client)).build();
+    }
 
-  @Data
-  @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
-  static class TestOutgoingConfigurationProperties {
+    @Data
+    @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
+    static class TestOutgoingConfigurationProperties {
 
-    private Long timeOut = 10000L;
-  }
+        private Long timeOut = 10000L;
+    }
 }

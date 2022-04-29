@@ -33,41 +33,42 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class ChaosDemoApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(ChaosDemoApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ChaosDemoApplication.class, args);
+    }
 
-  @Bean
-  public UnleashContextProvider unleashContextProvider() {
-    return () -> {
-      UnleashContext.Builder context = new UnleashContext.Builder();
+    @Bean
+    public UnleashContextProvider unleashContextProvider() {
+        return () -> {
+            UnleashContext.Builder context = new UnleashContext.Builder();
 
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth != null && auth.getPrincipal() instanceof User) {
-        context.userId(((User) auth.getPrincipal()).getUsername());
-      }
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.getPrincipal() instanceof User) {
+                context.userId(((User) auth.getPrincipal()).getUsername());
+            }
 
-      return context.build();
-    };
-  }
+            return context.build();
+        };
+    }
 
-  @Bean
-  public Unleash unleash(UnleashContextProvider contextProvider) {
-    UserAwareFakeUnleash unleash = new UserAwareFakeUnleash(contextProvider);
+    @Bean
+    public Unleash unleash(UnleashContextProvider contextProvider) {
+        UserAwareFakeUnleash unleash = new UserAwareFakeUnleash(contextProvider);
 
-    // The following line is commented out, but demonstrates how you can enable a toggle with
-    // the demo app without running an actual Unleash server
-    // unleash.enable("chaos.monkey.controller");
-    return unleash;
-  }
+        // The following line is commented out, but demonstrates how you can enable a
+        // toggle with
+        // the demo app without running an actual Unleash server
+        // unleash.enable("chaos.monkey.controller");
+        return unleash;
+    }
 
-  @Bean
-  public ChaosToggleNameMapper myChaosToggles(ChaosMonkeyProperties chaosMonkeyProperties) {
-    return new MyAppToggleMapper(chaosMonkeyProperties.getTogglePrefix());
-  }
+    @Bean
+    public ChaosToggleNameMapper myChaosToggles(ChaosMonkeyProperties chaosMonkeyProperties) {
+        return new MyAppToggleMapper(chaosMonkeyProperties.getTogglePrefix());
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

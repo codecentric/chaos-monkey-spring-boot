@@ -13,8 +13,8 @@ import org.springframework.instrument.classloading.ReflectiveLoadTimeWeaver;
 @EnableLoadTimeWeaving(aspectjWeaving = EnableLoadTimeWeaving.AspectJWeaving.ENABLED)
 public class ChaosMonkeyLoadTimeWeaving extends LoadTimeWeavingConfiguration {
 
-  @Override
-  public LoadTimeWeaver loadTimeWeaver() {
-    return new ReflectiveLoadTimeWeaver();
-  }
+    @Override
+    public LoadTimeWeaver loadTimeWeaver() {
+        return new ReflectiveLoadTimeWeaver();
+    }
 }

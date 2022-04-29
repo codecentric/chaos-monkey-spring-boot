@@ -23,8 +23,8 @@ import org.springframework.stereotype.Component;
 /** @author Alex Fincham */
 @Component
 public class ApplicationListenerComponent implements ApplicationListener<ApplicationEvent> {
-  @Override
-  public void onApplicationEvent(ApplicationEvent applicationEvent) {
-    // this can be empty
-  }
+    @Override
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+        // this can be empty
+    }
 }

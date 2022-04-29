@@ -4,4 +4,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /** @author Benjamin Wilms */
 @SpringBootTest
-public class ChaosDemoApplicationIntegrationTest {}
+public class ChaosDemoApplicationIntegrationTest {
+}

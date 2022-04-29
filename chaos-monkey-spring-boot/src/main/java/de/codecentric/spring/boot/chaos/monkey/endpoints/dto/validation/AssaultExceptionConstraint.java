@@ -12,9 +12,9 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AssaultExceptionConstraint {
 
-  String message() default "Invalid Exception type and arguments";
+    String message() default "Invalid Exception type and arguments";
 
-  Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-  Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

@@ -28,13 +28,16 @@ import lombok.NoArgsConstructor;
 @Data
 public class ChaosMonkeySettings {
 
-  @NotNull private ChaosMonkeyProperties chaosMonkeyProperties;
+    @NotNull
+    private ChaosMonkeyProperties chaosMonkeyProperties;
 
-  @NotNull private AssaultProperties assaultProperties;
+    @NotNull
+    private AssaultProperties assaultProperties;
 
-  @NotNull private WatcherProperties watcherProperties;
+    @NotNull
+    private WatcherProperties watcherProperties;
 
-  public ChaosMonkeySettingsDto toDto() {
-    return new ChaosMonkeySettingsDto(chaosMonkeyProperties, assaultProperties, watcherProperties);
-  }
+    public ChaosMonkeySettingsDto toDto() {
+        return new ChaosMonkeySettingsDto(chaosMonkeyProperties, assaultProperties, watcherProperties);
+    }
 }

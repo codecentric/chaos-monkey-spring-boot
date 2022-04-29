@@ -26,13 +26,15 @@ import org.springframework.context.ApplicationContext;
 @SpringBootTest
 public class ChaosDemoApplicationTests {
 
-  @Autowired private ApplicationContext ctx;
+    @Autowired
+    private ApplicationContext ctx;
 
-  @Test
-  public void contextLoads() {}
+    @Test
+    public void contextLoads() {
+    }
 
-  @Test
-  public void checkMetricsBean() {
-    assertThat(ctx.getBean("metrics")).isNotNull();
-  }
+    @Test
+    public void checkMetricsBean() {
+        assertThat(ctx.getBean("metrics")).isNotNull();
+    }
 }

@@ -32,28 +32,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
-@SpringBootTest(
-    classes = ChaosDemoApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
 class ChaosMonkeyRequestScopeRestEndpointDisabledIntegrationTest {
 
-  @LocalServerPort private int serverPort;
+    @LocalServerPort
+    private int serverPort;
 
-  @Autowired private TestRestTemplate testRestTemplate;
+    @Autowired
+    private TestRestTemplate testRestTemplate;
 
-  private String baseUrl;
+    private String baseUrl;
 
-  @BeforeEach
-  void setUp() {
-    baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
-  }
+    @BeforeEach
+    void setUp() {
+        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+    }
 
-  @Test
-  void getConfiguration() {
-    ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult =
-        testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
+    @Test
+    void getConfiguration() {
+        ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult = testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, chaosMonkeySettingsResult.getStatusCode());
-  }
+        assertEquals(HttpStatus.NOT_FOUND, chaosMonkeySettingsResult.getStatusCode());
+    }
 }

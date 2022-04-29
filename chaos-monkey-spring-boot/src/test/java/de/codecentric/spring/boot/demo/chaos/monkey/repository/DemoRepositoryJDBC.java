@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DemoRepositoryJDBC {
 
-  public String sayHello() {
-    return "Hello from Repository!";
-  }
+    public String sayHello() {
+        return "Hello from Repository!";
+    }
 }

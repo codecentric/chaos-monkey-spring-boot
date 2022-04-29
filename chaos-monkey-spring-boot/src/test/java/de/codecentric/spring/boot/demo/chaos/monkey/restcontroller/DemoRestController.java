@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @org.springframework.web.bind.annotation.RestController
 public class DemoRestController {
 
-  @GetMapping("/rest/hello")
-  public ResponseEntity<String> sayHello() {
-    return new ResponseEntity<String>("Hello", HttpStatus.OK);
-  }
+    @GetMapping("/rest/hello")
+    public ResponseEntity<String> sayHello() {
+        return new ResponseEntity<String>("Hello", HttpStatus.OK);
+    }
 }

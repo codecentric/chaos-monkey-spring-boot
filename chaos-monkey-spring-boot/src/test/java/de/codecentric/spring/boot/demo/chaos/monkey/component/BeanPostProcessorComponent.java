@@ -24,18 +24,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class BeanPostProcessorComponent implements BeanPostProcessor {
 
-  public String sayHello() {
-    return "Hello!";
-  }
+    public String sayHello() {
+        return "Hello!";
+    }
 
-  @Override
-  public Object postProcessBeforeInitialization(Object bean, String beanName)
-      throws BeansException {
-    return bean;
-  }
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
 
-  @Override
-  public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-    return bean;
-  }
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
 }
