@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profiles version="1">
+  <profile kind="CodeFormatterProfile" name="CM4SB" version="1">
+    <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+    <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="true"/>
+    <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="150" />
+    <setting id="org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve" value="1" />
+  </profile>
+</profiles>
