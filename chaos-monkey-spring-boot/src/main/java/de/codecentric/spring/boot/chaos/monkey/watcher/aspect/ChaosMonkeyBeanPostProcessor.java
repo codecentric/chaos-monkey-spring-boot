@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021-2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
@@ -24,69 +39,62 @@ import org.springframework.aop.framework.AbstractAdvisingBeanPostProcessor;
 @Slf4j
 public class ChaosMonkeyBeanPostProcessor extends AbstractAdvisingBeanPostProcessor {
 
-  private final WatcherProperties watcherProperties;
-  private final Map<Object, String> activeBeanNameCache = new WeakHashMap<>();
+    private final WatcherProperties watcherProperties;
+    private final Map<Object, String> activeBeanNameCache = new WeakHashMap<>();
 
-  public ChaosMonkeyBeanPostProcessor(
-      WatcherProperties watcherProperties,
-      ChaosMonkeyRequestScope requestScope,
-      MetricEventPublisher eventPublisher) {
-    this(watcherProperties, requestScope, eventPublisher, new ReflectiveAspectJAdvisorFactory());
-  }
-
-  public ChaosMonkeyBeanPostProcessor(
-      WatcherProperties watcherProperties,
-      ChaosMonkeyRequestScope requestScope,
-      MetricEventPublisher eventPublisher,
-      AspectJAdvisorFactory advisorFactory) {
-    this.watcherProperties = watcherProperties;
-    SpringBeanAspect aspect = new SpringBeanAspect(requestScope, eventPublisher);
-    this.advisor = convertAspectToAdvisor(advisorFactory, aspect, "springBeanAspect");
-  }
-
-  @Override
-  public Object postProcessAfterInitialization(Object bean, String beanName) {
-    if (watcherProperties.getBeans().contains(beanName)) {
-      Object proxy = super.postProcessAfterInitialization(bean, beanName);
-      activeBeanNameCache.put(proxy, beanName);
-      return proxy;
+    public ChaosMonkeyBeanPostProcessor(WatcherProperties watcherProperties, ChaosMonkeyRequestScope requestScope,
+            MetricEventPublisher eventPublisher) {
+        this(watcherProperties, requestScope, eventPublisher, new ReflectiveAspectJAdvisorFactory());
     }
-    return bean;
-  }
 
-  private Advisor convertAspectToAdvisor(
-      AspectJAdvisorFactory advisorFactory, Object aspect, String name) {
-    val factory = new SingletonMetadataAwareAspectInstanceFactory(aspect, name);
-    List<Advisor> classAdvisors = advisorFactory.getAdvisors(factory);
-    if (classAdvisors.size() != 1) {
-      throw new IllegalArgumentException(name + " must contain exactly one advisor");
+    public ChaosMonkeyBeanPostProcessor(WatcherProperties watcherProperties, ChaosMonkeyRequestScope requestScope,
+            MetricEventPublisher eventPublisher, AspectJAdvisorFactory advisorFactory) {
+        this.watcherProperties = watcherProperties;
+        SpringBeanAspect aspect = new SpringBeanAspect(requestScope, eventPublisher);
+        this.advisor = convertAspectToAdvisor(advisorFactory, aspect, "springBeanAspect");
     }
-    return classAdvisors.get(0);
-  }
 
-  @Aspect
-  @AllArgsConstructor
-  public class SpringBeanAspect extends ChaosMonkeyBaseAspect {
-
-    private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
-
-    private MetricEventPublisher metricEventPublisher;
-
-    @Around("allPublicMethodPointcut()")
-    public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
-      if (watcherProperties.getBeans().contains(activeBeanNameCache.get(pjp.getThis()))) {
-        log.debug("Watching public method on bean class: {}", pjp.getSignature());
-
-        if (metricEventPublisher != null) {
-          metricEventPublisher.publishMetricEvent(
-              calculatePointcut(pjp.toShortString()), MetricType.BEAN);
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+        if (watcherProperties.getBeans().contains(beanName)) {
+            Object proxy = super.postProcessAfterInitialization(bean, beanName);
+            activeBeanNameCache.put(proxy, beanName);
+            return proxy;
         }
-
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-        chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.BEAN, createSignature(signature));
-      }
-      return pjp.proceed();
+        return bean;
     }
-  }
+
+    private Advisor convertAspectToAdvisor(AspectJAdvisorFactory advisorFactory, Object aspect, String name) {
+        val factory = new SingletonMetadataAwareAspectInstanceFactory(aspect, name);
+        List<Advisor> classAdvisors = advisorFactory.getAdvisors(factory);
+        if (classAdvisors.size() != 1) {
+            throw new IllegalArgumentException(name + " must contain exactly one advisor");
+        }
+        return classAdvisors.get(0);
+    }
+
+    @Aspect
+    @AllArgsConstructor
+    public class SpringBeanAspect extends ChaosMonkeyBaseAspect {
+
+        private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+
+        private MetricEventPublisher metricEventPublisher;
+
+        @Around("allPublicMethodPointcut()")
+        public Object intercept(ProceedingJoinPoint pjp) throws Throwable {
+            if (watcherProperties.getBeans().contains(activeBeanNameCache.get(pjp.getThis()))) {
+                log.debug("Watching public method on bean class: {}", pjp.getSignature());
+
+                if (metricEventPublisher != null) {
+                    metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), MetricType.BEAN);
+                }
+
+                MethodSignature signature = (MethodSignature) pjp.getSignature();
+
+                chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.BEAN, createSignature(signature));
+            }
+            return pjp.proceed();
+        }
+    }
 }

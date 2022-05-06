@@ -88,7 +88,7 @@
   <name>chaos-monkey-spring-boot-parent</name>
   <organization>
     <name>codecentric AG</name>
-    <url>http://www.codecentric.de</url>
+    <url>https://www.codecentric.de</url>
   </organization>
   <packaging>pom</packaging>
 
@@ -199,12 +199,14 @@
         <artifactId>spotless-maven-plugin</artifactId>
         <version>${spotless-plugin.version}</version>
         <configuration>
+          <ratchetFrom>origin/main</ratchetFrom>
           <java>
-            <googleJavaFormat>
-              <version>${google-java-format.version}</version>
-            </googleJavaFormat>
-            <!-- TODO: Add a <licenseHeader> configuration to make all license headers in source
-                 files consistent -->
+            <eclipse>
+              <file>code-style.xml</file>
+            </eclipse>
+            <licenseHeader>
+              <file>license.template.txt</file>
+            </licenseHeader>
           </java>
         </configuration>
         <executions>
@@ -287,7 +289,7 @@
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
   <modelVersion>4.0.0</modelVersion>

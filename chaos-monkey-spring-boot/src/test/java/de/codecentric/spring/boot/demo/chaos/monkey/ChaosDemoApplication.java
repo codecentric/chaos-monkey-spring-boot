@@ -1,11 +1,11 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2018-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.codecentric.spring.boot.demo.chaos.monkey;
 
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication.TestOutgoingConfigurationProperties;
@@ -37,30 +36,25 @@ import reactor.netty.http.client.HttpClient;
 @EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class})
 public class ChaosDemoApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(ChaosDemoApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ChaosDemoApplication.class, args);
+    }
 
-  @Bean
-  public RestTemplate restTemplateWithTimeout(
-      final TestOutgoingConfigurationProperties properties,
-      final RestTemplateBuilder restTemplateBuilder) {
-    return restTemplateBuilder
-        .setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS))
-        .build();
-  }
+    @Bean
+    public RestTemplate restTemplateWithTimeout(final TestOutgoingConfigurationProperties properties, final RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS)).build();
+    }
 
-  @Bean
-  public WebClient webClient(
-      final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
-    HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
-    return webClientBuilder.clientConnector(new ReactorClientHttpConnector(client)).build();
-  }
+    @Bean
+    public WebClient webClient(final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
+        HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
+        return webClientBuilder.clientConnector(new ReactorClientHttpConnector(client)).build();
+    }
 
-  @Data
-  @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
-  static class TestOutgoingConfigurationProperties {
+    @Data
+    @ConfigurationProperties(prefix = "chaos.monkey.test.rest-template")
+    static class TestOutgoingConfigurationProperties {
 
-    private Long timeOut = 10000L;
-  }
+        private Long timeOut = 10000L;
+    }
 }

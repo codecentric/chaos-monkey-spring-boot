@@ -1,11 +1,11 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
 
 import static org.mockito.Mockito.mock;
@@ -42,134 +41,117 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootTest
 class SpringComponentAspectIntegrationTest {
 
-  private static final String demoComponentPointcutName = "execution.DemoComponent.sayHello";
-  private static final String finalDemoComponentPointcutName =
-      "execution.FinalDemoComponent.sayHello";
-  private static final String beanPostProcessorComponentPointcutName =
-      "execution.BeanPostProcessorComponent.postProcessBeforeInitialization";
-  private static final String applicationListenerComponentPointcutName =
-      "execution.ApplicationListenerComponent.onApplicationEvent";
-  private static final String beanFactorySingletonComponentPointcutName =
-      "execution.FactoryBeanComponent.isSingleton";
-  private static final String beanFactoryObjectTypeComponentPointcutName =
-      "execution.FactoryBeanComponent.getObjectType";
+    private static final String demoComponentPointcutName = "execution.DemoComponent.sayHello";
+    private static final String finalDemoComponentPointcutName = "execution.FinalDemoComponent.sayHello";
+    private static final String beanPostProcessorComponentPointcutName = "execution.BeanPostProcessorComponent.postProcessBeforeInitialization";
+    private static final String applicationListenerComponentPointcutName = "execution.ApplicationListenerComponent.onApplicationEvent";
+    private static final String beanFactorySingletonComponentPointcutName = "execution.FactoryBeanComponent.isSingleton";
+    private static final String beanFactoryObjectTypeComponentPointcutName = "execution.FactoryBeanComponent.getObjectType";
 
-  private static final String demoComponentSimpleName =
-      "de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello";
-  private static final String finalDemoComponentSimpleName =
-      "de.codecentric.spring.boot.demo.chaos.monkey.component.FinalDemoComponent.sayHello";
-  private static final String beanPostProcessorComponentSimpleName =
-      "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent.postProcessBeforeInitialization";
-  private static final String applicationListenerComponentSimpleName =
-      "de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent.onApplicationEvent";
-  private static final String beanFactorySingletonComponentSimpleName =
-      "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanFactoryComponent.isSingleton";
-  private static final String beanFactoryObjectTypeComponentSimpleName =
-      "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanFactoryComponent.getObjectType";
+    private static final String demoComponentSimpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello";
+    private static final String finalDemoComponentSimpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.FinalDemoComponent.sayHello";
+    private static final String beanPostProcessorComponentSimpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorComponent.postProcessBeforeInitialization";
+    private static final String applicationListenerComponentSimpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.ApplicationListenerComponent.onApplicationEvent";
+    private static final String beanFactorySingletonComponentSimpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanFactoryComponent.isSingleton";
+    private static final String beanFactoryObjectTypeComponentSimpleName = "de.codecentric.spring.boot.demo.chaos.monkey.component.BeanFactoryComponent.getObjectType";
 
-  @Autowired DemoComponent demoComponent;
+    @Autowired
+    DemoComponent demoComponent;
 
-  @Autowired FinalDemoComponent finalDemoComponent;
+    @Autowired
+    FinalDemoComponent finalDemoComponent;
 
-  @Autowired BeanPostProcessorComponent beanPostProcessorComponent;
+    @Autowired
+    BeanPostProcessorComponent beanPostProcessorComponent;
 
-  @Autowired ApplicationListenerComponent applicationListenerComponent;
+    @Autowired
+    ApplicationListenerComponent applicationListenerComponent;
 
-  @Autowired ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock;
+    @Autowired
+    ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock;
 
-  @Autowired MetricEventPublisher metricsMock;
+    @Autowired
+    MetricEventPublisher metricsMock;
 
-  @Autowired FactoryBeanComponent factoryBeanComponent;
+    @Autowired
+    FactoryBeanComponent factoryBeanComponent;
 
-  @Test
-  public void chaosMonkeyIsCalledWhenComponentIsNotFinal() {
-    demoComponent.sayHello();
-    verify(chaosMonkeyRequestScopeMock, times(1))
-        .callChaosMonkey(ChaosTarget.COMPONENT, demoComponentSimpleName);
-    verify(metricsMock, times(1))
-        .publishMetricEvent(demoComponentPointcutName, MetricType.COMPONENT);
-  }
-
-  @Test
-  public void chaosMonkeyIsNotCalledWhenComponentIsFinal() {
-    finalDemoComponent.sayHello();
-    verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(ChaosTarget.COMPONENT, finalDemoComponentSimpleName);
-    verify(metricsMock, times(0))
-        .publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
-  }
-
-  @Test
-  public void chaosMonkeyDoesNotProxyIgnoredSpringInterfaces() {
-    beanPostProcessorComponent.postProcessBeforeInitialization(new Object(), "fakeBean");
-    applicationListenerComponent.onApplicationEvent(mock(ApplicationEvent.class));
-    factoryBeanComponent.getObject();
-
-    verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(null, beanPostProcessorComponentSimpleName);
-    verify(metricsMock, times(0))
-        .publishMetricEvent(beanPostProcessorComponentPointcutName, MetricType.COMPONENT);
-
-    verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(null, applicationListenerComponentSimpleName);
-    verify(metricsMock, times(0))
-        .publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
-
-    verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(null, beanFactorySingletonComponentSimpleName);
-    verify(chaosMonkeyRequestScopeMock, times(0))
-        .callChaosMonkey(null, beanFactoryObjectTypeComponentSimpleName);
-    verify(metricsMock, times(0))
-        .publishMetricEvent(beanFactorySingletonComponentPointcutName, MetricType.COMPONENT);
-    verify(metricsMock, times(0))
-        .publishMetricEvent(beanFactoryObjectTypeComponentPointcutName, MetricType.COMPONENT);
-  }
-
-  @Configuration
-  @EnableAspectJAutoProxy(proxyTargetClass = true)
-  public static class TestContext {
-
-    @Bean
-    public ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock() {
-      return mock(ChaosMonkeyRequestScope.class);
+    @Test
+    public void chaosMonkeyIsCalledWhenComponentIsNotFinal() {
+        demoComponent.sayHello();
+        verify(chaosMonkeyRequestScopeMock, times(1)).callChaosMonkey(ChaosTarget.COMPONENT, demoComponentSimpleName);
+        verify(metricsMock, times(1)).publishMetricEvent(demoComponentPointcutName, MetricType.COMPONENT);
     }
 
-    @Bean
-    public MetricEventPublisher metricsMock() {
-      return mock(MetricEventPublisher.class);
+    @Test
+    public void chaosMonkeyIsNotCalledWhenComponentIsFinal() {
+        finalDemoComponent.sayHello();
+        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(ChaosTarget.COMPONENT, finalDemoComponentSimpleName);
+        verify(metricsMock, times(0)).publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
     }
 
-    @Bean
-    SpringComponentAspect aspect() {
-      WatcherProperties watcherProperties = new WatcherProperties();
-      watcherProperties.setComponent(true);
-      return new SpringComponentAspect(
-          chaosMonkeyRequestScopeMock(), metricsMock(), watcherProperties);
+    @Test
+    public void chaosMonkeyDoesNotProxyIgnoredSpringInterfaces() {
+        beanPostProcessorComponent.postProcessBeforeInitialization(new Object(), "fakeBean");
+        applicationListenerComponent.onApplicationEvent(mock(ApplicationEvent.class));
+        factoryBeanComponent.getObject();
+
+        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, beanPostProcessorComponentSimpleName);
+        verify(metricsMock, times(0)).publishMetricEvent(beanPostProcessorComponentPointcutName, MetricType.COMPONENT);
+
+        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, applicationListenerComponentSimpleName);
+        verify(metricsMock, times(0)).publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
+
+        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, beanFactorySingletonComponentSimpleName);
+        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, beanFactoryObjectTypeComponentSimpleName);
+        verify(metricsMock, times(0)).publishMetricEvent(beanFactorySingletonComponentPointcutName, MetricType.COMPONENT);
+        verify(metricsMock, times(0)).publishMetricEvent(beanFactoryObjectTypeComponentPointcutName, MetricType.COMPONENT);
     }
 
-    @Bean
-    DemoComponent demoComponent() {
-      return mock(DemoComponent.class);
-    }
+    @Configuration
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class TestContext {
 
-    @Bean
-    FinalDemoComponent finalDemoComponent() {
-      return mock(FinalDemoComponent.class);
-    }
+        @Bean
+        public ChaosMonkeyRequestScope chaosMonkeyRequestScopeMock() {
+            return mock(ChaosMonkeyRequestScope.class);
+        }
 
-    @Bean
-    BeanPostProcessorComponent beanPostProcessorComponent() {
-      return mock(BeanPostProcessorComponent.class);
-    }
+        @Bean
+        public MetricEventPublisher metricsMock() {
+            return mock(MetricEventPublisher.class);
+        }
 
-    @Bean
-    FactoryBeanComponent factoryBeanComponent() {
-      return mock(FactoryBeanComponent.class);
-    }
+        @Bean
+        SpringComponentAspect aspect() {
+            WatcherProperties watcherProperties = new WatcherProperties();
+            watcherProperties.setComponent(true);
+            return new SpringComponentAspect(chaosMonkeyRequestScopeMock(), metricsMock(), watcherProperties);
+        }
 
-    @Bean
-    ApplicationListenerComponent applicationListenerComponent() {
-      return mock(ApplicationListenerComponent.class);
+        @Bean
+        DemoComponent demoComponent() {
+            return mock(DemoComponent.class);
+        }
+
+        @Bean
+        FinalDemoComponent finalDemoComponent() {
+            return mock(FinalDemoComponent.class);
+        }
+
+        @Bean
+        BeanPostProcessorComponent beanPostProcessorComponent() {
+            return mock(BeanPostProcessorComponent.class);
+        }
+
+        @Bean
+        FactoryBeanComponent factoryBeanComponent() {
+            return mock(FactoryBeanComponent.class);
+        }
+
+        @Bean
+        ApplicationListenerComponent applicationListenerComponent() {
+            return mock(ApplicationListenerComponent.class);
+        }
     }
-  }
 }
