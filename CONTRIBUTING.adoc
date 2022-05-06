@@ -42,7 +42,7 @@ To fetch upstream changes switch to your main branch with `git checkout main` an
 
 Chaos Monkey for Spring Boot is a Java based https://spring.io/projects/spring-boot[Spring Boot] plugin.
 On Unix based systems we recommend using https://sdkman.io/[sdkman] to manage your Java installations.
-On Windows you can fallback to installing Java Development Kit 8 or higher directly.
+On Windows we recommend using https://scoop-docs.vercel.app/[scoop] with the https://scoop-docs.vercel.app/docs/guides/Java.html[Java Bucket] to manage your Java installations.
 
 In order to work with the code you need to use https://maven.apache.org/[Maven].
 Chaos Monkey for Spring Boot uses the https://github.com/takari/maven-wrapper[Maven Wrapper].
@@ -53,7 +53,9 @@ To build and test the code you can run
 ./mvnw clean verify
 ----
 
-We are using the https://google.github.io/styleguide/javaguide.html[Google Style Guide]. The style guide
+We also use https://projectlombok.org/[project Lombok] in our codebase. Please consult their https://projectlombok.org/setup/overview[setup page] to see how you can install the plugin for your favorite IDE.
+
+We use a custom eclipse code style to format our code consistently. The code style
 is enforced via https://github.com/diffplug/spotless[Spotless]. A check for style violations can be
 run via `./mvnw spotless:check`. Use `./mvnw spotless:apply` to fix these violations.
 
@@ -63,21 +65,19 @@ run via `./mvnw spotless:check`. Use `./mvnw spotless:apply` to fix these violat
 ====
 
 === IntelliJ Setup
-If you're using IntelliJ then we highly recommend installing the Google Style Guide file.
-Download the file https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml[code style file].
+If you're using IntelliJ then we highly recommend installing our code style.
 
 [NOTE]
 ====
-Installation of code style (download the file first):
+Installation of code style:
 
 Under `File -> Settings -> Editor -> Code Style` (Windows) or `Preferences -> Editor -> Code Style` (OSX)
-press the gear button and choose `Import Scheme`. Then, select the downloaded theme file and `Apply` the style.
+press the gear button and choose `Import Scheme`-> `Eclipse XML Profile`. Then, select the `code-style.xml` (in the root of the repository) file and `Apply` the style.
 ====
 
 == Working With The Code
 Considering these recommendations will help us in getting your pull request merged. 
 
-* Add the ASF license header comment to all new `.java` files (you can copy from existing files in the project).
 * Document your changes. This includes in code documentation but also user documentation.
 * Test your changes. Use `./mvnw verify` to run all build pipeline checks.
 * It would be great to follow Chris Beam's recommendations on https://chris.beams.io/posts/git-commit/[How to Write a Git Commit Message]. 
