@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.codecentric.spring.boot.chaos.monkey.component;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter;
 
-import lombok.Getter;
+import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.support.StaticMethodMatcher;
 
 @RequiredArgsConstructor
-public enum ChaosTarget {
-    CONTROLLER("controller", MetricType.CONTROLLER),
-    REST_CONTROLLER("restController", MetricType.RESTCONTROLLER),
-    REPOSITORY("repository", MetricType.REPOSITORY),
-    COMPONENT("component", MetricType.COMPONENT),
-    SERVICE("service", MetricType.SERVICE),
-    REST_TEMPLATE("restTemplate", null),
-    WEB_CLIENT("webClient", null),
-    ACTUATOR_HEALTH("actuatorHealth", null),
-    BEAN("bean", MetricType.BEAN);
+public class MethodNameFilter extends StaticMethodMatcher {
 
-    @Getter
-    private final String name;
-    @Getter
-    private final MetricType metricType;
+    private final String methodName;
+
+    @Override
+    public boolean matches(Method method, Class<?> targetClass) {
+        return methodName.equals(method.getName());
+    }
 }

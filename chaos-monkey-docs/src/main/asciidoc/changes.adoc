@@ -16,6 +16,7 @@ Built with Spring Boot {spring-boot-version}
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/302[#302] Added enabledFor to status endpoints.
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/299[#299] Custom exception configuration supports static factory methods
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/307[#307] Exclude any class from proxying
 
 === Contributors
 This release was only possible because of these great humans ❤️:

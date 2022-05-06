@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import static org.mockito.Mockito.*;
 
@@ -33,9 +33,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class ChaosMonkeyBeanPostProcessorTest {
 
-    private DemoBean target = new DemoBean();
+    private final DemoBean target = new DemoBean();
 
-    private WatcherProperties watcherProperties = new WatcherProperties();
+    private final WatcherProperties watcherProperties = new WatcherProperties();
 
     @Mock
     private ChaosMonkeyRequestScope requestScope;
@@ -45,9 +45,9 @@ public class ChaosMonkeyBeanPostProcessorTest {
 
     private ChaosMonkeyBeanPostProcessor postProcessor;
 
-    private String pointcutName = "execution.DemoBean.sayHello";
+    private final String pointcutName = "execution.DemoBean.sayHello";
 
-    private String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean.sayHello";
+    private final String simpleName = "de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean.sayHello";
 
     @BeforeEach
     void setup() {

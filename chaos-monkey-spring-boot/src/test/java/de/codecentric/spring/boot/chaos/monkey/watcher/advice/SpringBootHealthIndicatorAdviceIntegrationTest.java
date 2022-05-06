@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.codecentric.spring.boot.chaos.monkey.watcher.aspect;
+package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +27,7 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-class SpringBootHealthIndicatorAspectIntegrationTest {
+class SpringBootHealthIndicatorAdviceIntegrationTest {
 
     @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.actuator-health=true",
             "chaos.monkey.assaults.exceptions-active=true"}, classes = {ChaosDemoApplication.class})
@@ -56,7 +56,7 @@ class SpringBootHealthIndicatorAspectIntegrationTest {
         private List<HealthIndicator> healthIndicators;
 
         @Test
-        public void testIndicatorsAreDown() {
+        public void testIndicatorsAreUp() {
             this.healthIndicators.forEach(healthIndicator -> {
                 assertThat(healthIndicator.getHealth(Boolean.TRUE).getStatus()).isEqualTo(Health.up().build().getStatus());
             });
