@@ -8,7 +8,7 @@ Built with Spring Boot {spring-boot-version}
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added Spring actuator health watcher property to documentation.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/320[#320] Added Spring actuator health watcher property to documentation.
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
