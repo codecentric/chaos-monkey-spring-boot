@@ -172,6 +172,11 @@ You can decide which attacks you want to run and which parts of your application
 |TRUE or FALSE
 |FALSE
 
+|chaos.monkey.watcher.actuatorHealth
+|Spring actuator health watcher active
+|TRUE or FALSE
+|FALSE
+
 |chaos.monkey.watcher.beans
 |Bean watcher for given beans
 |List of bean names
