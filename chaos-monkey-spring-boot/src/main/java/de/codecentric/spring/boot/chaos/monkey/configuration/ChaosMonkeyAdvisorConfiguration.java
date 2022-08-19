@@ -32,6 +32,7 @@ import org.springframework.aop.support.ClassFilters;
 import org.springframework.aop.support.RootClassFilter;
 import org.springframework.aop.support.annotation.AnnotationClassFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "controllerPointcutAdvisor")
     public ChaosMonkeyPointcutAdvisor controllerPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
@@ -61,6 +63,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "restControllerPointcutAdvisor")
     public ChaosMonkeyPointcutAdvisor restControllerPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
@@ -69,6 +72,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "servicePointcutAdvisor")
     public ChaosMonkeyPointcutAdvisor servicePointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
@@ -77,6 +81,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "componentPointcutAdvisor")
     public ChaosMonkeyPointcutAdvisor componentPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
@@ -85,6 +90,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "jpaRepositoryPointcutAdvisor")
     @ConditionalOnClass(name = "org.springframework.data.repository.Repository")
     public ChaosMonkeyPointcutAdvisor jpaRepositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) throws ClassNotFoundException {
@@ -98,6 +104,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "jdbcRepositoryPointcdutAdvisor")
     public ChaosMonkeyPointcutAdvisor jdbcRepositoryPointcdutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
@@ -106,6 +113,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "healthIndicatorAdviceProvider")
     @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
     public ChaosMonkeyPointcutAdvisor healthIndicatorAdviceProvider(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope)
             throws ClassNotFoundException {
@@ -115,6 +123,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ChaosMonkeyBeanPostProcessor chaosMonkeyBeanPostProcessor(ChaosMonkeyRequestScope chaosMonkeyRequestScope,
             MetricEventPublisher publisher) {
         return new ChaosMonkeyBeanPostProcessor(watcherProperties, chaosMonkeyRequestScope, publisher);

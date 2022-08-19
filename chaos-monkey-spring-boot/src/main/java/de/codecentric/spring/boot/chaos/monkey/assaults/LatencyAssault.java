@@ -67,7 +67,7 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
         assaultExecutor.execute(atomicTimeoutGauge.get());
     }
 
-    private int determineLatency() {
+    protected int determineLatency() {
         final int latencyRangeStart = settings.getAssaultProperties().getLatencyRangeStart();
         final int latencyRangeEnd = settings.getAssaultProperties().getLatencyRangeEnd();
 
