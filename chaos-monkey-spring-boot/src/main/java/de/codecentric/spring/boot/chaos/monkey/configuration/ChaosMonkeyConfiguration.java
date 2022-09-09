@@ -96,26 +96,31 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public LatencyAssault latencyAssault() {
         return new LatencyAssault(settings(), publisher());
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ExceptionAssault exceptionAssault() {
         return new ExceptionAssault(settings(), publisher());
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public KillAppAssault killAppAssault() {
         return new KillAppAssault(settings(), publisher());
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public MemoryAssault memoryAssault() {
         return new MemoryAssault(Runtime.getRuntime(), settings(), publisher());
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public CpuAssault cpuAssault() {
         return new CpuAssault(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings(), publisher());
     }
