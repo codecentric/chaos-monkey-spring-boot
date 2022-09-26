@@ -7,7 +7,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v5
+      - uses: actions/stale@v6
         with:
           stale-issue-message: 'This issue was marked as stale because it has been open and waiting for feedback for 60 days with no activity. If no feedback is provided within 14 days, this will be closed.'
           days-before-stale: 60
