@@ -2,6 +2,8 @@
 == Spring Boot Actuator Endpoints ==
 Chaos Monkey for Spring Boot offers you some built in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints[JMX or HTTP]. This allows you to change configuration at runtime.
 
+https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html[Spring Boot Actuator] needs to be included in your project dependencies if you want to use this feature.
+
 '''
 
 === Enable chaosmonkey endpoint
@@ -396,3 +398,25 @@ component=false
 |Is Chaos Monkey active or not
 |true or false
 |===
+
+=== Enable springdoc-openapi integration
+Enable wanted endpoints like described in <<_enable_chaosmonkey_endpoint>>. Then include https://springdoc.org/[springdoc-openapi] in your dependencies and configure the following:
+[source,txt,subs="verbatim,attributes",role="primary"]
+.application.properties:
+----
+springdoc.show-actuator=true
+chaos.monkey.apidoc.enabled=true
+----
+
+[source,yaml,subs="verbatim,attributes",role="secondary"]
+.application.yml:
+----
+springdoc:
+  show-actuator: true
+chaos.monkey:
+    apidoc:
+      enabled: true
+----
+
+Chaosmonkey will now show up as a group in your Swagger UI.
+

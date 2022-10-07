@@ -51,7 +51,7 @@ import java.util.List;
 @Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 @Import({UnleashChaosConfiguration.class, ChaosMonkeyWebClientConfiguration.class, ChaosMonkeyRestTemplateConfiguration.class,
-        ChaosMonkeyAdvisorConfiguration.class})
+        ChaosMonkeyAdvisorConfiguration.class, ChaosMonkeyOpenApiConfiguration.class})
 @EnableScheduling
 public class ChaosMonkeyConfiguration {
 

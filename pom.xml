@@ -39,6 +39,7 @@
     <!-- spring versions -->
     <spring-boot.version>2.6.7</spring-boot.version>
     <spring-cloud.version>2021.0.2</spring-cloud.version>
+    <spring-doc.version>1.6.11</spring-doc.version>
 
     <!-- dependency versions -->
     <unleash.version>5.1.0</unleash.version>
@@ -201,10 +202,10 @@
           <ratchetFrom>origin/main</ratchetFrom>
           <java>
             <eclipse>
-              <file>code-style.xml</file>
+              <file>${maven.multiModuleProjectDirectory}/code-style.xml</file>
             </eclipse>
             <licenseHeader>
-              <file>license.template.txt</file>
+              <file>${maven.multiModuleProjectDirectory}/license.template.txt</file>
             </licenseHeader>
           </java>
         </configuration>
