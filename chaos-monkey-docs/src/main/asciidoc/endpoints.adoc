@@ -2,7 +2,7 @@
 == Spring Boot Actuator Endpoints ==
 Chaos Monkey for Spring Boot offers you some built in endpoints exposed via https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints[JMX or HTTP]. This allows you to change configuration at runtime.
 
-https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html[Spring Boot Actuator] needs to be included in your project dependencies.
+https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html[Spring Boot Actuator] needs to be included in your project dependencies if you want to use this feature.
 
 '''
 
