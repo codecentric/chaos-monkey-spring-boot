@@ -400,7 +400,7 @@ component=false
 |===
 
 === Enable springdoc-openapi integration
-First enable wanted endpoints as shown above. Then include https://springdoc.org/[springdoc-openapi] in your dependencies and configure the following:
+Enable wanted endpoints like described in <<_enable_chaosmonkey_endpoint>>. Then include https://springdoc.org/[springdoc-openapi] in your dependencies and configure the following:
 [source,txt,subs="verbatim,attributes",role="primary"]
 .application.properties:
 ----
