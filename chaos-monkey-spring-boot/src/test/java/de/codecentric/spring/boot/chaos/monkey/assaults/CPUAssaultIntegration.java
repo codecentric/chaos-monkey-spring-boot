@@ -22,7 +22,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

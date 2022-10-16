@@ -22,10 +22,10 @@ import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultE
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultPropertiesUpdateLatencyRangeConstraint;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;

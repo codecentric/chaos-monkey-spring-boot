@@ -22,9 +22,9 @@
 
   <properties>
     <!-- project version -->
-    <revision>2.7.1-SNAPSHOT</revision>
+    <revision>3.0.0-SNAPSHOT</revision>
     <!-- default settings -->
-    <java.version>1.8</java.version>
+    <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.version>3.8.6</maven.version>
@@ -37,16 +37,16 @@
 
     <!-- Dependency versions - use ./mvnw versions:update-properties to update-->
     <!-- spring versions -->
-    <spring-boot.version>2.7.6</spring-boot.version>
-    <spring-cloud.version>2021.0.5</spring-cloud.version>
+    <spring-boot.version>3.0.0</spring-boot.version>
+    <spring-cloud.version>2022.0.0-RC3</spring-cloud.version>
     <spring-doc.version>1.6.13</spring-doc.version>
 
     <!-- dependency versions -->
-    <unleash.version>5.1.0</unleash.version>
+    <unleash.version>7.0.0</unleash.version>
 
     <!-- plugin versions-->
-    <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
-    <git-commit-id-plugin.version>4.9.9</git-commit-id-plugin.version>
+    <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+    <git-commit-id-plugin.version>5.0.0</git-commit-id-plugin.version>
     <asciidoctor-maven-plugin.version>2.2.2</asciidoctor-maven-plugin.version>
     <asciidoctor-extensions-spring-boot>0.6.0</asciidoctor-extensions-spring-boot>
     <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
@@ -54,13 +54,13 @@
     <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-    <maven-shade-plugin.version>3.4.0</maven-shade-plugin.version>
+    <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
     <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
     <skuzzle-imports-enforcer.version>2.0.0</skuzzle-imports-enforcer.version>
     <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
-    <spotless-plugin.version>2.27.1</spotless-plugin.version>
-    <versions-plugin.version>2.12.0</versions-plugin.version>
+    <spotless-maven-plugin.version>2.27.2</spotless-maven-plugin.version>
+    <versions-maven-plugin.version>2.13.0</versions-maven-plugin.version>
   </properties>
 
   <scm>
@@ -197,14 +197,16 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless-plugin.version}</version>
+        <version>${spotless-maven-plugin.version}</version>
         <configuration>
           <ratchetFrom>origin/main</ratchetFrom>
           <java>
             <eclipse>
+              <!--suppress UnresolvedMavenProperty - replace with solution from https://github.com/apache/maven/pull/840 -->
               <file>${maven.multiModuleProjectDirectory}/code-style.xml</file>
             </eclipse>
             <licenseHeader>
+              <!--suppress UnresolvedMavenProperty replace with solution from https://github.com/apache/maven/pull/840 -->
               <file>${maven.multiModuleProjectDirectory}/license.template.txt</file>
             </licenseHeader>
           </java>
@@ -262,7 +264,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>${versions-plugin.version}</version>
+        <version>${versions-maven-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
@@ -330,4 +332,25 @@
       <id>release-sign-artifacts</id>
     </profile>
   </profiles>
+  <!-- TODO: remove this block after release of Spring Cloud 2022.0.0 -->
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>
