@@ -25,7 +25,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -144,7 +144,7 @@ class MemoryAssaultIntegrationTest {
         assertTrue(usedMemoryBeforeAttack <= usedMemoryDuringAttack);
 
         ResponseEntity<String> result = restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
-        assertEquals(200, result.getStatusCodeValue());
+        assertEquals(200, result.getStatusCode().value());
 
         while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
             // wait for thread to finish gracefully or time out
@@ -191,7 +191,7 @@ class MemoryAssaultIntegrationTest {
         }
 
         ResponseEntity<String> result = restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
-        assertEquals(200, result.getStatusCodeValue(), "Request was not successful");
+        assertEquals(200, result.getStatusCode().value(), "Request was not successful");
 
         // TODO: Check again when JAVA 8 can be dropped.
         // Apparently java 8 needs a bit more time to finish up things
