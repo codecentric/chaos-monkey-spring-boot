@@ -9,6 +9,7 @@ Built with Spring Boot {spring-boot-version}
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/320[#320] Added Spring actuator health watcher property to documentation.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/329[#329] Upgrade to Spring Boot 2.7.4 and bump dependencies
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -21,5 +22,6 @@ This release was only possible because of these great humans ❤️:
 // - https://github.com/octocat[@octocat]
 - https://github.com/ZengLawrence[@ZengLawrence]
 - https://github.com/F43nd1r[@F43nd1r]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!

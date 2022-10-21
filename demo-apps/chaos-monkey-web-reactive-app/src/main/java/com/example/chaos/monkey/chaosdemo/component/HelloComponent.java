@@ -27,6 +27,6 @@ import reactor.core.publisher.Mono;
 public class HelloComponent {
 
     public Mono<ServerResponse> hello(ServerRequest request) {
-        return ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).body(BodyInserters.fromObject("Hello, from Component!"));
+        return ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).body(BodyInserters.fromValue("Hello, from Component!"));
     }
 }

@@ -27,7 +27,7 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven.version>3.8.5</maven.version>
+    <maven.version>3.8.6</maven.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -37,8 +37,8 @@
 
     <!-- Dependency versions - use ./mvnw versions:update-properties to update-->
     <!-- spring versions -->
-    <spring-boot.version>2.6.7</spring-boot.version>
-    <spring-cloud.version>2021.0.2</spring-cloud.version>
+    <spring-boot.version>2.7.4</spring-boot.version>
+    <spring-cloud.version>2021.0.4</spring-cloud.version>
     <spring-doc.version>1.6.11</spring-doc.version>
 
     <!-- dependency versions -->
@@ -47,20 +47,20 @@
     <!-- plugin versions-->
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     <git-commit-id-plugin.version>4.9.9</git-commit-id-plugin.version>
-    <asciidoctor-maven-plugin.version>2.2.1</asciidoctor-maven-plugin.version>
+    <asciidoctor-maven-plugin.version>2.2.2</asciidoctor-maven-plugin.version>
     <asciidoctor-extensions-spring-boot>0.6.0</asciidoctor-extensions-spring-boot>
-    <maven-deploy-plugin.version>3.0.0-M2</maven-deploy-plugin.version>
+    <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-    <maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
-    <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+    <maven-shade-plugin.version>3.4.0</maven-shade-plugin.version>
+    <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
     <skuzzle-imports-enforcer.version>2.0.0</skuzzle-imports-enforcer.version>
-    <nexus-staging-maven-plugin.version>1.6.12</nexus-staging-maven-plugin.version>
-    <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
-    <spotless-plugin.version>2.22.4</spotless-plugin.version>
-    <versions-plugin.version>2.10.0</versions-plugin.version>
+    <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+    <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
+    <spotless-plugin.version>2.27.1</spotless-plugin.version>
+    <versions-plugin.version>2.12.0</versions-plugin.version>
   </properties>
 
   <scm>

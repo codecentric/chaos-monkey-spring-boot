@@ -28,12 +28,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.TaskScheduler;
@@ -47,7 +47,7 @@ import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.List;
 
-@Configuration
+@AutoConfiguration
 @Conditional(ChaosMonkeyCondition.class)
 @EnableConfigurationProperties({ChaosMonkeyProperties.class, AssaultProperties.class, WatcherProperties.class})
 @Import({UnleashChaosConfiguration.class, ChaosMonkeyWebClientConfiguration.class, ChaosMonkeyRestTemplateConfiguration.class,
@@ -97,38 +97,38 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public LatencyAssault latencyAssault() {
-        return new LatencyAssault(settings(), publisher());
+    public LatencyAssault latencyAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher) {
+        return new LatencyAssault(settings, publisher);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ExceptionAssault exceptionAssault() {
-        return new ExceptionAssault(settings(), publisher());
+    public ExceptionAssault exceptionAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher) {
+        return new ExceptionAssault(settings, publisher);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public KillAppAssault killAppAssault() {
-        return new KillAppAssault(settings(), publisher());
+    public KillAppAssault killAppAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher) {
+        return new KillAppAssault(settings, publisher);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public MemoryAssault memoryAssault() {
-        return new MemoryAssault(Runtime.getRuntime(), settings(), publisher());
+    public MemoryAssault memoryAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher) {
+        return new MemoryAssault(Runtime.getRuntime(), settings, publisher);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public CpuAssault cpuAssault() {
-        return new CpuAssault(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings(), publisher());
+    public CpuAssault cpuAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher) {
+        return new CpuAssault(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class), settings, publisher);
     }
 
     @Bean
     public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults,
-            ChaosToggles chaosToggles, ChaosToggleNameMapper chaosToggleNameMapper) {
-        return new ChaosMonkeyRequestScope(settings(), chaosMonkeyAssaults, allAssaults, publisher(), chaosToggles, chaosToggleNameMapper);
+            ChaosToggles chaosToggles, ChaosToggleNameMapper chaosToggleNameMapper, ChaosMonkeySettings settings, MetricEventPublisher publisher) {
+        return new ChaosMonkeyRequestScope(settings, chaosMonkeyAssaults, allAssaults, publisher, chaosToggles, chaosToggleNameMapper);
     }
 
     @Bean
@@ -157,21 +157,22 @@ public class ChaosMonkeyConfiguration {
     }
 
     @Bean
-    public ChaosMonkeyRuntimeScope chaosMonkeyRuntimeScope(List<ChaosMonkeyRuntimeAssault> chaosMonkeyAssaults) {
-        return new ChaosMonkeyRuntimeScope(settings(), chaosMonkeyAssaults);
+    public ChaosMonkeyRuntimeScope chaosMonkeyRuntimeScope(ChaosMonkeySettings settings, List<ChaosMonkeyRuntimeAssault> chaosMonkeyAssaults) {
+        return new ChaosMonkeyRuntimeScope(settings, chaosMonkeyAssaults);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint
-    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(ChaosMonkeyRuntimeScope runtimeScope, ChaosMonkeyScheduler scheduler) {
-        return new ChaosMonkeyRestEndpoint(settings(), runtimeScope, scheduler);
+    public ChaosMonkeyRestEndpoint chaosMonkeyRestEndpoint(ChaosMonkeySettings settings, ChaosMonkeyRuntimeScope runtimeScope,
+            ChaosMonkeyScheduler scheduler) {
+        return new ChaosMonkeyRestEndpoint(settings, runtimeScope, scheduler);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint
-    public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint() {
-        return new ChaosMonkeyJmxEndpoint(settings());
+    public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint(ChaosMonkeySettings settings) {
+        return new ChaosMonkeyJmxEndpoint(settings);
     }
 }
