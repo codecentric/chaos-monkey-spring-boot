@@ -37,9 +37,9 @@
 
     <!-- Dependency versions - use ./mvnw versions:update-properties to update-->
     <!-- spring versions -->
-    <spring-boot.version>2.7.4</spring-boot.version>
-    <spring-cloud.version>2021.0.4</spring-cloud.version>
-    <spring-doc.version>1.6.11</spring-doc.version>
+    <spring-boot.version>2.7.5</spring-boot.version>
+    <spring-cloud.version>2021.0.5</spring-cloud.version>
+    <spring-doc.version>1.6.12</spring-doc.version>
 
     <!-- dependency versions -->
     <unleash.version>5.1.0</unleash.version>
