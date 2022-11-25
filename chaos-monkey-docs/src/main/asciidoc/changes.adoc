@@ -8,20 +8,13 @@ Built with Spring Boot {spring-boot-version}
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/320[#320] Added Spring actuator health watcher property to documentation.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/329[#329] https://github.com/codecentric/chaos-monkey-spring-boot/pull/330[#330] https://github.com/codecentric/chaos-monkey-spring-boot/pull/331[#331] Upgrade to Spring Boot 2.7.6 and bump dependencies versions
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
- - https://github.com/codecentric/chaos-monkey-spring-boot/pull/324[#324] Allow overriding of chaos monkey beans for custom extensions.
- - https://github.com/codecentric/chaos-monkey-spring-boot/pull/327[#327] Add optional springdoc-openapi group for chaos monkey endpoints.
 
 === Contributors
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
-- https://github.com/ZengLawrence[@ZengLawrence]
-- https://github.com/F43nd1r[@F43nd1r]
-- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!
