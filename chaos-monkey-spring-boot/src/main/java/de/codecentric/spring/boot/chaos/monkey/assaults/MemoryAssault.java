@@ -119,12 +119,9 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
     private int getBytesToSteal() {
         int amount = (int) (runtime.freeMemory() * settings.getAssaultProperties().getMemoryFillIncrementFraction());
-        boolean isJava8 = System.getProperty("java.version").startsWith("1.8");
-
-        // TODO: Check again when JAVA 8 can be dropped.
-        // seems filling more than 256 MB per slice is bad on java 8
+        // Seems filling more than 256 MB per slice is bad on java 8 & 17
         // we keep running into heap errors and other OOMs.
-        return isJava8 ? Math.min(SizeConverter.toBytes(256), amount) : amount;
+        return Math.min(SizeConverter.toBytes(256), amount);
     }
 
     private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal, int bytesToSteal) {
