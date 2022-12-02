@@ -25,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -37,7 +39,8 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/home").permitAll().anyRequest().authenticated().and().httpBasic().and().logout().permitAll();
+        http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/", "/home").permitAll().anyRequest().authenticated())
+                .httpBasic(withDefaults());
         return http.build();
     }
 
