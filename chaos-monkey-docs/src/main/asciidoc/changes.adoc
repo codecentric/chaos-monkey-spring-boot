@@ -11,6 +11,11 @@ Built with Spring Boot {spring-boot-version}
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+* https://github.com/codecentric/chaos-monkey-spring-boot/pull/332[#332] *Breaking💥*: Upgrade to Spring Boot 3.0
+** Upgrade to Java 17
+** Upgrade to Jakarta EE 10
+** Remove deprecated `AssaultCronExpression` -> use `Cpu/Memory/KillApplicationCronExpressions`
+
 
 === Contributors
 This release was only possible because of these great humans ❤️:
