@@ -161,8 +161,6 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
     @Override
     public String getCronExpression(AssaultProperties assaultProperties) {
-        return assaultProperties.getMemoryCronExpression() != null
-                ? assaultProperties.getMemoryCronExpression()
-                : assaultProperties.getRuntimeAssaultCronExpression();
+        return assaultProperties.getMemoryCronExpression();
     }
 }

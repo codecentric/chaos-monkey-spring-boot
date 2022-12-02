@@ -160,7 +160,6 @@ public class AssaultPropertiesUpdate {
         applyTo(cpuLoadTargetFraction, t::setCpuLoadTargetFraction);
         applyTo(cpuCronExpression, t::setCpuCronExpression);
 
-        applyTo(runtimeAssaultCronExpression, t::setRuntimeAssaultCronExpression);
         applyTo(watchedCustomServices, t::setWatchedCustomServices);
     }
 }
