@@ -271,8 +271,18 @@
   <description>Chaos Monkey for Spring Boot parent project</description>
   <developers>
     <developer>
-      <email>benjamin.wilms@codecentric.de</email>
-      <name>Benjamin Wilms</name>
+      <email>manuel.wessner@codecentric.de</email>
+      <name>Manuel Wessner</name>
+      <organization>codecentric AG</organization>
+    </developer>
+    <developer>
+      <email>lukas.morawietz@codecentric.de</email>
+      <name>Lukas Morawietz</name>
+      <organization>codecentric AG</organization>
+    </developer>
+    <developer>
+      <email>marcel.becker@codecentric.de</email>
+      <name>Marcel Becker</name>
       <organization>codecentric AG</organization>
     </developer>
   </developers>
