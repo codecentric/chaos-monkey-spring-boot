@@ -9,8 +9,18 @@
   <url>https://github.com/codecentric/chaos-monkey-spring-boot/chaos-monkey-dependencies/chaos-monkey-spring-boot</url>
   <developers>
     <developer>
-      <name>Benjamin Wilms</name>
-      <email>benjamin.wilms@codecentric.de</email>
+      <name>Manuel Wessner</name>
+      <email>manuel.wessner@codecentric.de</email>
+      <organization>codecentric AG</organization>
+    </developer>
+    <developer>
+      <name>Lukas Morawietz</name>
+      <email>lukas.morawietz@codecentric.de</email>
+      <organization>codecentric AG</organization>
+    </developer>
+    <developer>
+      <name>Marcel Becker</name>
+      <email>marcel.becker@codecentric.de</email>
       <organization>codecentric AG</organization>
     </developer>
   </developers>
