@@ -1,0 +1,11 @@
+# The same is used in dev containers, its more lightweight than https://hub.docker.com/r/gitpod/workspace-full
+image: mcr.microsoft.com/devcontainers/java:17
+tasks:
+  - name: Install dependencies and run tests
+    init: mvnw verify
+vscode:
+  # Please also update .devcontainer/devcontainer.json extensions
+  extensions:
+    - vscjava.vscode-java-pack
+    - gabrielbb.vscode-lombok
+    - pivotal.vscode-boot-dev-pack
