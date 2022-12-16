@@ -1,0 +1,11 @@
+image:
+  file: .gitpod/Dockerfile
+tasks:
+  - name: Install dependencies and run tests
+    init: ./mvnw verify
+vscode:
+  # Please also update .devcontainer/devcontainer.json extensions
+  extensions:
+    - vscjava.vscode-java-pack
+    - gabrielbb.vscode-lombok
+    - pivotal.vscode-boot-dev-pack
