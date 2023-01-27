@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,8 +104,8 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "jdbcRepositoryPointcdutAdvisor")
-    public ChaosMonkeyPointcutAdvisor jdbcRepositoryPointcdutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
+    @ConditionalOnMissingBean(name = "jdbcRepositoryPointcutAdvisor")
+    public ChaosMonkeyPointcutAdvisor jdbcRepositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
                 new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.REPOSITORY, watcherProperties::isRepository),
