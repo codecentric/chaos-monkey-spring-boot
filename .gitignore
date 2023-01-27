@@ -36,7 +36,6 @@ target/
 .*.md.html
 .DS_Store
 .springBeans
-.flattened-pom.xml
 .vscode/
 .classpath
 .factorypath

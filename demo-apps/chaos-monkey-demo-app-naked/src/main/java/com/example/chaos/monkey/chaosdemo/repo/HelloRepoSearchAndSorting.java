@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package com.example.chaos.monkey.chaosdemo.repo;
 
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 /** @author Benjamin Wilms */
 @Repository
-public interface HelloRepoSearchAndSorting extends PagingAndSortingRepository<Hello, Long> {
+public interface HelloRepoSearchAndSorting extends PagingAndSortingRepository<Hello, Long>, CrudRepository<Hello, Long> {
 }

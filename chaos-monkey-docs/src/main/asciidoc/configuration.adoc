@@ -127,12 +127,7 @@ You can decide which attacks you want to run and which parts of your application
 |0.9
 
 |chaos.monkey.assaults.cpu.cron.expression
-|**DEPRECATED** Cron expression like `*/1 * * * * ?` can be set to enable chaos monkey cpu assault on a schedule
-|Any valid cron expression (or OFF)
-|OFF
-
-|chaos.monkey.assaults.runtime.scope.assault.cron.expression
-|Cron expression like `*/1 * * * * ?` can be set to enable chaos monkey runtime assaults on a schedule
+|Cron expression like `*/1 * * * * ?` can be set to enable chaos monkey cpu assault on a schedule
 |Any valid cron expression (or OFF)
 |OFF
 

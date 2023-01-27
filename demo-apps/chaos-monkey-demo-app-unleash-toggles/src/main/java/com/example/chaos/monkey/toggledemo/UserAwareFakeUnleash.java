@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.getunleash.UnleashContext;
 import io.getunleash.UnleashContextProvider;
 import io.getunleash.Variant;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 /**
  * Note implementing your own Unleash isn't typically needed. But for the
@@ -55,6 +56,11 @@ public class UserAwareFakeUnleash implements Unleash {
     @Override
     public boolean isEnabled(String s, boolean b) {
         return fakeUnleash.isEnabled(s, b);
+    }
+
+    @Override
+    public boolean isEnabled(String toggleName, UnleashContext context, BiPredicate<String, UnleashContext> fallbackAction) {
+        return fakeUnleash.isEnabled(toggleName, context, fallbackAction);
     }
 
     @Override

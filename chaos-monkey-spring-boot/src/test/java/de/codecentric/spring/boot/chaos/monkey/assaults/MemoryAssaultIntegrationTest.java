@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,12 +89,12 @@ class MemoryAssaultIntegrationTest {
         Thread backgroundThread = new Thread(memoryAssault::attack);
         backgroundThread.start();
 
-        // make sure we timeout if we never reach the target fill fraction
+        // make sure we time out if we never reach the target fill fraction
         while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
             // if we reach target approximately (memory filled up
             // correctly) we can return (test is successful)
             double target = rt.maxMemory() * memoryFillTargetFraction;
-            if (isInRange(rt.totalMemory(), target, 0.2)) {
+            if (isInRange(rt.totalMemory(), target)) {
                 return;
             }
         }
@@ -110,14 +110,14 @@ class MemoryAssaultIntegrationTest {
      *
      * @param value
      *            value to check against target if its in range
-     * @param deviationFactor
-     *            factor in percentage (10% = 0.1) of how much value is allowed to
-     *            deviate from target
      * @param target
      *            value against value is checked against
      * @return true if in range
      */
-    private boolean isInRange(double value, double target, double deviationFactor) {
+    private boolean isInRange(double value, double target) {
+        // factor in percentage (10% = 0.1) of how much value is allowed to deviate from
+        // target
+        double deviationFactor = 0.2;
         double deviation = target * deviationFactor;
         double lowerBoundary = Math.max(target - deviation, 0);
         double upperBoundary = Math.max(target + deviation, Runtime.getRuntime().maxMemory());
@@ -144,7 +144,7 @@ class MemoryAssaultIntegrationTest {
         assertTrue(usedMemoryBeforeAttack <= usedMemoryDuringAttack);
 
         ResponseEntity<String> result = restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
-        assertEquals(200, result.getStatusCodeValue());
+        assertEquals(200, result.getStatusCode().value());
 
         while (backgroundThread.isAlive() && System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
             // wait for thread to finish gracefully or time out
@@ -152,13 +152,12 @@ class MemoryAssaultIntegrationTest {
 
         assertFalse("Assault is still running", backgroundThread.isAlive());
 
-        // TODO: Check again when JAVA 8 can be dropped.
-        // Apparently java 8 needs a bit more time to finish up things
+        // Apparently java needs a bit more time to finish up things
         Thread.sleep(1000);
 
         long usedMemoryAfterAttack = rt.totalMemory() - rt.freeMemory();
 
-        // garbage collection should have ran by now
+        // garbage collection should have run by now
         assertTrue(usedMemoryAfterAttack <= usedMemoryDuringAttack, "Memory after attack was " + SizeConverter.toMegabytes(usedMemoryAfterAttack)
                 + " MB but should have been less  amount of memory during attack (" + SizeConverter.toMegabytes(usedMemoryDuringAttack) + " MB).");
     }
@@ -181,7 +180,7 @@ class MemoryAssaultIntegrationTest {
             double fillTargetMemory = rt.maxMemory() * memoryFillTargetFraction;
             while (System.nanoTime() - start < TimeUnit.SECONDS.toNanos(30)) {
                 long totalMemoryDuringAttack = rt.totalMemory();
-                if (isInRange(totalMemoryDuringAttack, fillTargetMemory, 0.2)) {
+                if (isInRange(totalMemoryDuringAttack, fillTargetMemory)) {
                     break outer;
                 }
             }
@@ -191,10 +190,9 @@ class MemoryAssaultIntegrationTest {
         }
 
         ResponseEntity<String> result = restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
-        assertEquals(200, result.getStatusCodeValue(), "Request was not successful");
+        assertEquals(200, result.getStatusCode().value(), "Request was not successful");
 
-        // TODO: Check again when JAVA 8 can be dropped.
-        // Apparently java 8 needs a bit more time to finish up things
+        // Apparently java needs a bit more time to finish up things
         Thread.sleep(1000);
 
         assertFalse("Assault is still running", backgroundThread.isAlive());
