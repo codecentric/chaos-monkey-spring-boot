@@ -4,7 +4,7 @@
   <groupId>de.codecentric</groupId>
   <artifactId>chaos-monkey-spring-boot</artifactId>
   <name>Chaos Monkey for Spring Boot</name>
-  <version>2.7.1-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <description>Chaos Monkey for Spring Boot</description>
   <url>https://github.com/codecentric/chaos-monkey-spring-boot/chaos-monkey-dependencies/chaos-monkey-spring-boot</url>
   <developers>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-context</artifactId>
-      <version>4.0.0-RC3</version>
+      <version>4.0.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -75,13 +75,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webflux</artifactId>
-      <version>6.0.2</version>
+      <version>6.0.4</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -100,7 +100,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.9.1</version>
+      <version>5.9.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -120,7 +120,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.1</version>
+      <version>5.9.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -136,7 +136,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -168,7 +168,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -208,7 +208,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -238,7 +238,7 @@
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-http</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
