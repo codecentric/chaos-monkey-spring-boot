@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,28 +22,24 @@ import org.springframework.context.ApplicationListener;
 /** @author Benjamin Wilms */
 public class Metrics implements ApplicationListener<MetricEvent> {
 
-    private MeterRegistry meterRegistry;
+    private final MeterRegistry meterRegistry;
 
     public Metrics() {
         this.meterRegistry = io.micrometer.core.instrument.Metrics.globalRegistry;
     }
 
     private void counter(MetricType type, String... tags) {
-        if (meterRegistry != null && tags != null) {
+        if (tags != null) {
             meterRegistry.counter(type.getMetricName(), tags).increment();
         }
     }
 
     private void counterWatcher(MetricType type, String name) {
-        if (meterRegistry != null) {
-            meterRegistry.counter(type.getMetricName() + ".watcher", "component", extractComponent(name)).increment();
-        }
+        meterRegistry.counter(type.getMetricName() + ".watcher", "component", extractComponent(name)).increment();
     }
 
     private void gauge(MetricType type, double number) {
-        if (meterRegistry != null) {
-            meterRegistry.gauge(type.getMetricName() + ".gauge.", number);
-        }
+        meterRegistry.gauge(type.getMetricName() + ".gauge.", number);
     }
 
     private String extractComponent(String name) {
