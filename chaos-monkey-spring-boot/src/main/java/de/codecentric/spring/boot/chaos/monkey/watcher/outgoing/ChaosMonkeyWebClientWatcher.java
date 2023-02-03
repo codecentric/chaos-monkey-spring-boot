@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -82,12 +80,7 @@ public class ChaosMonkeyWebClientWatcher implements ExchangeFilterFunction {
         return new RequestFilterWrapper(request, filter);
     }
 
-    @Data
-    @AllArgsConstructor
-    private static class RequestFilterWrapper {
-
-        private final ClientRequest clientRequest;
-        private final Boolean filter;
+    private record RequestFilterWrapper(ClientRequest clientRequest, Boolean filter) {
     }
 
     static class ErrorClientResponse {

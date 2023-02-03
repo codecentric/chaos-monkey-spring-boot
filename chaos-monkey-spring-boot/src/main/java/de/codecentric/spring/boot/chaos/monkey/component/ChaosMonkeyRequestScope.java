@@ -24,14 +24,18 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ */
 public class ChaosMonkeyRequestScope {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
@@ -113,16 +117,12 @@ public class ChaosMonkeyRequestScope {
         return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled() && chaosToggles.isEnabled(chaosToggleNameMapper.mapName(type, name));
     }
 
-    private static class RequestAssaultAdapter implements ChaosMonkeyRequestAssault {
+    private record RequestAssaultAdapter(ChaosMonkeyAssault rawAssault) implements ChaosMonkeyRequestAssault {
 
         private static final Logger Logger = LoggerFactory.getLogger(RequestAssaultAdapter.class);
 
-        private final ChaosMonkeyAssault rawAssault;
-
-        private RequestAssaultAdapter(ChaosMonkeyAssault rawAssault) {
+        private RequestAssaultAdapter {
             Logger.warn("Adapting a " + rawAssault.getClass().getSimpleName() + " into a request assault. The class should extend its proper parent");
-
-            this.rawAssault = rawAssault;
         }
 
         @Override
