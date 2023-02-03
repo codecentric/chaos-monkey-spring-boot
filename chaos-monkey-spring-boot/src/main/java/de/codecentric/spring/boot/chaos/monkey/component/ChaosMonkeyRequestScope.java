@@ -49,7 +49,7 @@ public class ChaosMonkeyRequestScope {
             ChaosToggleNameMapper chaosToggleNameMapper) {
         List<RequestAssaultAdapter> assaultAdapters = legacyAssaults.stream()
                 .filter(it -> !(it instanceof ChaosMonkeyRequestAssault || it instanceof ChaosMonkeyRuntimeAssault)).map(RequestAssaultAdapter::new)
-                .collect(Collectors.toList());
+                .toList();
         List<ChaosMonkeyRequestAssault> requestAssaults = new ArrayList<>();
         requestAssaults.addAll(assaults);
         requestAssaults.addAll(assaultAdapters);
