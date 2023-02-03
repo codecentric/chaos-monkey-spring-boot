@@ -35,6 +35,9 @@ public class Hello {
         this.message = message;
     }
 
+    public Hello() {
+    }
+
     public long getId() {
         return id;
     }
