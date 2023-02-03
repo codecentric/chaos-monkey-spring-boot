@@ -25,6 +25,7 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonke
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonkeyPointcutAdvisor;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.ChaosMonkeyBaseClassFilter;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.MethodNameFilter;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.RepositoryAnnotatedClassFilter;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.SpringHookMethodsFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -37,7 +38,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -107,9 +107,9 @@ public class ChaosMonkeyAdvisorConfiguration {
     @ConditionalOnMissingBean(name = "jdbcRepositoryPointcutAdvisor")
     public ChaosMonkeyPointcutAdvisor jdbcRepositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
-        return new ChaosMonkeyAnnotationPointcutAdvisor(baseClassFilter,
+        return new ChaosMonkeyPointcutAdvisor(baseClassFilter,
                 new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.REPOSITORY, watcherProperties::isRepository),
-                Repository.class);
+                new RepositoryAnnotatedClassFilter());
     }
 
     @Bean
