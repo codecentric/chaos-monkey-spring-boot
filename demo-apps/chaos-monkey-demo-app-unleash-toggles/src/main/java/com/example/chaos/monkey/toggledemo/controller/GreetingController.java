@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package com.example.chaos.monkey.toggledemo.controller;
 
 import com.example.chaos.monkey.toggledemo.component.HelloComponent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +24,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class GreetingController {
 
-    @Autowired
-    private HelloComponent helloComponent;
+    private final HelloComponent helloComponent;
+
+    public GreetingController(HelloComponent helloComponent) {
+        this.helloComponent = helloComponent;
+    }
 
     @GetMapping("/helloagain")
     public ResponseEntity<String> sayHello() {
