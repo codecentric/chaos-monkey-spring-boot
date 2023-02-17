@@ -6,6 +6,7 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html[Spr
 
 '''
 
+[#_enable_chaosmonkey_endpoint]
 === Enable chaosmonkey endpoint
 [source,txt,subs="verbatim,attributes",role="primary"]
 .application.properties:
