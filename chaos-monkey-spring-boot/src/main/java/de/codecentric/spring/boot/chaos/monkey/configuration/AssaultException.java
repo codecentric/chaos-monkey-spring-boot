@@ -134,20 +134,14 @@ public class AssaultException {
         Throwable create(List<?> arguments) throws ReflectiveOperationException;
     }
 
-    @RequiredArgsConstructor
-    private static class ThrowableConstructor implements ThrowableCreator {
-        private final Constructor<? extends Throwable> constructor;
-
+    private record ThrowableConstructor(Constructor<? extends Throwable> constructor) implements ThrowableCreator {
         @Override
         public Throwable create(List<?> arguments) throws ReflectiveOperationException {
             return constructor.newInstance(arguments.toArray());
         }
     }
 
-    @RequiredArgsConstructor
-    private static class ThrowableStaticInitializer implements ThrowableCreator {
-        private final Method initializer;
-
+    private record ThrowableStaticInitializer(Method initializer) implements ThrowableCreator {
         @Override
         public Throwable create(List<?> arguments) throws ReflectiveOperationException {
             return (Throwable) initializer.invoke(null, arguments.toArray());

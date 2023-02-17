@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,5 +31,5 @@ public class SpringHookMethodsFilter extends StaticMethodMatcher {
                 && !FactoryBean.class.isAssignableFrom(targetClass);
     }
 
-    public static SpringHookMethodsFilter INSTANCE = new SpringHookMethodsFilter();
+    public static final SpringHookMethodsFilter INSTANCE = new SpringHookMethodsFilter();
 }

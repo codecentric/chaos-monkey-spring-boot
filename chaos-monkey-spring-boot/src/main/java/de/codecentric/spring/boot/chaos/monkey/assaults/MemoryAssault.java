@@ -76,8 +76,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     }
 
     private void eatFreeMemory() {
-        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-        Vector<byte[]> memoryVector = new Vector<>();
+        var memoryVector = new Vector<byte[]>();
 
         long stolenMemoryTotal = 0L;
 

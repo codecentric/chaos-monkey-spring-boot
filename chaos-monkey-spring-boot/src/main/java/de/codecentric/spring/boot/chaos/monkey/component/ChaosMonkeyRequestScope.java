@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,18 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** @author Benjamin Wilms */
+/**
+ * @author Benjamin Wilms
+ */
 public class ChaosMonkeyRequestScope {
 
     private final ChaosMonkeySettings chaosMonkeySettings;
@@ -40,7 +44,7 @@ public class ChaosMonkeyRequestScope {
     private final ChaosToggles chaosToggles;
     private final ChaosToggleNameMapper chaosToggleNameMapper;
 
-    private MetricEventPublisher metricEventPublisher;
+    private final MetricEventPublisher metricEventPublisher;
 
     private final AtomicInteger assaultCounter;
 
@@ -49,7 +53,7 @@ public class ChaosMonkeyRequestScope {
             ChaosToggleNameMapper chaosToggleNameMapper) {
         List<RequestAssaultAdapter> assaultAdapters = legacyAssaults.stream()
                 .filter(it -> !(it instanceof ChaosMonkeyRequestAssault || it instanceof ChaosMonkeyRuntimeAssault)).map(RequestAssaultAdapter::new)
-                .collect(Collectors.toList());
+                .toList();
         List<ChaosMonkeyRequestAssault> requestAssaults = new ArrayList<>();
         requestAssaults.addAll(assaults);
         requestAssaults.addAll(assaultAdapters);
@@ -113,16 +117,12 @@ public class ChaosMonkeyRequestScope {
         return this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled() && chaosToggles.isEnabled(chaosToggleNameMapper.mapName(type, name));
     }
 
-    private static class RequestAssaultAdapter implements ChaosMonkeyRequestAssault {
+    private record RequestAssaultAdapter(ChaosMonkeyAssault rawAssault) implements ChaosMonkeyRequestAssault {
 
         private static final Logger Logger = LoggerFactory.getLogger(RequestAssaultAdapter.class);
 
-        private final ChaosMonkeyAssault rawAssault;
-
-        private RequestAssaultAdapter(ChaosMonkeyAssault rawAssault) {
+        private RequestAssaultAdapter {
             Logger.warn("Adapting a " + rawAssault.getClass().getSimpleName() + " into a request assault. The class should extend its proper parent");
-
-            this.rawAssault = rawAssault;
         }
 
         @Override
