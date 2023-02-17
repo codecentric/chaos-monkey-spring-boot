@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package de.codecentric.spring.boot.chaos.monkey.events;
 
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.context.ApplicationEvent;
 
 /** @author Benjamin Wilms */
@@ -48,7 +47,7 @@ public class MetricEvent extends ApplicationEvent {
     }
 
     public MetricEvent(Object source, MetricType metricType, String... tags) {
-        this(source, metricType, -1, null);
+        this(source, metricType, -1, null, tags);
     }
 
     public MetricEvent(Object source, MetricType metricType, long metricValue, String methodSignature, String... tags) {
@@ -73,9 +72,5 @@ public class MetricEvent extends ApplicationEvent {
 
     public double getMetricValue() {
         return metricValue;
-    }
-
-    public AtomicInteger getGaugeValue() {
-        return new AtomicInteger((int) metricValue);
     }
 }
