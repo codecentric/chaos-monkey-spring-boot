@@ -5,25 +5,16 @@ Built with Spring Boot {spring-boot-version}
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/337[#337]: Jdbc repository watcher wasn't working in most cases.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/340[#340] Improve uniqueness of beans provided by Chaos Monkey
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-* https://github.com/codecentric/chaos-monkey-spring-boot/pull/333[#333] *Breaking💥*: Upgrade to Spring Boot 3.0
-** Upgrade to Java 17
-** Upgrade to Jakarta EE 10
-** Remove deprecated `AssaultCronExpression` -> use `Cpu/Memory/KillApplicationCronExpressions`
-
 
 === Contributors
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
- - https://github.com/WtfJoke[@WtfJoke]
- - https://github.com/F43nd1r[@F43nd1r]
 
 Thank you for your support!
