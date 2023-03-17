@@ -679,7 +679,7 @@ window.onload = function() {
 <div id="header">
 <h1>Chaos Monkey for Spring Boot Reference Guide</h1>
 <div class="details">
-<span id="revnumber">version 2.7.1,</span>
+<span id="revnumber">version 3.0.0,</span>
 <span id="revdate">17.03.2023</span>
 </div>
 <div id="toc" class="toc2">
@@ -778,7 +778,7 @@ window.onload = function() {
 <li><a href="#_when_i_add_chaos_monkey_i_get_a_nullpointerexception_on_startup">8.2. When I add chaos monkey I get a <code>NullpointerException</code> on startup</a></li>
 </ul>
 </li>
-<li><a href="#changes">9. Changes in 2.7.1</a>
+<li><a href="#changes">9. Changes in 3.0.0</a>
 <ul class="sectlevel2">
 <li><a href="#_bug_fixes">9.1. Bug Fixes</a></li>
 <li><a href="#_improvements">9.2. Improvements</a></li>
@@ -809,20 +809,20 @@ window.onload = function() {
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.7.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:2.7.1</span><span class="delimiter">'</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:3.0.0</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:2.7.1&quot;)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:3.0.0&quot;)</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -883,20 +883,20 @@ If you want to use the latest snapshot version, add the sonatype staging reposit
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.7.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:2.7.1:jar-with-dependencies</span><span class="delimiter">'</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:3.0.0:jar-with-dependencies</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:2.7.1:jar-with-dependencies&quot;)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:3.0.0:jar-with-dependencies&quot;)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -906,7 +906,7 @@ If you want to use the latest snapshot version, add the sonatype staging reposit
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-2.7.1-jar-with-dependencies.jar
+    -Dloader.path=chaos-monkey-spring-boot-3.0.0-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -1870,13 +1870,7 @@ You can decide which attacks you want to run and which parts of your application
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.cpu.cron.expression</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>DEPRECATED</strong> Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey cpu assault on a schedule</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.assaults.runtime.scope.assault.cron.expression</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey runtime assaults on a schedule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cron expression like <code>*/1 * * * * ?</code> can be set to enable chaos monkey cpu assault on a schedule</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any valid cron expression (or OFF)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OFF</p></td>
 </tr>
@@ -2457,10 +2451,10 @@ To prevent these classes from being proxied, you can either:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 2.7.1</a></h2>
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 3.0.0</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Built with Spring Boot 2.7.9</p>
+<p>Built with Spring Boot 3.0.4</p>
 </div>
 <div class="sect2">
 <h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">9.1. Bug Fixes</a></h3>
@@ -2481,7 +2475,26 @@ To prevent these classes from being proxied, you can either:</p>
 </div>
 <div class="sect2">
 <h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">9.3. New Features</a></h3>
-
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/333">#333</a> <strong>Breaking💥</strong>: Upgrade to Spring Boot 3.0</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Upgrade to Java 17</p>
+</li>
+<li>
+<p>Upgrade to Jakarta EE 10</p>
+</li>
+<li>
+<p>Remove deprecated <code>AssaultCronExpression</code> &#8594; use <code>Cpu/Memory/KillApplicationCronExpressions</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">9.4. Contributors</a></h3>
@@ -2507,7 +2520,7 @@ To prevent these classes from being proxied, you can either:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.7.1<br>
+Version 3.0.0<br>
 </div>
 </div>
 </body>
