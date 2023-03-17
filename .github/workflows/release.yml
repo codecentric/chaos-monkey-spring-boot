@@ -15,10 +15,8 @@ jobs:
       VERSION: ${{ github.event.inputs.version }}
 
     steps:
-      - name: Install semver
-        run: sudo apt-get install -y node-semver
       - name: Validate is valid version
-        run: semver $VERSION
+        run: npx -y semver $VERSION
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # need git history for spotless license header
@@ -40,7 +38,7 @@ jobs:
           git tag -a -m "Release $VERSION" v$VERSION
       - name: Move to next Snapshot
         run: |
-          NEXT_VERSION=`semver $VERSION -i`-SNAPSHOT
+          NEXT_VERSION=`npx -y semver $VERSION -i`-SNAPSHOT
           ./mvnw versions:set-property -Dproperty=revision -DnewVersion=$NEXT_VERSION
           cp chaos-monkey-docs/src/main/asciidoc/changes.adoc.template chaos-monkey-docs/src/main/asciidoc/changes.adoc
           git commit -m "Prepare for next version: $NEXT_VERSION" -o pom.xml chaos-monkey-docs/src/main/asciidoc/changes.adoc
