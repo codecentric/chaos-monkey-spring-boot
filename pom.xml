@@ -45,7 +45,7 @@
     <unleash.version>7.1.0</unleash.version>
 
     <!-- plugin versions-->
-    <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
     <git-commit-id-plugin.version>5.0.0</git-commit-id-plugin.version>
     <asciidoctor-maven-plugin.version>2.2.3</asciidoctor-maven-plugin.version>
     <asciidoctor-extensions-spring-boot>0.6.1</asciidoctor-extensions-spring-boot>
