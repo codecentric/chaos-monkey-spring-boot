@@ -39,7 +39,7 @@
     <!-- spring versions -->
     <spring-boot.version>3.0.6</spring-boot.version>
     <spring-cloud.version>2022.0.2</spring-cloud.version>
-    <spring-doc.version>1.6.15</spring-doc.version>
+    <spring-doc.version>1.7.0</spring-doc.version>
 
     <!-- dependency versions -->
     <unleash.version>7.1.0</unleash.version>
