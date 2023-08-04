@@ -8,15 +8,13 @@ Built with Spring Boot {spring-boot-version}
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/compare/92d59a0a997bbd57a17f1b2574bf86ddd2df1652...0dd7e53adfedc239a44c528b62e3b9c4c95829f0[92d59a0...0dd7e53] Updated dependencies
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors
-This release was only possible because of these great robots ❤️:
+This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
-- https://github.com/renovatebot/[@renovate]
 
 Thank you for your support!
