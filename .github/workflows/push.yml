@@ -37,7 +37,7 @@ jobs:
       - name: Run Maven verify
         run: ./mvnw verify -B
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
   deploy:
     needs: build
