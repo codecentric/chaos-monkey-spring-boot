@@ -27,7 +27,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@ConditionalOnProperty(prefix = "chaos.monkey.watcher", value = "rest-template", havingValue = "true")
 @ConditionalOnClass(value = RestTemplate.class)
 class ChaosMonkeyRestTemplateConfiguration {
 

@@ -27,7 +27,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-@ConditionalOnProperty(prefix = "chaos.monkey.watcher", value = "web-client", havingValue = "true")
 @ConditionalOnClass(value = WebClient.class)
 class ChaosMonkeyWebClientConfiguration {
 
