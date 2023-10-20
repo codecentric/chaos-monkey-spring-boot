@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,15 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.*;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import java.time.OffsetDateTime;
-import java.util.Objects;
+import de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,12 +31,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
+
+import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.Objects;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
@@ -131,6 +126,18 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals("Watcher config has changed", result.getBody());
+    }
+
+    @Test
+    void postWatcherConfigurationContainingClass() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>("{\"beanClasses\": [\"de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean\"]}", headers);
+        ResponseEntity<String> result = testRestTemplate.postForEntity(baseUrl + "/watchers", entity, String.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Watcher config has changed", result.getBody());
+        assertEquals(chaosMonkeySettings.getWatcherProperties().getBeanClasses(), Collections.singletonList(DemoBean.class));
     }
 
     // Assault Tests
