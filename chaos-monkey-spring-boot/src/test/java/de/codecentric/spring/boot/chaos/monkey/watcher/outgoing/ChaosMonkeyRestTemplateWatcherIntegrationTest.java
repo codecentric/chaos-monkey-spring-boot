@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
-import static de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher.ErrorResponse.ERROR_BODY;
-import static de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyRestTemplateWatcher.ErrorResponse.ERROR_TEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -52,7 +50,10 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
     }
 
     @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.rest-template=true",
-            "chaos.monkey.assaults.exceptions-active=true"}, classes = {ChaosDemoApplication.class})
+            "chaos.monkey.assaults.exceptions-active=true",
+            "chaos.monkey.assaults.exception.type=org.springframework.web.client.HttpServerErrorException",
+            "chaos.monkey.assaults.exception.arguments[0].type=org.springframework.http.HttpStatusCode",
+            "chaos.monkey.assaults.exception.arguments[0].value=500"}, classes = {ChaosDemoApplication.class})
     @ActiveProfiles("chaos-monkey")
     @Nested
     class ExceptionAssaultIntegrationTest {
@@ -62,8 +63,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
         @Test
         public void testRestTemplateExceptionAssault() {
-            assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate())
-                    .hasMessage(500 + " " + ERROR_TEXT + ": \"" + ERROR_BODY + '"');
+            assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate()).hasMessage("500 INTERNAL_SERVER_ERROR");
         }
     }
 

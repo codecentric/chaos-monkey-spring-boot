@@ -43,7 +43,7 @@ class ChaosMonkeyRestTemplateConfiguration {
     @Bean
     @DependsOn("chaosMonkeyRequestScope")
     public ChaosMonkeyRestTemplateWatcher chaosMonkeyRestTemplateInterceptor(final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-            final WatcherProperties watcherProperties, final AssaultProperties assaultProperties) {
-        return new ChaosMonkeyRestTemplateWatcher(chaosMonkeyRequestScope, watcherProperties, assaultProperties);
+            final WatcherProperties watcherProperties) {
+        return new ChaosMonkeyRestTemplateWatcher(chaosMonkeyRequestScope, watcherProperties);
     }
 }

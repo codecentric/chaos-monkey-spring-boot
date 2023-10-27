@@ -43,7 +43,7 @@ class ChaosMonkeyWebClientConfiguration {
     @Bean
     @DependsOn("chaosMonkeyRequestScope")
     public ChaosMonkeyWebClientWatcher chaosMonkeyWebClientWatcher(final ChaosMonkeyRequestScope chaosMonkeyRequestScope,
-            final WatcherProperties watcherProperties, final AssaultProperties assaultProperties) {
-        return new ChaosMonkeyWebClientWatcher(chaosMonkeyRequestScope, watcherProperties, assaultProperties);
+            final WatcherProperties watcherProperties) {
+        return new ChaosMonkeyWebClientWatcher(chaosMonkeyRequestScope, watcherProperties);
     }
 }
