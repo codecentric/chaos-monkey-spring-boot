@@ -48,7 +48,7 @@
     <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
     <git-commit-id-plugin.version>6.0.0</git-commit-id-plugin.version>
     <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
-    <asciidoctor-extensions-spring-boot>0.6.2</asciidoctor-extensions-spring-boot>
+    <asciidoctor-extensions-spring-boot>0.6.3</asciidoctor-extensions-spring-boot>
     <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.6.0</maven-javadoc-plugin.version>
