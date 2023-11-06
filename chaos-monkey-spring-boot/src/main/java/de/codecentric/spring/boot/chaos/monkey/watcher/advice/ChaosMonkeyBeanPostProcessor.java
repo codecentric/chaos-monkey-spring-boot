@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,18 @@ public class ChaosMonkeyBeanPostProcessor extends AbstractAdvisingBeanPostProces
     public ChaosMonkeyBeanPostProcessor(WatcherProperties watcherProperties, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         this.watcherProperties = watcherProperties;
-        val advice = new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.BEAN,
-                (pjp) -> watcherProperties.getBeans().contains(activeBeanNameCache.get(pjp.getThis())));
+        val advice = new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.BEAN, (pjp) -> {
+            val bean = pjp.getThis();
+            return watcherProperties.getBeans().contains(activeBeanNameCache.get(bean))
+                    || watcherProperties.getBeanClasses().stream().anyMatch(clazz -> clazz.isInstance(bean));
+        });
         this.advisor = new DefaultPointcutAdvisor(new ComposablePointcut(SpringHookMethodsFilter.INSTANCE), advice);
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (watcherProperties.getBeans().contains(beanName)) {
+        if (watcherProperties.getBeans().contains(beanName)
+                || watcherProperties.getBeanClasses().stream().anyMatch(clazz -> clazz.isInstance(bean))) {
             Object proxy = super.postProcessAfterInitialization(bean, beanName);
             activeBeanNameCache.put(proxy, beanName);
             return proxy;

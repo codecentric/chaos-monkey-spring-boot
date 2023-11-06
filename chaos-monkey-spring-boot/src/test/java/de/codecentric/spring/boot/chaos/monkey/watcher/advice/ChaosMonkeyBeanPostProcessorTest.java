@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.bean.DemoBean;
 import java.util.Collections;
+
+import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,8 +66,27 @@ public class ChaosMonkeyBeanPostProcessorTest {
     }
 
     @Test
+    void chaosMonkeyIsCalledWhenClassInConfig() {
+        watcherProperties.setBeanClasses(Collections.singletonList(DemoBean.class));
+
+        callTargetMethod();
+
+        verifyDependenciesCalledXTimes(1);
+    }
+
+    @Test
+    void chaosMonkeyIsCalledWhenSuperClassInConfig() {
+        watcherProperties.setBeanClasses(Collections.singletonList(Object.class));
+
+        callTargetMethod();
+
+        verifyDependenciesCalledXTimes(1);
+    }
+
+    @Test
     void chaosMonkeyIsNotCalledWhenDisabledInConfig() {
         watcherProperties.setBeans(Collections.emptyList());
+        watcherProperties.setBeanClasses(Collections.emptyList());
 
         callTargetMethod();
 
@@ -75,6 +96,7 @@ public class ChaosMonkeyBeanPostProcessorTest {
     @Test
     void chaosMonkeyIsNotCalledWithUnrelatedBeansInConfig() {
         watcherProperties.setBeans(Collections.singletonList("demoComponent"));
+        watcherProperties.setBeanClasses(Collections.singletonList(DemoComponent.class));
 
         callTargetMethod();
 

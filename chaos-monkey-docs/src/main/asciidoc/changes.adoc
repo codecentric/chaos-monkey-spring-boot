@@ -11,11 +11,13 @@ Built with Spring Boot {spring-boot-version}
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === New Features
+ - https://github.com/codecentric/chaos-monkey-spring-boot/pull/408[#408] Watch beans by type
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Contributors
 This release was only possible because of these great humans ❤️:
 
+ - https://github.com/F43nd1r[@F43nd1r]
 // - https://github.com/octocat[@octocat]
 - https://github.com/F43nd1r[@F43nd1r]
 
