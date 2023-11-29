@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0 # need git history for spotless license header
           token: ${{ secrets.GH_TOKEN_CHAOS_BOT }}
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
