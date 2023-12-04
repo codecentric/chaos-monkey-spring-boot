@@ -59,7 +59,7 @@
     <skuzzle-imports-enforcer.version>2.4.0</skuzzle-imports-enforcer.version>
     <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-    <spotless-maven-plugin.version>2.41.0</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>2.41.1</spotless-maven-plugin.version>
     <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
   </properties>
 
