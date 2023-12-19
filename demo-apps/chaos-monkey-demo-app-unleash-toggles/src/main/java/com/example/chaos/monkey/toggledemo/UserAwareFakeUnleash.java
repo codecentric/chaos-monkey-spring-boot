@@ -84,6 +84,16 @@ public class UserAwareFakeUnleash implements Unleash {
     }
 
     @Override
+    public Variant deprecatedGetVariant(String s, UnleashContext unleashContext) {
+        return fakeUnleash.deprecatedGetVariant(s, unleashContext);
+    }
+
+    @Override
+    public Variant deprecatedGetVariant(String s, UnleashContext unleashContext, Variant variant) {
+        return fakeUnleash.deprecatedGetVariant(s, unleashContext, variant);
+    }
+
+    @Override
     public List<String> getFeatureToggleNames() {
         return null;
     }
