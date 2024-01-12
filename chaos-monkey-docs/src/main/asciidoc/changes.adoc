@@ -9,6 +9,7 @@ Built with Spring Boot {spring-boot-version}
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/411[#411] Allow custom exceptions to fall through in outgoing watchers (rest template, webclient). This could also slightly change the behaviour/output of outgoing watchers when not using a custom exception.
 
 === New Features
  - https://github.com/codecentric/chaos-monkey-spring-boot/pull/408[#408] Watch beans by type

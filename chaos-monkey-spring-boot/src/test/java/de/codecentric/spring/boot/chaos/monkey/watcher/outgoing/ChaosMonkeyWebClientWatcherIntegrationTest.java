@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,48 +15,51 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.fail;
-
-import de.codecentric.spring.boot.chaos.monkey.watcher.outgoing.ChaosMonkeyWebClientWatcher.ErrorClientResponse;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoWebClientService;
 import io.netty.handler.timeout.ReadTimeoutException;
-import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 class ChaosMonkeyWebClientWatcherIntegrationTest {
 
-    @SpringBootTest(properties = {"chaos.monkey.watcher.web-client=true", "chaos.monkey.enabled=true",
-            "chaos.monkey.assaults.exceptions-active=true"}, classes = {ChaosDemoApplication.class})
+    @Nested
+    @SpringBootTest(properties = {"chaos.monkey.watcher.web-client=true", "chaos.monkey.enabled=true", "chaos.monkey.assaults.exceptions-active=true",
+            "chaos.monkey.assaults.exception.type=org.springframework.web.reactive.function.client.WebClientResponseException",
+            "chaos.monkey.assaults.exception.method=create", "chaos.monkey.assaults.exception.arguments[0].type=int",
+            "chaos.monkey.assaults.exception.arguments[0].value=500", "chaos.monkey.assaults.exception.arguments[1].type=java.lang.String",
+            "chaos.monkey.assaults.exception.arguments[1].value=Failed",
+            "chaos.monkey.assaults.exception.arguments[2].type=org.springframework.http.HttpHeaders",
+            "chaos.monkey.assaults.exception.arguments[2].value=null", "chaos.monkey.assaults.exception.arguments[3].type=byte[]",
+            "chaos.monkey.assaults.exception.arguments[3].value=[70,97,105,108]", // "Fail" in UTF8
+            "chaos.monkey.assaults.exception.arguments[4].type=java.nio.charset.Charset",
+            "chaos.monkey.assaults.exception.arguments[4].value=null",}, classes = {ChaosDemoApplication.class})
     @ActiveProfiles("chaos-monkey")
-    static class ExceptionAssaultIntegrationTest {
+    class ExceptionAssaultIntegrationTest {
 
         @Autowired
         private DemoWebClientService demoWebClientService;
 
         @Test
         public void testWebClientExceptionAssault() {
-            try {
-                this.demoWebClientService.callWithWebClient();
-                fail("No WebClientResponseException occurred!");
-            } catch (WebClientResponseException ex) {
-                String body = ex.getResponseBodyAsString();
-                assertThat(body).isEqualTo(ErrorClientResponse.ERROR_BODY);
-            }
+
+            assertThatThrownBy(() -> this.demoWebClientService.callWithWebClient()).isInstanceOf(WebClientResponseException.class)
+                    .has(new Condition<>((ex) -> ((WebClientResponseException) ex).getResponseBodyAsString().equals("Fail"), "Body equals fail"));
         }
     }
 
-    @Slf4j
+    @Nested
     @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.web-client=true", "chaos.monkey.assaults.latency-active=true",
             "chaos.monkey.test.rest-template.time-out=20"}, classes = {ChaosDemoApplication.class})
     @ActiveProfiles("chaos-monkey")
-    static class LatencyAssaultIntegrationTest {
+    class LatencyAssaultIntegrationTest {
 
         @Autowired
         private DemoWebClientService demoWebClientService;
