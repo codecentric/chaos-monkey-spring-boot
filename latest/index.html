@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <title>Chaos Monkey for Spring Boot Reference Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -208,13 +208,10 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
-.exampleblock>.content>:first-child{margin-top:0}
-.exampleblock>.content>:last-child{margin-bottom:0}
 .sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
-.sidebarblock>:first-child{margin-top:0}
-.sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
-.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
 .literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
@@ -393,7 +390,7 @@ b.conum *{color:inherit!important}
 dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
 h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
 p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
 .exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
@@ -679,8 +676,8 @@ window.onload = function() {
 <div id="header">
 <h1>Chaos Monkey for Spring Boot Reference Guide</h1>
 <div class="details">
-<span id="revnumber">version 3.0.2,</span>
-<span id="revdate">04.08.2023</span>
+<span id="revnumber">version 3.1.0,</span>
+<span id="revdate">19.01.2024</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -778,7 +775,7 @@ window.onload = function() {
 <li><a href="#_when_i_add_chaos_monkey_i_get_a_nullpointerexception_on_startup">8.2. When I add chaos monkey I get a <code>NullpointerException</code> on startup</a></li>
 </ul>
 </li>
-<li><a href="#changes">9. Changes in 3.0.2</a>
+<li><a href="#changes">9. Changes in 3.1.0</a>
 <ul class="sectlevel2">
 <li><a href="#_bug_fixes">9.1. Bug Fixes</a></li>
 <li><a href="#_improvements">9.2. Improvements</a></li>
@@ -809,20 +806,20 @@ window.onload = function() {
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>3.0.2<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>3.1.0<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:3.0.2</span><span class="delimiter">'</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:3.1.0</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:3.0.2&quot;)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:3.1.0&quot;)</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -883,20 +880,20 @@ If you want to use the latest snapshot version, add the sonatype staging reposit
     <span class="tag">&lt;groupId&gt;</span>de.codecentric<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>chaos-monkey-spring-boot<span class="tag">&lt;/artifactId&gt;</span>
     <span class="tag">&lt;classifier&gt;</span>jar-with-dependencies<span class="tag">&lt;/classifier&gt;</span>
-    <span class="tag">&lt;version&gt;</span>3.0.2<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>3.1.0<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:3.0.2:jar-with-dependencies</span><span class="delimiter">'</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">implementation <span class="string"><span class="delimiter">'</span><span class="content">de.codecentric:chaos-monkey-spring-boot:3.1.0:jar-with-dependencies</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
 <div class="title">Gradle Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:3.0.2:jar-with-dependencies&quot;)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="kotlin">implementation(&quot;de.codecentric:chaos-monkey-spring-boot:3.1.0:jar-with-dependencies&quot;)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -906,7 +903,7 @@ If you want to use the latest snapshot version, add the sonatype staging reposit
 <div class="title">command-line</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="txt">java -cp your-app.jar
-    -Dloader.path=chaos-monkey-spring-boot-3.0.2-jar-with-dependencies.jar
+    -Dloader.path=chaos-monkey-spring-boot-3.1.0-jar-with-dependencies.jar
         org.springframework.boot.loader.PropertiesLauncher
     --spring.profiles.active=chaos-monkey
     --spring.config.location=file:./chaos-monkey.properties</code></pre>
@@ -1942,6 +1939,12 @@ You can decide which attacks you want to run and which parts of your application
 <td class="tableblock halign-left valign-top"><p class="tableblock">Empty list</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.beanClasses</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bean watcher for given beans classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of bean classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty list</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chaos.monkey.watcher.exclude</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Exclude classes from proxying. Use if proxying a class breaks it.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List of class names</p></td>
@@ -2052,7 +2055,7 @@ These watchers don&#8217;t use AOP. Instead, they inject respective customizers.
 <div class="sect3">
 <h4 id="_alternative_bean_watcher"><a class="anchor" href="#_alternative_bean_watcher"></a><a class="link" href="#_alternative_bean_watcher">5.1.4. Alternative Bean Watcher</a></h4>
 <div class="paragraph">
-<p>Chaos Monkey can watch any Bean in your application by name.</p>
+<p>Chaos Monkey can watch any Bean in your application by name or class.</p>
 </div>
 <div class="admonitionblock caution">
 <table>
@@ -2061,7 +2064,7 @@ These watchers don&#8217;t use AOP. Instead, they inject respective customizers.
 <i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-The chaos monkey profile must be active and bean names must be configured when the beans are <strong>created</strong>. Adding bean names to the configuration after the beans have been created will <strong>not</strong> enable them to be watched.
+The chaos monkey profile must be active and bean names/classes must be configured when the beans are <strong>created</strong>. Adding bean names/classes to the configuration after the beans have been created will <strong>not</strong> enable them to be watched.
 </td>
 </tr>
 </table>
@@ -2451,38 +2454,53 @@ To prevent these classes from being proxied, you can either:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 3.0.2</a></h2>
+<h2 id="changes"><a class="anchor" href="#changes"></a><a class="link" href="#changes">9. Changes in 3.1.0</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Built with Spring Boot 3.1.2</p>
+<p>Built with Spring Boot 3.2.1</p>
 </div>
 <div class="sect2">
 <h3 id="_bug_fixes"><a class="anchor" href="#_bug_fixes"></a><a class="link" href="#_bug_fixes">9.1. Bug Fixes</a></h3>
-
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/402">#402</a> Always register outgoing watchers so they can be enabled later</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_improvements"><a class="anchor" href="#_improvements"></a><a class="link" href="#_improvements">9.2. Improvements</a></h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/compare/92d59a0a997bbd57a17f1b2574bf86ddd2df1652&#8230;&#8203;0dd7e53adfedc239a44c528b62e3b9c4c95829f0">92d59a0&#8230;&#8203;0dd7e53</a> Updated dependencies</p>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/411">#411</a> Allow custom exceptions to fall through in outgoing watchers (rest template, webclient). This could also slightly change the behaviour/output of outgoing watchers when not using a custom exception.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_new_features"><a class="anchor" href="#_new_features"></a><a class="link" href="#_new_features">9.3. New Features</a></h3>
-
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/codecentric/chaos-monkey-spring-boot/pull/408">#408</a> Watch beans by type</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_contributors"><a class="anchor" href="#_contributors"></a><a class="link" href="#_contributors">9.4. Contributors</a></h3>
 <div class="paragraph">
-<p>This release was only possible because of these great robots ❤️:</p>
+<p>This release was only possible because of these great humans ❤️:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/renovatebot/">@renovate</a></p>
+<p><a href="https://github.com/F43nd1r">@F43nd1r</a></p>
+</li>
+<li>
+<p><a href="https://github.com/F43nd1r">@F43nd1r</a></p>
 </li>
 </ul>
 </div>
@@ -2495,7 +2513,7 @@ To prevent these classes from being proxied, you can either:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.2<br>
+Version 3.1.0<br>
 </div>
 </div>
 </body>
