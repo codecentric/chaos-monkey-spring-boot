@@ -45,6 +45,8 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: 17
+    - name: download maven wrapper jar # workaround, see https://github.com/github/codeql/issues/15636#issuecomment-1948516946
+      run: ./mvnw --version
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -58,8 +60,8 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    #- name: Autobuild
-    #  uses: github/codeql-action/autobuild@v3
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
@@ -68,8 +70,8 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - name: Build with Maven
-      run: ./mvnw clean package -f pom.xml -B -V -e -DskipTests
+    # - name: Build with Maven
+    #  run: ./mvnw clean package -f pom.xml -B -V -e -DskipTests
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
