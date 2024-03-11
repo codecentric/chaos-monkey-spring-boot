@@ -82,7 +82,7 @@ jobs:
       - name: Generate jar with dependencies
         run: ./mvnw package -pl chaos-monkey-spring-boot
       - name: Create Github Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: changes.md
           files: |
