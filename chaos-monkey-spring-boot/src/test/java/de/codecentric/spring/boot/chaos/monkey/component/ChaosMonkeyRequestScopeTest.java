@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,6 +76,21 @@ class ChaosMonkeyRequestScopeTest {
         given(chaosMonkeyProperties.isEnabled()).willReturn(false);
 
         chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(latencyAssault, never()).attack();
+        verify(exceptionAssault, never()).attack();
+    }
+
+    @Test
+    void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
+        String customService = "CustomService";
+
+        given(chaosMonkeyProperties.isEnabled()).willReturn(true);
+        given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customService));
+        given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, "notInListService");
 
         verify(latencyAssault, never()).attack();
         verify(exceptionAssault, never()).attack();
@@ -191,19 +206,6 @@ class ChaosMonkeyRequestScopeTest {
             given(assaultProperties.getTroubleRandom()).willReturn(9);
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault, never()).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
-            String customService = "CustomService";
-
-            given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customService));
-            given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, "notInListService");
 
             verify(latencyAssault, never()).attack();
             verify(exceptionAssault, never()).attack();

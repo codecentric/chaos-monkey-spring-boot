@@ -1,13 +1,14 @@
 [[changes]]
-== Changes in {project-version}
+== Changes in 3.1.1
 
-Built with Spring Boot {spring-boot-version}
+Built with Spring Boot 3.2.3
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- Increment level count exclusively for methods, classes or packages listed in WatchedCustomServices
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -16,5 +17,6 @@ Built with Spring Boot {spring-boot-version}
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
+- https://github.com/eshaanganesh2[@eshaanganesh2]
 
 Thank you for your support!
