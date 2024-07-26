@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,25 +67,31 @@ public class ChaosMonkeyRequestScope {
     }
 
     public void callChaosMonkey(ChaosTarget type, String simpleName) {
-        if (isEnabled(type, simpleName) && isTrouble()) {
-
+        AssaultProperties assaultProps = chaosMonkeySettings.getAssaultProperties();
+        if (isEnabled(type, simpleName) && checkWhetherWatchedCustomServiceToAttack()) {
+            if (assaultProps.getWatchedCustomServices().stream().anyMatch(simpleName::startsWith) && isTrouble()) {
+                // only all listed custom methods will be attacked
+                if (metricEventPublisher != null) {
+                    metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+                }
+                chooseAndRunAttack();
+            }
+        } else if (isEnabled(type, simpleName) && isTrouble()) {
             if (metricEventPublisher != null) {
                 metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
             }
-
-            // Custom watched services can be defined at runtime, if there are any, only
-            // these will be attacked!
-            AssaultProperties assaultProps = chaosMonkeySettings.getAssaultProperties();
-            if (assaultProps.isWatchedCustomServicesActive()) {
-                if (assaultProps.getWatchedCustomServices().stream().anyMatch(simpleName::startsWith)) {
-                    // only all listed custom methods will be attacked
-                    chooseAndRunAttack();
-                }
-            } else {
-                // default attack if no custom watched service is defined
-                chooseAndRunAttack();
-            }
+            chooseAndRunAttack();
         }
+    }
+
+    private boolean checkWhetherWatchedCustomServiceToAttack() {
+        // Custom watched services can be defined at runtime, if there are any, only
+        // these will be attacked!
+        AssaultProperties assaultProps = chaosMonkeySettings.getAssaultProperties();
+        if (assaultProps.isWatchedCustomServicesActive()) {
+            return true;
+        }
+        return false;
     }
 
     private void chooseAndRunAttack() {
