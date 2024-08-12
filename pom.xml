@@ -50,7 +50,7 @@
     <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
     <asciidoctor-extensions-spring-boot>0.6.3</asciidoctor-extensions-spring-boot>
     <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
-    <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+    <maven-gpg-plugin.version>3.2.5</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.8.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
