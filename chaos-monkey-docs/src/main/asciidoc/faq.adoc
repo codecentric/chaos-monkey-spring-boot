@@ -53,5 +53,11 @@ To prevent these classes from being proxied, you can either:
  - mark them as final
  - don't mark them as spring `@Component` (or `@Service`, `@Controller`, ...). Instead, register them as `@Bean` inside a configuration.
 
+=== My classes (or methods or packages) do not get assaulted after setting the WatchedCustomServices property
+
+ - Ensure that the associated watcher property for the class/method/package is set to true
+ - Ensure that the fully qualified path of the class/method/package is set accurately
+
+
 
 
