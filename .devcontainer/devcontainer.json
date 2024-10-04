@@ -1,7 +1,7 @@
 {
 	// Template from https://github.com/devcontainers/templates/tree/main/src/java
 	"name": "CMSB (Java)",
-	"image": "mcr.microsoft.com/devcontainers/java:17",
+	"image": "mcr.microsoft.com/devcontainers/java:21",
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
 			"version": "none",
