@@ -60,7 +60,7 @@
     <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
-    <versions-maven-plugin.version>2.17.1</versions-maven-plugin.version>
+    <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
   </properties>
 
   <scm>
