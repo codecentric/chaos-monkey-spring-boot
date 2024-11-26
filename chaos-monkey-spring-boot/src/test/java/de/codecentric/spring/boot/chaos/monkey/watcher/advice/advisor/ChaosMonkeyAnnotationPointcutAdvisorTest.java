@@ -17,21 +17,25 @@ package de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.ChaosMonkeyBaseClassFilter;
 import java.util.Collections;
 import org.aopalliance.aop.Advice;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.stereotype.Component;
 
+@ExtendWith(MockitoExtension.class)
 class ChaosMonkeyAnnotationPointcutAdvisorTest {
-
-    private final Advice advice = mock(Advice.class);
-    private final ChaosMonkeyBaseClassFilter baseClassFilter = mock(ChaosMonkeyBaseClassFilter.class);
+    @Mock
+    private Advice advice;
+    @Mock
+    private ChaosMonkeyBaseClassFilter baseClassFilter;
 
     @Test
     public void shouldMatchWhenAnnotationIsPresent() {
