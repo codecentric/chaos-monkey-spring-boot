@@ -15,6 +15,8 @@
  */
 package de.codecentric.spring.boot.demo.chaos.monkey;
 
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication.TestOutgoingConfigurationProperties;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -33,7 +35,7 @@ import reactor.netty.http.client.HttpClient;
 
 /** @author Benjamin Wilms */
 @SpringBootApplication
-@EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class})
+@EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class, WatcherProperties.class, AssaultProperties.class})
 public class ChaosDemoApplication {
 
     public static void main(String[] args) {
