@@ -100,7 +100,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -111,7 +111,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -121,7 +121,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -131,7 +131,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -142,7 +142,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -154,7 +154,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -164,7 +164,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -174,7 +174,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -221,7 +221,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, customService);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
             verify(exceptionAssault, never()).attack();
         }
 
@@ -238,7 +238,7 @@ class ChaosMonkeyRequestScopeTest {
             String simpleName = customRepository + ".findAll";
             chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
             verify(exceptionAssault, never()).attack();
         }
 
@@ -255,7 +255,7 @@ class ChaosMonkeyRequestScopeTest {
             String simpleName = packageName + "CrudRepository.findAll";
             chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
             verify(exceptionAssault, never()).attack();
         }
 
@@ -292,6 +292,6 @@ class ChaosMonkeyRequestScopeTest {
         customScope.callChaosMonkey(null, "foo");
         verify(customAssault, never()).attack();
         customScope.callChaosMonkey(null, "foo");
-        verify(customAssault, times(1)).attack();
+        verify(customAssault).attack();
     }
 }

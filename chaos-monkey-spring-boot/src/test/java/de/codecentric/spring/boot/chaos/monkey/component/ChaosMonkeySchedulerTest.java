@@ -85,7 +85,7 @@ class ChaosMonkeySchedulerTest {
         when(registrar.scheduleCronTask(any())).thenReturn(oldTask);
 
         ChaosMonkeyScheduler cms = new ChaosMonkeyScheduler(registrar, config, Collections.singletonList(memoryAssault));
-        verify(registrar, times(1)).scheduleCronTask(argThat(hasScheduleLike(schedule)));
+        verify(registrar).scheduleCronTask(argThat(hasScheduleLike("*/1 * * * * ?")));
 
         reset(registrar);
 
