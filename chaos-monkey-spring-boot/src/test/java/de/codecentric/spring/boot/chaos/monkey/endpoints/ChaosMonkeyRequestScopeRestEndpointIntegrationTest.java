@@ -41,6 +41,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
@@ -67,7 +68,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         chaosMonkeyProperties.setEnabled(false);
         chaosMonkeySettings.setChaosMonkeyProperties(chaosMonkeyProperties);
 
-        assertEquals(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode(), HttpStatus.METHOD_NOT_ALLOWED);
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, postChaosMonkeySettings(chaosMonkeySettings).getStatusCode());
         assertFalse(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
     }
 
@@ -76,6 +77,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult = testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.OK, chaosMonkeySettingsResult.getStatusCode());
+        assertNotNull(chaosMonkeySettingsResult.getBody());
         assertEquals(chaosMonkeySettings.toString(), chaosMonkeySettingsResult.getBody().toString());
     }
 
@@ -109,6 +111,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<WatcherProperties> result = testRestTemplate.getForEntity(baseUrl + "/watchers", WatcherProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
         assertEquals(chaosMonkeySettings.getWatcherProperties().toString(), result.getBody().toString());
     }
 
@@ -238,6 +241,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(result.getBody());
         assertThat(result.getBody().isEnabled()).isTrue();
     }
 
@@ -248,6 +252,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertNotNull(result.getBody());
         assertThat(result.getBody().isEnabled()).isFalse();
     }
 
