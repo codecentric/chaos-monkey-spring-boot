@@ -45,10 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
 class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
-
-    @LocalServerPort
-    private int serverPort;
-
     @Autowired
     private ChaosMonkeySettings chaosMonkeySettings;
 
@@ -60,8 +56,8 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
     private String baseUrl;
 
     @BeforeEach
-    void setUp() {
-        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+    void setUp(@LocalServerPort int serverPort) {
+        baseUrl = "http://localhost:" + serverPort + "/actuator/chaosmonkey";
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
