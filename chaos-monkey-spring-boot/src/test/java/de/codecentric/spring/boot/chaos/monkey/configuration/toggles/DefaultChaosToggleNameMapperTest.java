@@ -32,11 +32,11 @@ class DefaultChaosToggleNameMapperTest {
 
     @Test
     public void chaosTypeCanBeNull() {
-        assertEquals(sut.mapName(null, "com.example.MyController.hello"), "toggle.prefix.unknown");
+        assertEquals("toggle.prefix.unknown", sut.mapName(null, "com.example.MyController.hello"));
     }
 
     @Test
     public void chaosTypeNameIsUsedAsSuffix() {
-        assertEquals(sut.mapName(ChaosTarget.REPOSITORY, "com.example.MyController.hello"), "toggle.prefix.repository");
+        assertEquals("toggle.prefix.repository", sut.mapName(ChaosTarget.REPOSITORY, "com.example.MyController.hello"));
     }
 }
