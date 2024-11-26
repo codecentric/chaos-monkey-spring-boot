@@ -15,7 +15,9 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.mockito.Mockito.times;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +26,6 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,16 +68,18 @@ public class ChaosMonkeyRestEndpointTest {
 
         ResponseEntity<String> response = testRestTemplate.postForEntity("/actuator/chaosmonkey/watchers", watcherPropertiesUpdate, String.class);
 
-        BDDAssertions.then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        BDDAssertions.then(watcherProperties.isController()).isTrue();
-        BDDAssertions.then(watcherProperties.isRestController()).isTrue();
-        BDDAssertions.then(watcherProperties.isComponent()).isTrue();
-        BDDAssertions.then(watcherProperties.isService()).isTrue();
-        BDDAssertions.then(watcherProperties.isRepository()).isTrue();
-        BDDAssertions.then(watcherProperties.isRestTemplate()).isTrue();
-        BDDAssertions.then(watcherProperties.isWebClient()).isTrue();
-        BDDAssertions.then(watcherProperties.isActuatorHealth()).isTrue();
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
+                () -> assertTrue(watcherProperties.isController()),
+                () -> assertTrue(watcherProperties.isRestController()),
+                () -> assertTrue(watcherProperties.isService()),
+                () -> assertTrue(watcherProperties.isComponent()),
+                () -> assertTrue(watcherProperties.isRepository()),
+                () -> assertTrue(watcherProperties.isRestTemplate()),
+                () -> assertTrue(watcherProperties.isWebClient()),
+                () -> assertTrue(watcherProperties.isActuatorHealth())
+        );
 
-        verify(chaosMonkeyScheduler, times(1)).reloadConfig();
+        verify(chaosMonkeyScheduler).reloadConfig();
     }
 }
