@@ -30,10 +30,6 @@ public class ChaosDemoApplicationTests {
     private ApplicationContext ctx;
 
     @Test
-    public void contextLoads() {
-    }
-
-    @Test
     public void checkNotMetricsBean() {
         assertThrows(NoSuchBeanDefinitionException.class, () -> ctx.getBean("chaosMonkeyMetrics"), "No bean named 'metrics' available");
     }
