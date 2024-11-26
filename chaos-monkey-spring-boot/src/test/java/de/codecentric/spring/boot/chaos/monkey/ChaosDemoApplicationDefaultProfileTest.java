@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,22 +40,17 @@ class ChaosDemoApplicationDefaultProfileTest {
 
     @Test
     void checkEnvWatcherController() {
-        assertTrue( watcherProperties.isController());
+        assertTrue(watcherProperties.isController());
     }
 
     @Test
     void checkEnvAssaultLatencyRange() {
-        assertAll(
-                () -> assertEquals(100, assaultProperties.getLatencyRangeStart()),
-                () -> assertEquals(200, assaultProperties.getLatencyRangeEnd())
-        );
+        assertAll(() -> assertEquals(100, assaultProperties.getLatencyRangeStart()), () -> assertEquals(200, assaultProperties.getLatencyRangeEnd()));
     }
 
     @Test
     void checkEnvCustomServiceWatcherList() {
-        assertEquals(List.of(
-                "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
-                "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"),
-                assaultProperties.getWatchedCustomServices());
+        assertEquals(List.of("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
+                "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"), assaultProperties.getWatchedCustomServices());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,17 +68,11 @@ public class ChaosMonkeyRestEndpointTest {
 
         ResponseEntity<String> response = testRestTemplate.postForEntity("/actuator/chaosmonkey/watchers", watcherPropertiesUpdate, String.class);
 
-        assertAll(
-                () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertTrue(watcherProperties.isController()),
-                () -> assertTrue(watcherProperties.isRestController()),
-                () -> assertTrue(watcherProperties.isService()),
-                () -> assertTrue(watcherProperties.isComponent()),
-                () -> assertTrue(watcherProperties.isRepository()),
-                () -> assertTrue(watcherProperties.isRestTemplate()),
-                () -> assertTrue(watcherProperties.isWebClient()),
-                () -> assertTrue(watcherProperties.isActuatorHealth())
-        );
+        assertAll(() -> assertEquals(HttpStatus.OK, response.getStatusCode()), () -> assertTrue(watcherProperties.isController()),
+                () -> assertTrue(watcherProperties.isRestController()), () -> assertTrue(watcherProperties.isService()),
+                () -> assertTrue(watcherProperties.isComponent()), () -> assertTrue(watcherProperties.isRepository()),
+                () -> assertTrue(watcherProperties.isRestTemplate()), () -> assertTrue(watcherProperties.isWebClient()),
+                () -> assertTrue(watcherProperties.isActuatorHealth()));
 
         verify(chaosMonkeyScheduler).reloadConfig();
     }
