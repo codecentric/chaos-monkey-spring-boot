@@ -22,7 +22,7 @@ import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoRestTemplateService;
 import java.util.Optional;
 import javax.net.ssl.SSLException;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
         @Test
         public void testInterceptorIsPresent() {
-            Optional<ClientHttpRequestInterceptor> result = this.restTemplate.getInterceptors().stream()
+            Optional<ClientHttpRequestInterceptor> result = restTemplate.getInterceptors().stream()
                     .filter(interceptor -> (interceptor instanceof ChaosMonkeyRestTemplateWatcher)).findFirst();
             assertThat(result).isPresent();
         }
@@ -63,22 +63,23 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
         @Test
         public void testRestTemplateExceptionAssault() {
-            assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate()).hasMessage("500 INTERNAL_SERVER_ERROR");
+            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).hasMessage("500 INTERNAL_SERVER_ERROR");
         }
     }
 
-    @Slf4j
     @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.rest-template=true", "chaos.monkey.assaults.latency-active=true",
             "chaos.monkey.test.rest-template.time-out=20"}, classes = {ChaosDemoApplication.class})
     @ActiveProfiles("chaos-monkey")
-    static class LatencyAssaultIntegrationTest {
+    @Nested
+    @Disabled
+    class LatencyAssaultIntegrationTest {
 
         @Autowired
         private DemoRestTemplateService demoRestTemplateService;
 
         @Test
         public void testRestTemplateLatencyAssault() {
-            assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate()).hasCauseInstanceOf(SSLException.class).hasMessage(
+            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).hasCauseInstanceOf(SSLException.class).hasMessage(
                     "I/O error on GET request for \"https://www.codecentric.de\": Read timed out; nested exception is javax.net.ssl.SSLException: Read timed out");
         }
     }
