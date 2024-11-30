@@ -16,32 +16,37 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.component.MetricType;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import de.codecentric.spring.boot.chaos.monkey.events.MetricEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 class LatencyAssaultRangeTest {
     ChaosMonkeySettings chaosMonkeySettings;
 
     @Captor
-    ArgumentCaptor<AtomicInteger> captorTimeoutValue;
+    ArgumentCaptor<MetricEvent> eventArgumentCaptor;
+
+    @InjectMocks
+    MetricEventPublisher metricEventPublisher;
 
     @Mock
-    MetricEventPublisher metricEventPublisher;
+    ApplicationEventPublisher applicationEventPublisher;
 
     @BeforeEach
     void setUp() {
@@ -58,8 +63,9 @@ class LatencyAssaultRangeTest {
         LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricEventPublisher);
         latencyAssault.attack();
 
-        verify(metricEventPublisher).publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
-        assertThat(captorTimeoutValue.getValue().get()).isEqualTo(1000);
+        verify(applicationEventPublisher, times(2)).publishEvent(eventArgumentCaptor.capture());
+        assertThat(eventArgumentCaptor.getValue().getMetricType()).isEqualTo(MetricType.LATENCY_ASSAULT);
+        assertThat(eventArgumentCaptor.getValue().getMetricValue()).isEqualTo(1000);
     }
 
     @Test
@@ -69,7 +75,8 @@ class LatencyAssaultRangeTest {
         LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, metricEventPublisher);
         latencyAssault.attack();
 
-        verify(metricEventPublisher).publishMetricEvent(eq(MetricType.LATENCY_ASSAULT), captorTimeoutValue.capture());
-        assertThat(captorTimeoutValue.getValue().get()).isBetween(1000, 5000);
+        verify(applicationEventPublisher, times(2)).publishEvent(eventArgumentCaptor.capture());
+        assertThat(eventArgumentCaptor.getValue().getMetricType()).isEqualTo(MetricType.LATENCY_ASSAULT);
+        assertThat(eventArgumentCaptor.getValue().getMetricValue()).isBetween(1000.0, 5000.0);
     }
 }
