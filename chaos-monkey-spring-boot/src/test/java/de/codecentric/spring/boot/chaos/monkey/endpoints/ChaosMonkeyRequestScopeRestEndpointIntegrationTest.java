@@ -241,7 +241,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(result.getBody());
+        assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().isEnabled()).isTrue();
     }
 
@@ -252,7 +252,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertNotNull(result.getBody());
+        assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().isEnabled()).isFalse();
     }
 
@@ -264,7 +264,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.postForEntity(baseUrl + "/enable", null,
                 ChaosMonkeyStatusResponseDto.class);
 
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isTrue();
         assertThat(Objects.requireNonNull(result.getBody()).getEnabledAt()).isAfterOrEqualTo(enabledAt);
     }
@@ -275,7 +275,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.postForEntity(baseUrl + "/disable", null,
                 ChaosMonkeyStatusResponseDto.class);
 
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
         assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt()).isNull();
     }
@@ -288,7 +288,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.postForEntity(baseUrl + "/disable", null,
                 ChaosMonkeyStatusResponseDto.class);
 
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
         assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt()).isAfterOrEqualTo(disabledAt);
     }
