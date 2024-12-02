@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.chaos.monkey.chaosdemo.service.GreetingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -48,7 +50,9 @@ public class HelloControllerTest {
         when(greetingServiceMock.greet()).thenReturn(responseService);
         responseRepo = "Hello from repo!";
         when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
-    }
+        when(greetingServiceMock.greetFromRepoPagingSorting()).thenReturn(responseRepo);
+        when(greetingServiceMock.greetFromRepoJpa()).thenReturn(responseRepo);
+        when(greetingServiceMock.greetFromRepoAnnotation()).thenReturn(responseRepo);    }
 
     @Test
     public void shouldReturnHello() throws Exception {
@@ -68,7 +72,16 @@ public class HelloControllerTest {
         this.mockMvc.perform(get("/dbgreet")).andExpect(status().isOk()).andExpect(content().string(responseRepo));
     }
 
+    @Test
     public void shouldReturnGoodbye() throws Exception {
         this.mockMvc.perform(get("/goodbye")).andExpect(status().isOk()).andExpect(content().string("Goodbye!"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "/findbyid", "/jpa/findbyid", "/common/findbyid"
+    })
+    public void findById(String uriTemplate) throws Exception {
+        mockMvc.perform(get(uriTemplate)).andExpect(status().isOk()).andExpect(content().string("Hello from repo!"));
     }
 }
