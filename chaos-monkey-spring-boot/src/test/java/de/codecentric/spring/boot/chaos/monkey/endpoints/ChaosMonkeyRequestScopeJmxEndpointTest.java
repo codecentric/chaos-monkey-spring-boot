@@ -16,15 +16,21 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
+
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /** @author Benjamin Wilms */
 class ChaosMonkeyRequestScopeJmxEndpointTest {
@@ -41,7 +47,7 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
         assaultProperties.setLatencyRangeEnd(200);
         WatcherProperties watcherProperties = new WatcherProperties();
         watcherProperties.setComponent(true);
-        ChaosMonkeyProperties chaosMonkeyProperties = new ChaosMonkeyProperties();
+        ChaosMonkeyProperties chaosMonkeyProperties = spy(ChaosMonkeyProperties.class);
         chaosMonkeyProperties.setEnabled(true);
         chaosMonkeySettings = new ChaosMonkeySettings(chaosMonkeyProperties, assaultProperties, watcherProperties);
         chaosMonkeyJmxEndpoint = new ChaosMonkeyJmxEndpoint(chaosMonkeySettings);
@@ -114,13 +120,17 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
         assertThat(chaosMonkeyJmxEndpoint.getWatcherProperties()).isEqualTo(chaosMonkeySettings.getWatcherProperties());
     }
 
-    @Test
-    void getStatus() {
-        OffsetDateTime enabledAt = OffsetDateTime.now().withNano(0);
+    @ParameterizedTest
+    @CsvSource({"PT0S,0 seconds", "PT5M,5 minutes 00 seconds","PT2H,2 hours 00 minutes 00 seconds"})
+    void getStatus(Duration duration, String expectedEnabledFor) {
+        OffsetDateTime enabledAt = OffsetDateTime.now().minus(duration).withNano(0);
+        when(chaosMonkeySettings.getChaosMonkeyProperties().getLastEnabledToggleTimestamp()).thenReturn(enabledAt.toEpochSecond()*1000);
+
         chaosMonkeyJmxEndpoint.enableChaosMonkey();
         ChaosMonkeyStatusResponseDto enabledDto = chaosMonkeyJmxEndpoint.getStatus();
         assertThat(enabledDto.isEnabled()).isEqualTo(true);
         assertThat(enabledDto.getEnabledAt()).isAfterOrEqualTo(enabledAt);
+        assertThat(enabledDto.getEnabledFor().getFormatted()).isEqualTo(expectedEnabledFor);
         assertThat(chaosMonkeySettings.getChaosMonkeyProperties().isEnabled()).isTrue();
     }
 }
