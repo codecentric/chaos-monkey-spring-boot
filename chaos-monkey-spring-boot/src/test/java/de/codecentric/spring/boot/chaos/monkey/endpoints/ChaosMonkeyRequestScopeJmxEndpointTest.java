@@ -121,10 +121,10 @@ class ChaosMonkeyRequestScopeJmxEndpointTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"PT0S,0 seconds", "PT5M,5 minutes 00 seconds","PT2H,2 hours 00 minutes 00 seconds"})
+    @CsvSource({"PT0S,0 seconds", "PT5M,5 minutes 00 seconds", "PT2H,2 hours 00 minutes 00 seconds"})
     void getStatus(Duration duration, String expectedEnabledFor) {
         OffsetDateTime enabledAt = OffsetDateTime.now().minus(duration).withNano(0);
-        when(chaosMonkeySettings.getChaosMonkeyProperties().getLastEnabledToggleTimestamp()).thenReturn(enabledAt.toEpochSecond()*1000);
+        when(chaosMonkeySettings.getChaosMonkeyProperties().getLastEnabledToggleTimestamp()).thenReturn(enabledAt.toEpochSecond() * 1000);
 
         chaosMonkeyJmxEndpoint.enableChaosMonkey();
         ChaosMonkeyStatusResponseDto enabledDto = chaosMonkeyJmxEndpoint.getStatus();
