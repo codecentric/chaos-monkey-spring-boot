@@ -52,7 +52,8 @@ public class HelloControllerTest {
         when(greetingServiceMock.greetFromRepo()).thenReturn(responseRepo);
         when(greetingServiceMock.greetFromRepoPagingSorting()).thenReturn(responseRepo);
         when(greetingServiceMock.greetFromRepoJpa()).thenReturn(responseRepo);
-        when(greetingServiceMock.greetFromRepoAnnotation()).thenReturn(responseRepo);    }
+        when(greetingServiceMock.greetFromRepoAnnotation()).thenReturn(responseRepo);
+    }
 
     @Test
     public void shouldReturnHello() throws Exception {
@@ -78,9 +79,7 @@ public class HelloControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "/findbyid", "/jpa/findbyid", "/common/findbyid"
-    })
+    @CsvSource({"/findbyid", "/jpa/findbyid", "/common/findbyid"})
     public void findById(String uriTemplate) throws Exception {
         mockMvc.perform(get(uriTemplate)).andExpect(status().isOk()).andExpect(content().string("Hello from repo!"));
     }

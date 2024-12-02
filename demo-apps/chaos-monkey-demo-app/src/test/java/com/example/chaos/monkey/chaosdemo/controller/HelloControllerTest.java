@@ -71,9 +71,7 @@ public class HelloControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-        "/findbyid", "/jpa/findbyid", "/common/findbyid"
-    })
+    @CsvSource({"/findbyid", "/jpa/findbyid", "/common/findbyid"})
     public void findById(String uriTemplate) throws Exception {
         mockMvc.perform(get(uriTemplate)).andExpect(status().isOk()).andExpect(content().string("Hello from repo!"));
     }
