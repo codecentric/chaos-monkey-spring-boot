@@ -34,7 +34,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     private static final Logger Logger = LoggerFactory.getLogger(MemoryAssault.class);
 
     private static final AtomicLong stolenMemory = new AtomicLong(0);
-    private static final int QUARTER_GIGA_BYTE_IN_BYTES = (int)DataSize.ofMegabytes(256).toBytes();
+    private static final int QUARTER_GIGA_BYTE_IN_BYTES = (int) DataSize.ofMegabytes(256).toBytes();
 
     private final Runtime runtime;
 
@@ -67,7 +67,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         if (inAttack.compareAndSet(false, true)) {
             try {
-                Logger.debug("Detected java version: " + System.getProperty("java.version"));
+                Logger.debug("Detected java version: {}", System.getProperty("java.version"));
                 eatFreeMemory();
             } finally {
                 inAttack.set(false);
@@ -92,7 +92,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
                 break;
             }
 
-            Logger.debug("Used memory in bytes: " + usedMemory);
+            Logger.debug("Used memory in bytes: {}", usedMemory);
 
             stolenMemoryTotal = stealMemory(memoryVector, stolenMemoryTotal, getBytesToSteal());
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());

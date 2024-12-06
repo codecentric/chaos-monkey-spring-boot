@@ -102,8 +102,8 @@ class MemoryAssaultIntegrationTest {
 
         // if timeout reached
         long bytes = (long) (rt.maxMemory() * memoryFillTargetFraction);
-        fail("Memory did not fill up in time. Filled " + DataSize.ofBytes(rt.totalMemory()).toMegabytes() +
-                " MB but should have filled " + DataSize.ofBytes(bytes).toMegabytes() + " MB");
+        fail("Memory did not fill up in time. Filled " + DataSize.ofBytes(rt.totalMemory()).toMegabytes() + " MB but should have filled "
+                + DataSize.ofBytes(bytes).toMegabytes() + " MB");
     }
 
     /**
