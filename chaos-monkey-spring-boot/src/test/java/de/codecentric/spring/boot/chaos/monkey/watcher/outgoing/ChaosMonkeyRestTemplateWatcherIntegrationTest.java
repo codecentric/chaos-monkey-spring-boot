@@ -21,14 +21,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoRestTemplateService;
 import java.util.Optional;
-import javax.net.ssl.SSLException;
-import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 class ChaosMonkeyRestTemplateWatcherIntegrationTest {
@@ -71,7 +71,6 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
             "chaos.monkey.test.rest-template.time-out=20"}, classes = {ChaosDemoApplication.class})
     @ActiveProfiles("chaos-monkey")
     @Nested
-    @Disabled
     class LatencyAssaultIntegrationTest {
 
         @Autowired
@@ -79,8 +78,8 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
         @Test
         public void testRestTemplateLatencyAssault() {
-            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).hasCauseInstanceOf(SSLException.class).hasMessage(
-                    "I/O error on GET request for \"https://www.codecentric.de\": Read timed out; nested exception is javax.net.ssl.SSLException: Read timed out");
+            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).isInstanceOf(ResourceAccessException.class)
+                    .hasMessage("I/O error on GET request for \"https://www.codecentric.de\": null");
         }
     }
 }
