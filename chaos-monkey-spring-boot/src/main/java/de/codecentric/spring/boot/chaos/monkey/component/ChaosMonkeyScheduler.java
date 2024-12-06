@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 the original author or authors.
+ * Copyright 2019-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class ChaosMonkeyScheduler {
     }
 
     private void scheduleNewTasks(Map<ChaosMonkeyRuntimeAssault, String> cronExpressions) {
-        Logger.info("Schedule  %s cron task(s)".formatted(cronExpressions.size()));
+        Logger.info("Schedule {} cron task(s)", cronExpressions.size());
         cronExpressions.forEach((assault, expression) -> {
             if (expression != null && !"OFF".equals(expression))
                 scheduleRuntimeAssault(scheduler, assault, expression);
