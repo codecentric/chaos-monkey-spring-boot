@@ -25,12 +25,14 @@ import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
+@EnableConfigurationProperties({AssaultProperties.class, WatcherProperties.class})
 class ChaosDemoApplicationDefaultProfileTest {
     @Autowired
     private AssaultProperties assaultProperties;

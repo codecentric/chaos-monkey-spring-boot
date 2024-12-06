@@ -35,7 +35,7 @@ import reactor.netty.http.client.HttpClient;
 
 /** @author Benjamin Wilms */
 @SpringBootApplication
-@EnableConfigurationProperties(value = {TestOutgoingConfigurationProperties.class, WatcherProperties.class, AssaultProperties.class})
+@EnableConfigurationProperties(value = TestOutgoingConfigurationProperties.class)
 public class ChaosDemoApplication {
 
     public static void main(String[] args) {
