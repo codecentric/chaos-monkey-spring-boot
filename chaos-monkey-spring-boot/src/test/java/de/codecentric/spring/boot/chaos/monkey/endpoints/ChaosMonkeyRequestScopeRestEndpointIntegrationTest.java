@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,14 +41,11 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
 class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
-
-    @LocalServerPort
-    private int serverPort;
-
     @Autowired
     private ChaosMonkeySettings chaosMonkeySettings;
 
@@ -60,8 +57,8 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
     private String baseUrl;
 
     @BeforeEach
-    void setUp() {
-        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
+    void setUp(@LocalServerPort int serverPort) {
+        baseUrl = "http://localhost:" + serverPort + "/actuator/chaosmonkey";
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
@@ -71,7 +68,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         chaosMonkeyProperties.setEnabled(false);
         chaosMonkeySettings.setChaosMonkeyProperties(chaosMonkeyProperties);
 
-        assertEquals(postChaosMonkeySettings(chaosMonkeySettings).getStatusCode(), HttpStatus.METHOD_NOT_ALLOWED);
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, postChaosMonkeySettings(chaosMonkeySettings).getStatusCode());
         assertFalse(this.chaosMonkeySettings.getChaosMonkeyProperties().isEnabled());
     }
 
@@ -80,6 +77,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult = testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.OK, chaosMonkeySettingsResult.getStatusCode());
+        assertNotNull(chaosMonkeySettingsResult.getBody());
         assertEquals(chaosMonkeySettings.toString(), chaosMonkeySettingsResult.getBody().toString());
     }
 
@@ -113,6 +111,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<WatcherProperties> result = testRestTemplate.getForEntity(baseUrl + "/watchers", WatcherProperties.class);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
         assertEquals(chaosMonkeySettings.getWatcherProperties().toString(), result.getBody().toString());
     }
 
@@ -242,6 +241,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().isEnabled()).isTrue();
     }
 
@@ -252,6 +252,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.getForEntity(baseUrl + "/status", ChaosMonkeyStatusResponseDto.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().isEnabled()).isFalse();
     }
 
@@ -263,7 +264,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.postForEntity(baseUrl + "/enable", null,
                 ChaosMonkeyStatusResponseDto.class);
 
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isTrue();
         assertThat(Objects.requireNonNull(result.getBody()).getEnabledAt()).isAfterOrEqualTo(enabledAt);
     }
@@ -274,7 +275,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.postForEntity(baseUrl + "/disable", null,
                 ChaosMonkeyStatusResponseDto.class);
 
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
         assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt()).isNull();
     }
@@ -287,7 +288,7 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         ResponseEntity<ChaosMonkeyStatusResponseDto> result = testRestTemplate.postForEntity(baseUrl + "/disable", null,
                 ChaosMonkeyStatusResponseDto.class);
 
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
         assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt()).isAfterOrEqualTo(disabledAt);
     }

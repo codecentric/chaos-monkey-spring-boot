@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ class DefaultChaosToggleNameMapperTest {
 
     @Test
     public void chaosTypeCanBeNull() {
-        assertEquals(sut.mapName(null, "com.example.MyController.hello"), "toggle.prefix.unknown");
+        assertEquals("toggle.prefix.unknown", sut.mapName(null, "com.example.MyController.hello"));
     }
 
     @Test
     public void chaosTypeNameIsUsedAsSuffix() {
-        assertEquals(sut.mapName(ChaosTarget.REPOSITORY, "com.example.MyController.hello"), "toggle.prefix.repository");
+        assertEquals("toggle.prefix.repository", sut.mapName(ChaosTarget.REPOSITORY, "com.example.MyController.hello"));
     }
 }

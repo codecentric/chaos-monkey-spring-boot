@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,54 +15,44 @@
  */
 package de.codecentric.spring.boot.chaos.monkey;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-default-profile.properties")
+@EnableConfigurationProperties({AssaultProperties.class, WatcherProperties.class})
 class ChaosDemoApplicationDefaultProfileTest {
-
-    @Autowired(required = false)
-    private ChaosMonkeyRequestScope chaosMonkeyRequestScope;
+    @Autowired
+    private AssaultProperties assaultProperties;
 
     @Autowired
-    private Environment env;
-
-    @Test
-    void contextLoads() {
-        assertNull(chaosMonkeyRequestScope);
-    }
+    private WatcherProperties watcherProperties;
 
     @Test
     void checkEnvWatcherController() {
-        assertThat(env.getProperty("chaos.monkey.watcher.controller")).isEqualTo("true");
+        assertTrue(watcherProperties.isController());
     }
 
     @Test
-    void checkEnvAssaultLatencyRangeStart() {
-        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-start")).isEqualTo("100");
-    }
-
-    @Test
-    void checkEnvAssaultLatencyRangeEnd() {
-        assertThat(env.getProperty("chaos.monkey.assaults.latency-range-end")).isEqualTo("200");
+    void checkEnvAssaultLatencyRange() {
+        assertAll(() -> assertEquals(100, assaultProperties.getLatencyRangeStart()), () -> assertEquals(200, assaultProperties.getLatencyRangeEnd()));
     }
 
     @Test
     void checkEnvCustomServiceWatcherList() {
-        List<String> stringList = env.getProperty("chaos.monkey.assaults.watchedCustomServices", List.class);
-        assertThat(stringList).hasSize(2);
-        assertThat(stringList.get(0)).isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello");
-        assertThat(stringList.get(1)).isEqualTo("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye");
+        assertEquals(List.of("com.example.chaos.monkey.chaosdemo.controller.HelloController.sayHello",
+                "com.example.chaos.monkey.chaosdemo.controller.HelloController.sayGoodbye"), assaultProperties.getWatchedCustomServices());
     }
 }

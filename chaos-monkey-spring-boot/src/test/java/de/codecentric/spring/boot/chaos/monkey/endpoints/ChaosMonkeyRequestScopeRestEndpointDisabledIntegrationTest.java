@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,21 +33,9 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource("classpath:test-chaos-monkey-endpoints-disabled.properties")
 class ChaosMonkeyRequestScopeRestEndpointDisabledIntegrationTest {
 
-    @LocalServerPort
-    private int serverPort;
-
-    @Autowired
-    private TestRestTemplate testRestTemplate;
-
-    private String baseUrl;
-
-    @BeforeEach
-    void setUp() {
-        baseUrl = "http://localhost:" + this.serverPort + "/actuator/chaosmonkey";
-    }
-
     @Test
-    void getConfiguration() {
+    void getConfiguration(@LocalServerPort int serverPort, @Autowired TestRestTemplate testRestTemplate) {
+        String baseUrl = "http://localhost:" + serverPort + "/actuator/chaosmonkey";
         ResponseEntity<ChaosMonkeySettings> chaosMonkeySettingsResult = testRestTemplate.getForEntity(baseUrl, ChaosMonkeySettings.class);
 
         assertEquals(HttpStatus.NOT_FOUND, chaosMonkeySettingsResult.getStatusCode());

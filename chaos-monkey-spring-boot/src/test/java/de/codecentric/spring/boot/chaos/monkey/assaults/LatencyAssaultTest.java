@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package de.codecentric.spring.boot.chaos.monkey.assaults;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
+import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import org.junit.jupiter.api.Test;
@@ -29,32 +29,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LatencyAssaultTest {
 
-    @Mock
-    private ChaosMonkeySettings chaosMonkeySettings;
-
-    @Mock
-    private AssaultProperties assaultProperties;
-
     @Test
-    void threadSleepHasBeenCalled() {
-        int latencyRangeStart = 100;
-        int latencyRangeEnd = 200;
+    void threadSleepHasBeenCalled(@Mock MetricEventPublisher publisher) {
+        AssaultProperties assaultProperties = new AssaultProperties();
+        assaultProperties.setLatencyRangeStart(100);
+        assaultProperties.setLatencyRangeEnd(200);
+        ChaosMonkeySettings chaosMonkeySettings = new ChaosMonkeySettings();
+        chaosMonkeySettings.setAssaultProperties(assaultProperties);
+
         TestLatencyAssaultExecutor executor = new TestLatencyAssaultExecutor();
-
-        when(assaultProperties.getLatencyRangeStart()).thenReturn(latencyRangeStart);
-        when(assaultProperties.getLatencyRangeEnd()).thenReturn(latencyRangeEnd);
-        when(chaosMonkeySettings.getAssaultProperties()).thenReturn(assaultProperties);
-
-        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, null, executor);
+        LatencyAssault latencyAssault = new LatencyAssault(chaosMonkeySettings, publisher, executor);
         latencyAssault.attack();
 
         assertTrue(executor.executed);
-        String assertionMessage = "Latency not in range 100-200, actual latency: " + executor.duration;
-        assertTrue(executor.duration >= latencyRangeStart, assertionMessage);
-        assertTrue(executor.duration <= latencyRangeEnd, assertionMessage);
+        assertTrue(executor.duration >= 100 && executor.duration <= 200, "Latency not in range 100-200, actual latency: " + executor.duration);
     }
 
-    class TestLatencyAssaultExecutor implements ChaosMonkeyLatencyAssaultExecutor {
+    static class TestLatencyAssaultExecutor implements ChaosMonkeyLatencyAssaultExecutor {
 
         private long duration;
 

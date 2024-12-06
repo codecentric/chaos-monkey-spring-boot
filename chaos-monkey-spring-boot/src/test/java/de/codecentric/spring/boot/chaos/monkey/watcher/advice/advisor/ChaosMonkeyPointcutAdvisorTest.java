@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.ChaosMonkeyBaseClassFilter;
@@ -26,15 +24,20 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import org.aopalliance.aop.Advice;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.StaticMethodMatcher;
 
+@ExtendWith(MockitoExtension.class)
 class ChaosMonkeyPointcutAdvisorTest {
-
-    private final Advice advice = mock(Advice.class);
-    private final ChaosMonkeyBaseClassFilter baseClassFilter = mock(ChaosMonkeyBaseClassFilter.class);
+    @Mock
+    private Advice advice;
+    @Mock
+    private ChaosMonkeyBaseClassFilter baseClassFilter;
 
     @Test
     public void shouldMatchWhenAllFiltersMatch() {

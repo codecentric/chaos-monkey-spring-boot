@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package de.codecentric.spring.boot.chaos.monkey.component;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
@@ -31,11 +30,14 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChao
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /** @author Benjamin Wilms */
@@ -44,7 +46,7 @@ class ChaosMonkeyRequestScopeTest {
 
     ChaosMonkeyRequestScope chaosMonkeyRequestScope;
 
-    @Mock
+    @Spy
     AssaultProperties assaultProperties;
 
     @Mock
@@ -86,7 +88,7 @@ class ChaosMonkeyRequestScopeTest {
 
         @BeforeEach
         void setUpForChaosMonkeyExecutionEnabled() {
-            given(assaultProperties.getLevel()).willReturn(1);
+            assaultProperties.setLevel(1);
             given(assaultProperties.getTroubleRandom()).willReturn(1);
             given(chaosMonkeyProperties.isEnabled()).willReturn(true);
             given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
@@ -100,7 +102,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -111,7 +113,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -121,7 +123,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -131,7 +133,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -142,7 +144,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -154,7 +156,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -164,7 +166,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(exceptionAssault, times(1)).attack();
+            verify(exceptionAssault).attack();
         }
 
         @Test
@@ -174,7 +176,7 @@ class ChaosMonkeyRequestScopeTest {
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
         }
 
         @Test
@@ -187,7 +189,7 @@ class ChaosMonkeyRequestScopeTest {
 
         @Test
         void givenAssaultLevelTooHighExpectNoLogging() {
-            given(assaultProperties.getLevel()).willReturn(1000);
+            assaultProperties.setLevel(1000);
             given(assaultProperties.getTroubleRandom()).willReturn(9);
 
             chaosMonkeyRequestScope.callChaosMonkey(null, null);
@@ -198,10 +200,7 @@ class ChaosMonkeyRequestScopeTest {
 
         @Test
         void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
-            String customService = "CustomService";
-
-            given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customService));
-            given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
+            assaultProperties.setWatchedCustomServices(List.of("CustomService"));
 
             chaosMonkeyRequestScope.callChaosMonkey(null, "notInListService");
 
@@ -211,51 +210,42 @@ class ChaosMonkeyRequestScopeTest {
 
         @Test
         void chaosMonkeyIsCalledWhenServiceIsWatched() {
-            String customService = "CustomService";
-
+            assaultProperties.setWatchedCustomServices(List.of("CustomService"));
             given(exceptionAssault.isActive()).willReturn(true);
-            given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customService));
             given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
             given(assaultProperties.chooseAssault(2)).willReturn(0);
 
-            chaosMonkeyRequestScope.callChaosMonkey(null, customService);
+            chaosMonkeyRequestScope.callChaosMonkey(null, "CustomService");
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
             verify(exceptionAssault, never()).attack();
         }
 
         @Test
         void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsMethodReference() {
-            String customRepository = "org.springframework.data.repository.CrudRepository";
-
+            assaultProperties.setWatchedCustomServices(List.of("org.springframework.data.repository.CrudRepository"));
             given(exceptionAssault.isActive()).willReturn(true);
-            given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(customRepository));
             given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
             given(assaultProperties.chooseAssault(2)).willReturn(0);
 
-            String simpleName = customRepository + ".findAll";
-            chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
+            chaosMonkeyRequestScope.callChaosMonkey(null, "org.springframework.data.repository.CrudRepository.findAll");
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
             verify(exceptionAssault, never()).attack();
         }
 
         @Test
         void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsPackageReference() {
-            String packageName = "org.springframework.data.repository";
-
+            assaultProperties.setWatchedCustomServices(List.of("org.springframework.data.repository"));
             given(exceptionAssault.isActive()).willReturn(true);
-            given(assaultProperties.getWatchedCustomServices()).willReturn(Collections.singletonList(packageName));
-            given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
             given(latencyAssault.isActive()).willReturn(true);
             given(assaultProperties.chooseAssault(2)).willReturn(0);
 
-            String simpleName = packageName + "CrudRepository.findAll";
-            chaosMonkeyRequestScope.callChaosMonkey(null, simpleName);
+            chaosMonkeyRequestScope.callChaosMonkey(null, "org.springframework.data.repository.CrudRepository.findAll");
 
-            verify(latencyAssault, times(1)).attack();
+            verify(latencyAssault).attack();
             verify(exceptionAssault, never()).attack();
         }
 
@@ -275,13 +265,12 @@ class ChaosMonkeyRequestScopeTest {
 
     @Test
     void assaultShouldBeDeterministicIfConfigured() {
+        assaultProperties.setLevel(3);
+        assaultProperties.setDeterministic(true);
         ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
         given(customAssault.isActive()).willReturn(true);
         given(chaosMonkeyProperties.isEnabled()).willReturn(true);
         given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
-
-        given(assaultProperties.isDeterministic()).willReturn(true);
-        given(assaultProperties.getLevel()).willReturn(3);
 
         ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
                 Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
@@ -292,6 +281,6 @@ class ChaosMonkeyRequestScopeTest {
         customScope.callChaosMonkey(null, "foo");
         verify(customAssault, never()).attack();
         customScope.callChaosMonkey(null, "foo");
-        verify(customAssault, times(1)).attack();
+        verify(customAssault).attack();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.endpoints;
 
-import static org.mockito.Mockito.times;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,17 +26,16 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("chaos-monkey")
 @ContextConfiguration(classes = {ChaosDemoApplication.class})
@@ -44,9 +45,9 @@ public class ChaosMonkeyRestEndpointTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-    @MockBean
+    @MockitoBean
     private ChaosMonkeySettings chaosMonkeySettings;
-    @MockBean
+    @MockitoBean
     private ChaosMonkeyScheduler chaosMonkeyScheduler;
 
     @Test
@@ -67,16 +68,12 @@ public class ChaosMonkeyRestEndpointTest {
 
         ResponseEntity<String> response = testRestTemplate.postForEntity("/actuator/chaosmonkey/watchers", watcherPropertiesUpdate, String.class);
 
-        BDDAssertions.then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        BDDAssertions.then(watcherProperties.isController()).isTrue();
-        BDDAssertions.then(watcherProperties.isRestController()).isTrue();
-        BDDAssertions.then(watcherProperties.isComponent()).isTrue();
-        BDDAssertions.then(watcherProperties.isService()).isTrue();
-        BDDAssertions.then(watcherProperties.isRepository()).isTrue();
-        BDDAssertions.then(watcherProperties.isRestTemplate()).isTrue();
-        BDDAssertions.then(watcherProperties.isWebClient()).isTrue();
-        BDDAssertions.then(watcherProperties.isActuatorHealth()).isTrue();
+        assertAll(() -> assertEquals(HttpStatus.OK, response.getStatusCode()), () -> assertTrue(watcherProperties.isController()),
+                () -> assertTrue(watcherProperties.isRestController()), () -> assertTrue(watcherProperties.isService()),
+                () -> assertTrue(watcherProperties.isComponent()), () -> assertTrue(watcherProperties.isRepository()),
+                () -> assertTrue(watcherProperties.isRestTemplate()), () -> assertTrue(watcherProperties.isWebClient()),
+                () -> assertTrue(watcherProperties.isActuatorHealth()));
 
-        verify(chaosMonkeyScheduler, times(1)).reloadConfig();
+        verify(chaosMonkeyScheduler).reloadConfig();
     }
 }

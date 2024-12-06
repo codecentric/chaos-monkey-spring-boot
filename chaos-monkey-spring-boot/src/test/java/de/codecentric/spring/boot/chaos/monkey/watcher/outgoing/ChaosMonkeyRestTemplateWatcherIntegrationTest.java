@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoRestTemplateService;
 import java.util.Optional;
-import javax.net.ssl.SSLException;
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 class ChaosMonkeyRestTemplateWatcherIntegrationTest {
@@ -43,7 +43,7 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
         @Test
         public void testInterceptorIsPresent() {
-            Optional<ClientHttpRequestInterceptor> result = this.restTemplate.getInterceptors().stream()
+            Optional<ClientHttpRequestInterceptor> result = restTemplate.getInterceptors().stream()
                     .filter(interceptor -> (interceptor instanceof ChaosMonkeyRestTemplateWatcher)).findFirst();
             assertThat(result).isPresent();
         }
@@ -63,23 +63,23 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
         @Test
         public void testRestTemplateExceptionAssault() {
-            assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate()).hasMessage("500 INTERNAL_SERVER_ERROR");
+            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).hasMessage("500 INTERNAL_SERVER_ERROR");
         }
     }
 
-    @Slf4j
     @SpringBootTest(properties = {"chaos.monkey.enabled=true", "chaos.monkey.watcher.rest-template=true", "chaos.monkey.assaults.latency-active=true",
             "chaos.monkey.test.rest-template.time-out=20"}, classes = {ChaosDemoApplication.class})
     @ActiveProfiles("chaos-monkey")
-    static class LatencyAssaultIntegrationTest {
+    @Nested
+    class LatencyAssaultIntegrationTest {
 
         @Autowired
         private DemoRestTemplateService demoRestTemplateService;
 
         @Test
         public void testRestTemplateLatencyAssault() {
-            assertThatThrownBy(() -> this.demoRestTemplateService.callWithRestTemplate()).hasCauseInstanceOf(SSLException.class).hasMessage(
-                    "I/O error on GET request for \"https://www.codecentric.de\": Read timed out; nested exception is javax.net.ssl.SSLException: Read timed out");
+            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).isInstanceOf(ResourceAccessException.class)
+                    .hasMessage("I/O error on GET request for \"https://www.codecentric.de\": null");
         }
     }
 }

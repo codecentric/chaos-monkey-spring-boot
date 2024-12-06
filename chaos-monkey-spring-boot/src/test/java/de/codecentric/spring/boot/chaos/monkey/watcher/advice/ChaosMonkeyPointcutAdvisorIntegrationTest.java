@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
@@ -84,15 +84,15 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
     @Test
     public void chaosMonkeyIsCalledWhenComponentIsNotFinal() {
         demoComponent.sayHello();
-        verify(chaosMonkeyRequestScopeMock, times(1)).callChaosMonkey(ChaosTarget.COMPONENT, demoComponentSimpleName);
-        verify(metricsMock, times(1)).publishMetricEvent(demoComponentPointcutName, MetricType.COMPONENT);
+        verify(chaosMonkeyRequestScopeMock).callChaosMonkey(ChaosTarget.COMPONENT, demoComponentSimpleName);
+        verify(metricsMock).publishMetricEvent(demoComponentPointcutName, MetricType.COMPONENT);
     }
 
     @Test
     public void chaosMonkeyIsNotCalledWhenComponentIsFinal() {
         finalDemoComponent.sayHello();
-        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(ChaosTarget.COMPONENT, finalDemoComponentSimpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
+        verify(chaosMonkeyRequestScopeMock, never()).callChaosMonkey(ChaosTarget.COMPONENT, finalDemoComponentSimpleName);
+        verify(metricsMock, never()).publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
     }
 
     @Test
@@ -101,16 +101,16 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
         applicationListenerComponent.onApplicationEvent(mock(ApplicationEvent.class));
         factoryBeanComponent.getObject();
 
-        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, beanPostProcessorComponentSimpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(beanPostProcessorComponentPointcutName, MetricType.COMPONENT);
+        verify(chaosMonkeyRequestScopeMock, never()).callChaosMonkey(null, beanPostProcessorComponentSimpleName);
+        verify(metricsMock, never()).publishMetricEvent(beanPostProcessorComponentPointcutName, MetricType.COMPONENT);
 
-        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, applicationListenerComponentSimpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
+        verify(chaosMonkeyRequestScopeMock, never()).callChaosMonkey(null, applicationListenerComponentSimpleName);
+        verify(metricsMock, never()).publishMetricEvent(applicationListenerComponentPointcutName, MetricType.COMPONENT);
 
-        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, beanFactorySingletonComponentSimpleName);
-        verify(chaosMonkeyRequestScopeMock, times(0)).callChaosMonkey(null, beanFactoryObjectTypeComponentSimpleName);
-        verify(metricsMock, times(0)).publishMetricEvent(beanFactorySingletonComponentPointcutName, MetricType.COMPONENT);
-        verify(metricsMock, times(0)).publishMetricEvent(beanFactoryObjectTypeComponentPointcutName, MetricType.COMPONENT);
+        verify(chaosMonkeyRequestScopeMock, never()).callChaosMonkey(null, beanFactorySingletonComponentSimpleName);
+        verify(chaosMonkeyRequestScopeMock, never()).callChaosMonkey(null, beanFactoryObjectTypeComponentSimpleName);
+        verify(metricsMock, never()).publishMetricEvent(beanFactorySingletonComponentPointcutName, MetricType.COMPONENT);
+        verify(metricsMock, never()).publishMetricEvent(beanFactoryObjectTypeComponentPointcutName, MetricType.COMPONENT);
     }
 
     @Configuration
