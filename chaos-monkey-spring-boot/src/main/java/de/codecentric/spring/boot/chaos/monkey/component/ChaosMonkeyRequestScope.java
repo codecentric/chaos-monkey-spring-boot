@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ public class ChaosMonkeyRequestScope {
         private static final Logger Logger = LoggerFactory.getLogger(RequestAssaultAdapter.class);
 
         private RequestAssaultAdapter {
-            Logger.warn("Adapting a " + rawAssault.getClass().getSimpleName() + " into a request assault. The class should extend its proper parent");
+            Logger.warn("Adapting a {} into a request assault. The class should extend its proper parent", rawAssault.getClass().getSimpleName());
         }
 
         @Override

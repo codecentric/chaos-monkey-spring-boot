@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.unit.DataSize;
 
 /** @author Benjamin Wilms */
 public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
@@ -33,6 +34,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     private static final Logger Logger = LoggerFactory.getLogger(MemoryAssault.class);
 
     private static final AtomicLong stolenMemory = new AtomicLong(0);
+    private static final int QUARTER_GIGA_BYTE_IN_BYTES = (int) DataSize.ofMegabytes(256).toBytes();
 
     private final Runtime runtime;
 
@@ -65,7 +67,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
 
         if (inAttack.compareAndSet(false, true)) {
             try {
-                Logger.debug("Detected java version: " + System.getProperty("java.version"));
+                Logger.debug("Detected java version: {}", System.getProperty("java.version"));
                 eatFreeMemory();
             } finally {
                 inAttack.set(false);
@@ -90,7 +92,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
                 break;
             }
 
-            Logger.debug("Used memory in bytes: " + usedMemory);
+            Logger.debug("Used memory in bytes: {}", usedMemory);
 
             stolenMemoryTotal = stealMemory(memoryVector, stolenMemoryTotal, getBytesToSteal());
             waitUntil(settings.getAssaultProperties().getMemoryMillisecondsWaitNextIncrease());
@@ -120,7 +122,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         int amount = (int) (runtime.freeMemory() * settings.getAssaultProperties().getMemoryFillIncrementFraction());
         // Seems filling more than 256 MB per slice is bad on java 8 & 17
         // we keep running into heap errors and other OOMs.
-        return Math.min(SizeConverter.toBytes(256), amount);
+        return Math.min(QUARTER_GIGA_BYTE_IN_BYTES, amount);
     }
 
     private long stealMemory(Vector<byte[]> memoryVector, long stolenMemoryTotal, int bytesToSteal) {
@@ -129,7 +131,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
         stolenMemoryTotal += bytesToSteal;
         long newStolenTotal = MemoryAssault.stolenMemory.addAndGet(bytesToSteal);
         metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT_MEMORY_STOLEN, newStolenTotal);
-        Logger.debug("Chaos Monkey - memory assault increase, free memory: " + SizeConverter.toMegabytes(runtime.freeMemory()));
+        Logger.debug("Chaos Monkey - memory assault increase, free memory: {}", DataSize.ofBytes(runtime.freeMemory()).toMegabytes());
 
         return stolenMemoryTotal;
     }

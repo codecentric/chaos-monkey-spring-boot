@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.unit.DataSize;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
@@ -100,8 +101,9 @@ class MemoryAssaultIntegrationTest {
         }
 
         // if timeout reached
-        fail("Memory did not fill up in time. Filled " + SizeConverter.toMegabytes(rt.totalMemory()) + " MB but should have filled "
-                + SizeConverter.toMegabytes(rt.maxMemory() * memoryFillTargetFraction) + " MB");
+        long bytes = (long) (rt.maxMemory() * memoryFillTargetFraction);
+        fail("Memory did not fill up in time. Filled " + DataSize.ofBytes(rt.totalMemory()).toMegabytes() + " MB but should have filled "
+                + DataSize.ofBytes(bytes).toMegabytes() + " MB");
     }
 
     /**
@@ -158,8 +160,10 @@ class MemoryAssaultIntegrationTest {
         long usedMemoryAfterAttack = rt.totalMemory() - rt.freeMemory();
 
         // garbage collection should have run by now
-        assertTrue(usedMemoryAfterAttack <= usedMemoryDuringAttack, "Memory after attack was " + SizeConverter.toMegabytes(usedMemoryAfterAttack)
-                + " MB but should have been less  amount of memory during attack (" + SizeConverter.toMegabytes(usedMemoryDuringAttack) + " MB).");
+        assertTrue(usedMemoryAfterAttack <= usedMemoryDuringAttack,
+                "Memory after attack was " + DataSize.ofBytes(usedMemoryAfterAttack).toMegabytes()
+                        + " MB but should have been less  amount of memory during attack (" + DataSize.ofBytes(usedMemoryDuringAttack).toMegabytes()
+                        + " MB).");
     }
 
     @Test
@@ -185,8 +189,9 @@ class MemoryAssaultIntegrationTest {
                 }
             }
 
-            fail("Memory did not fill up in time. Filled " + SizeConverter.toMegabytes(rt.totalMemory()) + " MB but should have filled "
-                    + SizeConverter.toMegabytes(fillTargetMemory) + " MB");
+            long bytes = rt.totalMemory();
+            fail("Memory did not fill up in time. Filled " + DataSize.ofBytes(bytes).toMegabytes() + " MB but should have filled "
+                    + DataSize.ofBytes((long) fillTargetMemory).toMegabytes() + " MB");
         }
 
         ResponseEntity<String> result = restTemplate.postForEntity(baseUrl + "/assaults", assaultProperties, String.class);
