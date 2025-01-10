@@ -76,7 +76,7 @@ jobs:
       - name: Generate documentation (docbook, html, zip)
         run: ./mvnw asciidoctor:process-asciidoc@output-docbook generate-resources -pl chaos-monkey-docs
       - name: Convert changelog from docbook to markdown
-        uses: docker://pandoc/core:3.13
+        uses: docker://pandoc/core:3
         with:
           args: "-f docbook -t gfm -o changes.md chaos-monkey-docs/target/generated-docbook/changes.xml --wrap=none"
       - name: Generate jar with dependencies
