@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 the original author or authors.
+ * Copyright 2020-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -84,7 +86,7 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
     @Test
     public void chaosMonkeyIsCalledWhenComponentIsNotFinal() {
         demoComponent.sayHello();
-        verify(chaosMonkeyRequestScopeMock).callChaosMonkey(ChaosTarget.COMPONENT, demoComponentSimpleName);
+        verify(chaosMonkeyRequestScopeMock).callChaosMonkey(eq(ChaosTarget.COMPONENT), eq(demoComponentSimpleName), any(), any());
         verify(metricsMock).publishMetricEvent(demoComponentPointcutName, MetricType.COMPONENT);
     }
 
