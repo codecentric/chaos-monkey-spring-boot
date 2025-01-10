@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,8 +109,14 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public KillAppAssault killAppAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher) {
-        return new KillAppAssault(settings, publisher);
+    public KillAppAssault killAppAssault(ChaosMonkeySettings settings, MetricEventPublisher publisher, KillAppAssault.ExitHelper exitHelper) {
+        return new KillAppAssault(settings, publisher, exitHelper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public KillAppAssault.ExitHelper exitHelper() {
+        return new KillAppAssault.ExitHelper();
     }
 
     @Bean
