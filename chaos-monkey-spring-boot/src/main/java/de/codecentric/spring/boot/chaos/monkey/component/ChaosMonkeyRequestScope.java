@@ -56,8 +56,8 @@ public class ChaosMonkeyRequestScope {
     private final MethodFilter methodFilter;
 
     public ChaosMonkeyRequestScope(ChaosMonkeySettings chaosMonkeySettings, List<ChaosMonkeyRequestAssault> assaults,
-                                   List<ChaosMonkeyAssault> legacyAssaults, MetricEventPublisher metricEventPublisher, ChaosToggles chaosToggles,
-                                   ChaosToggleNameMapper chaosToggleNameMapper, MethodFilter methodFilter) {
+            List<ChaosMonkeyAssault> legacyAssaults, MetricEventPublisher metricEventPublisher, ChaosToggles chaosToggles,
+            ChaosToggleNameMapper chaosToggleNameMapper, MethodFilter methodFilter) {
         this.methodFilter = methodFilter;
         List<ChaosMonkeyRequestAssault> requestAssaults = new ArrayList<>(assaults);
         requestAssaults.addAll(getLegacyAssaults(legacyAssaults));
@@ -71,10 +71,8 @@ public class ChaosMonkeyRequestScope {
     }
 
     private static List<RequestAssaultAdapter> getLegacyAssaults(List<ChaosMonkeyAssault> legacyAssaults) {
-        return legacyAssaults.stream()
-                .filter(Predicate.not(ChaosMonkeyRuntimeAssault.class::isInstance))
-                .filter(Predicate.not(ChaosMonkeyRequestAssault.class::isInstance))
-                .map(RequestAssaultAdapter::new).toList();
+        return legacyAssaults.stream().filter(Predicate.not(ChaosMonkeyRuntimeAssault.class::isInstance))
+                .filter(Predicate.not(ChaosMonkeyRequestAssault.class::isInstance)).map(RequestAssaultAdapter::new).toList();
     }
 
     public void callChaosMonkey(ChaosTarget type, String signature) {

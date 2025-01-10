@@ -125,7 +125,8 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults,
-            ChaosToggles chaosToggles, ChaosToggleNameMapper chaosToggleNameMapper, ChaosMonkeySettings settings, MetricEventPublisher publisher, MethodFilter methodFilter) {
+            ChaosToggles chaosToggles, ChaosToggleNameMapper chaosToggleNameMapper, ChaosMonkeySettings settings, MetricEventPublisher publisher,
+            MethodFilter methodFilter) {
         return new ChaosMonkeyRequestScope(settings, chaosMonkeyAssaults, allAssaults, publisher, chaosToggles, chaosToggleNameMapper, methodFilter);
     }
 

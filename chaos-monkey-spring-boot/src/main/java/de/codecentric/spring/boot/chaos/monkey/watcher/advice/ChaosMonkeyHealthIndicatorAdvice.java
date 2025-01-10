@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ public class ChaosMonkeyHealthIndicatorAdvice extends AbstractChaosMonkeyAdvice 
         if (watcherProperties.isActuatorHealth()) {
             MethodSignature signature = (MethodSignature) pjp.getSignature();
             try {
-                this.chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.ACTUATOR_HEALTH, createSignature(signature), pjp.getTarget(), signature.getMethod());
+                this.chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.ACTUATOR_HEALTH, createSignature(signature), pjp.getTarget(),
+                        signature.getMethod());
             } catch (final Exception e) {
                 log.error("Exception occurred", e);
                 health = Health.down(e).build();

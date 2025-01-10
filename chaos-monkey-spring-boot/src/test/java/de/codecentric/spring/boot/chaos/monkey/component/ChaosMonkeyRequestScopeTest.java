@@ -70,7 +70,7 @@ class ChaosMonkeyRequestScopeTest {
 
         chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault),
                 Collections.emptyList(), metricEventPublisherMock, new DefaultChaosToggles(),
-                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t,m) -> false);
+                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t, m) -> false);
     }
 
     @Test
@@ -256,7 +256,7 @@ class ChaosMonkeyRequestScopeTest {
             given(customAssault.isActive()).willReturn(true);
             ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
                     Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
-                    new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t,m) -> false);
+                    new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t, m) -> false);
 
             customScope.callChaosMonkey(null, "foo");
             verify(customAssault).attack();
@@ -274,7 +274,7 @@ class ChaosMonkeyRequestScopeTest {
 
         ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
                 Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
-                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t,m) -> false);
+                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t, m) -> false);
 
         customScope.callChaosMonkey(null, "foo");
         verify(customAssault, never()).attack();
