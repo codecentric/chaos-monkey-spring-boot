@@ -8,6 +8,10 @@ Built with Spring Boot {spring-boot-version}
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/518[#518] Maintenance - Use more junit5 features
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/522[#522] Replace SizeConverter by DataSize
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/517[#517] Update to spring boot v3.4.0
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/521[#521] Update to spring cloud v2024 
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -16,5 +20,6 @@ Built with Spring Boot {spring-boot-version}
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
+- https://github.com/jens-kaiser[@jens-kaiser]
 
 Thank you for your support!
