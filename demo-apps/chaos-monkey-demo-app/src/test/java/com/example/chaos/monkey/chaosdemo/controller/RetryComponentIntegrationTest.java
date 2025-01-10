@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,23 @@
  */
 package com.example.chaos.monkey.chaosdemo.controller;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
-import com.example.chaos.monkey.chaosdemo.component.HelloComponent;
+import com.example.chaos.monkey.chaosdemo.retry.RetryComponent;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-/** @author Benjamin Wilms */
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application-component-test.properties")
-public class HelloComponentIntegrationTest {
+@TestPropertySource("classpath:application-component-retry.properties")
+public class RetryComponentIntegrationTest {
 
     @Autowired
-    private HelloComponent helloComponent;
+    private RetryComponent retryComponent;
 
     @Autowired
     private ChaosMonkeyConfiguration chaosMonkeyConfiguration;
@@ -40,6 +40,6 @@ public class HelloComponentIntegrationTest {
     public void callingPublicMethodOnComponent() {
         assertTrue(chaosMonkeyConfiguration.chaosMonkeySettings().getWatcherProperties().isComponent());
 
-        helloComponent.sayHello();
+        assertEquals("Hello from Recover: Chaos Monkey - RuntimeException", retryComponent.sayHello());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ class ChaosMonkeyRequestScopeTest {
 
         chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault),
                 Collections.emptyList(), metricEventPublisherMock, new DefaultChaosToggles(),
-                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t,m) -> false);
     }
 
     @Test
@@ -256,7 +256,7 @@ class ChaosMonkeyRequestScopeTest {
             given(customAssault.isActive()).willReturn(true);
             ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
                     Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
-                    new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+                    new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t,m) -> false);
 
             customScope.callChaosMonkey(null, "foo");
             verify(customAssault).attack();
@@ -274,7 +274,7 @@ class ChaosMonkeyRequestScopeTest {
 
         ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
                 Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
-                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()), (t,m) -> false);
 
         customScope.callChaosMonkey(null, "foo");
         verify(customAssault, never()).attack();

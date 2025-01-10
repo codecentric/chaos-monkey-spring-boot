@@ -37,7 +37,7 @@ public class ChaosMonkeyHealthIndicatorAdvice extends AbstractChaosMonkeyAdvice 
         if (watcherProperties.isActuatorHealth()) {
             MethodSignature signature = (MethodSignature) pjp.getSignature();
             try {
-                this.chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.ACTUATOR_HEALTH, createSignature(signature));
+                this.chaosMonkeyRequestScope.callChaosMonkey(ChaosTarget.ACTUATOR_HEALTH, createSignature(signature), pjp.getTarget(), signature.getMethod());
             } catch (final Exception e) {
                 log.error("Exception occurred", e);
                 health = Health.down(e).build();

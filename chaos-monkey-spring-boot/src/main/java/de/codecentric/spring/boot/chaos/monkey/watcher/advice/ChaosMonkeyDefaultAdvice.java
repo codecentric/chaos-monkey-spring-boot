@@ -56,7 +56,7 @@ public class ChaosMonkeyDefaultAdvice extends AbstractChaosMonkeyAdvice {
 
             MethodSignature signature = (MethodSignature) pjp.getSignature();
 
-            chaosMonkeyRequestScope.callChaosMonkey(target, createSignature(signature));
+            chaosMonkeyRequestScope.callChaosMonkey(target, createSignature(signature), pjp.getTarget(), signature.getMethod());
         }
         return pjp.proceed();
     }

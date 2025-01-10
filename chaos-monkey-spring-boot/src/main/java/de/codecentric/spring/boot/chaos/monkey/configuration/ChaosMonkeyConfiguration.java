@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChao
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyJmxEndpoint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.ChaosMonkeyRestEndpoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -36,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.retry.annotation.Recover;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -53,9 +53,8 @@ import java.util.List;
 @Import({UnleashChaosConfiguration.class, ChaosMonkeyWebClientConfiguration.class, ChaosMonkeyRestTemplateConfiguration.class,
         ChaosMonkeyAdvisorConfiguration.class, ChaosMonkeyOpenApiConfiguration.class})
 @EnableScheduling
+@Slf4j
 public class ChaosMonkeyConfiguration {
-
-    private static final Logger Logger = LoggerFactory.getLogger(ChaosMonkeyConfiguration.class);
 
     private static final String CHAOS_MONKEY_TASK_SCHEDULER = "chaosMonkeyTaskScheduler";
 
@@ -72,10 +71,9 @@ public class ChaosMonkeyConfiguration {
         this.assaultProperties = assaultProperties;
 
         try {
-            String chaosLogo = StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset());
-            Logger.info(chaosLogo);
+            log.info(StreamUtils.copyToString(new ClassPathResource("chaos-logo.txt").getInputStream(), Charset.defaultCharset()));
         } catch (IOException e) {
-            Logger.info("Chaos Monkey - ready to do evil");
+            log.info("Chaos Monkey - ready to do evil");
         }
     }
 
@@ -127,8 +125,8 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     public ChaosMonkeyRequestScope chaosMonkeyRequestScope(List<ChaosMonkeyRequestAssault> chaosMonkeyAssaults, List<ChaosMonkeyAssault> allAssaults,
-            ChaosToggles chaosToggles, ChaosToggleNameMapper chaosToggleNameMapper, ChaosMonkeySettings settings, MetricEventPublisher publisher) {
-        return new ChaosMonkeyRequestScope(settings, chaosMonkeyAssaults, allAssaults, publisher, chaosToggles, chaosToggleNameMapper);
+            ChaosToggles chaosToggles, ChaosToggleNameMapper chaosToggleNameMapper, ChaosMonkeySettings settings, MetricEventPublisher publisher, MethodFilter methodFilter) {
+        return new ChaosMonkeyRequestScope(settings, chaosMonkeyAssaults, allAssaults, publisher, chaosToggles, chaosToggleNameMapper, methodFilter);
     }
 
     @Bean
@@ -174,5 +172,17 @@ public class ChaosMonkeyConfiguration {
     @ConditionalOnAvailableEndpoint
     public ChaosMonkeyJmxEndpoint chaosMonkeyJmxEndpoint(ChaosMonkeySettings settings) {
         return new ChaosMonkeyJmxEndpoint(settings);
+    }
+
+    @Bean
+    @ConditionalOnClass(Recover.class)
+    public MethodFilter recoverMethodFilter() {
+        return new RecoverMethodFilter();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public MethodFilter methodFilter() {
+        return (target, method) -> false;
     }
 }
