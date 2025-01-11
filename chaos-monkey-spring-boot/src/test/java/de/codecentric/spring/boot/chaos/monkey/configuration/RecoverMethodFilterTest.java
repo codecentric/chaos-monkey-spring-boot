@@ -33,7 +33,6 @@ class RecoverMethodFilterTest {
         }
     }
 
-
     private RecoverMethodFilter recoverMethodFilter;
 
     @BeforeEach
