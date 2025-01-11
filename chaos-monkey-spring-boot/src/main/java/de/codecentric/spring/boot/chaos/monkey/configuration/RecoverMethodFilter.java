@@ -15,13 +15,11 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.retry.annotation.Recover;
 
 import java.lang.reflect.Method;
 
-@Slf4j
 public class RecoverMethodFilter implements MethodFilter {
     @Override
     public boolean filter(Object target, Method method) {
@@ -29,18 +27,14 @@ public class RecoverMethodFilter implements MethodFilter {
         if (recover == null) {
             recover = findAnnotationOnTarget(target, method);
         }
-        if (recover != null) {
-            log.info("recover found:{}", recover);
-            return true;
-        }
-        return false;
+        return recover != null;
     }
 
     private Recover findAnnotationOnTarget(Object target, Method method) {
         try {
             Method targetMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
             return AnnotatedElementUtils.findMergedAnnotation(targetMethod, Recover.class);
-        } catch (Exception var4) {
+        } catch (RuntimeException | NoSuchMethodException e) {
             return null;
         }
     }

@@ -101,12 +101,8 @@ public class ChaosMonkeyRequestScope {
         }
 
         ChaosMonkeyAssault assault = getRandomFrom(activeAssaults);
-        if (target != null && method != null && assault instanceof ExceptionAssault) {
-            log.info("exception assault found");
-            if (methodFilter.filter(target, method)) {
-                log.info("recover found");
-                return;
-            }
+        if (target != null && method != null && assault instanceof ExceptionAssault && methodFilter.filter(target, method)) {
+            return;
         }
         assault.attack();
 
