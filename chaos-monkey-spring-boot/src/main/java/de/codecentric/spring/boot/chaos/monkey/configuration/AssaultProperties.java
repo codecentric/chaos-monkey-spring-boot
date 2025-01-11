@@ -42,6 +42,7 @@ public class AssaultProperties {
 
     private boolean exceptionsActive;
 
+    @JsonIgnore
     private boolean exceptionsIgnoredOnRecover;
 
     @NestedConfigurationProperty
