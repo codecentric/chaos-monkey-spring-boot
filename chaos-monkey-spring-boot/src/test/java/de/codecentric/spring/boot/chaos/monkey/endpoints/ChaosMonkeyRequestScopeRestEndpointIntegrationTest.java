@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,12 @@ package de.codecentric.spring.boot.chaos.monkey.endpoints;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.codecentric.spring.boot.chaos.monkey.configuration.*;
+import de.codecentric.spring.boot.chaos.monkey.assaults.KillAppAssault;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
+import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
+import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
+import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
@@ -31,8 +36,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -46,13 +57,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test-chaos-monkey-profile.properties")
 class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    // NB: We don't want to kill the JVM the tests are running in
+    @MockitoBean
+    private KillAppAssault.ExitHelper exitHelper;
+
     @Autowired
     private ChaosMonkeySettings chaosMonkeySettings;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private String baseUrl;
 
@@ -291,6 +307,16 @@ class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(Objects.requireNonNull(result.getBody()).isEnabled()).isEqualTo(false);
         assertThat(Objects.requireNonNull(result.getBody()).getDisabledAt()).isAfterOrEqualTo(disabledAt);
+    }
+
+    @Test
+    void postToAttackRespondsIfKillAppAssaultIsConfigured() {
+        chaosMonkeySettings.getChaosMonkeyProperties().setEnabled(true);
+        chaosMonkeySettings.getAssaultProperties().setKillApplicationActive(true);
+
+        ResponseEntity<String> result = testRestTemplate.postForEntity(baseUrl + "/assaults/runtime/attack", null, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isEqualTo("Started runtime assaults");
     }
 
     private ResponseEntity<String> postChaosMonkeySettings(ChaosMonkeySettings chaosMonkeySettings) {
