@@ -52,7 +52,7 @@ You can decide which attacks you want to run and which parts of your application
 |FALSE
 
 |chaos.monkey.assaults.exceptions-ignored-on-recover.
-|Exceptionignored on `@Recover` annotated methods
+|Exception ignored on `@Recover` annotated methods
 |TRUE or FALSE
 |FALSE
 
