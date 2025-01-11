@@ -11,6 +11,7 @@ Built with Spring Boot {spring-boot-version}
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/issues/395 Recover method should be called in case of service assault.
 
 === Contributors
 This release was only possible because of these great humans ❤️:

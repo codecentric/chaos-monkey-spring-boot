@@ -51,6 +51,11 @@ You can decide which attacks you want to run and which parts of your application
 |TRUE or FALSE
 |FALSE
 
+|chaos.monkey.assaults.exceptions-ignored-on-recover.
+|Exceptionignored on `@Recover` annotated methods
+|TRUE or FALSE
+|FALSE
+
 |chaos.monkey.assaults.exception.type
 |Exception to be thrown
 |Class name
