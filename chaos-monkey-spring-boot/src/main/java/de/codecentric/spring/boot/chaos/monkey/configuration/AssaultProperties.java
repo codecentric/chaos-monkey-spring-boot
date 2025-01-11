@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,24 +32,26 @@ import org.springframework.util.CollectionUtils;
 public class AssaultProperties {
     private int level = 1;
 
-    private boolean deterministic = false;
+    private boolean deterministic;
 
     private int latencyRangeStart = 1000;
 
     private int latencyRangeEnd = 3000;
 
-    private boolean latencyActive = false;
+    private boolean latencyActive;
 
-    private boolean exceptionsActive = false;
+    private boolean exceptionsActive;
+
+    private boolean exceptionsIgnoredOnRecover;
 
     @NestedConfigurationProperty
     private AssaultException exception;
 
-    private boolean killApplicationActive = false;
+    private boolean killApplicationActive;
 
     private String killApplicationCronExpression = "OFF";
 
-    private volatile boolean memoryActive = false;
+    private volatile boolean memoryActive;
 
     private int memoryMillisecondsHoldFilledMemory = 90000;
 
@@ -61,7 +63,7 @@ public class AssaultProperties {
 
     private String memoryCronExpression = "OFF";
 
-    private volatile boolean cpuActive = false;
+    private volatile boolean cpuActive;
 
     private int cpuMillisecondsHoldLoad = 90000;
 

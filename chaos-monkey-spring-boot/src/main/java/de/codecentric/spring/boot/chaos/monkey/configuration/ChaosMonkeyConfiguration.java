@@ -30,6 +30,7 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -177,6 +178,7 @@ public class ChaosMonkeyConfiguration {
 
     @Bean
     @ConditionalOnClass(Recover.class)
+    @ConditionalOnProperty(name = "chaos.monkey.assaults.exceptions-ignored-on-recover", havingValue = "true")
     public MethodFilter recoverMethodFilter() {
         return new RecoverMethodFilter();
     }

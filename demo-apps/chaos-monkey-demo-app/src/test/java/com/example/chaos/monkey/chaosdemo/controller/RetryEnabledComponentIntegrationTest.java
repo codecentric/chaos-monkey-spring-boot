@@ -24,12 +24,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application-component-retry.properties")
-public class RetryComponentIntegrationTest {
+@TestPropertySource(locations = "classpath:application-component-retry.properties", properties = "chaos.monkey.assaults.exceptions-ignored-on-recover=true")
+public class RetryEnabledComponentIntegrationTest {
 
     @Autowired
     private RetryComponent retryComponent;
@@ -41,7 +40,6 @@ public class RetryComponentIntegrationTest {
     public void callingPublicMethodOnComponent() {
         assertTrue(chaosMonkeyConfiguration.chaosMonkeySettings().getWatcherProperties().isComponent());
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> retryComponent.sayHello());
-        assertEquals("Chaos Monkey - RuntimeException", runtimeException.getMessage());
+        assertEquals("Hello from Recover: Chaos Monkey - RuntimeException", retryComponent.sayHello());
     }
 }
