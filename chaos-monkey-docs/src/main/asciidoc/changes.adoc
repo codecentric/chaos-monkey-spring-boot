@@ -17,5 +17,6 @@ Built with Spring Boot {spring-boot-version}
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
+- https://github.com/denniseffing[@denniseffing]
 
 Thank you for your support!
