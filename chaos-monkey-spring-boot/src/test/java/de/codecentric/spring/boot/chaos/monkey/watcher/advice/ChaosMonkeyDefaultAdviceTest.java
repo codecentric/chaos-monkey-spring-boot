@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -55,8 +57,8 @@ class ChaosMonkeyDefaultAdviceTest {
 
         proxy.sayHello();
 
-        verify(requestScope, times(1)).callChaosMonkey(ChaosTarget.COMPONENT,
-                "de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello");
+        verify(requestScope, times(1)).callChaosMonkey(eq(ChaosTarget.COMPONENT),
+                eq("de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent.sayHello"), any(), any());
         verify(eventPublisher, times(1)).publishMetricEvent("execution.DemoComponent.sayHello", MetricType.COMPONENT);
         verifyNoMoreInteractions(requestScope, eventPublisher);
     }

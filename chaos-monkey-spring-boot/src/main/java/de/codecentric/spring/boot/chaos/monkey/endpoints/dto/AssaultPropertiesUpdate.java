@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 the original author or authors.
+ * Copyright 2019-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultExceptionConstraint;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultPropertiesUpdateLatencyRangeConstraint;
 import java.util.List;
-import java.util.function.Consumer;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -129,37 +130,11 @@ public class AssaultPropertiesUpdate {
     @Nullable
     private List<String> watchedCustomServices;
 
-    private <T> void applyTo(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
-    }
-
     public void applyTo(AssaultProperties t) {
-        applyTo(level, t::setLevel);
-        applyTo(deterministic, t::setDeterministic);
-        applyTo(latencyActive, t::setLatencyActive);
-        applyTo(latencyRangeStart, t::setLatencyRangeStart);
-        applyTo(latencyRangeEnd, t::setLatencyRangeEnd);
-
-        applyTo(exceptionsActive, t::setExceptionsActive);
-        applyTo(exception, t::setException);
-
-        applyTo(killApplicationActive, t::setKillApplicationActive);
-        applyTo(killApplicationCronExpression, t::setKillApplicationCronExpression);
-
-        applyTo(memoryActive, t::setMemoryActive);
-        applyTo(memoryMillisecondsHoldFilledMemory, t::setMemoryMillisecondsHoldFilledMemory);
-        applyTo(memoryMillisecondsWaitNextIncrease, t::setMemoryMillisecondsWaitNextIncrease);
-        applyTo(memoryFillIncrementFraction, t::setMemoryFillIncrementFraction);
-        applyTo(memoryFillTargetFraction, t::setMemoryFillTargetFraction);
-        applyTo(memoryCronExpression, t::setMemoryCronExpression);
-
-        applyTo(cpuActive, t::setCpuActive);
-        applyTo(cpuMillisecondsHoldLoad, t::setCpuMillisecondsHoldLoad);
-        applyTo(cpuLoadTargetFraction, t::setCpuLoadTargetFraction);
-        applyTo(cpuCronExpression, t::setCpuCronExpression);
-
-        applyTo(watchedCustomServices, t::setWatchedCustomServices);
+        try {
+            new ObjectMapper().updateValue(t, this);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

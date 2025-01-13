@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ public class ChaosMonkeyBeanPostProcessorTest {
     }
 
     private void verifyDependenciesCalledXTimes(int i) {
-        verify(requestScope, times(i)).callChaosMonkey(ChaosTarget.BEAN, simpleName);
+        verify(requestScope, times(i)).callChaosMonkey(eq(ChaosTarget.BEAN), eq(simpleName), any(), any());
         verify(metrics, times(i)).publishMetricEvent(pointcutName, MetricType.BEAN);
         verifyNoMoreInteractions(requestScope, metrics);
     }
