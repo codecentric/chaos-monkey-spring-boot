@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,10 +49,8 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
     public void attack() {
         Logger.info("Chaos Monkey - cpu assault");
 
-        // metrics
-        if (metricEventPublisher != null) {
-            metricEventPublisher.publishMetricEvent(MetricType.CPU_ASSAULT);
-        }
+        metricEventPublisher.publishMetricEvent(MetricType.CPU_ASSAULT);
+
         double load = settings.getAssaultProperties().getCpuLoadTargetFraction();
 
         if (os.getProcessCpuLoad() >= 0) {

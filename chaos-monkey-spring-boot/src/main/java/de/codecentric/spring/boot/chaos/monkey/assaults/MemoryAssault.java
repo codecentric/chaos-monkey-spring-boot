@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,7 @@ public class MemoryAssault implements ChaosMonkeyRuntimeAssault {
     public void attack() {
         Logger.info("Chaos Monkey - memory assault");
 
-        // metrics
-        if (metricEventPublisher != null) {
-            metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT);
-        }
+        metricEventPublisher.publishMetricEvent(MetricType.MEMORY_ASSAULT);
 
         if (inAttack.compareAndSet(false, true)) {
             try {
