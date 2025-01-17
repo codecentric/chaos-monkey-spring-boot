@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,7 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.component;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
-import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
@@ -28,20 +23,28 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperti
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-/** @author Benjamin Wilms */
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
+/**
+ * @author Benjamin Wilms, Dennis Effing
+ */
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ChaosMonkeyRequestScopeTest {
 
     ChaosMonkeyRequestScope chaosMonkeyRequestScope;
@@ -64,18 +67,25 @@ class ChaosMonkeyRequestScopeTest {
     @Mock
     MetricEventPublisher metricEventPublisherMock;
 
+    private List<ChaosMonkeyRequestAssault> assaults;
+
     @BeforeEach
     void setUpCommon() {
         given(chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(chaosMonkeyProperties);
+        given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
 
-        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Arrays.asList(latencyAssault, exceptionAssault),
-                Collections.emptyList(), metricEventPublisherMock, new DefaultChaosToggles(),
-                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+        // NB: The order of assaults in the array is important when attacks are chosen
+        // by random
+        // or when mocking the random result.
+        assaults = Arrays.asList(latencyAssault, exceptionAssault);
+        chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, assaults, Collections.emptyList(), metricEventPublisherMock,
+                new DefaultChaosToggles(), new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
     }
 
     @Test
-    void givenChaosMonkeyExecutionIsDisabledExpectNoInteractions() {
-        given(chaosMonkeyProperties.isEnabled()).willReturn(false);
+    void callChaosMonkey_shouldNotRunActiveAttacksIfDisabled() {
+        givenChaosMonkeyIsDisabled();
+        givenMultipleActiveAttacks();
 
         chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
@@ -83,204 +93,192 @@ class ChaosMonkeyRequestScopeTest {
         verify(exceptionAssault, never()).attack();
     }
 
-    @Nested
-    class GivenChaosMonekyExecutionIsEnabled {
+    @Test
+    void callChaosMonkey_shouldNotPublishRequestCountMetricIfDisabled() {
+        givenChaosMonkeyIsDisabled();
 
-        @BeforeEach
-        void setUpForChaosMonkeyExecutionEnabled() {
-            assaultProperties.setLevel(1);
-            given(assaultProperties.getTroubleRandom()).willReturn(1);
-            given(chaosMonkeyProperties.isEnabled()).willReturn(true);
-            given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
-        }
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
-        @Test
-        void allAssaultsActiveExpectLatencyAttack() {
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(0);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault).attack();
-        }
-
-        @Test
-        void allAssaultsActiveExpectExceptionAttack() {
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(1);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(exceptionAssault).attack();
-        }
-
-        @Test
-        void isLatencyAssaultActive() {
-            given(latencyAssault.isActive()).willReturn(true);
-            given(exceptionAssault.isActive()).willReturn(false);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault).attack();
-        }
-
-        @Test
-        void isExceptionAssaultActive() {
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(false);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(exceptionAssault).attack();
-        }
-
-        @Test
-        void isExceptionAndLatencyAssaultActiveExpectExceptionAttack() {
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(1);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(exceptionAssault).attack();
-        }
-
-        @Test
-        void isExceptionAndLatencyAssaultActiveExpectLatencyAttack() {
-
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(0);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault).attack();
-        }
-
-        @Test
-        void isExceptionActiveExpectExceptionAttack() {
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(false);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(exceptionAssault).attack();
-        }
-
-        @Test
-        void isLatencyActiveExpectLatencyAttack() {
-            given(exceptionAssault.isActive()).willReturn(false);
-            given(latencyAssault.isActive()).willReturn(true);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault).attack();
-        }
-
-        @Test
-        void givenNoAssaultsActiveExpectNoAttack() {
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault, never()).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void givenAssaultLevelTooHighExpectNoLogging() {
-            assaultProperties.setLevel(1000);
-            given(assaultProperties.getTroubleRandom()).willReturn(9);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, null);
-
-            verify(latencyAssault, never()).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void chaosMonkeyIsNotCalledWhenServiceNotWatched() {
-            assaultProperties.setWatchedCustomServices(List.of("CustomService"));
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, "notInListService");
-
-            verify(latencyAssault, never()).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void chaosMonkeyIsCalledWhenServiceIsWatched() {
-            assaultProperties.setWatchedCustomServices(List.of("CustomService"));
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(0);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, "CustomService");
-
-            verify(latencyAssault).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsMethodReference() {
-            assaultProperties.setWatchedCustomServices(List.of("org.springframework.data.repository.CrudRepository"));
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(chaosMonkeySettings.getAssaultProperties().isWatchedCustomServicesActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(0);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, "org.springframework.data.repository.CrudRepository.findAll");
-
-            verify(latencyAssault).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void chaosMonkeyIsCalledWhenServiceIsWatchedWhenSimpleNameIsPackageReference() {
-            assaultProperties.setWatchedCustomServices(List.of("org.springframework.data.repository"));
-            given(exceptionAssault.isActive()).willReturn(true);
-            given(latencyAssault.isActive()).willReturn(true);
-            given(assaultProperties.chooseAssault(2)).willReturn(0);
-
-            chaosMonkeyRequestScope.callChaosMonkey(null, "org.springframework.data.repository.CrudRepository.findAll");
-
-            verify(latencyAssault).attack();
-            verify(exceptionAssault, never()).attack();
-        }
-
-        @Test
-        void shouldMakeUncategorizedCustomAssaultsRequestScopeByDefault() {
-            // create an assault that is neither runtime nor request
-            ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
-            given(customAssault.isActive()).willReturn(true);
-            ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
-                    Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
-                    new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
-
-            customScope.callChaosMonkey(null, "foo");
-            verify(customAssault).attack();
-        }
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
     }
 
     @Test
-    void assaultShouldBeDeterministicIfConfigured() {
-        assaultProperties.setLevel(3);
-        assaultProperties.setDeterministic(true);
-        ChaosMonkeyAssault customAssault = mock(ChaosMonkeyAssault.class);
-        given(customAssault.isActive()).willReturn(true);
+    void callChaosMonkey_givenOneActiveAttack_shouldRunAttackIfEnabled() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0)).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenMultipleActiveAttacks_shouldChooseAttackByRandom() {
+        givenChaosMonkeyIsEnabled();
+        givenMultipleActiveAttacks();
+        given(assaultProperties.chooseAssault(assaults.size())).willReturn(0);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0)).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenRandomTrouble_shouldRunAttackAndPublishRequestCountMetricIfRandomTroubleIsHigherThanLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(false);
+        given(assaultProperties.getTroubleRandom()).willReturn(3);
+        given(assaultProperties.getLevel()).willReturn(2);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0)).attack();
+        verify(metricEventPublisherMock).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+        verify(metricEventPublisherMock).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
+
+    @Test
+    void callChaosMonkey_givenRandomTrouble_shouldRunAttackAndPublishRequestCountMetricIfRandomTroubleIsEqualToLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(false);
+        given(assaultProperties.getTroubleRandom()).willReturn(2);
+        given(assaultProperties.getLevel()).willReturn(2);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0)).attack();
+        verify(metricEventPublisherMock).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+        verify(metricEventPublisherMock).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
+
+    @Test
+    void callChaosMonkey_givenRandomTrouble_shouldNotRunAttackAndNotPublishRequestCountMetricIfRandomTroubleIsLowerThanLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(false);
+        given(assaultProperties.getTroubleRandom()).willReturn(1);
+        given(assaultProperties.getLevel()).willReturn(2);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0), never()).attack();
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
+
+    @Test
+    void callChaosMonkey_givenDeterministicTrouble_shouldNotRunAndNotPublishRequestCountMetricAttackIfAttackCountIsLowerThanLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(true);
+        given(assaultProperties.getLevel()).willReturn(2);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0), never()).attack();
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
+
+    @Test
+    void callChaosMonkey_givenDeterministicTrouble_shouldRunAttackAndPublishRequestCountMetricIfAttackCountIsEqualToLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(true);
+        given(assaultProperties.getLevel()).willReturn(2);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(assaults.get(0)).attack();
+        verify(metricEventPublisherMock).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
+        verify(metricEventPublisherMock).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
+
+    @Test
+    void callChaosMonkey_givenDeterministicTroubleAndConfiguredWatchedCustomServices_shouldNotRunAttackIfAttackCountIsLowerThanLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(true);
+        given(assaultProperties.getLevel()).willReturn(3);
+        given(assaultProperties.isWatchedCustomServicesActive()).willReturn(true);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(List.of("de.test.CustomService.someMethod"));
+
+        // Important: We call chaos monkey three times, but the second attack is not on
+        // the watched custom service!
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someOtherMethod");
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+
+        verify(assaults.get(0), never()).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenConfiguredWatchedCustomServices_shouldRunAttackIfTargetPackageNameMatches() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isWatchedCustomServicesActive()).willReturn(true);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(List.of("de.test"));
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+
+        verify(assaults.get(0)).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenConfiguredWatchedCustomServices_shouldRunAttackIfTargetClassNameMatches() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isWatchedCustomServicesActive()).willReturn(true);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(List.of("de.test.CustomService"));
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+
+        verify(assaults.get(0)).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenConfiguredWatchedCustomServices_shouldRunAttackIfTargetMethodNameMatches() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isWatchedCustomServicesActive()).willReturn(true);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(List.of("de.test.CustomService.someMethod"));
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+
+        verify(assaults.get(0)).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenConfiguredCustomServices_shouldNotRunAttackIfTargetSimpleNameDoesNotMatch() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isWatchedCustomServicesActive()).willReturn(true);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(List.of("de.test.CustomService.someMethod"));
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someOtherMethod");
+
+        verify(assaults.get(0), never()).attack();
+    }
+
+    private void givenChaosMonkeyIsEnabled() {
         given(chaosMonkeyProperties.isEnabled()).willReturn(true);
-        given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
+    }
 
-        ChaosMonkeyRequestScope customScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, Collections.emptyList(),
-                Collections.singletonList(customAssault), metricEventPublisherMock, new DefaultChaosToggles(),
-                new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+    private void givenChaosMonkeyIsDisabled() {
+        given(chaosMonkeyProperties.isEnabled()).willReturn(false);
+    }
 
-        customScope.callChaosMonkey(null, "foo");
-        verify(customAssault, never()).attack();
-        customScope.callChaosMonkey(null, "foo");
-        verify(customAssault, never()).attack();
-        customScope.callChaosMonkey(null, "foo");
-        verify(customAssault).attack();
+    private void givenOneActiveAttack() {
+        given(latencyAssault.isActive()).willReturn(true);
+        given(exceptionAssault.isActive()).willReturn(false);
+    }
+
+    private void givenMultipleActiveAttacks() {
+        given(exceptionAssault.isActive()).willReturn(true);
+        given(latencyAssault.isActive()).willReturn(true);
     }
 }
