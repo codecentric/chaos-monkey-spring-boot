@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.lang.Nullable;
 
 import java.util.Locale;
 import java.util.function.BooleanSupplier;
@@ -33,15 +32,15 @@ import java.util.function.Predicate;
 public class ChaosMonkeyDefaultAdvice extends AbstractChaosMonkeyAdvice {
 
     private final ChaosMonkeyRequestScope chaosMonkeyRequestScope;
-    @Nullable
+
     private final MetricEventPublisher metricEventPublisher;
 
     private final ChaosTarget target;
 
     private final Predicate<ProceedingJoinPoint> isEnabled;
 
-    public ChaosMonkeyDefaultAdvice(ChaosMonkeyRequestScope chaosMonkeyRequestScope, @Nullable MetricEventPublisher metricEventPublisher,
-            ChaosTarget target, BooleanSupplier isEnabled) {
+    public ChaosMonkeyDefaultAdvice(ChaosMonkeyRequestScope chaosMonkeyRequestScope, MetricEventPublisher metricEventPublisher, ChaosTarget target,
+            BooleanSupplier isEnabled) {
         this(chaosMonkeyRequestScope, metricEventPublisher, target, (pjp) -> isEnabled.getAsBoolean());
     }
 
@@ -50,9 +49,7 @@ public class ChaosMonkeyDefaultAdvice extends AbstractChaosMonkeyAdvice {
         if (isEnabled.test(pjp)) {
             log.debug("Watching public method on {} class: {}", target.getName().toLowerCase(Locale.ROOT), pjp.getSignature());
 
-            if (metricEventPublisher != null) {
-                metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), target.getMetricType());
-            }
+            metricEventPublisher.publishMetricEvent(calculatePointcut(pjp.toShortString()), target.getMetricType());
 
             MethodSignature signature = (MethodSignature) pjp.getSignature();
 

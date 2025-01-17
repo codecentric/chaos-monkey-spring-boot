@@ -59,9 +59,7 @@ public class KillAppAssault implements ChaosMonkeyRuntimeAssault {
         try {
             Logger.info("Chaos Monkey - I am killing your Application!");
 
-            if (metricEventPublisher != null) {
-                metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
-            }
+            metricEventPublisher.publishMetricEvent(MetricType.KILLAPP_ASSAULT);
 
             Thread thread = new Thread(this::killApplication);
             thread.setContextClassLoader(this.getClass().getClassLoader());

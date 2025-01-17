@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,11 +58,8 @@ public class LatencyAssault implements ChaosMonkeyRequestAssault {
 
         atomicTimeoutGauge.set(determineLatency());
 
-        // metrics
-        if (metricEventPublisher != null) {
-            metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT);
-            metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
-        }
+        metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT);
+        metricEventPublisher.publishMetricEvent(MetricType.LATENCY_ASSAULT, atomicTimeoutGauge);
 
         assaultExecutor.execute(atomicTimeoutGauge.get());
     }

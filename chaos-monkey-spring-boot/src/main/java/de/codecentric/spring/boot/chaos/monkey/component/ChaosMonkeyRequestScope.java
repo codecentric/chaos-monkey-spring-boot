@@ -68,9 +68,7 @@ public class ChaosMonkeyRequestScope {
 
     public void callChaosMonkey(ChaosTarget type, String simpleName) {
         if (isEnabled(type, simpleName) && isTrouble(simpleName)) {
-            if (metricEventPublisher != null) {
-                metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
-            }
+            metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
             chooseAndRunAttack();
         }
     }
@@ -82,9 +80,7 @@ public class ChaosMonkeyRequestScope {
         }
         getRandomFrom(activeAssaults).attack();
 
-        if (metricEventPublisher != null) {
-            metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
-        }
+        metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
     }
 
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {
