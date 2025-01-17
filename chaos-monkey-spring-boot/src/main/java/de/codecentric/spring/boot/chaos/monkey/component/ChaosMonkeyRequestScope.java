@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,24 +67,11 @@ public class ChaosMonkeyRequestScope {
     }
 
     public void callChaosMonkey(ChaosTarget type, String simpleName) {
-        if (isEnabled(type, simpleName) && isTrouble()) {
-
+        if (isEnabled(type, simpleName) && isTrouble(simpleName)) {
             if (metricEventPublisher != null) {
                 metricEventPublisher.publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "total");
             }
-
-            // Custom watched services can be defined at runtime, if there are any, only
-            // these will be attacked!
-            AssaultProperties assaultProps = chaosMonkeySettings.getAssaultProperties();
-            if (assaultProps.isWatchedCustomServicesActive()) {
-                if (assaultProps.getWatchedCustomServices().stream().anyMatch(simpleName::startsWith)) {
-                    // only all listed custom methods will be attacked
-                    chooseAndRunAttack();
-                }
-            } else {
-                // default attack if no custom watched service is defined
-                chooseAndRunAttack();
-            }
+            chooseAndRunAttack();
         }
     }
 
@@ -105,7 +92,15 @@ public class ChaosMonkeyRequestScope {
         return activeAssaults.get(exceptionRand);
     }
 
-    private boolean isTrouble() {
+    private boolean isTrouble(String simpleName) {
+        // Custom watched services can be defined at runtime, if there are any, only
+        // these will be attacked!
+        AssaultProperties assaultProperties = chaosMonkeySettings.getAssaultProperties();
+        if (assaultProperties.isWatchedCustomServicesActive()
+                && assaultProperties.getWatchedCustomServices().stream().noneMatch(simpleName::startsWith)) {
+            return false;
+        }
+
         if (chaosMonkeySettings.getAssaultProperties().isDeterministic()) {
             return assaultCounter.incrementAndGet() % chaosMonkeySettings.getAssaultProperties().getLevel() == 0;
         } else {

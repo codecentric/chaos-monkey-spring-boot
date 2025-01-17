@@ -199,6 +199,24 @@ class ChaosMonkeyRequestScopeTest {
     }
 
     @Test
+    void callChaosMonkey_givenDeterministicTroubleAndConfiguredWatchedCustomServices_shouldNotRunAttackIfAttackCountIsLowerThanLevel() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(assaultProperties.isDeterministic()).willReturn(true);
+        given(assaultProperties.getLevel()).willReturn(3);
+        given(assaultProperties.isWatchedCustomServicesActive()).willReturn(true);
+        given(assaultProperties.getWatchedCustomServices()).willReturn(List.of("de.test.CustomService.someMethod"));
+
+        // Important: We call chaos monkey three times, but the second attack is not on
+        // the watched custom service!
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someOtherMethod");
+        chaosMonkeyRequestScope.callChaosMonkey(null, "de.test.CustomService.someMethod");
+
+        verify(assaults.get(0), never()).attack();
+    }
+
+    @Test
     void callChaosMonkey_givenConfiguredWatchedCustomServices_shouldRunAttackIfTargetPackageNameMatches() {
         givenChaosMonkeyIsEnabled();
         givenOneActiveAttack();

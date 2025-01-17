@@ -6,6 +6,9 @@ Built with Spring Boot {spring-boot-version}
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/528[#528] Fix `/chaosmonkey/assaults/runtime/attack` not responding when executing kill application assault
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/532[#532] Fix deterministic trouble for custom watched services +
+We now only counts attacks on custom watched services instead of
+counting all attacks.
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -18,5 +21,6 @@ This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
 - https://github.com/denniseffing[@denniseffing]
+- https://github.com/eshaanganesh2[@eshaanganesh2]
 
 Thank you for your support!
