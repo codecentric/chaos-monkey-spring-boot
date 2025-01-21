@@ -42,7 +42,7 @@
     <spring-doc.version>1.8.0</spring-doc.version>
 
     <!-- dependency versions -->
-    <unleash.version>9.3.0</unleash.version>
+    <unleash.version>9.3.1</unleash.version>
 
     <!-- plugin versions-->
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
