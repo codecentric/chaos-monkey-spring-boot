@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,13 @@ public enum MetricType {
     private final boolean tagEvent;
 
     MetricType(String metricName, boolean signatureEvent, boolean tagEvent) {
-        this.metricName = metricName;
+        this.metricName = "chaos.monkey." + metricName;
         this.signatureEvent = signatureEvent;
         this.tagEvent = tagEvent;
     }
 
     public String getMetricName() {
-        String metricBaseName = "chaos.monkey.";
-        return metricBaseName + metricName;
+        return metricName;
     }
 
     public boolean isSignatureOnlyEvent() {
