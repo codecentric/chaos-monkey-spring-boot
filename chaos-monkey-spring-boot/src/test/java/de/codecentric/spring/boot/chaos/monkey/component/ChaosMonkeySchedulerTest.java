@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 the original author or authors.
+ * Copyright 2019-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,9 +111,8 @@ class ChaosMonkeySchedulerTest {
     }
 
     @Test
-    void shouldRescheduleOnlyChangedTasks(@Mock ScheduledTask newTask,
-                                          @Mock(name = "memory") ScheduledTask memoryTask,
-                                          @Mock(name = "killApp") ScheduledTask oldTask) {
+    void shouldRescheduleOnlyChangedTasks(@Mock ScheduledTask newTask, @Mock(name = "memory") ScheduledTask memoryTask,
+            @Mock(name = "killApp") ScheduledTask oldTask) {
         when(memoryTask.getTask()).thenReturn(new CronTask(EMPTY_RUNNABLE, "*/1 * * * * ?"));
         when(oldTask.getTask()).thenReturn(new CronTask(EMPTY_RUNNABLE, "*/2 * * * * ?"));
         when(memoryAssault.getCronExpression(any())).thenReturn("*/1 * * * * ?");
