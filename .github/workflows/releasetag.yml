@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Run Maven deploy
-        run: ./mvnw deploy -DperformRelease=true --settings .settings.xml -pl chaos-monkey-spring-boot
+        run: ./mvnw deploy -pl chaos-monkey-spring-boot -DperformRelease=true --settings .settings.xml
         env:
           SONATYPE_USERTOKEN: ${{ secrets.SONATYPE_USERTOKEN }}
           SONATYPE_USERTOKENPASSWORD: ${{ secrets.SONATYPE_USERTOKENPASSWORD }}
