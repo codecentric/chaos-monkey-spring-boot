@@ -30,7 +30,7 @@ implementation 'de.codecentric:chaos-monkey-spring-boot:{project-version}'
 implementation("de.codecentric:chaos-monkey-spring-boot:{project-version}")
 ----
 
-NOTE: If you want to use the latest snapshot version, add the sonatype staging repository `https://oss.sonatype.org/content/repositories/snapshots/`
+NOTE: If you want to use the latest snapshot version, add the maven central staging repository `https://central.sonatype.com/repository/maven-snapshots/`
 
 2.) Start your Spring Boot App with the `chaos-monkey` spring profile enabled. We also pass some properties to assault services with latency.
 

@@ -22,5 +22,7 @@ This release was only possible because of these great humans ❤️:
 // - https://github.com/octocat[@octocat]
 - https://github.com/denniseffing[@denniseffing]
 - https://github.com/eshaanganesh2[@eshaanganesh2]
+- https://github.com/jens-kaiser[@jens-kaiser]
+- https://github.com/WtfJoke[@WtfJoke]
 
 Thank you for your support!
