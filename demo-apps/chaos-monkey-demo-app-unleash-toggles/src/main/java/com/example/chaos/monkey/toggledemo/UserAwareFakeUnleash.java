@@ -20,8 +20,8 @@ import io.getunleash.MoreOperations;
 import io.getunleash.Unleash;
 import io.getunleash.UnleashContext;
 import io.getunleash.UnleashContextProvider;
-import io.getunleash.Variant;
-import java.util.List;
+import io.getunleash.variant.Variant;
+
 import java.util.function.BiPredicate;
 
 /**
@@ -81,21 +81,6 @@ public class UserAwareFakeUnleash implements Unleash {
     @Override
     public Variant getVariant(String s, Variant variant) {
         return fakeUnleash.getVariant(s, variant);
-    }
-
-    @Override
-    public Variant deprecatedGetVariant(String s, UnleashContext unleashContext) {
-        return fakeUnleash.deprecatedGetVariant(s, unleashContext);
-    }
-
-    @Override
-    public Variant deprecatedGetVariant(String s, UnleashContext unleashContext, Variant variant) {
-        return fakeUnleash.deprecatedGetVariant(s, unleashContext, variant);
-    }
-
-    @Override
-    public List<String> getFeatureToggleNames() {
-        return null;
     }
 
     @Override
