@@ -15,8 +15,6 @@
  */
 package de.codecentric.spring.boot.demo.chaos.monkey;
 
-import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
-import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication.TestOutgoingConfigurationProperties;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
