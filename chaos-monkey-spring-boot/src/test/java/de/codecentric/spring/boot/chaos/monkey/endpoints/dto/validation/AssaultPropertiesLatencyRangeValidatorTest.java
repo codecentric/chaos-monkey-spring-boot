@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2019-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,7 @@ class AssaultPropertiesLatencyRangeValidatorTest {
     final AssaultPropertiesUpdateLatencyRangeValidator assaultPropertiesValidator = new AssaultPropertiesUpdateLatencyRangeValidator();
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "1000, 1001",
-            "1000, 1000",
-            "NULL, NULL"
-    }, nullValues = "NULL")
+    @CsvSource(value = {"1000, 1001", "1000, 1000", "NULL, NULL"}, nullValues = "NULL")
     void valideRange(Integer rangeStart, Integer rangeEnd) {
         AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
         assaultProperties.setLatencyRangeStart(rangeStart);
@@ -41,11 +37,7 @@ class AssaultPropertiesLatencyRangeValidatorTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "1001, 1000",
-            "1000, NULL",
-            "NULL, 1000"
-    }, nullValues = "NULL")
+    @CsvSource(value = {"1001, 1000", "1000, NULL", "NULL, 1000"}, nullValues = "NULL")
     void invalideRange(final Integer rangeStart, final Integer rangeEnd) {
         AssaultPropertiesUpdate assaultProperties = new AssaultPropertiesUpdate();
         assaultProperties.setLatencyRangeStart(rangeStart);
