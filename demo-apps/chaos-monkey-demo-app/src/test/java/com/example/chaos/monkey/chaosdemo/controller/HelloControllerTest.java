@@ -26,12 +26,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 /** @author Benjamin Wilms */
-@WebMvcTest(HelloController.class)
+@WebMvcTest(controllers = HelloController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class HelloControllerTest {
 
     @Autowired

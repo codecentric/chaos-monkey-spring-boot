@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,13 @@ import com.example.chaos.monkey.chaosdemo.bean.HelloConfiguration;
 import com.example.chaos.monkey.chaosdemo.component.HelloComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 /** @author Benjamin Wilms */
-@WebMvcTest({GreetingController.class, HelloComponent.class, HelloConfiguration.class})
+@WebMvcTest(controllers = {GreetingController.class, HelloComponent.class,
+        HelloConfiguration.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class GreetingControllerTest {
 
     @Autowired
