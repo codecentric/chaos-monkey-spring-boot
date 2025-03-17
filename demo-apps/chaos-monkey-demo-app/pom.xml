@@ -77,7 +77,16 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>20240325.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.14.0</version>
+        </dependency>  
     </dependencies>
 
     <build>
