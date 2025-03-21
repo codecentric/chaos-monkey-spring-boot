@@ -4,13 +4,10 @@
 Built with Spring Boot {spring-boot-version}
 
 === Bug Fixes
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/552[#552] Add alternative constructor keyword to work around HTML sanitization
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/539[539] Update unleash-client from v9 to v10.
-If you use unleash, please make sure to update the unleash-client to v10.x.x.
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -19,9 +16,5 @@ If you use unleash, please make sure to update the unleash-client to v10.x.x.
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
-- https://github.com/wtfjoke[@WtfJoke]
-- https://github.com/denniseffing[@denniseffing]
-- https://github.com/jens-kaiser[@jens-kaiser]
-- https://github.com/pratik-chauhan[@pratik-chauhan]
 
 Thank you for your support!
