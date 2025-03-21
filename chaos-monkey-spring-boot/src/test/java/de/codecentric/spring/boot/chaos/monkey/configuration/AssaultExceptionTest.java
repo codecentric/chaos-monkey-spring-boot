@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class AssaultExceptionTest {
     @Test
     void testStandardCase() {
         AssaultException assaultException = new AssaultException();
+
+        RuntimeException exception = assertThrows(RuntimeException.class, assaultException::throwExceptionInstance);
+        assertThat(exception.getMessage()).isEqualTo("Chaos Monkey - RuntimeException");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"<init>", "[init]"})
+    void testConstructorKeywords(String keyword) {
+        AssaultException assaultException = new AssaultException();
+        assaultException.setMethod(keyword);
 
         RuntimeException exception = assertThrows(RuntimeException.class, assaultException::throwExceptionInstance);
         assertThat(exception.getMessage()).isEqualTo("Chaos Monkey - RuntimeException");

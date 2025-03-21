@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 the original author or authors.
+ * Copyright 2018-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,17 +38,24 @@ public class AssaultException {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * special value used to represent constructors. "<init>" was chosen because it
-     * is used as jvm internal name for constructors, which means no method could be
-     * named like this.
+     * special default value used to represent constructors. "<init>" was chosen
+     * because it is used as jvm internal name for constructors, which means no
+     * method could be named like this.
      */
-    private static final String CONSTRUCTOR = "<init>";
+    private static final String DEFAULT_CONSTRUCTOR_KEYWORD = "<init>";
+    /**
+     * special alternative value used to represent constructors. "[init]" was chosen
+     * because it is not affected by request sanitizes (e.g. OWASP HTML sanitizer)
+     * and is not a valid method name.
+     */
+    private static final String ALTERNATIVE_CONSTRUCTOR_KEYWORD = "[init]";
+    private static final List<String> CONSTRUCTOR_KEYWORDS = List.of(DEFAULT_CONSTRUCTOR_KEYWORD, ALTERNATIVE_CONSTRUCTOR_KEYWORD);
 
     @NotNull
     private String type = "java.lang.RuntimeException";
 
     @NotNull
-    private String method = CONSTRUCTOR;
+    private String method = DEFAULT_CONSTRUCTOR_KEYWORD;
 
     @NotNull
     @NestedConfigurationProperty
@@ -78,7 +85,7 @@ public class AssaultException {
     public ThrowableCreator getCreator() throws ReflectiveOperationException {
         Class<?> exceptionClass = getExceptionClass();
         Class<?>[] argumentTypes = getExceptionArgumentTypes().toArray(new Class[0]);
-        if (CONSTRUCTOR.equals(method)) {
+        if (CONSTRUCTOR_KEYWORDS.contains(method)) {
             return new ThrowableConstructor(exceptionClass.asSubclass(Throwable.class).getConstructor(argumentTypes));
         } else {
             return new ThrowableStaticInitializer(exceptionClass.getMethod(method, argumentTypes));
