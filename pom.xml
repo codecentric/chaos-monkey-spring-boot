@@ -55,7 +55,7 @@
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
-    <skuzzle-imports-enforcer.version>2.6.0</skuzzle-imports-enforcer.version>
+    <skuzzle-imports-enforcer.version>2.6.1</skuzzle-imports-enforcer.version>
     <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
