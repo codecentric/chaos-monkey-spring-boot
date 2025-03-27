@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
+import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalManagementPort;
@@ -74,6 +75,31 @@ public class HelloControllerIntegrationTest {
         assertEquals(HttpStatus.OK, assaultResponse.getStatusCode());
 
         ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void whenExceptionAssaultIsActivatedExpectExceptionIsThrownFromRepository() {
+        AssaultPropertiesUpdate assault = new AssaultPropertiesUpdate();
+        assault.setLevel(1);
+        assault.setExceptionsActive(true);
+        assault.setLatencyActive(false);
+
+        ResponseEntity<String> assaultResponse = testRestTemplate
+                .postForEntity("http://localhost:" + managementPort + "/actuator/chaosmonkey/assaults", assault, String.class);
+        assertEquals(HttpStatus.OK, assaultResponse.getStatusCode());
+
+        WatcherPropertiesUpdate watcher = new WatcherPropertiesUpdate();
+        watcher.setRepository(true);
+        watcher.setController(false);
+        watcher.setComponent(false);
+        watcher.setRestController(false);
+        watcher.setService(false);
+        ResponseEntity<String> watcherResponse = testRestTemplate
+                .postForEntity("http://localhost:" + managementPort + "/actuator/chaosmonkey/watchers", watcher, String.class);
+        assertEquals(HttpStatus.OK, watcherResponse.getStatusCode());
+
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/dbgreet", String.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 }
