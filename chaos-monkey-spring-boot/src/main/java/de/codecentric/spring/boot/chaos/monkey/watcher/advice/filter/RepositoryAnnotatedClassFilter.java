@@ -15,6 +15,8 @@
  */
 package de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.ClassFilter;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +24,18 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 
 public class RepositoryAnnotatedClassFilter implements ClassFilter {
+    private static final Logger log = LoggerFactory.getLogger(RepositoryAnnotatedClassFilter.class);
+
     @Override
     public boolean matches(Class<?> clazz) {
+        if(clazz.isAnnotationPresent(Repository.class)
+                // if a repository is proxied by spring the annotation can only be found on the
+                // implemented interface
+                || Proxy.isProxyClass(clazz) && Arrays.stream(clazz.getInterfaces()).anyMatch(i -> i.isAnnotationPresent(Repository.class))){
+
+            log.info("Repository class which is matches RepositoryAnnotationFilter condition"+ clazz);
+        }
+
         return clazz.isAnnotationPresent(Repository.class)
                 // if a repository is proxied by spring the annotation can only be found on the
                 // implemented interface
