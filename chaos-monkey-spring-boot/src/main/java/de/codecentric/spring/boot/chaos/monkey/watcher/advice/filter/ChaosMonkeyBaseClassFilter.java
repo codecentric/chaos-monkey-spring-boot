@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
     }
 
     private boolean nonFinalOrJdkProxiedClass(Class<?> clazz) {
-        return !Modifier.isFinal(clazz.getModifiers()) || clazz.getName().startsWith("com.sun.proxy.") || clazz.getName().startsWith("jdk.proxy2.") || clazz.getName().startsWith("jdk.proxy4.");
+        return !Modifier.isFinal(clazz.getModifiers()) || clazz.getName().startsWith("com.sun.proxy.") || clazz.getName().startsWith("jdk.proxy2.")
+                || clazz.getName().startsWith("jdk.proxy4.");
     }
 
     private boolean hasProblematicFinalMethod(Class<?> clazz) {
