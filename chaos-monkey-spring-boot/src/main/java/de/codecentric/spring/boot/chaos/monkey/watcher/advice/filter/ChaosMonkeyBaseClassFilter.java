@@ -49,8 +49,8 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
     }
 
     private boolean nonFinalOrJdkProxiedClass(Class<?> clazz) {
-        return !Modifier.isFinal(clazz.getModifiers()) || clazz.getName().startsWith("com.sun.proxy.") || clazz.getName().startsWith("jdk.proxy2.")
-                || clazz.getName().startsWith("jdk.proxy4.");
+        return !Modifier.isFinal(clazz.getModifiers()) || clazz.getName().startsWith("com.sun.proxy.") || clazz.getName().startsWith("jdk.proxy");
+
     }
 
     private boolean hasProblematicFinalMethod(Class<?> clazz) {
