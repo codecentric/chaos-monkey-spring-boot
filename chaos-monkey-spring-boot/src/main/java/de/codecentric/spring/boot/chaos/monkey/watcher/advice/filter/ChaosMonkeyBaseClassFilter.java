@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.ClassFilter;
 import org.springframework.web.filter.GenericFilterBean;
@@ -49,7 +51,7 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
     }
 
     private boolean nonFinalOrJdkProxiedClass(Class<?> clazz) {
-        return !Modifier.isFinal(clazz.getModifiers()) || clazz.getName().startsWith("com.sun.proxy.") || clazz.getName().startsWith("jdk.proxy2.");
+        return !Modifier.isFinal(clazz.getModifiers()) || Proxy.isProxyClass(clazz);
     }
 
     private boolean hasProblematicFinalMethod(Class<?> clazz) {
