@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.chaos.monkey.chaosdemo.repo;
+package com.example.chaos.monkey.chaosdemo;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
-/** @author Benjamin Wilms */
-public interface HelloRepo extends CrudRepository<Hello, Long> {
+public interface PersonRepository extends CrudRepository<Person, Long> {
 }
