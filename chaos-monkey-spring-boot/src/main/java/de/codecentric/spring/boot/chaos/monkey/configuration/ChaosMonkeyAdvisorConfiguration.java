@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 the original author or authors.
+ * Copyright 2022-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,11 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.advice.advisor.ChaosMonke
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.ChaosMonkeyBaseClassFilter;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.MethodNameFilter;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.RepositoryAnnotatedClassFilter;
+import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.RepositoryClassFilter;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.SpringHookMethodsFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.aop.ClassFilter;
 import org.springframework.aop.support.ClassFilters;
 import org.springframework.aop.support.RootClassFilter;
 import org.springframework.aop.support.annotation.AnnotationClassFilter;
@@ -90,26 +92,17 @@ public class ChaosMonkeyAdvisorConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "jpaRepositoryPointcutAdvisor")
+    @ConditionalOnMissingBean(name = "repositoryPointcutAdvisor")
     @ConditionalOnClass(name = "org.springframework.data.repository.Repository")
-    public ChaosMonkeyPointcutAdvisor jpaRepositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
+    public ChaosMonkeyPointcutAdvisor repositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) throws ClassNotFoundException {
         @SuppressWarnings("unchecked")
         val repositoryDefinition = (Class<? extends Annotation>) Class.forName("org.springframework.data.repository.RepositoryDefinition");
-        Class<?> repository = Class.forName("org.springframework.data.repository.Repository");
-        return new ChaosMonkeyPointcutAdvisor(baseClassFilter,
-                new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.REPOSITORY, watcherProperties::isRepository),
-                ClassFilters.union(new AnnotationClassFilter(repositoryDefinition, false), new RootClassFilter(repository)),
-                SpringHookMethodsFilter.INSTANCE);
-    }
 
-    @Bean
-    @ConditionalOnMissingBean(name = "jdbcRepositoryPointcutAdvisor")
-    public ChaosMonkeyPointcutAdvisor jdbcRepositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
-            MetricEventPublisher eventPublisher) {
+        ClassFilter[] filters = {new RepositoryClassFilter(), new RepositoryAnnotatedClassFilter(), new AnnotationClassFilter(repositoryDefinition)};
         return new ChaosMonkeyPointcutAdvisor(baseClassFilter,
                 new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.REPOSITORY, watcherProperties::isRepository),
-                new RepositoryAnnotatedClassFilter());
+                ClassFilters.union(filters), SpringHookMethodsFilter.INSTANCE);
     }
 
     @Bean

@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.chaos.monkey.chaosdemo.repo;
+package com.example.chaos.monkey.chaosdemo;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/** @author Benjamin Wilms */
-public interface HelloRepo extends CrudRepository<Hello, Long> {
+@SpringBootApplication
+public class ChaosDemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ChaosDemoApplication.class, args);
+    }
 }
