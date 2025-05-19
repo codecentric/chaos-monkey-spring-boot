@@ -5,7 +5,6 @@ Built with Spring Boot {spring-boot-version}
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-- https://github.com/codecentric/chaos-monkey-spring-boot/pull/567[#567] Fix deterministic attacks on Spring Data repositories not working correctly
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
@@ -17,9 +16,5 @@ Built with Spring Boot {spring-boot-version}
 This release was only possible because of these great humans ❤️:
 
 // - https://github.com/octocat[@octocat]
-- https://github.com/octocat[@denniseffing]
-- https://github.com/octocat[@WtfJoke]
-- https://github.com/octocat[@jens-kaiser]
-- https://github.com/octocat[@pratik-chauhan]
 
 Thank you for your support!
