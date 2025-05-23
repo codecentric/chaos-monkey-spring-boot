@@ -21,8 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-@SpringBootTest(properties = {"spring.profiles.active=chaos-monkey", "chaos.monkey.enabled=true", "chaos.monkey.assaults.exceptions-active=true",
-        "chaos.monkey.watcher.repository=true", "chaos.monkey.assaults.level=1", "chaos.monkey.assaults.latency-active=false"})
+@SpringBootTest(properties = {"chaos.monkey.assaults.exceptions-active=true", "chaos.monkey.watcher.repository=true",
+        "chaos.monkey.assaults.level=1"})
 class RepositoryWatcherIntegrationTest {
 
     @Autowired
