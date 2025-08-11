@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Validate is valid version
         run: npx -y semver $VERSION
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # need git history for spotless license header
           token: ${{ secrets.GH_TOKEN_CHAOS_BOT }}
