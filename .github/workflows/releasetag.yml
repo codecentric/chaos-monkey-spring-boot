@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # need git history for spotless license header
       - name: Set up JDK 17
@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: Set TAG_NAME without ref
         run: echo "TAG_NAME_WITHOUT_REF=${TAG_NAME//refs\/tags\/}" >> $GITHUB_ENV
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # need git history for spotless license header
       - name: Set up JDK 17
