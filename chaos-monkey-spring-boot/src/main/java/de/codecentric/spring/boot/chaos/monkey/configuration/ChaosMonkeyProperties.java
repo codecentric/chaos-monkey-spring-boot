@@ -19,8 +19,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.lang.Nullable;
 
 @Data
 @NoArgsConstructor
@@ -35,7 +35,6 @@ public class ChaosMonkeyProperties {
 
     private String togglePrefix = "chaos.monkey";
 
-    @Nullable
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             lastEnabledToggleTimestamp = System.currentTimeMillis();

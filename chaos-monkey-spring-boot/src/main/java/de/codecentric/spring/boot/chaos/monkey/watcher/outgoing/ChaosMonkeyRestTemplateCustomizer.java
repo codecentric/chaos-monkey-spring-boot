@@ -16,7 +16,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
 import java.util.List;
-import org.springframework.boot.web.client.RestTemplateCustomizer;
+
+import org.springframework.boot.restclient.RestTemplateCustomizer;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 

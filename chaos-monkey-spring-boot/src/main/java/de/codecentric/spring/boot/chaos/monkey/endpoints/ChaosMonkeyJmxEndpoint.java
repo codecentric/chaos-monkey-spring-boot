@@ -19,12 +19,13 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
+import org.springframework.boot.actuate.endpoint.Access;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint;
 
 /** @author Benjamin Wilms */
-@JmxEndpoint(enableByDefault = false, id = "chaosmonkeyjmx")
+@JmxEndpoint(defaultAccess = Access.NONE, id = "chaosmonkeyjmx")
 public class ChaosMonkeyJmxEndpoint extends BaseChaosMonkeyEndpoint {
 
     public ChaosMonkeyJmxEndpoint(ChaosMonkeySettings chaosMonkeySettings) {

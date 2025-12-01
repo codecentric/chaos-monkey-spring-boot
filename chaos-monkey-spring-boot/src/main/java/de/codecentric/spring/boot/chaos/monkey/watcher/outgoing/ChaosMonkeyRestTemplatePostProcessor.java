@@ -30,8 +30,8 @@ public class ChaosMonkeyRestTemplatePostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
-        if (bean instanceof RestTemplate) {
-            this.restTemplateCustomizer.customize((RestTemplate) bean);
+        if (bean instanceof RestTemplate template) {
+            this.restTemplateCustomizer.customize(template);
         }
         return bean;
     }

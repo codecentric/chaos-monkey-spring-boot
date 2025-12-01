@@ -31,10 +31,10 @@ public class ChaosMonkeyWebClientPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
         final Object target;
-        if (bean instanceof WebClient) {
+        if (bean instanceof WebClient client) {
             // create a copy of WebClient whose settings are replicated from the current
             // WebClient.
-            target = ((WebClient) bean).mutate().filter(filter).build();
+            target = client.mutate().filter(filter).build();
         } else {
             target = bean;
         }

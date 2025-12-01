@@ -23,6 +23,7 @@ import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUp
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeySettingsDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.ChaosMonkeyStatusResponseDto;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUpdate;
+import org.springframework.boot.actuate.endpoint.Access;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestControllerEndpoint(enableByDefault = false, id = "chaosmonkey")
+@RestControllerEndpoint(defaultAccess = Access.NONE, id = "chaosmonkey")
 public class ChaosMonkeyRestEndpoint extends BaseChaosMonkeyEndpoint {
 
     private final ChaosMonkeyRuntimeScope runtimeScope;
