@@ -61,8 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ChaosMonkeyRequestScopeRestEndpointIntegrationTest {
 
     private final ObjectMapper objectMapper = JsonMapper.builder()
-            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
-            .build();
+            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL)).build();
 
     // NB: We don't want to kill the JVM the tests are running in
     @MockitoBean

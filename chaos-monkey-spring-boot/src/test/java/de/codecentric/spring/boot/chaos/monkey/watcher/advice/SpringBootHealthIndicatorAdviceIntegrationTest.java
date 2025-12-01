@@ -41,8 +41,8 @@ class SpringBootHealthIndicatorAdviceIntegrationTest {
 
         @Test
         public void testIndicatorsAreDown() {
-            healthIndicators.forEach(
-                    healthIndicator -> assertThat(healthIndicator.health(Boolean.TRUE)).isNotNull().extracting(Health::getStatus).isEqualTo(Status.DOWN));
+            healthIndicators.forEach(healthIndicator -> assertThat(healthIndicator.health(Boolean.TRUE)).isNotNull().extracting(Health::getStatus)
+                    .isEqualTo(Status.DOWN));
         }
     }
 
@@ -57,8 +57,8 @@ class SpringBootHealthIndicatorAdviceIntegrationTest {
 
         @Test
         public void testIndicatorsAreUp() {
-            healthIndicators.forEach(
-                    healthIndicator -> assertThat(healthIndicator.health(Boolean.TRUE)).isNotNull().extracting(Health::getStatus).isEqualTo(Status.UP));
+            healthIndicators.forEach(healthIndicator -> assertThat(healthIndicator.health(Boolean.TRUE)).isNotNull().extracting(Health::getStatus)
+                    .isEqualTo(Status.UP));
         }
     }
 }
