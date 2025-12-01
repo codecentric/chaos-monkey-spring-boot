@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package de.codecentric.spring.boot.chaos.monkey.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.ClassUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 @Data
 public class AssaultException {
@@ -74,7 +75,7 @@ public class AssaultException {
         try {
             ThrowableCreator creator = getCreator();
             instance = creator.create(getExceptionArgumentValues());
-        } catch (ReflectiveOperationException | ClassCastException | JsonProcessingException e) {
+        } catch (ReflectiveOperationException | ClassCastException | JacksonException e) {
             Logger.warn("Failed to create custom exception. Fallback: Throw RuntimeException");
             instance = new RuntimeException("Chaos Monkey - RuntimeException (Fallback)", e);
         }
@@ -105,7 +106,7 @@ public class AssaultException {
         return exceptionArgumentTypes;
     }
 
-    private List<Object> getExceptionArgumentValues() throws ClassNotFoundException, JsonProcessingException {
+    private List<Object> getExceptionArgumentValues() throws ClassNotFoundException {
         List<Object> exceptionArgumentValues = new ArrayList<>();
         for (ExceptionArgument argument : arguments) {
             Class<?> classType = argument.getClassType();
@@ -113,7 +114,7 @@ public class AssaultException {
             try {
                 // this mostly works for primitive values and strings
                 exceptionArgumentValues.add(objectMapper.convertValue(value, classType));
-            } catch (IllegalArgumentException e) {
+            } catch (MismatchedInputException | IllegalArgumentException e) {
                 // treat value as json encoded otherwise
                 exceptionArgumentValues.add(objectMapper.readValue(value, classType));
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.client.RestTemplate;
@@ -44,7 +44,7 @@ public class ChaosDemoApplication {
 
     @Bean
     public RestTemplate restTemplateWithTimeout(final TestOutgoingConfigurationProperties properties, final RestTemplateBuilder restTemplateBuilder) {
-        return restTemplateBuilder.setReadTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS)).build();
+        return restTemplateBuilder.readTimeout(Duration.of(properties.timeOut, ChronoUnit.MILLIS)).build();
     }
 
     @Bean

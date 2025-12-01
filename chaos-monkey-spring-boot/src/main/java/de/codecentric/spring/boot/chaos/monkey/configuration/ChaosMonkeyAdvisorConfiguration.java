@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 the original author or authors.
+ * Copyright 2022-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.RepositoryA
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.RepositoryClassFilter;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.SpringHookMethodsFilter;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.support.ClassFilters;
 import org.springframework.aop.support.RootClassFilter;
@@ -96,8 +95,7 @@ public class ChaosMonkeyAdvisorConfiguration {
     @ConditionalOnClass(name = "org.springframework.data.repository.Repository")
     public ChaosMonkeyPointcutAdvisor repositoryPointcutAdvisor(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) throws ClassNotFoundException {
-        @SuppressWarnings("unchecked")
-        val repositoryDefinition = (Class<? extends Annotation>) Class.forName("org.springframework.data.repository.RepositoryDefinition");
+        final var repositoryDefinition = (Class<? extends Annotation>) Class.forName("org.springframework.data.repository.RepositoryDefinition");
 
         ClassFilter[] filters = {new RepositoryClassFilter(), new RepositoryAnnotatedClassFilter(), new AnnotationClassFilter(repositoryDefinition)};
         return new ChaosMonkeyPointcutAdvisor(baseClassFilter,
@@ -107,12 +105,12 @@ public class ChaosMonkeyAdvisorConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "healthIndicatorAdviceProvider")
-    @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
+    @ConditionalOnClass(name = "org.springframework.boot.health.contributor.HealthIndicator")
     public ChaosMonkeyPointcutAdvisor healthIndicatorAdviceProvider(ChaosMonkeyBaseClassFilter baseClassFilter, ChaosMonkeyRequestScope requestScope)
             throws ClassNotFoundException {
-        Class<?> healthIndicatorClass = Class.forName("org.springframework.boot.actuate.health.HealthIndicator");
+        Class<?> healthIndicatorClass = Class.forName("org.springframework.boot.health.contributor.HealthIndicator");
         return new ChaosMonkeyPointcutAdvisor(baseClassFilter, new ChaosMonkeyHealthIndicatorAdvice(requestScope, watcherProperties),
-                new RootClassFilter(healthIndicatorClass), new MethodNameFilter("getHealth"));
+                new RootClassFilter(healthIndicatorClass), new MethodNameFilter("health"));
     }
 
     @Bean

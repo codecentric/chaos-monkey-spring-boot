@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,21 +33,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 abstract class CPUAssaultIntegration {
 
     @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
-            "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.enabled-by-default=true",
+            "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.access.default=unrestricted",
             "chaos.monkey.assaults.cpuActive=true", "chaos.monkey.assaults.cpuLoadTargetFraction=0.3",
             "chaos.monkey.assaults.cpuMillisecondsHoldLoad=5000", "spring.profiles.active=chaos-monkey"})
     static class LowCPUAssaultIntegration extends CPUAssaultIntegration {
     }
 
     @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
-            "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.enabled-by-default=true",
+            "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.access.default=unrestricted",
             "chaos.monkey.assaults.cpuActive=true", "chaos.monkey.assaults.cpuLoadTargetFraction=0.8",
             "chaos.monkey.assaults.cpuMillisecondsHoldLoad=5000", "spring.profiles.active=chaos-monkey"})
     static class HighCPUAssaultIntegration extends CPUAssaultIntegration {
     }
 
     @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
-            "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.enabled-by-default=true",
+            "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.access.default=unrestricted",
             "chaos.monkey.assaults.cpuActive=true", "chaos.monkey.assaults.cpuLoadTargetFraction=1.0",
             "chaos.monkey.assaults.cpuMillisecondsHoldLoad=5000", "spring.profiles.active=chaos-monkey"})
     static class MaxCPUAssaultIntegration extends CPUAssaultIntegration {

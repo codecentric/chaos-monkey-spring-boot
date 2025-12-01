@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.outgoing;
 
 import java.util.List;
-import org.springframework.boot.web.client.RestTemplateCustomizer;
+
+import org.springframework.boot.restclient.RestTemplateCustomizer;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 

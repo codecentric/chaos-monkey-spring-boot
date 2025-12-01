@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.lang.Nullable;
 
 @Data
 @NoArgsConstructor
@@ -35,7 +35,6 @@ public class ChaosMonkeyProperties {
 
     private String togglePrefix = "chaos.monkey";
 
-    @Nullable
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             lastEnabledToggleTimestamp = System.currentTimeMillis();
