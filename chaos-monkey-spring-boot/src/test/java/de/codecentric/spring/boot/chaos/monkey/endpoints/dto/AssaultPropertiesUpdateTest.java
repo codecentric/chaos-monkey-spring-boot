@@ -30,11 +30,9 @@ class AssaultPropertiesUpdateTest {
     void handlesDatabindException() {
         final AssaultProperties properties = new AssaultProperties();
         final AssaultPropertiesUpdate update = new AssaultPropertiesUpdate();
-        try (final MockedConstruction<ObjectMapper> mockedConstruction = mockConstruction(
-                ObjectMapper.class,
+        try (final MockedConstruction<ObjectMapper> mockedConstruction = mockConstruction(ObjectMapper.class,
                 (mock, context) -> when(mock.updateValue(properties, update)).thenThrow(DatabindException.class))) {
-            assertThatThrownBy(() -> update.applyTo(properties))
-                    .isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(() -> update.applyTo(properties)).isInstanceOf(IllegalArgumentException.class);
         }
     }
 }

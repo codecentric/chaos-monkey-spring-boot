@@ -31,11 +31,9 @@ class WatcherPropertiesUpdateTest {
     void handlesDatabindException() {
         final WatcherProperties properties = new WatcherProperties();
         final WatcherPropertiesUpdate update = new WatcherPropertiesUpdate();
-        try (final MockedConstruction<ObjectMapper> mockedConstruction = mockConstruction(
-                ObjectMapper.class,
+        try (final MockedConstruction<ObjectMapper> mockedConstruction = mockConstruction(ObjectMapper.class,
                 (mock, context) -> when(mock.updateValue(properties, update)).thenThrow(DatabindException.class))) {
-            assertThatThrownBy(() -> update.applyTo(properties))
-                    .isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(() -> update.applyTo(properties)).isInstanceOf(IllegalArgumentException.class);
         }
     }
 }
