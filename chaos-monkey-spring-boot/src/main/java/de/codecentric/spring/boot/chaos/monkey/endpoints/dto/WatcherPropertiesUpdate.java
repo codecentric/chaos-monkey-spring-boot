@@ -16,13 +16,13 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
+import tools.jackson.databind.DatabindException;
 
 @Data
 @NoArgsConstructor
@@ -62,7 +62,7 @@ public class WatcherPropertiesUpdate {
     public void applyTo(WatcherProperties t) {
         try {
             new ObjectMapper().updateValue(t, this);
-        } catch (JsonMappingException e) {
+        } catch (DatabindException e) {
             throw new IllegalArgumentException("cannot update values", e);
         }
     }

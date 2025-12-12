@@ -11,8 +11,8 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html[Spr
 [source,txt,subs="verbatim,attributes",role="primary"]
 .application.properties:
 ----
-management.endpoint.chaosmonkey.enabled=true
-management.endpoint.chaosmonkeyjmx.enabled=true
+management.endpoint.chaosmonkey.access=unrestricted
+management.endpoint.chaosmonkeyjmx.access=unrestricted
 
 # include all endpoints
 management.endpoints.web.exposure.include=*
