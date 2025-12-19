@@ -30,18 +30,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.unit.DataSize;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
-        "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.enabled-by-default=true",
+        "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.access.default=unrestricted",
         "chaos.monkey.assaults.memoryActive=true", "chaos.monkey.assaults.memoryFillTargetFraction=0.80",
         "chaos.monkey.assaults.memoryMillisecondsWaitNextIncrease=100", "chaos.monkey.assaults.memoryFillIncrementFraction=0.99",
         "chaos.monkey.assaults.memoryMillisecondsHoldFilledMemory=2000", "spring.profiles.active=chaos-monkey"})
+@AutoConfigureTestRestTemplate
 class MemoryAssaultIntegrationTest {
 
     @LocalServerPort
