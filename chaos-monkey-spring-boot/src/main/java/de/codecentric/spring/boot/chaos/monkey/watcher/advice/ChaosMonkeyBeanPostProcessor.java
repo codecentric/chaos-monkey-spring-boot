@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 the original author or authors.
+ * Copyright 2022-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import de.codecentric.spring.boot.chaos.monkey.component.MetricEventPublisher;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter.SpringHookMethodsFilter;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.aop.framework.AbstractAdvisingBeanPostProcessor;
 import org.springframework.aop.support.ComposablePointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
@@ -38,8 +37,8 @@ public class ChaosMonkeyBeanPostProcessor extends AbstractAdvisingBeanPostProces
     public ChaosMonkeyBeanPostProcessor(WatcherProperties watcherProperties, ChaosMonkeyRequestScope requestScope,
             MetricEventPublisher eventPublisher) {
         this.watcherProperties = watcherProperties;
-        val advice = new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.BEAN, (pjp) -> {
-            val bean = pjp.getThis();
+        final var advice = new ChaosMonkeyDefaultAdvice(requestScope, eventPublisher, ChaosTarget.BEAN, (pjp) -> {
+            final var bean = pjp.getThis();
             return watcherProperties.getBeans().contains(activeBeanNameCache.get(bean))
                     || watcherProperties.getBeanClasses().stream().anyMatch(clazz -> clazz.isInstance(bean));
         });

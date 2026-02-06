@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ public class ChaosMonkeyRestTemplatePostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
-        if (bean instanceof RestTemplate) {
-            this.restTemplateCustomizer.customize((RestTemplate) bean);
+        if (bean instanceof RestTemplate template) {
+            this.restTemplateCustomizer.customize(template);
         }
         return bean;
     }

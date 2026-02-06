@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ public class ChaosMonkeyWebClientPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
         final Object target;
-        if (bean instanceof WebClient) {
+        if (bean instanceof WebClient client) {
             // create a copy of WebClient whose settings are replicated from the current
             // WebClient.
-            target = ((WebClient) bean).mutate().filter(filter).build();
+            target = client.mutate().filter(filter).build();
         } else {
             target = bean;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,16 @@ import com.example.chaos.monkey.chaosdemo.ChaosDemoApplication;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.AssaultPropertiesUpdate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /** @author Benjamin Wilms */
 @SpringBootTest(classes = ChaosDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "chaos.monkey.watcher.controller=true")
+@AutoConfigureTestRestTemplate
 public class HelloControllerIntegrationTest {
 
     @Autowired
@@ -67,11 +69,14 @@ public class HelloControllerIntegrationTest {
         assault.setExceptionsActive(true);
         assault.setLatencyActive(false);
 
+        ResponseEntity<String> response = testRestTemplate.getForEntity("http://localhost:" + managementPort + "/actuator/chaosmonkey", String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
         ResponseEntity<String> assaultResponse = testRestTemplate
                 .postForEntity("http://localhost:" + managementPort + "/actuator/chaosmonkey/assaults", assault, String.class);
         assertEquals(HttpStatus.OK, assaultResponse.getStatusCode());
 
-        ResponseEntity<String> response = testRestTemplate.getForEntity("/goodbye", String.class);
+        response = testRestTemplate.getForEntity("/goodbye", String.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 }

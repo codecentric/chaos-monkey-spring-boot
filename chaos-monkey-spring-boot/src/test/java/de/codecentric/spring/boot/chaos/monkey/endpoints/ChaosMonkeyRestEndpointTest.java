@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,10 @@ import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.WatcherPropertiesUp
 import de.codecentric.spring.boot.demo.chaos.monkey.ChaosDemoApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -39,8 +40,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("chaos-monkey")
 @ContextConfiguration(classes = {ChaosDemoApplication.class})
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {"management.endpoint.chaosmonkey.enabled=true",
-        "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.enabled-by-default=true"})
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {"management.endpoint.chaosmonkey.access=unrestricted",
+        "management.endpoints.web.exposure.include=chaosmonkey", "management.endpoints.access.default=unrestricted"})
+@AutoConfigureTestRestTemplate
 public class ChaosMonkeyRestEndpointTest {
 
     @Autowired

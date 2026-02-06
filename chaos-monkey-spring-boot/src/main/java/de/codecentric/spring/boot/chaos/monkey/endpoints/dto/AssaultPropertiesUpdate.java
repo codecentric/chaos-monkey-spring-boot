@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2025 the original author or authors.
+ * Copyright 2019-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package de.codecentric.spring.boot.chaos.monkey.endpoints.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultException;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.endpoints.dto.validation.AssaultExceptionConstraint;
@@ -29,8 +28,9 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.validation.annotation.Validated;
+import tools.jackson.databind.DatabindException;
 
 /**
  * Is used to update properties. Partial updates are allowed: i. e.
@@ -133,7 +133,7 @@ public class AssaultPropertiesUpdate {
     public void applyTo(AssaultProperties t) {
         try {
             new ObjectMapper().updateValue(t, this);
-        } catch (JsonMappingException e) {
+        } catch (DatabindException e) {
             throw new IllegalArgumentException("cannot update values", e);
         }
     }
