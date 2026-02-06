@@ -122,7 +122,6 @@ management:
     "cpuActive": true,
     "cpuMillisecondsHoldLoad": 90000,
     "cpuLoadTargetFraction": 0.9,
-    "runtimeAssaultCronExpression": "OFF"
   },
   "watcherProperties": {
     "controller": false,
@@ -253,8 +252,7 @@ Watcher config has changed
   "cpuActive": true,
   "cpuMillisecondsHoldLoad": 90000,
   "cpuLoadTargetFraction": 0.9,
-  "cpuCronExpression": "OFF",
-  "runtimeAssaultCronExpression": "OFF"
+  "cpuCronExpression": "OFF"
 }
 ----
 ===== POST Assaults
@@ -312,7 +310,7 @@ Assault config has changed
   "killApplicationActive": false,
   "exception": {
     "type": "java.lang.IllegalArgumentException",
-    "method": "<init>", 
+    "method": "<init>",
     "arguments": [
       {
         "className": "java.lang.String",
@@ -420,4 +418,3 @@ chaos.monkey:
 ----
 
 Chaosmonkey will now show up as a group in your Swagger UI.
-

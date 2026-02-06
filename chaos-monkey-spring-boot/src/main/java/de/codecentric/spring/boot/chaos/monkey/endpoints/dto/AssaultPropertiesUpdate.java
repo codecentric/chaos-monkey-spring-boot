@@ -118,15 +118,6 @@ public class AssaultPropertiesUpdate {
     @Nullable
     private String cpuCronExpression;
 
-    /**
-     * @deprecated please use {@link #killApplicationCronExpression},
-     *             {@link #memoryCronExpression} or {@link #cpuCronExpression}
-     *             instead
-     */
-    @Deprecated
-    @Nullable
-    private String runtimeAssaultCronExpression;
-
     @Nullable
     private List<String> watchedCustomServices;
 
