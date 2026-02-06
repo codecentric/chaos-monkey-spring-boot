@@ -13,6 +13,7 @@ Built with Spring Boot {spring-boot-version}
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
 - https://github.com/codecentric/chaos-monkey-spring-boot/pull/618[#618] Upgrade to Spring Boot 4 and Spring Cloud 2025.1
+- https://github.com/codecentric/chaos-monkey-spring-boot/pull/575[#575] Update dependency io.getunleash:unleash-client-java to v12
 
 === Contributors
 This release was only possible because of these great humans ❤️:
