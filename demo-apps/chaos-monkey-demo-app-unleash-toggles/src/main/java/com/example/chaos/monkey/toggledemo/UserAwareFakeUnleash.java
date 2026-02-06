@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import io.getunleash.MoreOperations;
 import io.getunleash.Unleash;
 import io.getunleash.UnleashContext;
 import io.getunleash.UnleashContextProvider;
+import io.getunleash.impactmetrics.MetricsAPI;
 import io.getunleash.variant.Variant;
 
 import java.util.function.BiPredicate;
@@ -85,6 +86,11 @@ public class UserAwareFakeUnleash implements Unleash {
 
     @Override
     public MoreOperations more() {
+        return null;
+    }
+
+    @Override
+    public MetricsAPI getImpactMetrics() {
         return null;
     }
 }
