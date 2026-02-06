@@ -21,7 +21,7 @@
 
   <properties>
     <!-- project version -->
-    <revision>3.3.1-SNAPSHOT</revision>
+    <revision>4.0.0</revision>
     <!-- default settings -->
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
