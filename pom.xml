@@ -37,7 +37,7 @@
     <!-- Dependency versions - use ./mvnw versions:update-properties to update-->
     <!-- spring versions -->
     <spring-boot.version>4.0.2</spring-boot.version>
-    <spring-cloud.version>2025.1.0</spring-cloud.version>
+    <spring-cloud.version>2025.1.1</spring-cloud.version>
     <spring-doc.version>3.0.1</spring-doc.version>
 
     <!-- dependency versions -->
