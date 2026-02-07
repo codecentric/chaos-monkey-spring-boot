@@ -1,7 +1,6 @@
 [![Apache License 2](https://img.shields.io/github/license/codecentric/chaos-monkey-spring-boot)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Build Status](https://github.com/codecentric/chaos-monkey-spring-boot/workflows/Chaos%20Monkey%20Build/badge.svg)](https://github.com/codecentric/chaos-monkey-spring-boot/actions?query=workflow%3A%22Chaos+Monkey+Build%22)
-[![codecov](https://codecov.io/gh/codecentric/chaos-monkey-spring-boot/branch/main/graph/badge.svg)](https://codecov.io/gh/codecentric/chaos-monkey-spring-boot)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.codecentric/chaos-monkey-spring-boot/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.codecentric/chaos-monkey-spring-boot/)
+[![codecov](https://codecov.io/gh/codecentric/chaos-monkey-spring-boot/branch/main/graph/badge.svg)](https://codecov.io/gh/codecentric/chaos-monkey-spring-boot) ![Maven Central Version](https://img.shields.io/maven-central/v/:de.codecentric/chaos-monkey-spring-boot)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.adoc)
 
 [![Open in Gitpod](https://img.shields.io/badge/Open%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/codecentric/chaos-monkey-spring-boot)
