@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 the original author or authors.
+ * Copyright 2022-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
 package de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.ClassFilter;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 
 @RequiredArgsConstructor
 public class ChaosMonkeyBaseClassFilter implements ClassFilter {
@@ -39,6 +41,7 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
                 // can't proxy final classes
                 nonFinalOrJdkProxiedClass(clazz) &&
                 // see https://github.com/codecentric/chaos-monkey-spring-boot/issues/287
+                // and https://github.com/codecentric/chaos-monkey-spring-boot/issues/595
                 !hasProblematicFinalMethod(clazz);
     }
 
@@ -55,12 +58,29 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
     }
 
     private boolean hasProblematicFinalMethod(Class<?> clazz) {
+        // only stereotype beans (@Component, @Service, @Controller, @RestController,
+        // @Repository) are affected, framework types like AbstractHealthIndicator
+        // must stay proxyable
+        if (Proxy.isProxyClass(clazz) || AnnotationUtils.findAnnotation(clazz, Component.class) == null) {
+            return false;
+        }
         try {
-            // see https://github.com/codecentric/chaos-monkey-spring-boot/pull/261
-            return GenericFilterBean.class.isAssignableFrom(clazz);
+            // A final method runs on a CGLIB proxy itself rather than its injected
+            // target, see
+            // https://github.com/codecentric/chaos-monkey-spring-boot/issues/595
+            for (Class<?> type = clazz; type != null && type != Object.class; type = type.getSuperclass()) {
+                for (Method method : type.getDeclaredMethods()) {
+                    int modifiers = method.getModifiers();
+                    // private and static methods are never proxied, so they are not affected
+                    if (Modifier.isFinal(modifiers) && !Modifier.isPrivate(modifiers) && !Modifier.isStatic(modifiers)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         } catch (NoClassDefFoundError error) {
-            // if a class implements an interface not on the classpath, isAssignableFrom
-            // will fail.
+            // if a method signature references a class not on the classpath,
+            // getDeclaredMethods will fail.
             return false;
         }
     }

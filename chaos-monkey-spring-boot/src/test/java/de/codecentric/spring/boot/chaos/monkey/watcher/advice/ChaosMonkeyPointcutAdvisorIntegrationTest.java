@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2025 the original author or authors.
+ * Copyright 2020-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package de.codecentric.spring.boot.chaos.monkey.watcher.advice;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosMonkeyRequestScope;
 import de.codecentric.spring.boot.chaos.monkey.component.ChaosTarget;
@@ -33,6 +34,7 @@ import de.codecentric.spring.boot.demo.chaos.monkey.component.BeanPostProcessorC
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.FactoryBeanComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.FinalDemoComponent;
+import de.codecentric.spring.boot.demo.chaos.monkey.component.InheritedFinalMethodComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +43,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /** @author Kevin Sapper */
 @SpringBootTest
@@ -65,6 +68,9 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
 
     @Autowired
     FinalDemoComponent finalDemoComponent;
+
+    @Autowired
+    InheritedFinalMethodComponent inheritedFinalMethodComponent;
 
     @Autowired
     BeanPostProcessorComponent beanPostProcessorComponent;
@@ -93,6 +99,11 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
         finalDemoComponent.sayHello();
         verify(chaosMonkeyRequestScopeMock, never()).callChaosMonkey(ChaosTarget.COMPONENT, finalDemoComponentSimpleName);
         verify(metricsMock, never()).publishMetricEvent(finalDemoComponentPointcutName, MetricType.COMPONENT);
+    }
+
+    @Test
+    public void inheritedFinalMethodCanUseInjectedDependency() {
+        assertThat(inheritedFinalMethodComponent.value()).isNotBlank();
     }
 
     @Test
@@ -137,6 +148,15 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
         }
 
         @Bean
+        ChaosMonkeyPointcutAdvisor serviceAdvisor() {
+            WatcherProperties watcherProperties = new WatcherProperties();
+            watcherProperties.setService(true);
+            return new ChaosMonkeyAnnotationPointcutAdvisor(new ChaosMonkeyBaseClassFilter(watcherProperties),
+                    new ChaosMonkeyDefaultAdvice(chaosMonkeyRequestScopeMock(), metricsMock(), ChaosTarget.SERVICE, watcherProperties::isService),
+                    Service.class, SpringHookMethodsFilter.INSTANCE);
+        }
+
+        @Bean
         DemoComponent demoComponent() {
             return mock(DemoComponent.class);
         }
@@ -144,6 +164,11 @@ class ChaosMonkeyPointcutAdvisorIntegrationTest {
         @Bean
         FinalDemoComponent finalDemoComponent() {
             return mock(FinalDemoComponent.class);
+        }
+
+        @Bean
+        InheritedFinalMethodComponent inheritedFinalMethodComponent(DemoComponent dependency) {
+            return new InheritedFinalMethodComponent(dependency);
         }
 
         @Bean
