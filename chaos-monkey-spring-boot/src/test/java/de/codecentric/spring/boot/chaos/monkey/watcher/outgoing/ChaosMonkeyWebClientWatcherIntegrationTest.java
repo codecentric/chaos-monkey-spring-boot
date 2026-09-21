@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import reactor.netty.DisposableServer;
+import reactor.netty.http.server.HttpServer;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -45,13 +49,19 @@ class ChaosMonkeyWebClientWatcherIntegrationTest {
     class ExceptionAssaultIntegrationTest {
 
         @Autowired
-        private DemoWebClientService demoWebClientService;
+        private WebClient webClient;
 
         @Test
         public void testWebClientExceptionAssault() {
-
-            assertThatThrownBy(() -> this.demoWebClientService.callWithWebClient()).isInstanceOf(WebClientResponseException.class)
-                    .has(new Condition<>((ex) -> ((WebClientResponseException) ex).getResponseBodyAsString().equals("Fail"), "Body equals fail"));
+            DisposableServer server = HttpServer.create().host("127.0.0.1").port(0)
+                    .handle((request, response) -> response.sendString(Mono.just("OK"))).bindNow();
+            try {
+                assertThatThrownBy(() -> webClient.get().uri("http://127.0.0.1:" + server.port()).retrieve().bodyToMono(String.class).block())
+                        .isInstanceOf(WebClientResponseException.class)
+                        .has(new Condition<>((ex) -> ((WebClientResponseException) ex).getResponseBodyAsString().equals("Fail"), "Body equals fail"));
+            } finally {
+                server.disposeNow();
+            }
         }
     }
 
