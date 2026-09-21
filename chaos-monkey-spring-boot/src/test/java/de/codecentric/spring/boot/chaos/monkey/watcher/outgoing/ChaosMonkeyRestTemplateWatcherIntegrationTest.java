@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,9 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
+import reactor.netty.DisposableServer;
+import reactor.netty.http.server.HttpServer;
 
 class ChaosMonkeyRestTemplateWatcherIntegrationTest {
 
@@ -59,11 +62,18 @@ class ChaosMonkeyRestTemplateWatcherIntegrationTest {
     class ExceptionAssaultIntegrationTest {
 
         @Autowired
-        private DemoRestTemplateService demoRestTemplateService;
+        private RestTemplate restTemplate;
 
         @Test
         public void testRestTemplateExceptionAssault() {
-            assertThatThrownBy(() -> demoRestTemplateService.callWithRestTemplate()).hasMessage("500 INTERNAL_SERVER_ERROR");
+            DisposableServer server = HttpServer.create().host("127.0.0.1").port(0)
+                    .handle((request, response) -> response.sendString(Mono.just("OK"))).bindNow();
+            try {
+                assertThatThrownBy(() -> restTemplate.getForEntity("http://127.0.0.1:" + server.port(), String.class))
+                        .isInstanceOf(org.springframework.web.client.HttpServerErrorException.class).hasMessage("500 INTERNAL_SERVER_ERROR");
+            } finally {
+                server.disposeNow();
+            }
         }
     }
 
