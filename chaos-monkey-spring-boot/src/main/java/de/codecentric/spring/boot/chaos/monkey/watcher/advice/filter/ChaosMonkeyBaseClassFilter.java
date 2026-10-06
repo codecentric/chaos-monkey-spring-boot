@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 the original author or authors.
+ * Copyright 2022-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,13 @@ package de.codecentric.spring.boot.chaos.monkey.watcher.advice.filter;
 
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.ClassFilter;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.GenericFilterBean;
 
 @RequiredArgsConstructor
@@ -57,7 +60,23 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
     private boolean hasProblematicFinalMethod(Class<?> clazz) {
         try {
             // see https://github.com/codecentric/chaos-monkey-spring-boot/pull/261
-            return GenericFilterBean.class.isAssignableFrom(clazz);
+            if (GenericFilterBean.class.isAssignableFrom(clazz)) {
+                return true;
+            }
+            if (Proxy.isProxyClass(clazz) || AnnotationUtils.findAnnotation(clazz, Service.class) == null) {
+                return false;
+            }
+            // A final method runs on a CGLIB proxy itself rather than its injected target.
+            // Exclude the class so such methods retain their normal dependency injection.
+            for (Class<?> type = clazz; type != null && type != Object.class; type = type.getSuperclass()) {
+                for (Method method : type.getDeclaredMethods()) {
+                    int modifiers = method.getModifiers();
+                    if (Modifier.isFinal(modifiers) && !Modifier.isPrivate(modifiers) && !Modifier.isStatic(modifiers)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         } catch (NoClassDefFoundError error) {
             // if a class implements an interface not on the classpath, isAssignableFrom
             // will fail.
