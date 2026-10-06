@@ -63,7 +63,7 @@ public class ChaosMonkeyBaseClassFilter implements ClassFilter {
             if (GenericFilterBean.class.isAssignableFrom(clazz)) {
                 return true;
             }
-            if (Proxy.isProxyClass(clazz) || clazz.getName().contains("$$") || AnnotationUtils.findAnnotation(clazz, Service.class) == null) {
+            if (Proxy.isProxyClass(clazz) || AnnotationUtils.findAnnotation(clazz, Service.class) == null) {
                 return false;
             }
             // A final method runs on a CGLIB proxy itself rather than its injected target.
