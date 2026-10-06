@@ -20,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.codecentric.spring.boot.chaos.monkey.configuration.WatcherProperties;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.DemoComponent;
 import de.codecentric.spring.boot.demo.chaos.monkey.component.InheritedFinalMethodComponent;
+import de.codecentric.spring.boot.demo.chaos.monkey.service.DemoService;
+import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.Test;
 
 class ChaosMonkeyBaseClassFilterTest {
@@ -29,6 +31,17 @@ class ChaosMonkeyBaseClassFilterTest {
     void excludesInheritedFinalMethodsThatCannotBeProxied() {
         assertThat(filter.matches(InheritedFinalMethodComponent.class)).isFalse();
         assertThat(filter.matches(DemoComponent.class)).isTrue();
+    }
+
+    @Test
+    void allowsServicesWithoutFinalInstanceMethods() {
+        assertThat(filter.matches(DemoService.class)).isTrue();
+    }
+
+    @Test
+    void allowsJdkProxiesDespiteTheirFinalClassModifier() {
+        Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{Runnable.class}, (instance, method, arguments) -> null);
+        assertThat(filter.matches(proxy.getClass())).isTrue();
     }
 
 }
