@@ -5,6 +5,7 @@ Built with Spring Boot {spring-boot-version}
 
 === Bug Fixes
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
+- https://github.com/codecentric/chaos-monkey-spring-boot/issues/595[#595] Avoid proxying components with inherited final methods so those methods can access injected dependencies.
 
 === Improvements
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
