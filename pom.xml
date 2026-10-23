@@ -58,7 +58,7 @@
     <skuzzle-imports-enforcer.version>3.0.2-develop</skuzzle-imports-enforcer.version>
     <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
     <spotless-maven-plugin.version>3.10.4</spotless-maven-plugin.version>
-    <versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
+    <versions-maven-plugin.version>2.23.0</versions-maven-plugin.version>
   </properties>
 
   <scm>
