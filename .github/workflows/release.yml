@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 25
       - name: Configure Git
         run: |
           git config user.email "54942692+ChaosMonkeyBot@users.noreply.github.com"
