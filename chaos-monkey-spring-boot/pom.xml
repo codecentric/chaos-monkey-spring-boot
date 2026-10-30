@@ -158,6 +158,26 @@
     </dependencies>
     <build>
         <plugins>
+            <!-- JDK 23+ no longer runs annotation processors found on the classpath, they must be declared explicitly.
+                 https://bugs.openjdk.org/browse/JDK-8321314
+                 https://projectlombok.org/setup/maven
+                 https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <!-- Building CM4SB external JAR - run it as external dependency-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

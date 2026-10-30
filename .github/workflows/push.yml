@@ -11,7 +11,7 @@ jobs:
         java: [17]
         include:
           # Build additional java versions
-          - java: 19
+          - java: 27
             os: ubuntu-latest
 
     runs-on: ${{ matrix.os }}
