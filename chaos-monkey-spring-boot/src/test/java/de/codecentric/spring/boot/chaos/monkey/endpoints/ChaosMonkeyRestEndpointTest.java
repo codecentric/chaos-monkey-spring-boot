@@ -62,6 +62,7 @@ public class ChaosMonkeyRestEndpointTest {
         watcherPropertiesUpdate.setRepository(Boolean.TRUE);
         watcherPropertiesUpdate.setRestTemplate(Boolean.TRUE);
         watcherPropertiesUpdate.setWebClient(Boolean.TRUE);
+        watcherPropertiesUpdate.setRestClient(Boolean.TRUE);
         watcherPropertiesUpdate.setActuatorHealth(Boolean.TRUE);
 
         final WatcherProperties watcherProperties = new WatcherProperties();
@@ -74,6 +75,7 @@ public class ChaosMonkeyRestEndpointTest {
                 () -> assertTrue(watcherProperties.isRestController()), () -> assertTrue(watcherProperties.isService()),
                 () -> assertTrue(watcherProperties.isComponent()), () -> assertTrue(watcherProperties.isRepository()),
                 () -> assertTrue(watcherProperties.isRestTemplate()), () -> assertTrue(watcherProperties.isWebClient()),
+                () -> assertTrue(watcherProperties.isRestClient()),
                 () -> assertTrue(watcherProperties.isActuatorHealth()));
 
         verify(chaosMonkeyScheduler).reloadConfig();
