@@ -27,6 +27,7 @@ public enum ChaosTarget {
     SERVICE("service", MetricType.SERVICE),
     REST_TEMPLATE("restTemplate", null),
     WEB_CLIENT("webClient", null),
+    REST_CLIENT("restClient", null),
     ACTUATOR_HEALTH("actuatorHealth", null),
     BEAN("bean", MetricType.BEAN);
 

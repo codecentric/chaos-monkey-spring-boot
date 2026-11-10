@@ -41,6 +41,8 @@ public class WatcherProperties {
 
     private boolean webClient = false;
 
+    private boolean restClient = false;
+
     private boolean actuatorHealth = false;
 
     private List<String> beans = Collections.emptyList();
