@@ -12,7 +12,7 @@ Built with Spring Boot {spring-boot-version}
 
 === New Features
 // - https://github.com/codecentric/chaos-monkey-spring-boot/pull/xxx[#xxx] Added example entry. Please don't remove.
-
+// -https://github.com/codecentric/chaos-monkey-spring-boot/issues/660[#660] Add support for Spring RestClient
 === Contributors
 This release was only possible because of these great humans ❤️:
 

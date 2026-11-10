@@ -131,6 +131,7 @@ management:
     "component": false,
     "restTemplate": false,
     "webClient": false,
+    "restClient": false,
     "actuatorHealth": false
   }
 }
