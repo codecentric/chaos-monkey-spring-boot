@@ -75,8 +75,7 @@ public class ChaosMonkeyRestEndpointTest {
                 () -> assertTrue(watcherProperties.isRestController()), () -> assertTrue(watcherProperties.isService()),
                 () -> assertTrue(watcherProperties.isComponent()), () -> assertTrue(watcherProperties.isRepository()),
                 () -> assertTrue(watcherProperties.isRestTemplate()), () -> assertTrue(watcherProperties.isWebClient()),
-                () -> assertTrue(watcherProperties.isRestClient()),
-                () -> assertTrue(watcherProperties.isActuatorHealth()));
+                () -> assertTrue(watcherProperties.isRestClient()), () -> assertTrue(watcherProperties.isActuatorHealth()));
 
         verify(chaosMonkeyScheduler).reloadConfig();
     }
