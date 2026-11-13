@@ -55,8 +55,8 @@ public class ChaosDemoApplication {
     }
 
     @Bean
-    public RestClient restClient() {
-        return RestClient.create();
+    public RestClient restClient(final RestClient.Builder restClientBuilder) {
+        return restClientBuilder.build();
     }
 
     @Data
