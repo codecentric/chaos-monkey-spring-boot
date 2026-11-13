@@ -183,7 +183,7 @@
         <version>${maven-central-publishing-plugin.version}</version>
         <extensions>true</extensions>
         <configuration>
-          <publishingServerId>central</publishingServerId>
+          <publishingServerId>sonatype-publishing</publishingServerId>
           <autoPublish>true</autoPublish>
         </configuration>
       </plugin>
@@ -281,7 +281,7 @@
   </developers>
   <distributionManagement>
     <snapshotRepository>
-      <id>central</id>
+      <id>sonatype-publishing</id>
       <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
