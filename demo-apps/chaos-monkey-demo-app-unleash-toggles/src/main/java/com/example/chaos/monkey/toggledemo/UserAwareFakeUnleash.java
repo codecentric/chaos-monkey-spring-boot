@@ -47,7 +47,8 @@ public class UserAwareFakeUnleash implements Unleash {
     public boolean isEnabled(String toggleName) {
         UnleashContext context = this.contextProvider.getContext();
 
-        if (toggleName.equals("chaos.monkey.howdy") && context.getUserId().orElse("").equals("chaosuser")) {
+        if ((toggleName.equals("chaos.monkey.howdy") || toggleName.equals("chaos.monkey.assault.exception"))
+                && context.getUserId().orElse("").equals("chaosuser")) {
             return true;
         }
 

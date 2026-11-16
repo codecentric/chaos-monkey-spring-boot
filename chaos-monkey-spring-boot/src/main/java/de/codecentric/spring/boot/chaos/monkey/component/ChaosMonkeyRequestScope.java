@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRequestAssault;
 import de.codecentric.spring.boot.chaos.monkey.assaults.ChaosMonkeyRuntimeAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.ExceptionAssault;
+import de.codecentric.spring.boot.chaos.monkey.assaults.LatencyAssault;
 import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggleNameMapper;
@@ -74,7 +76,8 @@ public class ChaosMonkeyRequestScope {
     }
 
     private void chooseAndRunAttack() {
-        List<ChaosMonkeyAssault> activeAssaults = assaults.stream().filter(ChaosMonkeyAssault::isActive).collect(Collectors.toList());
+        List<ChaosMonkeyAssault> activeAssaults = assaults.stream().filter(ChaosMonkeyAssault::isActive).filter(this::isAssaultToggleEnabled)
+                .collect(Collectors.toList());
         if (isEmpty(activeAssaults)) {
             return;
         }
@@ -86,6 +89,21 @@ public class ChaosMonkeyRequestScope {
     private ChaosMonkeyAssault getRandomFrom(List<ChaosMonkeyAssault> activeAssaults) {
         int exceptionRand = chaosMonkeySettings.getAssaultProperties().chooseAssault(activeAssaults.size());
         return activeAssaults.get(exceptionRand);
+    }
+
+    private boolean isAssaultToggleEnabled(ChaosMonkeyAssault assault) {
+        Class<?> assaultClass = assault instanceof RequestAssaultAdapter adapter ? adapter.rawAssault().getClass() : assault.getClass();
+        String assaultName;
+        if (ExceptionAssault.class.isAssignableFrom(assaultClass)) {
+            assaultName = "exception";
+        } else if (LatencyAssault.class.isAssignableFrom(assaultClass)) {
+            assaultName = "latency";
+        } else {
+            assaultName = "custom." + assaultClass.getName();
+        }
+
+        String toggleName = chaosMonkeySettings.getChaosMonkeyProperties().getTogglePrefix() + ".assault." + assaultName;
+        return chaosToggles.isEnabled(toggleName);
     }
 
     private boolean isTrouble(String simpleName) {
