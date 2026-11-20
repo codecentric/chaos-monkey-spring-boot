@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 25
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
       - name: Cache local Maven repository
         uses: actions/cache@v6
@@ -65,7 +65,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 25
       - name: Cache local Maven repository
         uses: actions/cache@v6
         with:
