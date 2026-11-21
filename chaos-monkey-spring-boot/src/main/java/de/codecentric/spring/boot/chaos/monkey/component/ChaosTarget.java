@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ public enum ChaosTarget {
     SERVICE("service", MetricType.SERVICE),
     REST_TEMPLATE("restTemplate", null),
     WEB_CLIENT("webClient", null),
+    REST_CLIENT("restClient", null),
     ACTUATOR_HEALTH("actuatorHealth", null),
     BEAN("bean", MetricType.BEAN);
 

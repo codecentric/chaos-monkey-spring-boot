@@ -29,11 +29,12 @@ and assault the health checks with exceptions and latency. Exceptions will let t
 Chaos Monkey also provides watchers for:
 
 - RestTemplate
+- RestClient
 - WebClient
 
-The watchers will inject assaults for all _RestTemplate_ and _WebClient_ beans in the Spring Context based on the given assault configuration.
+The watchers will inject assaults for all _RestTemplate_, _RestClient_ and _WebClient_ beans in the Spring Context based on the given assault configuration.
 
-IMPORTANT: _RestTemplates_ and _WebClients_ which are created not as a bean via _new RestTemplate()_ and _WebClient.create()_ are not getting instrumented.
+IMPORTANT: _RestTemplates_, _RestClients_ and _WebClients_ which are created not as a bean via _new RestTemplate()_, _RestClient.create()_ and _WebClient.create()_ are not getting instrumented.
 
 NOTE: These watchers don't use AOP. Instead, they inject respective customizers.
 
