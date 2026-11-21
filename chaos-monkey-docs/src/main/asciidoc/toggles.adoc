@@ -38,6 +38,14 @@ The default ChaosToggleNameMapper is in place and will check for toggles named t
 
 If the assault has been enabled via properties then enabling that toggle in Unleash with the matching name will allow the corresponding assault to happen.
 
+==== Request assault toggles
+Request assaults are also gated by a toggle after their assault properties are checked. The toggle is evaluated on every request, so the enabled request assault can be changed at runtime without restarting the application:
+
+ chaos.monkey.assault.exception
+ chaos.monkey.assault.latency
+
+The toggle prefix follows `chaos.monkey.toggle-prefix`. Custom request assaults use `chaos.monkey.assault.custom.<fully-qualified-class-name>`. These toggles are independent from watcher toggles; with Unleash, enable both the watcher toggle and the request-assault toggle to run an assault.
+
 === Creating your own
 ==== ChaosToggleNameMapper
 
