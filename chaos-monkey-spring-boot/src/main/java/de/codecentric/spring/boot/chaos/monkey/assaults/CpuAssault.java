@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 the original author or authors.
+ * Copyright 2021-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,14 +76,14 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
         return assaultProperties.getCpuCronExpression();
     }
 
-    private static class ThreadManager {
+    static class ThreadManager {
         private final OperatingSystemMXBean os;
         private final double targetLoad;
         private final List<WorkerThread> runningThreads = new ArrayList<>();
         private final List<WorkerThread> pausedThreads = new ArrayList<>();
         private double lastLoad;
 
-        private ThreadManager(OperatingSystemMXBean os, double targetLoad) {
+        ThreadManager(OperatingSystemMXBean os, double targetLoad) {
             this.os = os;
             this.targetLoad = targetLoad;
         }
@@ -111,11 +111,11 @@ public class CpuAssault implements ChaosMonkeyRuntimeAssault {
                     thread.shouldPause = true;
                     pausedThreads.add(thread);
                 }
-                // make sure the managing thread doesn't generate too much load
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ignored) {
-                }
+            }
+            // Make sure the managing thread doesn't generate too much load.
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ignored) {
             }
         }
 
