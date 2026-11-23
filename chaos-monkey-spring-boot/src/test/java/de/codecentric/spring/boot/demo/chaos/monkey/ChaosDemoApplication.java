@@ -28,6 +28,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
@@ -51,6 +52,11 @@ public class ChaosDemoApplication {
     public WebClient webClient(final TestOutgoingConfigurationProperties properties, final Builder webClientBuilder) {
         HttpClient client = HttpClient.create().responseTimeout(Duration.ofMillis(properties.timeOut));
         return webClientBuilder.clientConnector(new ReactorClientHttpConnector(client)).build();
+    }
+
+    @Bean
+    public RestClient restClient(final RestClient.Builder restClientBuilder) {
+        return restClientBuilder.build();
     }
 
     @Data

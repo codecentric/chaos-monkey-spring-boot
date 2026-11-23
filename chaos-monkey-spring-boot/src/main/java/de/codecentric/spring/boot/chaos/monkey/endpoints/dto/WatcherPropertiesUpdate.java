@@ -51,6 +51,9 @@ public class WatcherPropertiesUpdate {
     private Boolean webClient;
 
     @Nullable
+    private Boolean restClient;
+
+    @Nullable
     private Boolean actuatorHealth;
 
     @Nullable
