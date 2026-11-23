@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeyProperties;
 import de.codecentric.spring.boot.chaos.monkey.configuration.ChaosMonkeySettings;
 import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggleNameMapper;
-import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.DefaultChaosToggles;
+import de.codecentric.spring.boot.chaos.monkey.configuration.toggles.ChaosToggles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -56,6 +57,9 @@ class ChaosMonkeyRequestScopeTest {
     ChaosMonkeyProperties chaosMonkeyProperties;
 
     @Mock
+    ChaosToggles chaosToggles;
+
+    @Mock
     ChaosMonkeySettings chaosMonkeySettings;
 
     @Mock
@@ -73,13 +77,15 @@ class ChaosMonkeyRequestScopeTest {
     void setUpCommon() {
         given(chaosMonkeySettings.getChaosMonkeyProperties()).willReturn(chaosMonkeyProperties);
         given(chaosMonkeySettings.getAssaultProperties()).willReturn(assaultProperties);
+        given(chaosMonkeyProperties.getTogglePrefix()).willReturn("chaos.monkey");
+        given(chaosToggles.isEnabled(anyString())).willReturn(true);
 
         // NB: The order of assaults in the array is important when attacks are chosen
         // by random
         // or when mocking the random result.
         assaults = Arrays.asList(latencyAssault, exceptionAssault);
         chaosMonkeyRequestScope = new ChaosMonkeyRequestScope(chaosMonkeySettings, assaults, Collections.emptyList(), metricEventPublisherMock,
-                new DefaultChaosToggles(), new DefaultChaosToggleNameMapper(chaosMonkeyProperties.getTogglePrefix()));
+                chaosToggles, new DefaultChaosToggleNameMapper("chaos.monkey"));
     }
 
     @Test
@@ -122,6 +128,45 @@ class ChaosMonkeyRequestScopeTest {
         chaosMonkeyRequestScope.callChaosMonkey(null, null);
 
         verify(assaults.get(0)).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenOnlyLatencyToggleEnabled_shouldOnlyChooseLatencyAssault() {
+        givenChaosMonkeyIsEnabled();
+        givenMultipleActiveAttacks();
+        given(chaosToggles.isEnabled("chaos.monkey.assault.exception")).willReturn(false);
+        given(chaosToggles.isEnabled("chaos.monkey.assault.latency")).willReturn(true);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(latencyAssault).attack();
+        verify(exceptionAssault, never()).attack();
+    }
+
+    @Test
+    void callChaosMonkey_givenAllAssaultTogglesDisabled_shouldNotRunAnAssault() {
+        givenChaosMonkeyIsEnabled();
+        givenMultipleActiveAttacks();
+        given(chaosToggles.isEnabled("chaos.monkey.assault.exception")).willReturn(false);
+        given(chaosToggles.isEnabled("chaos.monkey.assault.latency")).willReturn(false);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(latencyAssault, never()).attack();
+        verify(exceptionAssault, never()).attack();
+        verify(metricEventPublisherMock, never()).publishMetricEvent(MetricType.APPLICATION_REQ_COUNT, "type", "assaulted");
+    }
+
+    @Test
+    void callChaosMonkey_evaluatesAssaultTogglesOnEveryRequest() {
+        givenChaosMonkeyIsEnabled();
+        givenOneActiveAttack();
+        given(chaosToggles.isEnabled("chaos.monkey.assault.latency")).willReturn(false, true);
+
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+        chaosMonkeyRequestScope.callChaosMonkey(null, null);
+
+        verify(latencyAssault).attack();
     }
 
     @Test
